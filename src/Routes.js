@@ -19,9 +19,15 @@ import some from 'lodash/some';
  *     see the difference with DashboardMap and InventoryDeployments.
  *
  */
-const SamplePage = asyncComponent(() => import(/* webpackChunkName: "SamplePage" */ './routes/SamplePage'));
-const OopsPage = asyncComponent(() => import(/* webpackChunkName: "OopsPage" */ './routes/OopsPage'));
-const NoPermissionsPage = asyncComponent(() => import(/* webpackChunkName: "NoPermissionsPage" */ './routes/NoPermissionsPage'));
+const SamplePage = asyncComponent(
+  () => import(/* webpackChunkName: "SamplePage" */ './routes/SamplePage')
+);
+const OopsPage = asyncComponent(
+  () => import(/* webpackChunkName: "OopsPage" */ './routes/OopsPage')
+);
+const NoPermissionsPage = asyncComponent(
+  () => import(/* webpackChunkName: "NoPermissionsPage" */ './routes/NoPermissionsPage')
+);
 
 const paths = {
   samplePage: '/sample',
@@ -58,9 +64,13 @@ export const Routes = () => {
     <Switch>
       <InsightsRoute path={paths.samplePage} component={SamplePage} rootClass='samplePage' />
       <InsightsRoute path={paths.oops} component={OopsPage} rootClass='oopsPage' />
-      <InsightsRoute path={paths.noPermissions} component={NoPermissionsPage} rootClass='noPermissionsPage' />
+      <InsightsRoute
+        path={paths.noPermissions} component={NoPermissionsPage} rootClass='noPermissionsPage'
+      />
       { /* Finally, catch all unmatched routes */}
-      <Route render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.samplePage} />)} />
+      <Route
+        render={() => some(paths, p => p === path) ? null : (<Redirect to={paths.samplePage} />)}
+      />
     </Switch>
   );
 };
