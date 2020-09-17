@@ -2,7 +2,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import asyncComponent from './Utilities/asyncComponent';
+import { asyncComponent } from './utilities';
 import some from 'lodash/some';
 
 /**
@@ -19,9 +19,9 @@ import some from 'lodash/some';
  *     see the difference with DashboardMap and InventoryDeployments.
  *
  */
-const SamplePage = asyncComponent(() => import(/* webpackChunkName: "SamplePage" */ './Routes/SamplePage/SamplePage'));
-const OopsPage = asyncComponent(() => import(/* webpackChunkName: "OopsPage" */ './Routes/OopsPage/OopsPage'));
-const NoPermissionsPage = asyncComponent(() => import(/* webpackChunkName: "NoPermissionsPage" */ './Routes/NoPermissionsPage/NoPermissionsPage'));
+const SamplePage = asyncComponent(() => import(/* webpackChunkName: "SamplePage" */ './routes/SamplePage'));
+const OopsPage = asyncComponent(() => import(/* webpackChunkName: "OopsPage" */ './routes/OopsPage'));
+const NoPermissionsPage = asyncComponent(() => import(/* webpackChunkName: "NoPermissionsPage" */ './routes/NoPermissionsPage'));
 
 const paths = {
   samplePage: '/sample',

@@ -1,7 +1,7 @@
-import SampleComponent from './sample-component';
+import SampleComponent from './SampleComponent';
 
-describe('sample-component', () => {
-  it('expect sample-component to render children', () => {
+describe('SampleComponent', () => {
+  it('expect SampleComponent to render children', () => {
     const children = '<h1>Hello</h1>';
 
     const wrapper = shallow(

@@ -6,8 +6,8 @@ import { Button, StackItem, Stack, Title } from '@patternfly/react-core';
 import { Main, PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/';
 
-import asyncComponent from '../../Utilities/asyncComponent';
-const SampleComponent = asyncComponent(() => import('../../Components/SampleComponent/sample-component'));
+import { asyncComponent } from '../../utilities';
+const SampleComponent = asyncComponent(() => import('../../components/SampleComponent'));
 
 import './sample-page.scss';
 
