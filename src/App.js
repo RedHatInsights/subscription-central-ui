@@ -14,30 +14,30 @@ registry.register({ notifications });
 
 class App extends Component {
 
-    componentDidMount () {
-        insights.chrome.init();
-        // TODO change this to your appname
-        insights.chrome.identifyApp('insights');
+  componentDidMount () {
+    insights.chrome.init();
+    // TODO change this to your appname
+    insights.chrome.identifyApp('insights');
 
-        this.appNav = insights.chrome.on('APP_NAVIGATION', event => this.props.history.push(`/${event.navId}`));
-    }
+    this.appNav = insights.chrome.on('APP_NAVIGATION', event => this.props.history.push(`/${event.navId}`));
+  }
 
-    componentWillUnmount () {
-        this.appNav();
-    }
+  componentWillUnmount () {
+    this.appNav();
+  }
 
-    render () {
-        return (
-            <Provider store={ registry.getStore() }>
-                <NotificationsPortal />
-                <Routes childProps={ this.props } />
-            </Provider>
-        );
-    }
+  render () {
+    return (
+      <Provider store={ registry.getStore() }>
+        <NotificationsPortal />
+        <Routes childProps={ this.props } />
+      </Provider>
+    );
+  }
 }
 
 App.propTypes = {
-    history: PropTypes.object
+  history: PropTypes.object
 };
 
 /**

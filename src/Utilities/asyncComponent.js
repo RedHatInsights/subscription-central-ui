@@ -4,45 +4,45 @@ import { Skeleton } from '@redhat-cloud-services/frontend-components';
 /**
  * Webpack allows loading components asynchronously by using import().
  *
- *      Ex) const Component = asyncComponent(() => import('component');
+ *   Ex) const Component = asyncComponent(() => import('component');
  *
- *          class aClass extends React.Component {
- *              render() {
- *                  return (<Component prop1="prop1" prop2="prop2" ... />);
- *              }
- *          }
+ *     class aClass extends React.Component {
+ *       render() {
+ *         return (<Component prop1="prop1" prop2="prop2" ... />);
+ *       }
+ *     }
  *
- *  https://reactjs.org/docs/higher-order-components.html
+ * https://reactjs.org/docs/higher-order-components.html
  *
  * @param importComponent a function that contains and async import statement
- *      Ex) () => import('react-component')
+ *   Ex) () => import('react-component')
  *
  * @returns {AsyncComponent} The imported component or can return a loading
  */
 export default function asyncComponent(importComponent) {
-    class AsyncComponent extends Component {
-        constructor(props) {
-            super(props);
+  class AsyncComponent extends Component {
+    constructor(props) {
+      super(props);
 
-            this.state = {
-                component: null
-            };
-        }
-
-        async componentDidMount() {
-            const { default: component } = await importComponent();
-
-            this.setState({
-                component
-            });
-        }
-
-        render() {
-            const C = this.state.component;
-
-            return C ? <C { ...this.props } /> : <Skeleton />;
-        }
+      this.state = {
+        component: null
+      };
     }
 
-    return AsyncComponent;
+    async componentDidMount() {
+      const { default: component } = await importComponent();
+
+      this.setState({
+        component
+      });
+    }
+
+    render() {
+      const C = this.state.component;
+
+      return C ? <C { ...this.props } /> : <Skeleton />;
+    }
+  }
+
+  return AsyncComponent;
 }

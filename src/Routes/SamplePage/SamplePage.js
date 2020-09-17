@@ -20,46 +20,46 @@ import './sample-page.scss';
  */
 const SamplePage = () => {
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const handleAlert = () => {
-        dispatch(
-            addNotification({
-                variant: 'success',
-                title: 'Notification title',
-                description: 'notification description'
-            })
-        );
-    };
-
-    return (
-        <React.Fragment>
-            <PageHeader>
-                <PageHeaderTitle title='Sample Insights App'/>
-                <p> This is page header text </p>
-            </PageHeader>
-            <Main>
-                <Stack hasGutter>
-                    <StackItem>
-                        <Title headingLevel="h2" size="3xl"> Alerts </Title>
-                        <Button variant='primary' onClick={handleAlert}> Dispatch alert </Button>
-                    </StackItem>
-                    <StackItem>
-                        <SampleComponent/>
-                    </StackItem>
-                    <StackItem>
-                        <Stack hasGutter>
-                            <StackItem>
-                                <Title headingLevel="h2" size="3xl"> Links </Title>
-                            </StackItem>
-                            <StackItem><Link to='/oops'> How to handle 500s in app </Link></StackItem>
-                            <StackItem><Link to='/no-permissions'> How to handle 403s in app </Link></StackItem>
-                        </Stack>
-                    </StackItem>
-                </Stack>
-            </Main>
-        </React.Fragment>
+  const handleAlert = () => {
+    dispatch(
+      addNotification({
+        variant: 'success',
+        title: 'Notification title',
+        description: 'notification description'
+      })
     );
+  };
+
+  return (
+    <React.Fragment>
+      <PageHeader>
+        <PageHeaderTitle title='Sample Insights App'/>
+        <p> This is page header text </p>
+      </PageHeader>
+      <Main>
+        <Stack hasGutter>
+          <StackItem>
+            <Title headingLevel="h2" size="3xl"> Alerts </Title>
+            <Button variant='primary' onClick={handleAlert}> Dispatch alert </Button>
+          </StackItem>
+          <StackItem>
+            <SampleComponent/>
+          </StackItem>
+          <StackItem>
+            <Stack hasGutter>
+              <StackItem>
+                <Title headingLevel="h2" size="3xl"> Links </Title>
+              </StackItem>
+              <StackItem><Link to='/oops'> How to handle 500s in app </Link></StackItem>
+              <StackItem><Link to='/no-permissions'> How to handle 403s in app </Link></StackItem>
+            </Stack>
+          </StackItem>
+        </Stack>
+      </Main>
+    </React.Fragment>
+  );
 };
 
 export default withRouter(SamplePage);
