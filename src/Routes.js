@@ -19,6 +19,9 @@ import some from 'lodash/some';
  *     see the difference with DashboardMap and InventoryDeployments.
  *
  */
+const SatelliteManifestPage = asyncComponent(
+  () => import(/*webpackChunkName: "SatelliteManifestPage" */ './routes/SatelliteManifestPage')
+);
 const SamplePage = asyncComponent(
   () => import(/* webpackChunkName: "SamplePage" */ './routes/SamplePage')
 );
@@ -30,6 +33,7 @@ const NoPermissionsPage = asyncComponent(
 );
 
 const paths = {
+  satelliteManifestPage: '/satellite-manifest',
   samplePage: '/sample',
   oops: '/oops',
   noPermissions: '/no-permissions'
@@ -62,6 +66,11 @@ export const Routes = () => {
 
   return (
     <Switch>
+      <InsightsRoute
+        path={paths.satelliteManifestPage}
+        component={SatelliteManifestPage}
+        rootClass='satelliteManifestPage'
+      />
       <InsightsRoute path={paths.samplePage} component={SamplePage} rootClass='samplePage' />
       <InsightsRoute path={paths.oops} component={OopsPage} rootClass='oopsPage' />
       <InsightsRoute
