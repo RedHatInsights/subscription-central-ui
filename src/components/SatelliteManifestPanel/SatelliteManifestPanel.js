@@ -1,4 +1,5 @@
 import React from 'react';
+import { instanceOf } from 'prop-types';
 import {
   Badge,
   Button,
@@ -18,7 +19,7 @@ import {
   SortByDirection,
   sortable
 } from '@patternfly/react-table';
-import { getSatelliteManifest } from '../../services/mockApi';
+import { withCookies, Cookies } from 'react-cookie';
 import { NoResults, Processing } from '../emptyState';
 
 class SatelliteManifestPanel extends React.Component {
@@ -30,13 +31,11 @@ class SatelliteManifestPanel extends React.Component {
         { title: 'Version', transforms: [sortable] },
         { title: 'UUID', transforms: [sortable] }
       ],
-      count: 0,
       page: 1,
       perPage: 3,
       processing: true,
-      rows: [],
+      data: [],
       searchValue: '',
-      searchTerm: '',
       sortBy: { index: 0, direction: SortByDirection.asc }
     };
     this.handlePerPageSelect = this.handlePerPageSelect.bind(this);
@@ -46,31 +45,22 @@ class SatelliteManifestPanel extends React.Component {
     this.clearSearch = this.clearSearch.bind(this);
   }
 
-  fetchRows() {
-    const { page, perPage, searchTerm, sortBy } = this.state;
-    const key = ['name', 'version', 'uuid'][sortBy.index];
-    // Temporary timer to simulate wating for the api call
-    this.setState({ processing: true, rows: [] });
-    setTimeout(() => {
-      const paginatedData = getSatelliteManifest({
-        page,
-        perPage,
-        searchTerm,
-        sortBy: key,
-        sortByDirection: sortBy.direction
-      });
+  fetchData() {
+    const { cookies } = this.props.cookies;
+    this.setState({ processing: true });
+    fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
+      headers: { Authorization: `Bearer ${cookies.cs_jwt}` },
+      mode: 'cors'
+    }).then((response) => response.json()).then((data) => {
       this.setState({
-        count: paginatedData.quantity,
-        processing: false,
-        rows: paginatedData.data.map(entry => {
-          return [entry.name, entry.version, entry.uuid];
-        })
+        data: data.body.filter((manifest) => (manifest.type === 'Satellite')),
+        processing: false
       });
-    }, 1500);
+    });
   }
 
   componentDidMount() {
-    this.fetchRows();
+    this.fetchData();
   };
 
   handlePerPageSelect(_event, perPage) {
@@ -78,37 +68,76 @@ class SatelliteManifestPanel extends React.Component {
   }
 
   handleSearch(searchValue) {
-    if (this.search) {
-      clearTimeout(this.search);
-    }
-
-    this.setState({ searchValue });
-    this.search = setTimeout(() => {
-      this.setState({ searchTerm: searchValue, page: 1 }, this.fetchRows);
-      this.search = null;
-    }, 1000);
+    this.setState({ searchValue, page: 1 });
   }
 
   handleSetPage(_event, page) {
-    this.setState({ page }, this.fetchRows);
+    this.setState({ page });
   }
 
   clearSearch() {
-    this.setState({ page: 1, searchValue: '', searchTerm: '' }, this.fetchRows);
+    this.setState({ page: 1, searchValue: '' });
   }
 
   handleSort(_event, index, direction) {
     const { processing } = this.state;
     if (!processing) {
-      this.setState({ page: 1, sortBy: { index, direction } }, this.fetchRows);
+      this.setState({ page: 1, sortBy: { index, direction } });
     }
   }
 
+  filteredData() {
+    const { data, searchValue } = this.state;
+
+    return (data.filter(entry => {
+      return (
+        (entry.name || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
+        (entry.version || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
+        (entry.uuid || '').toLowerCase().startsWith(searchValue.toLowerCase())
+      );
+    }));
+  }
+
+  filteredRows() {
+    return (this.filteredData().map((entry) => {
+      return [entry.name || '', entry.version || '', entry.uuid || ''];
+    }));
+  }
+
+  sortedRows() {
+    const { direction, index } = this.state.sortBy;
+    const directionFactor = direction === SortByDirection.desc ? -1 : 1;
+
+    return (this.filteredRows().sort((a, b) => {
+      const term1 = (a[index] || '').toLowerCase();
+      const term2 = (b[index] || '').toLowerCase();
+      if (term1 < term2) {
+        return -1 * directionFactor;
+      } else if (term1 > term2) {
+        return 1 * directionFactor;
+      } else {
+        return 0;
+      }
+    }));
+  }
+
+  paginatedRows() {
+    const { page, perPage } = this.state;
+    const first = (page - 1) * perPage;
+    const last = first + perPage;
+
+    return this.sortedRows().slice(first, last);
+  }
+
+  count() {
+    return this.filteredData().length;
+  }
+
   emptyState() {
-    const { processing, count } = this.state;
+    const { processing } = this.state;
     if (processing) {
       return <Processing />;
-    } else if (count === 0) {
+    } else if (this.count() === 0) {
       return <NoResults clearFilters={this.clearSearch} />;
     } else {
       return '';
@@ -116,11 +145,11 @@ class SatelliteManifestPanel extends React.Component {
   }
 
   pagination(variant = 'top') {
-    const { count, page, perPage, processing } = this.state;
+    const { page, perPage, processing } = this.state;
     return (
       <Pagination
         isDisabled={processing}
-        itemCount={count}
+        itemCount={this.count()}
         perPage={perPage}
         page={page}
         onSetPage={this.handleSetPage}
@@ -131,12 +160,13 @@ class SatelliteManifestPanel extends React.Component {
   }
 
   resultCountBadge() {
-    const { count, processing } = this.state;
-    return (processing ? '' : <Badge isRead>{count}</Badge>);
+    const { processing } = this.state;
+    return (processing ? '' : <Badge isRead>{this.count()}</Badge>);
   }
 
   render() {
-    const { columns, rows, searchValue, sortBy } = this.state;
+    const { columns, searchValue, sortBy } = this.state;
+
     return (
       <PageSection variant="light">
         <Title headingLevel="h2">
@@ -168,7 +198,7 @@ class SatelliteManifestPanel extends React.Component {
         <Table
           aria-label="Satellite Manifest Table"
           cells={columns}
-          rows={rows}
+          rows={this.paginatedRows()}
           sortBy={sortBy}
           onSort={this.handleSort}
         >
@@ -182,4 +212,8 @@ class SatelliteManifestPanel extends React.Component {
   }
 }
 
-export default SatelliteManifestPanel;
+SatelliteManifestPanel.propTypes = {
+  cookies: instanceOf(Cookies).isRequired
+};
+
+export default withCookies(SatelliteManifestPanel);
