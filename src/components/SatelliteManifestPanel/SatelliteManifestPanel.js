@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { instanceOf } from 'prop-types';
 import {
   Badge,
@@ -20,75 +20,55 @@ import {
   sortable
 } from '@patternfly/react-table';
 import { withCookies, Cookies } from 'react-cookie';
+import { useQuery } from 'react-query';
 import { NoResults, Processing } from '../emptyState';
 
-class SatelliteManifestPanel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      columns: [
-        { title: 'Name', transforms: [sortable] },
-        { title: 'Version', transforms: [sortable] },
-        { title: 'UUID', transforms: [sortable] }
-      ],
-      page: 1,
-      perPage: 3,
-      processing: true,
-      data: [],
-      searchValue: '',
-      sortBy: { index: 0, direction: SortByDirection.asc }
-    };
-    this.handlePerPageSelect = this.handlePerPageSelect.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleSetPage = this.handleSetPage.bind(this);
-    this.handleSort = this.handleSort.bind(this);
-    this.clearSearch = this.clearSearch.bind(this);
-  }
+const SatelliteManifestPanel = (props) => {
+  const [columns] = useState([
+    { title: 'Name', transforms: [sortable] },
+    { title: 'Version', transforms: [sortable] },
+    { title: 'UUID', transforms: [sortable] }
+  ]);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(3);
+  const [searchValue, setSearchValue] = useState('');
+  const [sortBy, setSortBy] = useState({ index: 0, direction: SortByDirection.asc });
+  const { cookies } = props.cookies;
 
-  fetchData() {
-    const { cookies } = this.props.cookies;
-    this.setState({ processing: true });
-    fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
+  const { isLoading, data } = useQuery('manifests', () => {
+    return (fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
       headers: { Authorization: `Bearer ${cookies.cs_jwt}` },
       mode: 'cors'
     }).then((response) => response.json()).then((data) => {
-      this.setState({
-        data: data.body.filter((manifest) => (manifest.type === 'Satellite')),
-        processing: false
-      });
-    });
-  }
+      return data.body.filter((manifest) => (manifest.type === 'Satellite'));
+    }));
+  });
 
-  componentDidMount() {
-    this.fetchData();
+  const handlePerPageSelect = (_event, perPage) => {
+    setPerPage(perPage);
+    setPage(1);
   };
 
-  handlePerPageSelect(_event, perPage) {
-    this.setState({ perPage }, this.fetchRows);
-  }
+  const handleSearch = (searchValue) => {
+    setSearchValue(searchValue);
+    setPage(1);
+  };
 
-  handleSearch(searchValue) {
-    this.setState({ searchValue, page: 1 });
-  }
+  const handleSetPage = (_event, page) => {
+    setPage(page);
+  };
 
-  handleSetPage(_event, page) {
-    this.setState({ page });
-  }
+  const clearSearch = () => {
+    setSearchValue('');
+    setPage(1);
+  };
 
-  clearSearch() {
-    this.setState({ page: 1, searchValue: '' });
-  }
+  const handleSort = (_event, index, direction) => {
+    setSortBy({ index, direction });
+    setPage(1);
+  };
 
-  handleSort(_event, index, direction) {
-    const { processing } = this.state;
-    if (!processing) {
-      this.setState({ page: 1, sortBy: { index, direction } });
-    }
-  }
-
-  filteredData() {
-    const { data, searchValue } = this.state;
-
+  const filteredData = () => {
     return (data.filter(entry => {
       return (
         (entry.name || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
@@ -96,19 +76,19 @@ class SatelliteManifestPanel extends React.Component {
         (entry.uuid || '').toLowerCase().startsWith(searchValue.toLowerCase())
       );
     }));
-  }
+  };
 
-  filteredRows() {
-    return (this.filteredData().map((entry) => {
+  const filteredRows = () => {
+    return (filteredData().map((entry) => {
       return [entry.name || '', entry.version || '', entry.uuid || ''];
     }));
-  }
+  };
 
-  sortedRows() {
-    const { direction, index } = this.state.sortBy;
+  const sortedRows = () => {
+    const { direction, index } = sortBy;
     const directionFactor = direction === SortByDirection.desc ? -1 : 1;
 
-    return (this.filteredRows().sort((a, b) => {
+    return (filteredRows().sort((a, b) => {
       const term1 = (a[index] || '').toLowerCase();
       const term2 = (b[index] || '').toLowerCase();
       if (term1 < term2) {
@@ -119,98 +99,90 @@ class SatelliteManifestPanel extends React.Component {
         return 0;
       }
     }));
-  }
+  };
 
-  paginatedRows() {
-    const { page, perPage } = this.state;
+  const paginatedRows = () => {
     const first = (page - 1) * perPage;
     const last = first + perPage;
 
-    return this.sortedRows().slice(first, last);
-  }
+    return sortedRows().slice(first, last);
+  };
 
-  count() {
-    return this.filteredData().length;
-  }
+  const count = () => {
+    return (isLoading ? 0 : filteredData().length);
+  };
 
-  emptyState() {
-    const { processing } = this.state;
-    if (processing) {
+  const emptyState = () => {
+    if (isLoading) {
       return <Processing />;
-    } else if (this.count() === 0) {
-      return <NoResults clearFilters={this.clearSearch} />;
+    } else if (count() === 0) {
+      return <NoResults clearFilters={clearSearch} />;
     } else {
       return '';
     }
-  }
+  };
 
-  pagination(variant = 'top') {
-    const { page, perPage, processing } = this.state;
+  const pagination = (variant = 'top') => {
     return (
       <Pagination
-        isDisabled={processing}
-        itemCount={this.count()}
+        isDisabled={isLoading}
+        itemCount={count()}
         perPage={perPage}
         page={page}
-        onSetPage={this.handleSetPage}
-        onPerPageSelect={this.handlePerPageSelect}
+        onSetPage={handleSetPage}
+        onPerPageSelect={handlePerPageSelect}
         variant={variant}
       />
     );
-  }
+  };
 
-  resultCountBadge() {
-    const { processing } = this.state;
-    return (processing ? '' : <Badge isRead>{this.count()}</Badge>);
-  }
+  const resultCountBadge = () => {
+    return (isLoading ? '' : <Badge isRead>{count()}</Badge>);
+  };
 
-  render() {
-    const { columns, searchValue, sortBy } = this.state;
-
-    return (
-      <PageSection variant="light">
-        <Title headingLevel="h2">
-          Satellite Manifests
-          {this.resultCountBadge()}
-        </Title>
-        <Flex
-          direction={{ default: 'column', md: 'row' }}
-          justifyContent={{ default: 'justifyContentSpaceBetween' }}
-        >
-          <FlexItem>
-            <Split hasGutter>
-              <SplitItem isFilled>
-                <SearchInput
-                  value={searchValue}
-                  onChange={this.handleSearch}
-                  onClear={this.clearSearch}
-                />
-              </SplitItem>
-              <SplitItem>
-                <Button variant="primary">New</Button>
-              </SplitItem>
-            </Split>
-          </FlexItem>
-          <FlexItem align={{ default: 'alightRight' }}>
-            {this.pagination()}
-          </FlexItem>
-        </Flex>
-        <Table
-          aria-label="Satellite Manifest Table"
-          cells={columns}
-          rows={this.paginatedRows()}
-          sortBy={sortBy}
-          onSort={this.handleSort}
-        >
-          <TableHeader />
-          <TableBody />
-        </Table>
-        {this.emptyState()}
-        {this.pagination('bottom')}
-      </PageSection>
-    );
-  }
-}
+  return (
+    <PageSection variant="light">
+      <Title headingLevel="h2">
+        Satellite Manifests
+        {resultCountBadge()}
+      </Title>
+      <Flex
+        direction={{ default: 'column', md: 'row' }}
+        justifyContent={{ default: 'justifyContentSpaceBetween' }}
+      >
+        <FlexItem>
+          <Split hasGutter>
+            <SplitItem isFilled>
+              <SearchInput
+                value={searchValue}
+                onChange={handleSearch}
+                onClear={clearSearch}
+              />
+            </SplitItem>
+            <SplitItem>
+              <Button variant="primary">New</Button>
+            </SplitItem>
+          </Split>
+        </FlexItem>
+        <FlexItem align={{ default: 'alightRight' }}>
+          {pagination()}
+        </FlexItem>
+      </Flex>
+      <Table
+        aria-label="Satellite Manifest Table"
+        cells={columns}
+        rows={isLoading ? [] : paginatedRows()}
+        sortBy={sortBy}
+        onSort={handleSort}
+      >
+        <TableHeader />
+        <TableBody />
+      </Table>
+      {emptyState()}
+      {pagination('bottom')}
+    </PageSection>
+  );
+};
 
 SatelliteManifestPanel.propTypes = {
   cookies: instanceOf(Cookies).isRequired
