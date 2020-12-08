@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import {
   Title,
   EmptyState,
   EmptyStateIcon
 } from '@patternfly/react-core';
 
-const Processing = () => {
+const Processing: FunctionComponent = () => {
   const Spinner = () => (
     <span className="pf-c-spinner" role="progressbar" aria-valuetext="Loading...">
       <span className="pf-c-spinner__clipper" />

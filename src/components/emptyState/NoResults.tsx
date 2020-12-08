@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FunctionComponent } from 'react';
 import {
   Button,
   EmptyState,
@@ -10,7 +9,11 @@ import {
 } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
 
-const NoResults = ({ clearFilters }) => {
+interface NoResultsProps { clearFilters: () => void }
+
+const NoResults: FunctionComponent<NoResultsProps> = (
+  { clearFilters }: { clearFilters: () => void }
+) => {
   return (
     <EmptyState variant={EmptyStateVariant.small}>
       <EmptyStateIcon icon={SearchIcon} />
@@ -25,7 +28,5 @@ const NoResults = ({ clearFilters }) => {
     </EmptyState>
   );
 };
-
-NoResults.propTypes = { clearFilters: PropTypes.func };
 
 export default NoResults;
