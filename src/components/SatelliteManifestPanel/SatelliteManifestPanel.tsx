@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { instanceOf } from 'prop-types';
+import React, { FunctionComponent, useState } from 'react';
 import {
   Badge,
   Button,
@@ -7,6 +6,7 @@ import {
   FlexItem,
   PageSection,
   Pagination,
+  PaginationVariant,
   SearchInput,
   Split,
   SplitItem,
@@ -19,11 +19,20 @@ import {
   SortByDirection,
   sortable
 } from '@patternfly/react-table';
-import { withCookies, Cookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import { useQuery } from 'react-query';
 import { NoResults, Processing } from '../emptyState';
 
-const SatelliteManifestPanel = (props) => {
+interface Entry {
+  entitlementQuantity: number;
+  name: string;
+  type: string;
+  url: string;
+  uuid: string;
+  version: string;
+}
+
+const SatelliteManifestPanel: FunctionComponent = () => {
   const [columns] = useState([
     { title: 'Name', transforms: [sortable] },
     { title: 'Version', transforms: [sortable] },
@@ -33,28 +42,28 @@ const SatelliteManifestPanel = (props) => {
   const [perPage, setPerPage] = useState(3);
   const [searchValue, setSearchValue] = useState('');
   const [sortBy, setSortBy] = useState({ index: 0, direction: SortByDirection.asc });
-  const { cookies } = props.cookies;
+  const [cookies] = useCookies(['cs_jwt']);
 
   const { isLoading, data } = useQuery('manifests', () => {
     return (fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
       headers: { Authorization: `Bearer ${cookies.cs_jwt}` },
       mode: 'cors'
     }).then((response) => response.json()).then((data) => {
-      return data.body.filter((manifest) => (manifest.type === 'Satellite'));
+      return data.body.filter((manifest: Entry) => (manifest.type === 'Satellite'));
     }));
   });
 
-  const handlePerPageSelect = (_event, perPage) => {
+  const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
     setPerPage(perPage);
     setPage(1);
   };
 
-  const handleSearch = (searchValue) => {
+  const handleSearch = (searchValue: string) => {
     setSearchValue(searchValue);
     setPage(1);
   };
 
-  const handleSetPage = (_event, page) => {
+  const handleSetPage = (_event: React.MouseEvent, page: number) => {
     setPage(page);
   };
 
@@ -63,13 +72,13 @@ const SatelliteManifestPanel = (props) => {
     setPage(1);
   };
 
-  const handleSort = (_event, index, direction) => {
+  const handleSort = (_event: React.MouseEvent, index: number, direction: SortByDirection) => {
     setSortBy({ index, direction });
     setPage(1);
   };
 
   const filteredData = () => {
-    return (data.filter(entry => {
+    return (data.filter((entry: Entry) => {
       return (
         (entry.name || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
         (entry.version || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
@@ -79,7 +88,7 @@ const SatelliteManifestPanel = (props) => {
   };
 
   const filteredRows = () => {
-    return (filteredData().map((entry) => {
+    return (filteredData().map((entry: Entry) => {
       return [entry.name || '', entry.version || '', entry.uuid || ''];
     }));
   };
@@ -88,7 +97,7 @@ const SatelliteManifestPanel = (props) => {
     const { direction, index } = sortBy;
     const directionFactor = direction === SortByDirection.desc ? -1 : 1;
 
-    return (filteredRows().sort((a, b) => {
+    return (filteredRows().sort((a: [string, string, string], b: [string, string, string]) => {
       const term1 = (a[index] || '').toLowerCase();
       const term2 = (b[index] || '').toLowerCase();
       if (term1 < term2) {
@@ -122,7 +131,7 @@ const SatelliteManifestPanel = (props) => {
     }
   };
 
-  const pagination = (variant = 'top') => {
+  const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
         isDisabled={isLoading}
@@ -164,7 +173,7 @@ const SatelliteManifestPanel = (props) => {
             </SplitItem>
           </Split>
         </FlexItem>
-        <FlexItem align={{ default: 'alightRight' }}>
+        <FlexItem align={{ default: 'alignRight' }}>
           {pagination()}
         </FlexItem>
       </Flex>
@@ -179,13 +188,9 @@ const SatelliteManifestPanel = (props) => {
         <TableBody />
       </Table>
       {emptyState()}
-      {pagination('bottom')}
+      {pagination(PaginationVariant.bottom)}
     </PageSection>
   );
 };
 
-SatelliteManifestPanel.propTypes = {
-  cookies: instanceOf(Cookies).isRequired
-};
-
-export default withCookies(SatelliteManifestPanel);
+export default SatelliteManifestPanel;
