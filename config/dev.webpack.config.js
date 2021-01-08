@@ -8,5 +8,6 @@ const { config: webpackConfig, plugins } = config({
 
 module.exports = {
   ...webpackConfig,
-  plugins
+  plugins,
+  stats: 'minimal'
 };

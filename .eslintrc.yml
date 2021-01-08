@@ -50,7 +50,7 @@ rules:
     - error
     - 2
     - SwitchCase: 1
-      MemberExpression: 0
+      MemberExpression: 1
       ImportDeclaration: 1
       ObjectExpression: 1
   key-spacing: 2
@@ -85,7 +85,7 @@ rules:
     - error
     - blankLine: always
       prev: block-like
-      next: "*"
+      next: '*'
   quote-props:
     - error
     - as-needed

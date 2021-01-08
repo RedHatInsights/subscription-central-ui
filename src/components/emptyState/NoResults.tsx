@@ -9,11 +9,15 @@ import {
 } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
 
-interface NoResultsProps { clearFilters: () => void }
+interface NoResultsProps {
+  clearFilters: () => void;
+}
 
-const NoResults: FunctionComponent<NoResultsProps> = (
-  { clearFilters }: { clearFilters: () => void }
-) => {
+const NoResults: FunctionComponent<NoResultsProps> = ({
+  clearFilters
+}: {
+  clearFilters: () => void;
+}) => {
   return (
     <EmptyState variant={EmptyStateVariant.small}>
       <EmptyStateIcon icon={SearchIcon} />
@@ -21,10 +25,12 @@ const NoResults: FunctionComponent<NoResultsProps> = (
         No results found
       </Title>
       <EmptyStateBody>
-        No results match the filter criteria.
-        Remove all filters or clear all filters to show results.
+        No results match the filter criteria. Remove all filters or clear all filters to show
+        results.
       </EmptyStateBody>
-      <Button variant="link" onClick={clearFilters}>Clear all filters</Button>
+      <Button variant="link" onClick={clearFilters}>
+        Clear all filters
+      </Button>
     </EmptyState>
   );
 };

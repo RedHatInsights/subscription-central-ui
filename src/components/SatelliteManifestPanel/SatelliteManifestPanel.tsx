@@ -12,13 +12,7 @@ import {
   SplitItem,
   Title
 } from '@patternfly/react-core';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  SortByDirection,
-  sortable
-} from '@patternfly/react-table';
+import { Table, TableHeader, TableBody, SortByDirection, sortable } from '@patternfly/react-table';
 import { useCookies } from 'react-cookie';
 import { useQuery } from 'react-query';
 import { NoResults, Processing } from '../emptyState';
@@ -45,12 +39,14 @@ const SatelliteManifestPanel: FunctionComponent = () => {
   const [cookies] = useCookies(['cs_jwt']);
 
   const { isLoading, data } = useQuery('manifests', () => {
-    return (fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
+    return fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
       headers: { Authorization: `Bearer ${cookies.cs_jwt}` },
       mode: 'cors'
-    }).then((response) => response.json()).then((data) => {
-      return data.body.filter((manifest: Entry) => (manifest.type === 'Satellite'));
-    }));
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return data.body.filter((manifest: Entry) => manifest.type === 'Satellite');
+      });
   });
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
@@ -78,26 +74,26 @@ const SatelliteManifestPanel: FunctionComponent = () => {
   };
 
   const filteredData = () => {
-    return (data.filter((entry: Entry) => {
+    return data.filter((entry: Entry) => {
       return (
         (entry.name || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
         (entry.version || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
         (entry.uuid || '').toLowerCase().startsWith(searchValue.toLowerCase())
       );
-    }));
+    });
   };
 
   const filteredRows = () => {
-    return (filteredData().map((entry: Entry) => {
+    return filteredData().map((entry: Entry) => {
       return [entry.name || '', entry.version || '', entry.uuid || ''];
-    }));
+    });
   };
 
   const sortedRows = () => {
     const { direction, index } = sortBy;
     const directionFactor = direction === SortByDirection.desc ? -1 : 1;
 
-    return (filteredRows().sort((a: [string, string, string], b: [string, string, string]) => {
+    return filteredRows().sort((a: [string, string, string], b: [string, string, string]) => {
       const term1 = (a[index] || '').toLowerCase();
       const term2 = (b[index] || '').toLowerCase();
       if (term1 < term2) {
@@ -107,7 +103,7 @@ const SatelliteManifestPanel: FunctionComponent = () => {
       } else {
         return 0;
       }
-    }));
+    });
   };
 
   const paginatedRows = () => {
@@ -118,7 +114,7 @@ const SatelliteManifestPanel: FunctionComponent = () => {
   };
 
   const count = () => {
-    return (isLoading ? 0 : filteredData().length);
+    return isLoading ? 0 : filteredData().length;
   };
 
   const emptyState = () => {
@@ -146,7 +142,7 @@ const SatelliteManifestPanel: FunctionComponent = () => {
   };
 
   const resultCountBadge = () => {
-    return (isLoading ? '' : <Badge isRead>{count()}</Badge>);
+    return isLoading ? '' : <Badge isRead>{count()}</Badge>;
   };
 
   return (
@@ -162,20 +158,14 @@ const SatelliteManifestPanel: FunctionComponent = () => {
         <FlexItem>
           <Split hasGutter>
             <SplitItem isFilled>
-              <SearchInput
-                value={searchValue}
-                onChange={handleSearch}
-                onClear={clearSearch}
-              />
+              <SearchInput value={searchValue} onChange={handleSearch} onClear={clearSearch} />
             </SplitItem>
             <SplitItem>
               <Button variant="primary">New</Button>
             </SplitItem>
           </Split>
         </FlexItem>
-        <FlexItem align={{ default: 'alignRight' }}>
-          {pagination()}
-        </FlexItem>
+        <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
       </Flex>
       <Table
         aria-label="Satellite Manifest Table"

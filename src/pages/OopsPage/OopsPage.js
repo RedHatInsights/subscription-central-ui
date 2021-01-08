@@ -6,7 +6,7 @@ import { Main, Unavailable } from '@redhat-cloud-services/frontend-components';
 const OopsPage = () => {
   return (
     <Main>
-      <Unavailable/>
+      <Unavailable />
     </Main>
   );
 };
