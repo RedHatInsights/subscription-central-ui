@@ -1,9 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import {
-  Title,
-  EmptyState,
-  EmptyStateIcon
-} from '@patternfly/react-core';
+import { Title, EmptyState, EmptyStateIcon } from '@patternfly/react-core';
 
 const Processing: FunctionComponent = () => {
   const Spinner = () => (

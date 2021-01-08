@@ -9,7 +9,7 @@ const SatelliteManifestPage = () => {
   return (
     <React.Fragment>
       <PageHeader>
-        <PageHeaderTitle title="Satellite Manifests"/>
+        <PageHeaderTitle title="Satellite Manifests" />
         <p>Export subscriptions to your on-premise subscription management application</p>
       </PageHeader>
       <Main>

@@ -1,18 +1,15 @@
-import ReducerRegistry from
-  '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
+// eslint-disable-next-line max-len
+import ReducerRegistry from '@redhat-cloud-services/frontend-components-utilities/files/ReducerRegistry';
 import promiseMiddleware from 'redux-promise-middleware';
 
 let registry;
 
-export function init (...middleware) {
+export function init(...middleware) {
   if (registry) {
     throw new Error('store already initialized');
   }
 
-  registry = new ReducerRegistry({}, [
-    promiseMiddleware,
-    ...middleware
-  ]);
+  registry = new ReducerRegistry({}, [promiseMiddleware, ...middleware]);
 
   //If you want to register all of your reducers, this is good place.
   /*
@@ -23,10 +20,10 @@ export function init (...middleware) {
   return registry;
 }
 
-export function getStore () {
+export function getStore() {
   return registry.getStore();
 }
 
-export function register (...args) {
+export function register(...args) {
   return registry.register(...args);
 }

@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { init } from './store';
 import App from './App';
-import { getBaseName } from './utilities';
-
+import getBaseName from './utilities/getBaseName';
+import { Skeleton } from '@redhat-cloud-services/frontend-components';
 ReactDOM.render(
-  <Provider store={ init().getStore() }>
-    <Router basename={ getBaseName(window.location.pathname) }>
-      <App />
-    </Router>
+  <Provider store={init().getStore()}>
+    <Suspense fallback={<Skeleton />}>
+      <Router basename={getBaseName(window.location.pathname)}>
+        <App />
+      </Router>
+    </Suspense>
   </Provider>,
   document.getElementById('root')
 );

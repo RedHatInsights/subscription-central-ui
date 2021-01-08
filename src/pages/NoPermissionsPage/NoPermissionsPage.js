@@ -6,7 +6,7 @@ import { Main, NotAuthorized } from '@redhat-cloud-services/frontend-components'
 const NoPermissionsPage = () => {
   return (
     <Main>
-      <NotAuthorized serviceName='Sample app'/>
+      <NotAuthorized serviceName="Sample app" />
     </Main>
   );
 };
