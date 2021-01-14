@@ -29,7 +29,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,scss,ts,tsx,html,md}": "eslint --cache --fix"
+    "*.{js,scss,ts,tsx,html}": "eslint --cache --fix"
   },
   "jest": {
     "collectCoverage": true,
