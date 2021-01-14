@@ -1,1 +1,1 @@
-declare module '@redhat-cloud-services/frontend-components';
+declare module '@redhat-cloud-services/frontend-components/*';
