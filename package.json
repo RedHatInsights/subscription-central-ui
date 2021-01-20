@@ -29,7 +29,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,scss,ts,tsx,html,md}": "eslint --cache --fix"
+    "*.{js,scss,ts,tsx,html}": "eslint --cache --fix"
   },
   "jest": {
     "collectCoverage": true,
@@ -56,7 +56,7 @@
     "@patternfly/patternfly": "^4.42.2",
     "@patternfly/react-core": "^4.50.2",
     "@patternfly/react-table": "^4.16.20",
-    "@redhat-cloud-services/frontend-components": "^2.5.1",
+    "@redhat-cloud-services/frontend-components": "^2.5.8",
     "@redhat-cloud-services/frontend-components-notifications": "^2.0.4",
     "@redhat-cloud-services/frontend-components-utilities": "2.0.4",
     "babel-plugin-transform-imports": "^2.0.0",

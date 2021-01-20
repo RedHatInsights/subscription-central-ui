@@ -17,10 +17,13 @@ Note: You will need to set up the Insights environment if you want to develop wi
 
 ## Build app
 
-1. ```npm install```
+1. `npm install`
 
-2. ```npm run start```
-    - starts webpack bundler and serves the files with webpack dev server
+2. `npm run start`
+
+   - starts webpack bundler and serves the files with webpack dev server
+
+3. If you have set up the Insights Proxy repo in the same parent folder as this project, you can run `npm run start:proxy` to run the proxy as well as the front-end dev server via Webpack.
 
 ### Testing
 
@@ -51,6 +54,11 @@ Note: You will need to set up the Insights environment if you want to develop wi
 
 - This project imports Patternfly components:
   - [Patternfly React](https://github.com/patternfly/patternfly-react)
+
+### Tree-Shaking
+
+Please be sure to follow import directives from the various libraries used. For ex., in
+https://github.com/RedHatInsights/frontend-components/tree/master/packages/components#readme this has specific instructions on how to import components (under Direct Components). Failing to do so will increase the bundle size significantly by importing all of Patternfly icons and other unnecessary assets.
 
 ## Insights Components
 
@@ -126,6 +134,7 @@ This file exports an object with the configuration for webpack and webpack dev s
     - Ex) [asyncComponent.js](https://github.com/RedHatInsights/insights-frontend-starter-app/src/Utils/asyncComponent.js)
 
 - [Smart/Presentational Components](https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43)
+
   - Smart components have access to the redux state
   - Presentational components do not have access to the redux state
   - Smart Components === insights-frontend/app/js/states
@@ -145,7 +154,7 @@ This file exports an object with the configuration for webpack and webpack dev s
 A [store](https://redux.js.org/basics/store) holds the whole [state tree](https://redux.js.org/glossary) of your application.
 Redux doesn't have a Dispatcher or support many stores. Instead, there is just a single store with a single root reducing function.
 
-[Create Store](https://redux.js.org/api-reference/createstore): ```createStore(reducer, preloadedState, enhancer)```
+[Create Store](https://redux.js.org/api-reference/createstore): `createStore(reducer, preloadedState, enhancer)`
 
 - methods
   - [getState()](https://redux.js.org/api-reference/store#dispatch)
@@ -209,6 +218,7 @@ When setting up the routes, the page content is wrapped with a `.page__{pageName
   - passes updated match, location, and history props to the wrapped component whenever it renders
 
 ## Running locally
+
 Have [insights-proxy](https://github.com/RedHatInsights/insights-proxy) installed under PROXY_PATH
 
 ```shell
