@@ -4,7 +4,6 @@ import React, { lazy, LazyExoticComponent, ReactNode, ComponentType } from 'reac
 const SatelliteManifestPage = lazy(
   () => import(/* webpackChunkName: "SatelliteManifestPage" */ './pages/SatelliteManifestPage')
 );
-const SamplePage = lazy(() => import(/* webpackChunkName: "SamplePage" */ './pages/SamplePage'));
 const OopsPage = lazy(() => import(/* webpackChunkName: "OopsPage" */ './pages/OopsPage'));
 const NoPermissionsPage = lazy(
   () => import(/* webpackChunkName: "NoPermissionsPage" */ './pages/NoPermissionsPage')
@@ -33,11 +32,6 @@ const routes = [
     path: '/satellite-manifest',
     component: SatelliteManifestPage,
     rootClass: 'satelliteManifestPage'
-  },
-  {
-    path: '/sample',
-    component: SamplePage,
-    rootClass: 'SamplePage'
   },
   {
     path: '/oops',

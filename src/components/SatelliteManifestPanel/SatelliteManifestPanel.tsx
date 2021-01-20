@@ -14,17 +14,8 @@ import {
 } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, SortByDirection, sortable } from '@patternfly/react-table';
 import { useCookies } from 'react-cookie';
-import { useQuery } from 'react-query';
+import useSatelliteManifests, { Entry } from '../../hooks/useSatelliteManifests';
 import { NoResults, Processing } from '../emptyState';
-
-interface Entry {
-  entitlementQuantity: number;
-  name: string;
-  type: string;
-  url: string;
-  uuid: string;
-  version: string;
-}
 
 const SatelliteManifestPanel: FunctionComponent = () => {
   const [columns] = useState([
@@ -38,16 +29,7 @@ const SatelliteManifestPanel: FunctionComponent = () => {
   const [sortBy, setSortBy] = useState({ index: 0, direction: SortByDirection.asc });
   const [cookies] = useCookies(['cs_jwt']);
 
-  const { isLoading, data } = useQuery('manifests', () => {
-    return fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
-      headers: { Authorization: `Bearer ${cookies.cs_jwt}` },
-      mode: 'cors'
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data.body.filter((manifest: Entry) => manifest.type === 'Satellite');
-      });
-  });
+  const { isLoading, data } = useSatelliteManifests(cookies);
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
     setPerPage(perPage);
