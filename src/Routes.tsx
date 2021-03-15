@@ -1,61 +1,27 @@
-import { Redirect, Route, Switch, RouteComponentProps } from 'react-router-dom';
-import React, { lazy, LazyExoticComponent, ReactNode, ComponentType } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import React, { Suspense, lazy, ReactNode } from 'react';
+import { Bullseye, Spinner } from '@patternfly/react-core';
 
-const SatelliteManifestPage = lazy(
-  () => import(/* webpackChunkName: "SatelliteManifestPage" */ './pages/SatelliteManifestPage')
-);
-const OopsPage = lazy(() => import(/* webpackChunkName: "OopsPage" */ './pages/OopsPage'));
-const NoPermissionsPage = lazy(
-  () => import(/* webpackChunkName: "NoPermissionsPage" */ './pages/NoPermissionsPage')
-);
+const SatelliteManifestPage = lazy(() => import('./pages/SatelliteManifestPage'));
+const OopsPage = lazy(() => import('./pages/OopsPage'));
+const NoPermissionsPage = lazy(() => import('./pages/NoPermissionsPage'));
 
-interface InsightsRouteParams {
-  path: string;
-  rootClass: string;
-  component: LazyExoticComponent<
-    ComponentType<RouteComponentProps<unknown>> | ComponentType<unknown>
-  >;
-}
-
-const InsightsRoute = ({ component, rootClass, path }: InsightsRouteParams) => {
-  const Component = component;
-  const root = document.getElementById('root');
-  root.removeAttribute('class');
-  root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
-  root.setAttribute('role', 'main');
-
-  return <Route path={path} component={Component} />;
-};
-
-const routes = [
-  {
-    path: '/satellite-manifest',
-    component: SatelliteManifestPage,
-    rootClass: 'satelliteManifestPage'
-  },
-  {
-    path: '/oops',
-    component: OopsPage,
-    rootClass: 'oopsPage'
-  },
-  {
-    path: '/no-permissions',
-    component: NoPermissionsPage,
-    rootClass: 'noPermissionsPage'
-  }
-];
-
-export const Routes: ReactNode = () => {
-  return (
+export const Routes: ReactNode = () => (
+  <Suspense
+    fallback={
+      <Bullseye>
+        <Spinner />
+      </Bullseye>
+    }
+  >
     <Switch>
-      {routes.map(({ component, rootClass, path }: InsightsRouteParams) => (
-        <InsightsRoute key={rootClass} path={path} component={component} rootClass={rootClass} />
-      ))}
-
-      {/* Catch all unmatched routes */}
+      <Route path="/satellite-manifest" component={SatelliteManifestPage} />
+      <Route path="/oops" component={OopsPage} />
+      <Route path="/no-permissions" component={NoPermissionsPage} />
+      {/* Finally, catch all unmatched routes */}
       <Route>
         <Redirect to="/oops" />
       </Route>
     </Switch>
-  );
-};
+  </Suspense>
+);
