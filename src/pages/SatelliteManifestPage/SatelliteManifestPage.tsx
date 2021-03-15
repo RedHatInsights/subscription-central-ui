@@ -1,10 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
-import { Main } from '@redhat-cloud-services/frontend-components/components/esm/Main';
-import { PageHeader } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
-// eslint-disable-next-line max-len
-import { PageHeaderTitle } from '@redhat-cloud-services/frontend-components/components/esm/PageHeader';
+import Main from '@redhat-cloud-services/frontend-components/Main';
+import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
+import { PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 
 const SatelliteManifestPage = () => {
