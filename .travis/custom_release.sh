@@ -2,7 +2,7 @@
 set -e
 set -x
 
-if [ "${TRAVIS_BRANCH}" = "main" ]
+if [ "${TRAVIS_BRANCH}" = "master" ]
 then
     for env in ci qa
     do
@@ -13,7 +13,7 @@ then
 fi
 
 
-if [ "${TRAVIS_BRANCH}" = "main-stable" ]
+if [ "${TRAVIS_BRANCH}" = "master-stable" ]
 then
     for env in ci qa
     do
