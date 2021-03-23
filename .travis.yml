@@ -20,7 +20,7 @@ jobs:
     script: npm run deploy && curl -sSL https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master/src/bootstrap.sh | bash -s
 env:
   global:
-  - REPO="git@github.com:RedHatInsights/frontend-starter-app-build"
-  - REPO_DIR="frontend-starter-app-build"
+  - REPO="git@github.com:RedHatInsights/subscription-central-ui-build"
+  - REPO_DIR="subscription-central-ui-build"
   - BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
   - NODE_OPTIONS="--max-old-space-size=4096 --max_old_space_size=4096"
