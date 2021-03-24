@@ -5,16 +5,19 @@ const { config: webpackConfig, plugins } = config({
   debug: true,
   https: true,
   useFileHash: false,
-  ...(process.env.BETA && { deployment: 'beta/apps' })
+  modules: ['subscriptionCentral'],
+  ...(process.env.BETA && { deployment: 'beta/apps' }),
 });
 
 plugins.push(
   require('@redhat-cloud-services/frontend-components-config/federated-modules')({
     root: resolve(__dirname, '../'),
-    useFileHash: false
+    moduleName: 'subscriptionCentral',
+    useFileHash: false,
   })
 );
+
 module.exports = {
   ...webpackConfig,
-  plugins
+  plugins,
 };
