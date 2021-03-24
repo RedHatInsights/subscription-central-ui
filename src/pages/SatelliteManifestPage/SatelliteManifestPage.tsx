@@ -1,12 +1,15 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { CookiesProvider } from 'react-cookie';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
 import { PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
 import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
+import useSatelliteManifests from '../../hooks/useSatelliteManifests';
+import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 
 const SatelliteManifestPage = () => {
+  const { isLoading, error, data } = useSatelliteManifests();
+
   return (
     <React.Fragment>
       <PageHeader>
@@ -14,9 +17,10 @@ const SatelliteManifestPage = () => {
         <p>Export subscriptions to your on-premise subscription management application</p>
       </PageHeader>
       <Main>
-        <CookiesProvider>
-          <SatelliteManifestPanel />
-        </CookiesProvider>
+        <>
+          {!error && <SatelliteManifestPanel isLoading={isLoading} data={data} />}
+          {error && <Unavailable />}
+        </>
       </Main>
     </React.Fragment>
   );

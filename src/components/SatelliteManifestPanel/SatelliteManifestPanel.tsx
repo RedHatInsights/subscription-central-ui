@@ -12,24 +12,46 @@ import {
   SplitItem,
   Title
 } from '@patternfly/react-core';
-import { Table, TableHeader, TableBody, SortByDirection, sortable } from '@patternfly/react-table';
-import { useCookies } from 'react-cookie';
-import useSatelliteManifests, { Entry } from '../../hooks/useSatelliteManifests';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  SortByDirection,
+  sortable,
+  cellWidth
+} from '@patternfly/react-table';
+import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
+import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoResults, Processing } from '../emptyState';
+import './SatelliteManifestPanel.scss';
 
-const SatelliteManifestPanel: FunctionComponent = () => {
+interface SatelliteManifestPanelProps {
+  isLoading: boolean;
+  data: ManifestEntry[] | undefined;
+}
+
+const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
+  isLoading,
+  data
+}) => {
   const [columns] = useState([
     { title: 'Name', transforms: [sortable] },
     { title: 'Version', transforms: [sortable] },
+    {
+      title: (
+        <>
+          Simple Content Access
+          <SCAInfoIconWithPopover />
+        </>
+      ),
+      transforms: [sortable, cellWidth(20)]
+    },
     { title: 'UUID', transforms: [sortable] }
   ]);
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(3);
+  const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
   const [sortBy, setSortBy] = useState({ index: 0, direction: SortByDirection.asc });
-  const [cookies] = useCookies(['cs_jwt']);
-
-  const { isLoading, data } = useSatelliteManifests(cookies);
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
     setPerPage(perPage);
@@ -56,18 +78,23 @@ const SatelliteManifestPanel: FunctionComponent = () => {
   };
 
   const filteredData = () => {
-    return data.filter((entry: Entry) => {
+    return data.filter((entry: ManifestEntry) => {
       return (
-        (entry.name || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
-        (entry.version || '').toLowerCase().startsWith(searchValue.toLowerCase()) ||
-        (entry.uuid || '').toLowerCase().startsWith(searchValue.toLowerCase())
+        (entry.name || '').toLowerCase().includes(searchValue.toLowerCase().trim()) ||
+        (entry.version || '').toLowerCase().includes(searchValue.toLowerCase().trim()) ||
+        (entry.uuid || '').toLowerCase().includes(searchValue.toLowerCase().trim())
       );
     });
   };
 
   const filteredRows = () => {
-    return filteredData().map((entry: Entry) => {
-      return [entry.name || '', entry.version || '', entry.uuid || ''];
+    return filteredData().map((entry: ManifestEntry) => {
+      return [
+        entry.name || '',
+        entry.version || '',
+        entry.simpleContentAccess || '',
+        entry.uuid || ''
+      ];
     });
   };
 
@@ -140,10 +167,15 @@ const SatelliteManifestPanel: FunctionComponent = () => {
         <FlexItem>
           <Split hasGutter>
             <SplitItem isFilled>
-              <SearchInput value={searchValue} onChange={handleSearch} onClear={clearSearch} />
+              <SearchInput
+                placeholder="Filter by name, version or UUID"
+                value={searchValue}
+                onChange={handleSearch}
+                onClear={clearSearch}
+              />
             </SplitItem>
             <SplitItem>
-              <Button variant="primary">New</Button>
+              <Button variant="primary">Create new manifest</Button>
             </SplitItem>
           </Split>
         </FlexItem>

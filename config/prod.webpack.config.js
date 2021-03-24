@@ -12,18 +12,6 @@ plugins.push(
   })
 );
 
-// This fix is needed because otherwise Patternfly will
-// import all the Patternfly CSS and bloat the bundle
-
-const patternflyTreeshakingCSSFixRule = {
-  test: /\.css$/i,
-  include: /@patternfly\/react-styles\/css/,
-  use: 'null-loader'
-};
-
-// Adding Patternfly treeshaking rule to the beginning of Webpack rules array
-webpackConfig.module.rules.unshift(patternflyTreeshakingCSSFixRule);
-
 module.exports = function (env) {
   if (env && env.analyze === 'true') {
     plugins.push(new BundleAnalyzerPlugin());
