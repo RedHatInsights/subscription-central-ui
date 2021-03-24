@@ -1,30 +1,48 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
-import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
+import { ManifestEntry } from '../../../hooks/useSatelliteManifests';
 
 jest.mock('../../../hooks/useSatelliteManifests');
 
-it('renders correctly', () => {
-  (useSatelliteManifests as jest.Mock).mockReturnValue({
-    isLoading: false,
-    data: [
+describe('Satellite Manifest Panel', () => {
+  it('renders correctly', () => {
+    const data: ManifestEntry[] = [
       {
         name: 'Sputnik',
         type: 'Satellite',
         url: 'www.example.com',
         uuid: '00000000-0000-0000-0000-000000000000',
-        version: '1.2.3'
+        version: '1.2.3',
+        entitlementQuantity: 5
       }
-    ]
+    ];
+    const props = {
+      isLoading: false,
+      data
+    };
+
+    const { container } = render(<SatelliteManifestPanel {...props} />);
+    expect(container).toMatchSnapshot();
   });
-  const { container } = render(<SatelliteManifestPanel />);
-  expect(container).toMatchSnapshot();
-});
 
-it('renders NoResults when there are no results', () => {
-  (useSatelliteManifests as jest.Mock).mockReturnValue({ isLoading: false, data: [] });
+  it('renders no results when there are no results', () => {
+    const props = { isLoading: false, data: [] as ManifestEntry[] };
 
-  const { container } = render(<SatelliteManifestPanel />);
-  expect(container).toMatchSnapshot();
+    const { container } = render(<SatelliteManifestPanel {...props} />);
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders an error message when an error comes back from the API', () => {
+    const props = { isLoading: false, error: true, data: [] as ManifestEntry[] };
+
+    const { container } = render(<SatelliteManifestPanel {...props} />);
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders loading spinner when loading', () => {
+    const props = { isLoading: true, data: undefined as ManifestEntry[] };
+    const { container } = render(<SatelliteManifestPanel {...props} />);
+    expect(container).toMatchSnapshot();
+  });
 });
