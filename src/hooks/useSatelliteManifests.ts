@@ -34,7 +34,7 @@ export const authenticateUser = () => {
   }
 };
 
-export const fetchSatelliteManifestData = (): Promise<any> => {
+export const fetchSatelliteManifestData = (): Promise<Response> => {
   const cs_jwt = Cookies.get('cs_jwt');
   return fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
     headers: { Authorization: `Bearer ${cs_jwt}` },
@@ -60,13 +60,12 @@ export const filterSatelliteData = (data: SatelliteManifestAPIData): ManifestEnt
   return manifestsV6AndHigher;
 };
 
-export const getSatelliteManifests = (): ManifestEntry[] => {
+export const getSatelliteManifests = async (): Promise<ManifestEntry[]> => {
   return authenticateUser()
     .then(() => fetchSatelliteManifestData())
     .then((data: SatelliteManifestAPIData) => filterSatelliteData(data))
     .catch((e: Error) => {
-      console.error('Error fetching Satellite data', e);
-      return [] as ManifestEntry[];
+      throw new Error(`Error fetching Satellite Manifest data: ${e.message}`);
     });
 };
 

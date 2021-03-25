@@ -25,10 +25,13 @@ const SatelliteManifestPage: FC = () => {
               <Spinner />
             </Bullseye>
           )}
-          {!isLoading && data.length > 0 && (
+
+          {!isLoading && data?.length > 0 && (
             <SatelliteManifestPanel isLoading={isLoading} data={data} />
           )}
-          {!isLoading && data.length === 0 && <NoSatelliteManifests />}
+
+          {!isLoading && data?.length === 0 && <NoSatelliteManifests />}
+
           {error && <Unavailable />}
         </>
       </Main>
