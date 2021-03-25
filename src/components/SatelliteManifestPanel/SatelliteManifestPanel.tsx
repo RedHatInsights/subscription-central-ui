@@ -22,7 +22,7 @@ import {
 } from '@patternfly/react-table';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
-import { NoResults, Processing } from '../emptyState';
+import { NoSearchResults } from '../EmptyState';
 import './SatelliteManifestPanel.scss';
 
 interface SatelliteManifestPanelProps {
@@ -126,16 +126,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     return isLoading ? 0 : filteredData().length;
   };
 
-  const emptyState = () => {
-    if (isLoading) {
-      return <Processing />;
-    } else if (count() === 0) {
-      return <NoResults clearFilters={clearSearch} />;
-    } else {
-      return '';
-    }
-  };
-
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
@@ -150,15 +140,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     );
   };
 
-  const resultCountBadge = () => {
-    return isLoading ? '' : <Badge isRead>{count()}</Badge>;
-  };
-
   return (
     <PageSection variant="light">
       <Title headingLevel="h2">
         Satellite Manifests
-        {resultCountBadge()}
+        <Badge isRead>{count()}</Badge>
       </Title>
       <Flex
         direction={{ default: 'column', md: 'row' }}
@@ -191,7 +177,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <TableHeader />
         <TableBody />
       </Table>
-      {emptyState()}
+      {count() === 0 && <NoSearchResults clearFilters={clearSearch} />}
       {pagination(PaginationVariant.bottom)}
     </PageSection>
   );
