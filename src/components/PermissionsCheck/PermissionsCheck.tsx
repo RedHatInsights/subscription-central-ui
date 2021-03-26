@@ -6,10 +6,11 @@ import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthori
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 
 const PermissionsCheck: FC = ({ children }) => {
-  const [orgAdminStatus, setOrgAdminStatus] = useState('checking');
+  const [orgAdminStatus, setOrgAdminStatus] = useState('loading');
   const location = useLocation();
 
   useEffect(() => {
+    setOrgAdminStatus('loading');
     authenticateUser()
       .then((response) => {
         if (response.identity.user.is_org_admin === true) {
@@ -25,11 +26,11 @@ const PermissionsCheck: FC = ({ children }) => {
 
   return (
     <>
-      {orgAdminStatus === 'checking' && <Processing />}
-
-      {orgAdminStatus === 'false' && <NotAuthorized serviceName="Manifests" />}
+      {orgAdminStatus === 'loading' && <Processing />}
 
       {orgAdminStatus === 'true' && children}
+
+      {orgAdminStatus === 'false' && <NotAuthorized serviceName="Manifests" />}
 
       {orgAdminStatus === 'error' && <Unavailable />}
     </>

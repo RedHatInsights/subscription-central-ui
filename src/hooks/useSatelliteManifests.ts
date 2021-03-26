@@ -47,7 +47,6 @@ export const filterSatelliteData = (data: SatelliteManifestAPIData): ManifestEnt
 };
 
 export const getSatelliteManifests = (): Promise<ManifestEntry[]> => {
-  console.log('getting satellite data');
   return fetchSatelliteManifestData()
     .then((data: SatelliteManifestAPIData) => filterSatelliteData(data))
     .catch((e: Error) => {
