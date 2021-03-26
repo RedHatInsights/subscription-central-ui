@@ -15,7 +15,7 @@ export const Routes: ReactNode = () => (
     }
   >
     <Switch>
-      <Route path="/" component={SatelliteManifestPage} />
+      <Route exact path="/" component={SatelliteManifestPage} />
       <Route path="/oops" component={OopsPage} />
       <Route path="/no-permissions" component={NoPermissionsPage} />
       {/* Finally, catch all unmatched routes */}
