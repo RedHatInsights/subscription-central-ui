@@ -26,14 +26,10 @@ import { NoSearchResults } from '../EmptyState';
 import './SatelliteManifestPanel.scss';
 
 interface SatelliteManifestPanelProps {
-  isLoading: boolean;
   data: ManifestEntry[] | undefined;
 }
 
-const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
-  isLoading,
-  data
-}) => {
+const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({ data }) => {
   const [columns] = useState([
     { title: 'Name', transforms: [sortable] },
     { title: 'Version', transforms: [sortable] },
@@ -123,13 +119,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   const count = () => {
-    return isLoading ? 0 : filteredData().length;
+    return filteredData().length;
   };
 
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
-        isDisabled={isLoading}
         itemCount={count()}
         perPage={perPage}
         page={page}
@@ -170,7 +165,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       <Table
         aria-label="Satellite Manifest Table"
         cells={columns}
-        rows={isLoading ? [] : paginatedRows()}
+        rows={paginatedRows()}
         sortBy={sortBy}
         onSort={handleSort}
       >

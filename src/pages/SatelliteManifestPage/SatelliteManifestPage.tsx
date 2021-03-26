@@ -26,9 +26,7 @@ const SatelliteManifestPage: FC = () => {
             </Bullseye>
           )}
 
-          {!isLoading && data?.length > 0 && (
-            <SatelliteManifestPanel isLoading={isLoading} data={data} />
-          )}
+          {!isLoading && data?.length > 0 && <SatelliteManifestPanel data={data} />}
 
           {!isLoading && data?.length === 0 && <NoSatelliteManifests />}
 

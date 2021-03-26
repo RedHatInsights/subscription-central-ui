@@ -39,7 +39,7 @@ describe('Satellite Manifests Page', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders correctly with no results', () => {
+  it('renders the empty state with create manifest button when no results are returned', () => {
     window.insights = {};
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -63,7 +63,7 @@ describe('Satellite Manifests Page', () => {
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
       error: true,
-      data: []
+      data: undefined
     });
 
     const { container } = render(
