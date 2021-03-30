@@ -5,12 +5,9 @@ import { init } from './store';
 import App from './App';
 import { getBaseName } from '@redhat-cloud-services/frontend-components-utilities/helpers';
 
-interface AppEntryProps {
-  logger: unknown;
-}
-const AppEntry: React.FC<AppEntryProps> = ({ logger }) => (
+const AppEntry = ({ logger }) => (
   <Provider store={(logger ? init(logger) : init()).getStore()}>
-    <Router basename={getBaseName(window.location.pathname)}>
+    <Router basename={`${getBaseName(window.location.pathname, 3)}`}>
       <App />
     </Router>
   </Provider>
