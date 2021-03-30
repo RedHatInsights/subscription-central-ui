@@ -3,7 +3,7 @@ const APP_ID = 'subscription-central';
 const FRONTEND_PORT = 8002;
 const routes = {};
 
-routes[`/beta/${SECTION}/${APP_ID}`] = {
+routes[`/beta/${SECTION}/subscriptions`] = {
   host: `https://localhost:${FRONTEND_PORT}`
 };
 routes[`/${SECTION}/${APP_ID}`] = {
