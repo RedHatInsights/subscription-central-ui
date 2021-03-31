@@ -27,6 +27,7 @@ export interface AuthenticateUserResponse {
     };
   };
 }
+
 export const authenticateUser = (): Promise<AuthenticateUserResponse> => {
   try {
     return window.insights.chrome.auth.getUser();
