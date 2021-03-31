@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { authenticateUser } from '../../utilities/platformServices';
-import UserContext from './UserContext';
+import UserContext, { UserContextValue } from './UserContext';
 import { Processing } from '../EmptyState';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 
@@ -11,6 +11,11 @@ const Authentication: FC = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
+    /**
+     * On every rerender, based on URL change (location),
+     * reset the user's status to loading before authenticating again.
+     */
+
     setUser({ status: 'loading', isOrgAdmin: null });
 
     authenticateUser()
@@ -23,7 +28,7 @@ const Authentication: FC = ({ children }) => {
   }, [location]);
 
   return (
-    <UserContext.Provider value={value as any}>
+    <UserContext.Provider value={value as UserContextValue}>
       {user.status === 'loading' && <Processing />}
 
       {user.status === 'loaded' && children}

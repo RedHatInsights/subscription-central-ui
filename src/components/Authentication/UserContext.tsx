@@ -1,13 +1,22 @@
 import { createContext } from 'react';
 
-const UserContext = createContext({
+export interface User {
+  isOrgAdmin: boolean | null;
+  status: string;
+}
+
+export interface UserContextValue {
+  user: User;
+  setUser: () => void;
+}
+
+const UserContext = createContext<UserContextValue>({
   user: {
     isOrgAdmin: null,
     status: 'loading'
   },
-  setUser: () => {
-    console.log('dummy');
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setUser: () => {}
 });
 
 export default UserContext;
