@@ -20,7 +20,7 @@ interface SatelliteManifestAPIData {
   };
 }
 
-export const fetchSatelliteManifestData = () => {
+export const fetchSatelliteManifestData = (): Promise<any> => {
   const cs_jwt = Cookies.get('cs_jwt');
   return fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
     headers: { Authorization: `Bearer ${cs_jwt}` },
