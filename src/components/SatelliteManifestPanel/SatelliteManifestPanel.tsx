@@ -22,7 +22,7 @@ import {
 } from '@patternfly/react-table';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
-import { NoSearchResults } from '../EmptyState';
+import { NoResults } from '../EmptyState';
 import './SatelliteManifestPanel.scss';
 
 interface SatelliteManifestPanelProps {
@@ -172,7 +172,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <TableHeader />
         <TableBody />
       </Table>
-      {count() === 0 && <NoSearchResults clearFilters={clearSearch} />}
+      {count() === 0 && <NoResults clearFilters={clearSearch} />}
       {pagination(PaginationVariant.bottom)}
     </PageSection>
   );

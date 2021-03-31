@@ -13,7 +13,7 @@ interface NoResultsProps {
   clearFilters: () => void;
 }
 
-const NoSearchResults: FunctionComponent<NoResultsProps> = ({ clearFilters }) => {
+const NoResults: FunctionComponent<NoResultsProps> = ({ clearFilters }) => {
   return (
     <EmptyState variant={EmptyStateVariant.small}>
       <EmptyStateIcon icon={SearchIcon} />
@@ -31,4 +31,4 @@ const NoSearchResults: FunctionComponent<NoResultsProps> = ({ clearFilters }) =>
   );
 };
 
-export default NoSearchResults;
+export default NoResults;
