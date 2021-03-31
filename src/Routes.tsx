@@ -1,6 +1,6 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
 import React, { Suspense, lazy, ReactNode } from 'react';
-import { Processing } from './components/EmptyState';
+import { Processing } from './components/emptyState';
 import Authentication from './components/Authentication';
 
 const SatelliteManifestPage = lazy(() => import('./pages/SatelliteManifestPage'));

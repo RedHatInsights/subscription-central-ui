@@ -6,9 +6,9 @@ import { PageHeaderTitle } from '@redhat-cloud-services/frontend-components/Page
 import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
-import { NoSatelliteManifests } from '../../components/EmptyState';
+import { NoSatelliteManifests } from '../../components/emptyState';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
-import { Processing } from '../../components/EmptyState';
+import { Processing } from '../../components/emptyState';
 import UserContext from '../../components/Authentication/UserContext';
 
 const SatelliteManifestPage: FC = () => {

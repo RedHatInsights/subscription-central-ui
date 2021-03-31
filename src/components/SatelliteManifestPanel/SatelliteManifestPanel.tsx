@@ -22,7 +22,7 @@ import {
 } from '@patternfly/react-table';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
-import { NoResults } from '../EmptyState';
+import { NoResults } from '../emptyState';
 import './SatelliteManifestPanel.scss';
 
 interface SatelliteManifestPanelProps {

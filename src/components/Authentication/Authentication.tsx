@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { authenticateUser } from '../../utilities/platformServices';
 import UserContext, { UserContextValue } from './UserContext';
-import { Processing } from '../EmptyState';
+import { Processing } from '../emptyState';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 
 const Authentication: FC = ({ children }) => {
