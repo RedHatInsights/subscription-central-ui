@@ -1,12 +1,6 @@
 import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
 
-declare global {
-  interface Window {
-    insights: any;
-  }
-}
-
 export interface ManifestEntry {
   entitlementQuantity: number;
   name: string;
@@ -26,15 +20,7 @@ interface SatelliteManifestAPIData {
   };
 }
 
-export const authenticateUser = () => {
-  try {
-    return window.insights.chrome.auth.getUser();
-  } catch (e) {
-    throw new Error(`Error authenticating user: ${e.message}`);
-  }
-};
-
-export const fetchSatelliteManifestData = (): Promise<Response> => {
+export const fetchSatelliteManifestData = () => {
   const cs_jwt = Cookies.get('cs_jwt');
   return fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
     headers: { Authorization: `Bearer ${cs_jwt}` },
@@ -60,9 +46,9 @@ export const filterSatelliteData = (data: SatelliteManifestAPIData): ManifestEnt
   return manifestsV6AndHigher;
 };
 
-export const getSatelliteManifests = async (): Promise<ManifestEntry[]> => {
-  return authenticateUser()
-    .then(() => fetchSatelliteManifestData())
+export const getSatelliteManifests = (): Promise<ManifestEntry[]> => {
+  console.log('getting satellite data');
+  return fetchSatelliteManifestData()
     .then((data: SatelliteManifestAPIData) => filterSatelliteData(data))
     .catch((e: Error) => {
       throw new Error(`Error fetching Satellite Manifest data: ${e.message}`);

@@ -7,7 +7,7 @@ import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import { NoSatelliteManifests } from '../../components/EmptyState';
-import { Bullseye, Spinner } from '@patternfly/react-core';
+import { Processing } from '../../components/EmptyState';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, error, data } = useSatelliteManifests();
@@ -20,11 +20,7 @@ const SatelliteManifestPage: FC = () => {
       </PageHeader>
       <Main>
         <>
-          {isLoading && (
-            <Bullseye>
-              <Spinner />
-            </Bullseye>
-          )}
+          {isLoading && <Processing />}
 
           {!isLoading && data?.length > 0 && <SatelliteManifestPanel data={data} />}
 
