@@ -12,7 +12,7 @@ const Authentication: FC = ({ children }) => {
 
   useEffect(() => {
     /**
-     * On every rerender, based on URL change (location),
+     * On every rerender, based on URL change (location.pathname),
      * reset the user's status to loading before authenticating again.
      */
 
@@ -25,7 +25,7 @@ const Authentication: FC = ({ children }) => {
       .catch(() => {
         setUser({ status: 'error', isOrgAdmin: null });
       });
-  }, [location]);
+  }, [location.pathname]);
 
   return (
     <UserContext.Provider value={value as UserContextValue}>

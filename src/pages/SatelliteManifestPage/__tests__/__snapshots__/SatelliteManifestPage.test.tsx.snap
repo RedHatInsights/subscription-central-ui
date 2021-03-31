@@ -764,7 +764,105 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
 </div>
 `;
 
-exports[`Satellite Manifests Page renders the empty state with create manifest button when no results are returned 1`] = `
+exports[`Satellite Manifests Page renders loading when it has not received a response back 1`] = `
+<div>
+  <div
+    class="pf-l-bullseye"
+  >
+    <span
+      aria-valuetext="Loading..."
+      class="pf-c-spinner pf-m-xl"
+      role="progressbar"
+    >
+      <span
+        class="pf-c-spinner__clipper"
+      />
+      <span
+        class="pf-c-spinner__lead-ball"
+      />
+      <span
+        class="pf-c-spinner__tail-ball"
+      />
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Satellite Manifests Page renders the empty state of not authorized, when no results are returned and user is not org admin 1`] = `
+<div>
+  <section
+    class="pf-l-page-header pf-c-page-header pf-l-page__main-section pf-c-page__main-section pf-m-light"
+    widget-type="InsightsPageHeader"
+  >
+    <h1
+      class="pf-c-title pf-m-2xl"
+      widget-type="InsightsPageHeaderTitle"
+    >
+       
+      Satellite Manifests
+       
+    </h1>
+    <p>
+      Export subscriptions to your on-premise subscription management application
+    </p>
+  </section>
+  <section
+    class="pf-l-page__main-section pf-c-page__main-section"
+    page-type=""
+  >
+    <div
+      class="pf-c-empty-state ins-c-not-authorized "
+    >
+      <div
+        class="pf-c-empty-state__content"
+      >
+        <svg
+          aria-hidden="true"
+          class="pf-c-empty-state__icon"
+          fill="currentColor"
+          height="1em"
+          role="img"
+          style="vertical-align: -0.125em;"
+          viewBox="0 0 448 512"
+          width="1em"
+        >
+          <path
+            d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"
+          />
+        </svg>
+        <h5
+          class="pf-c-title pf-m-lg"
+        >
+          You do not have access to Manifests
+        </h5>
+        <div
+          class="pf-c-empty-state__body"
+        >
+          Contact your organization administrator(s) for more information or visit 
+          <a
+            href="./settings/my-user-access"
+          >
+            My User Access
+          </a>
+            to learn more about your permissions.
+        </div>
+        <a
+          aria-disabled="false"
+          class="pf-c-button pf-m-primary"
+          data-ouia-component-id="OUIA-Generated-Button-primary-4"
+          data-ouia-component-type="PF4/Button"
+          data-ouia-safe="true"
+          href="."
+        >
+          Go to landing page
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+`;
+
+exports[`Satellite Manifests Page renders the empty state with Create Manifest button when no results are returned and user is org admin 1`] = `
 <div>
   <section
     class="pf-l-page-header pf-c-page-header pf-l-page__main-section pf-c-page__main-section pf-m-light"
@@ -819,7 +917,7 @@ exports[`Satellite Manifests Page renders the empty state with create manifest b
         <button
           aria-disabled="false"
           class="pf-c-button pf-m-primary"
-          data-ouia-component-id="OUIA-Generated-Button-primary-2"
+          data-ouia-component-id="OUIA-Generated-Button-primary-3"
           data-ouia-component-type="PF4/Button"
           data-ouia-safe="true"
           type="button"
