@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-interface AuthenticateUserResponse {
+export interface AuthenticateUserResponse {
   entitlements: {
     [key: string]: any;
   };

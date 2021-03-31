@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { withRouter } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
@@ -7,10 +7,13 @@ import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import { NoSatelliteManifests } from '../../components/EmptyState';
+import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { Processing } from '../../components/EmptyState';
+import UserContext from '../../components/Authentication/UserContext';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, error, data } = useSatelliteManifests();
+  const { user } = useContext(UserContext);
 
   return (
     <>
@@ -24,7 +27,11 @@ const SatelliteManifestPage: FC = () => {
 
           {!isLoading && data?.length > 0 && <SatelliteManifestPanel data={data} />}
 
-          {!isLoading && data?.length === 0 && <NoSatelliteManifests />}
+          {!isLoading && data?.length === 0 && user.isOrgAdmin === true && <NoSatelliteManifests />}
+
+          {!isLoading && data?.length === 0 && user.isOrgAdmin === false && (
+            <NotAuthorized serviceName="Manifests" />
+          )}
 
           {error && <Unavailable />}
         </>

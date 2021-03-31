@@ -7,7 +7,6 @@ import {
   EmptyStateVariant,
   Title
 } from '@patternfly/react-core';
-
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 
 const NoSatelliteManifests: FC = () => {
