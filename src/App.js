@@ -26,7 +26,7 @@ const App = (props) => {
     registry.register({ notifications: notificationsReducer });
     insights.chrome.init();
 
-    insights.chrome.identifyApp('subscription-central');
+    insights.chrome.identifyApp('manifests');
     return insights.chrome.on('APP_NAVIGATION', (event) =>
       this.props.history.push(`/${event.navId}`)
     );
