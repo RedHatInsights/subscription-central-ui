@@ -20,6 +20,18 @@ jest.mock('react-router-dom', () => ({
 
 const queryClient = new QueryClient();
 
+const mockAuthenticateUser = (orgAdminStatus: boolean) => {
+  const { authenticateUser } = PlatformServices;
+
+  return (authenticateUser as jest.Mock).mockResolvedValue({
+    identity: {
+      user: {
+        is_org_admin: orgAdminStatus
+      }
+    }
+  });
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -40,17 +52,8 @@ describe('Satellite Manifests Page', () => {
       ]
     });
 
-    const { authenticateUser } = PlatformServices;
-
-    (authenticateUser as jest.Mock).mockReturnValue(
-      Promise.resolve({
-        identity: {
-          user: {
-            is_org_admin: true
-          }
-        }
-      })
-    );
+    const orgAdminStatus = true;
+    const authenticateUser = mockAuthenticateUser(orgAdminStatus);
 
     const { container } = render(
       <Authentication>
@@ -71,17 +74,8 @@ describe('Satellite Manifests Page', () => {
   it('renders loading when it has not received a response back', async () => {
     window.insights = {};
 
-    const { authenticateUser } = PlatformServices;
-
-    (authenticateUser as jest.Mock).mockReturnValue(
-      Promise.resolve({
-        identity: {
-          user: {
-            is_org_admin: true
-          }
-        }
-      })
-    );
+    const orgAdminStatus = true;
+    const authenticateUser = mockAuthenticateUser(orgAdminStatus);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -107,17 +101,8 @@ describe('Satellite Manifests Page', () => {
   it('renders the empty state with Create Manifest button when no results are returned and user is org admin', async () => {
     window.insights = {};
 
-    const { authenticateUser } = PlatformServices;
-
-    (authenticateUser as jest.Mock).mockReturnValue(
-      Promise.resolve({
-        identity: {
-          user: {
-            is_org_admin: true
-          }
-        }
-      })
-    );
+    const orgAdminStatus = true;
+    const authenticateUser = mockAuthenticateUser(orgAdminStatus);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -144,17 +129,8 @@ describe('Satellite Manifests Page', () => {
   it('renders the empty state of not authorized, when no results are returned and user is not org admin', async () => {
     window.insights = {};
 
-    const { authenticateUser } = PlatformServices;
-
-    (authenticateUser as jest.Mock).mockReturnValue(
-      Promise.resolve({
-        identity: {
-          user: {
-            is_org_admin: false
-          }
-        }
-      })
-    );
+    const orgAdminStatus = false;
+    const authenticateUser = mockAuthenticateUser(orgAdminStatus);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
