@@ -9,7 +9,7 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 
-const NoSatelliteManifests: FC = () => {
+const CreateManifestPanel: FC = () => {
   return (
     <EmptyState variant={EmptyStateVariant.large}>
       <EmptyStateIcon icon={PlusCircleIcon} />
@@ -25,4 +25,4 @@ const NoSatelliteManifests: FC = () => {
   );
 };
 
-export default NoSatelliteManifests;
+export default CreateManifestPanel;

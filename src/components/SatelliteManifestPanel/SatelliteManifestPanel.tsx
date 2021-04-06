@@ -23,7 +23,7 @@ import {
 import { User } from '../Authentication/UserContext';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
-import { NoResults } from '../emptyState';
+import { NoSearchResults } from '../emptyState';
 import './SatelliteManifestPanel.scss';
 
 interface SatelliteManifestPanelProps {
@@ -176,7 +176,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <TableHeader />
         <TableBody />
       </Table>
-      {count() === 0 && <NoResults clearFilters={clearSearch} />}
+      {count() === 0 && <NoSearchResults clearFilters={clearSearch} />}
       {pagination(PaginationVariant.bottom)}
     </PageSection>
   );

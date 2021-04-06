@@ -1,5 +1,5 @@
-import NoResults from './NoResults';
-import NoSatelliteManifests from './NoSatelliteManifests';
+import NoSearchResults from './NoSearchResults';
+import CreateManifestPanel from './CreateManifestPanel';
 import Processing from './Processing';
 
-export { NoResults, NoSatelliteManifests, Processing };
+export { NoSearchResults, CreateManifestPanel, Processing };
