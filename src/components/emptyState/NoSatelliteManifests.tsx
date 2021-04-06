@@ -13,7 +13,7 @@ const NoSatelliteManifests: FC = () => {
   return (
     <EmptyState variant={EmptyStateVariant.large}>
       <EmptyStateIcon icon={PlusCircleIcon} />
-      <Title headingLevel="h5" size="lg">
+      <Title headingLevel="h2" size="lg">
         Create a new manifest to export subscriptions
       </Title>
       <EmptyStateBody>
