@@ -29,7 +29,9 @@ const SatelliteManifestPage: FC = () => {
 
           {!isLoading && data?.length === 0 && user.isOrgAdmin === true && <CreateManifestPanel />}
 
-          {!isLoading && user.isOrgAdmin === false && <NotAuthorized serviceName="Manifests" />}
+          {!isLoading && data?.length && user.isOrgAdmin === false && (
+            <NotAuthorized serviceName="Manifests" />
+          )}
 
           {error && <Unavailable />}
         </>
