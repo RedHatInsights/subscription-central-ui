@@ -18,6 +18,18 @@ jest.mock('react-router-dom', () => ({
   })
 }));
 
+const SatellitePage = () => (
+  <Authentication>
+    <Provider store={init().getStore()}>
+      <Router>
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPage />
+        </QueryClientProvider>
+      </Router>
+    </Provider>
+  </Authentication>
+);
+
 const queryClient = new QueryClient();
 
 const mockAuthenticateUser = (orgAdminStatus: boolean) => {
@@ -55,17 +67,7 @@ describe('Satellite Manifests Page', () => {
     const orgAdminStatus = true;
     const authenticateUser = mockAuthenticateUser(orgAdminStatus);
 
-    const { container } = render(
-      <Authentication>
-        <Provider store={init().getStore()}>
-          <Router>
-            <QueryClientProvider client={queryClient}>
-              <SatelliteManifestPage />
-            </QueryClientProvider>
-          </Router>
-        </Provider>
-      </Authentication>
-    );
+    const { container } = render(<SatellitePage />);
 
     await waitFor(() => expect(authenticateUser).toHaveBeenCalledTimes(1));
     expect(container).toMatchSnapshot();
@@ -82,17 +84,7 @@ describe('Satellite Manifests Page', () => {
       data: []
     });
 
-    const { container } = render(
-      <Authentication>
-        <Provider store={init().getStore()}>
-          <Router>
-            <QueryClientProvider client={queryClient}>
-              <SatelliteManifestPage />
-            </QueryClientProvider>
-          </Router>
-        </Provider>
-      </Authentication>
-    );
+    const { container } = render(<SatellitePage />);
 
     expect(container).toMatchSnapshot();
     await waitFor(() => expect(authenticateUser).toHaveBeenCalledTimes(1));
@@ -109,17 +101,7 @@ describe('Satellite Manifests Page', () => {
       data: []
     });
 
-    const { container } = render(
-      <Authentication>
-        <Provider store={init().getStore()}>
-          <Router>
-            <QueryClientProvider client={queryClient}>
-              <SatelliteManifestPage />
-            </QueryClientProvider>
-          </Router>
-        </Provider>
-      </Authentication>
-    );
+    const { container } = render(<SatellitePage />);
 
     await waitFor(() => expect(authenticateUser).toHaveBeenCalledTimes(1));
 
@@ -137,24 +119,14 @@ describe('Satellite Manifests Page', () => {
       data: []
     });
 
-    const { container } = render(
-      <Authentication>
-        <Provider store={init().getStore()}>
-          <Router>
-            <QueryClientProvider client={queryClient}>
-              <SatelliteManifestPage />
-            </QueryClientProvider>
-          </Router>
-        </Provider>
-      </Authentication>
-    );
+    const { container } = render(<SatellitePage />);
 
     await waitFor(() => expect(authenticateUser).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
   });
 
-  it('renders with an error message when an API fails', () => {
+  it('renders with an error message when an API fails', async () => {
     window.insights = {};
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -162,15 +134,11 @@ describe('Satellite Manifests Page', () => {
       data: undefined
     });
 
-    const { container } = render(
-      <Provider store={init().getStore()}>
-        <Router>
-          <QueryClientProvider client={queryClient}>
-            <SatelliteManifestPage />
-          </QueryClientProvider>
-        </Router>
-      </Provider>
-    );
+    const orgAdminStatus = false;
+    const authenticateUser = mockAuthenticateUser(orgAdminStatus);
+
+    const { container } = render(<SatellitePage />);
+    await waitFor(() => expect(authenticateUser).toHaveBeenCalledTimes(1));
     expect(container).toMatchSnapshot();
   });
 });
