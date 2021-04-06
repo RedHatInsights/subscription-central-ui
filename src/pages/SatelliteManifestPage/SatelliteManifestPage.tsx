@@ -25,7 +25,7 @@ const SatelliteManifestPage: FC = () => {
         <>
           {isLoading && <Processing />}
 
-          {!isLoading && data?.length > 0 && <SatelliteManifestPanel data={data} />}
+          {!isLoading && data?.length > 0 && <SatelliteManifestPanel data={data} user={user} />}
 
           {!isLoading && data?.length === 0 && user.isOrgAdmin === true && <NoSatelliteManifests />}
 

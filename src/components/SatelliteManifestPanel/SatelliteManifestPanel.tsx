@@ -20,6 +20,7 @@ import {
   sortable,
   cellWidth
 } from '@patternfly/react-table';
+import { User } from '../Authentication/UserContext';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoResults } from '../emptyState';
@@ -27,9 +28,10 @@ import './SatelliteManifestPanel.scss';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
+  user: User;
 }
 
-const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({ data }) => {
+const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({ data, user }) => {
   const [columns] = useState([
     { title: 'Name', transforms: [sortable] },
     { title: 'Version', transforms: [sortable] },
@@ -155,9 +157,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 onClear={clearSearch}
               />
             </SplitItem>
-            <SplitItem>
-              <Button variant="primary">Create new manifest</Button>
-            </SplitItem>
+            {user.isOrgAdmin === true && (
+              <SplitItem>
+                <Button variant="primary">Create new manifest</Button>
+              </SplitItem>
+            )}
           </Split>
         </FlexItem>
         <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>

@@ -25,7 +25,7 @@ beforeEach(() => {
 });
 
 describe('Satellite Manifests Page', () => {
-  it('renders correctly with satellite data', () => {
+  it('renders correctly with satellite data', async () => {
     window.insights = {};
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -40,15 +40,31 @@ describe('Satellite Manifests Page', () => {
       ]
     });
 
-    const { container } = render(
-      <Provider store={init().getStore()}>
-        <Router>
-          <QueryClientProvider client={queryClient}>
-            <SatelliteManifestPage />
-          </QueryClientProvider>
-        </Router>
-      </Provider>
+    const { authenticateUser } = PlatformServices;
+
+    (authenticateUser as jest.Mock).mockReturnValue(
+      Promise.resolve({
+        identity: {
+          user: {
+            is_org_admin: true
+          }
+        }
+      })
     );
+
+    const { container } = render(
+      <Authentication>
+        <Provider store={init().getStore()}>
+          <Router>
+            <QueryClientProvider client={queryClient}>
+              <SatelliteManifestPage />
+            </QueryClientProvider>
+          </Router>
+        </Provider>
+      </Authentication>
+    );
+
+    await waitFor(() => expect(authenticateUser).toHaveBeenCalledTimes(1));
     expect(container).toMatchSnapshot();
   });
 
