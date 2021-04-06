@@ -23,10 +23,10 @@ SPANDX_CONFIG="./profiles/local-frontend.js" bash $PROXY_PATH/scripts/run.sh
 
 4. Open one of the following environments behind the Red Hat VPN and accept the certs:
 
-- https://ci.foo.redhat.com:1337/beta/insights/subscription-central
-- https://qa.foo.redhat.com:1337/beta/insights/subscription-central
-- https://stage.foo.redhat.com:1337/beta/insights/subscription-central
-- https://prod.foo.redhat.com:1337/beta/insights/subscription-central
+- https://ci.foo.redhat.com:1337/beta/insights/subscriptions/manifests
+- https://qa.foo.redhat.com:1337/beta/insights/subscriptions/manifests
+- https://stage.foo.redhat.com:1337/beta/insights/subscriptions/manifests
+- https://prod.foo.redhat.com:1337/beta/insights/subscriptions/manifests
 
 For convenience, the script to run the front-end and the proxy has been provided as `npm run start:proxy`, provided that the insights-proxy repo is located in the parent folder, and Docker is running.
 

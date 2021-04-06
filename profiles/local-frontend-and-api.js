@@ -1,5 +1,5 @@
 const SECTION = 'insights';
-const APP_ID = 'subscription-central';
+const APP_ID = 'manifests';
 const FRONTEND_PORT = 8002;
 const API_PORT = 8888;
 const routes = {};
