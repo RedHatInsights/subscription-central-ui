@@ -23,9 +23,9 @@ import {
 import { User } from '../Authentication/UserContext';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
-import { EmptyTable } from '../emptyState';
-import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
+import { NoSearchResults } from '../emptyState';
 import './SatelliteManifestPanel.scss';
+import NoManifestsFound from '../emptyState/NoManifestsFound';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -178,27 +178,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <TableHeader />
         <TableBody />
       </Table>
-      {count() === 0 && data.length > 0 && (
-        <EmptyTable
-          title="No results found"
-          body="No results match the filter criteria. Remove all filters or clear all filters to show
-        results."
-          icon={SearchIcon}
-          hasButton={true}
-          buttonText="Clear all filters"
-          buttonClickHandler={clearSearch}
-        />
-      )}
-      {data.length === 0 && (
-        <EmptyTable
-          title="No manifests found"
-          body="No manifests were found under your account."
-          icon={SearchIcon}
-          hasButton={true}
-          buttonLink="/"
-          buttonText="Go to landing page"
-        />
-      )}
+      {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
+      {data.length === 0 && <NoManifestsFound />}
       {pagination(PaginationVariant.bottom)}
     </PageSection>
   );

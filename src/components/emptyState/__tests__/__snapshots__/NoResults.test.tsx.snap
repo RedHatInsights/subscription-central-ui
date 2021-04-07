@@ -25,23 +25,23 @@ exports[`renders correctly 1`] = `
       <h2
         class="pf-c-title pf-m-lg"
       >
-        Test Title
+        No results found
       </h2>
       <div
         class="pf-c-empty-state__body"
       >
-        Test Body
+        No results match the filter criteria. Remove all filters or clear all filters to show results.
       </div>
-      <a
+      <button
         aria-disabled="false"
-        class="pf-c-button pf-m-primary"
-        data-ouia-component-id="OUIA-Generated-Button-primary-1"
+        class="pf-c-button pf-m-link"
+        data-ouia-component-id="OUIA-Generated-Button-link-1"
         data-ouia-component-type="PF4/Button"
         data-ouia-safe="true"
-        href="/"
+        type="button"
       >
-        Button text
-      </a>
+        Clear all filters
+      </button>
     </div>
   </div>
 </div>
