@@ -18,7 +18,7 @@ interface EmptyTableProps {
   buttonText?: string;
 }
 
-const NoSearchResults: FunctionComponent<EmptyTableProps> = ({
+const EmptyTable: FunctionComponent<EmptyTableProps> = ({
   title,
   body,
   icon,
@@ -48,4 +48,4 @@ const NoSearchResults: FunctionComponent<EmptyTableProps> = ({
   );
 };
 
-export default NoSearchResults;
+export default EmptyTable;
