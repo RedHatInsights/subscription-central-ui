@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import {
-  Button,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
@@ -17,10 +16,6 @@ const NoManifestsFound: FunctionComponent = () => {
         No manifests found
       </Title>
       <EmptyStateBody>No manifests were found under your account.</EmptyStateBody>
-
-      <Button component="a" href="/">
-        Go to landing page
-      </Button>
     </EmptyState>
   );
 };

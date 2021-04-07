@@ -1276,16 +1276,6 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
         >
           No manifests were found under your account.
         </div>
-        <a
-          aria-disabled="false"
-          class="pf-c-button pf-m-primary"
-          data-ouia-component-id="OUIA-Generated-Button-primary-3"
-          data-ouia-component-type="PF4/Button"
-          data-ouia-safe="true"
-          href="/"
-        >
-          Go to landing page
-        </a>
       </div>
     </div>
     <div
