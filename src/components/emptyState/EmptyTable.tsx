@@ -34,12 +34,12 @@ const EmptyTable: FunctionComponent<EmptyTableProps> = ({
         {title}
       </Title>
       {body && <EmptyStateBody>{body}</EmptyStateBody>}
-      {hasButton === true && typeof buttonClickHandler !== 'undefined' && (
+      {hasButton && buttonClickHandler && (
         <Button variant="link" onClick={buttonClickHandler}>
           {buttonText}
         </Button>
       )}
-      {hasButton === true && buttonLink?.length && (
+      {hasButton && buttonLink && (
         <Button component="a" href={buttonLink}>
           {buttonText}
         </Button>
