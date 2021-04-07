@@ -25,6 +25,7 @@ import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
 import './SatelliteManifestPanel.scss';
+import NoManifestsFound from '../emptyState/NoManifestsFound';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -46,6 +47,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     },
     { title: 'UUID', transforms: [sortable] }
   ]);
+
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
@@ -176,7 +178,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <TableHeader />
         <TableBody />
       </Table>
-      {count() === 0 && <NoSearchResults clearFilters={clearSearch} />}
+      {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
+      {data.length === 0 && <NoManifestsFound />}
       {pagination(PaginationVariant.bottom)}
     </PageSection>
   );

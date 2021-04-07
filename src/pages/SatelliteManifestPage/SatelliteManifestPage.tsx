@@ -7,7 +7,6 @@ import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import { CreateManifestPanel } from '../../components/emptyState';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { Processing } from '../../components/emptyState';
 import UserContext from '../../components/Authentication/UserContext';
 
@@ -30,7 +29,7 @@ const SatelliteManifestPage: FC = () => {
           {!isLoading && data?.length === 0 && user.isOrgAdmin === true && <CreateManifestPanel />}
 
           {!isLoading && data?.length === 0 && user.isOrgAdmin === false && (
-            <NotAuthorized serviceName="Manifests" />
+            <SatelliteManifestPanel data={data} user={user} />
           )}
 
           {error && <Unavailable />}

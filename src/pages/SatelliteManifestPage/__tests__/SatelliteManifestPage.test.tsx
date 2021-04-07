@@ -108,7 +108,7 @@ describe('Satellite Manifests Page', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders the empty state of not authorized, when no results are returned and user is not org admin', async () => {
+  it('renders the empty table with no manifests found message, when no manifests returned via API, and user is not org_admin', async () => {
     window.insights = {};
 
     const orgAdminStatus = false;

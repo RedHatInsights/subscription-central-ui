@@ -1269,23 +1269,23 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
         <h2
           class="pf-c-title pf-m-lg"
         >
-          No results found
+          No manifests found
         </h2>
         <div
           class="pf-c-empty-state__body"
         >
-          No results match the filter criteria. Remove all filters or clear all filters to show results.
+          No manifests were found under your account.
         </div>
-        <button
+        <a
           aria-disabled="false"
-          class="pf-c-button pf-m-link"
-          data-ouia-component-id="OUIA-Generated-Button-link-1"
+          class="pf-c-button pf-m-primary"
+          data-ouia-component-id="OUIA-Generated-Button-primary-3"
           data-ouia-component-type="PF4/Button"
           data-ouia-safe="true"
-          type="button"
+          href="/"
         >
-          Clear all filters
-        </button>
+          Go to landing page
+        </a>
       </div>
     </div>
     <div
