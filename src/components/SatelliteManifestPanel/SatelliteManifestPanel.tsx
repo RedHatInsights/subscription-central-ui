@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 import {
   Badge,
-  Button,
   Flex,
   FlexItem,
   PageSection,
@@ -24,6 +23,7 @@ import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoResults, Processing } from '../emptyState';
 import './SatelliteManifestPanel.scss';
+import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 
 interface SatelliteManifestPanelProps {
   isLoading: boolean;
@@ -175,7 +175,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
               />
             </SplitItem>
             <SplitItem>
-              <Button variant="primary">Create new manifest</Button>
+              <CreateManifestButtonWithModal />
             </SplitItem>
           </Split>
         </FlexItem>
