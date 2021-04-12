@@ -6,7 +6,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   modules: ['manifests'],
-  ...(process.env.BETA && { deployment: 'beta/apps', sassPrefix: '.subscriptions' })
+  ...(process.env.BETA && { deployment: 'beta/apps' })
 });
 
 plugins.push(
