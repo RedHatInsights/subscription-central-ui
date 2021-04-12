@@ -8,17 +8,19 @@ const OopsPage = lazy(() => import('./pages/OopsPage'));
 const NoPermissionsPage = lazy(() => import('./pages/NoPermissionsPage'));
 
 export const Routes: ReactNode = () => (
-  <Suspense fallback={<Processing />}>
-    <Authentication>
-      <Switch>
-        <Route exact path="/" component={SatelliteManifestPage} />
-        <Route path="/oops" component={OopsPage} />
-        <Route path="/no-permissions" component={NoPermissionsPage} />
-        {/* Finally, catch all unmatched routes */}
-        <Route>
-          <Redirect to="/oops" />
-        </Route>
-      </Switch>
-    </Authentication>
-  </Suspense>
+  <div className="manifests">
+    <Suspense fallback={<Processing />}>
+      <Authentication>
+        <Switch>
+          <Route exact path="/" component={SatelliteManifestPage} />
+          <Route path="/oops" component={OopsPage} />
+          <Route path="/no-permissions" component={NoPermissionsPage} />
+          {/* Finally, catch all unmatched routes */}
+          <Route>
+            <Redirect to="/oops" />
+          </Route>
+        </Switch>
+      </Authentication>
+    </Suspense>
+  </div>
 );

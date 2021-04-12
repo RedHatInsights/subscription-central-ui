@@ -29,7 +29,12 @@ const SCAInfoIconWithPopover: FunctionComponent = () => {
           </ExternalLink>
         }
       >
-        <InfoIcon className="sca-more-info-icon" />
+        <InfoIcon
+          className="sca-more-info-icon"
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        />
       </Popover>
     </>
   );
