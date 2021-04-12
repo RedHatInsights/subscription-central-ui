@@ -18,8 +18,8 @@ describe('Satellite Manifest Panel', () => {
       }
     ];
     const props = {
-      isLoading: false,
-      data
+      data,
+      user: { status: 'loaded', isOrgAdmin: true }
     };
 
     const { container } = render(<SatelliteManifestPanel {...props} />);
@@ -27,21 +27,8 @@ describe('Satellite Manifest Panel', () => {
   });
 
   it('renders no results when there are no results', () => {
-    const props = { isLoading: false, data: [] as ManifestEntry[] };
+    const props = { data: [] as ManifestEntry[], user: { status: 'loaded', isOrgAdmin: true } };
 
-    const { container } = render(<SatelliteManifestPanel {...props} />);
-    expect(container).toMatchSnapshot();
-  });
-
-  it('renders an error message when an error comes back from the API', () => {
-    const props = { isLoading: false, error: true, data: [] as ManifestEntry[] };
-
-    const { container } = render(<SatelliteManifestPanel {...props} />);
-    expect(container).toMatchSnapshot();
-  });
-
-  it('renders loading spinner when loading', () => {
-    const props = { isLoading: true, data: undefined as ManifestEntry[] };
     const { container } = render(<SatelliteManifestPanel {...props} />);
     expect(container).toMatchSnapshot();
   });
