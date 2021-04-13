@@ -9,15 +9,11 @@ import {
 } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
 
-interface NoResultsProps {
+interface NoSearchResultsProps {
   clearFilters: () => void;
 }
 
-const NoResults: FunctionComponent<NoResultsProps> = ({
-  clearFilters
-}: {
-  clearFilters: () => void;
-}) => {
+const NoSearchResults: FunctionComponent<NoSearchResultsProps> = ({ clearFilters }) => {
   return (
     <EmptyState variant={EmptyStateVariant.small}>
       <EmptyStateIcon icon={SearchIcon} />
@@ -35,4 +31,4 @@ const NoResults: FunctionComponent<NoResultsProps> = ({
   );
 };
 
-export default NoResults;
+export default NoSearchResults;

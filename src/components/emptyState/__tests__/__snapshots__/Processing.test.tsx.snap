@@ -3,36 +3,23 @@
 exports[`renders correctly 1`] = `
 <div>
   <div
-    class="pf-c-empty-state"
+    class="pf-l-bullseye"
   >
-    <div
-      class="pf-c-empty-state__content"
+    <span
+      aria-valuetext="Loading..."
+      class="pf-c-spinner pf-m-xl"
+      role="progressbar"
     >
-      <div
-        class="pf-c-empty-state__icon"
-      >
-        <span
-          aria-valuetext="Loading..."
-          class="pf-c-spinner"
-          role="progressbar"
-        >
-          <span
-            class="pf-c-spinner__clipper"
-          />
-          <span
-            class="pf-c-spinner__lead-ball"
-          />
-          <span
-            class="pf-c-spinner__tail-ball"
-          />
-        </span>
-      </div>
-      <h4
-        class="pf-c-title pf-m-lg"
-      >
-        Loading
-      </h4>
-    </div>
+      <span
+        class="pf-c-spinner__clipper"
+      />
+      <span
+        class="pf-c-spinner__lead-ball"
+      />
+      <span
+        class="pf-c-spinner__tail-ball"
+      />
+    </span>
   </div>
 </div>
 `;

@@ -19,21 +19,20 @@ import {
   sortable,
   cellWidth
 } from '@patternfly/react-table';
+import { User } from '../Authentication/UserContext';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
-import { NoResults, Processing } from '../emptyState';
+import { NoSearchResults } from '../emptyState';
 import './SatelliteManifestPanel.scss';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
+import NoManifestsFound from '../emptyState/NoManifestsFound';
 
 interface SatelliteManifestPanelProps {
-  isLoading: boolean;
   data: ManifestEntry[] | undefined;
+  user: User;
 }
 
-const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
-  isLoading,
-  data
-}) => {
+const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({ data, user }) => {
   const [columns] = useState([
     { title: 'Name', transforms: [sortable] },
     { title: 'Version', transforms: [sortable] },
@@ -48,6 +47,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     },
     { title: 'UUID', transforms: [sortable] }
   ]);
+
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
@@ -123,23 +123,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   const count = () => {
-    return isLoading ? 0 : filteredData().length;
-  };
-
-  const emptyState = () => {
-    if (isLoading) {
-      return <Processing />;
-    } else if (count() === 0) {
-      return <NoResults clearFilters={clearSearch} />;
-    } else {
-      return '';
-    }
+    return filteredData().length;
   };
 
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
-        isDisabled={isLoading}
         itemCount={count()}
         perPage={perPage}
         page={page}
@@ -150,15 +139,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     );
   };
 
-  const resultCountBadge = () => {
-    return isLoading ? '' : <Badge isRead>{count()}</Badge>;
-  };
-
   return (
     <PageSection variant="light">
       <Title headingLevel="h2">
         Satellite Manifests
-        {resultCountBadge()}
+        <Badge isRead>{count()}</Badge>
       </Title>
       <Flex
         direction={{ default: 'column', md: 'row' }}
@@ -174,9 +159,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 onClear={clearSearch}
               />
             </SplitItem>
-            <SplitItem>
-              <CreateManifestButtonWithModal />
-            </SplitItem>
+            {user.isOrgAdmin === true && (
+              <SplitItem>
+                <CreateManifestButtonWithModal />
+              </SplitItem>
+            )}
           </Split>
         </FlexItem>
         <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
@@ -184,14 +171,15 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       <Table
         aria-label="Satellite Manifest Table"
         cells={columns}
-        rows={isLoading ? [] : paginatedRows()}
+        rows={paginatedRows()}
         sortBy={sortBy}
         onSort={handleSort}
       >
         <TableHeader />
         <TableBody />
       </Table>
-      {emptyState()}
+      {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
+      {data.length === 0 && <NoManifestsFound />}
       {pagination(PaginationVariant.bottom)}
     </PageSection>
   );
