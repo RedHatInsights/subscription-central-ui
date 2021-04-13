@@ -13,7 +13,7 @@ const { config: webpackConfig, plugins } = config({
     useProxy: true,
     customProxy: [
       {
-        context: (path) => path.includes('/api/'),
+        context: (path) => path.includes('/rhsm-api/'),
         target: 'https://api.access.qa.redhat.com',
         secure: true,
         changeOrigin: true,
