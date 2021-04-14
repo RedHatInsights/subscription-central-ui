@@ -11,7 +11,7 @@ const createSatelliteManifest = (data: CreateManifestParams) => {
   const { name, version } = data;
   const cs_jwt = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations?name=${name}&version=${version}`, {
+  return fetch(`${rhsmAPIBase}/management/v1/allocations?name=${name}&version=sat-${version}`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${cs_jwt}` }
   })
