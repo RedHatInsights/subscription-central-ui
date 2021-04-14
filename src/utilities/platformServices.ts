@@ -30,7 +30,7 @@ export interface AuthenticateUserResponse {
   };
 }
 
-type Environment = 'development' | 'ci' | 'qa' | 'stage' | 'prod';
+type Environment = 'ci' | 'qa' | 'stage' | 'prod';
 
 export const authenticateUser = (): Promise<AuthenticateUserResponse> => {
   try {
@@ -41,13 +41,7 @@ export const authenticateUser = (): Promise<AuthenticateUserResponse> => {
 };
 
 export const getEnvironment = (): Environment => {
-  const env = window.insights.chrome.getEnvironment();
-  const isBeta = window.insights.chrome.isBeta();
-
-  if (isBeta === true && (env === 'ci' || env === 'qa')) {
-    return 'development';
-  }
-  return env || 'development';
+  return window.insights.chrome.getEnvironment() || 'ci';
 };
 
 export const getConfig = (): EnvironmentConfig => {

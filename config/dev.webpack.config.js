@@ -10,17 +10,7 @@ const { config: webpackConfig, plugins } = config({
   modules: ['manifests'],
   ...(process.env.BETA && {
     deployment: 'beta/apps',
-    useProxy: true,
-    customProxy: [
-      {
-        context: (path) => path.includes('/rhsm-api/'),
-        target: 'https://api.access.qa.redhat.com',
-        secure: true,
-        changeOrigin: true,
-        autoRewrite: true,
-        ws: true
-      }
-    ]
+    useProxy: true
   })
 });
 

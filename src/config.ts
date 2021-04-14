@@ -1,5 +1,4 @@
 export interface Config {
-  development: EnvironmentConfig;
   ci: EnvironmentConfig;
   qa: EnvironmentConfig;
   stage: EnvironmentConfig;
@@ -11,14 +10,6 @@ export interface EnvironmentConfig {
 }
 
 const config: Config = {
-  development: {
-    /**
-     * Note: when developing locally, /api proxies to
-     * https://api.access.qa.redhat.com/management via
-     * the config/dev.webpack.config.js settings, to avoid CORS issues.
-     */
-    rhsmAPIBase: '/beta/rhsm-api'
-  },
   ci: {
     rhsmAPIBase: 'https://api.access.qa.redhat.com'
   },
