@@ -1,5 +1,3 @@
-import config, { EnvironmentConfig } from '../config';
-
 declare global {
   interface Window {
     insights: any;
@@ -30,21 +28,10 @@ export interface AuthenticateUserResponse {
   };
 }
 
-type Environment = 'ci' | 'qa' | 'stage' | 'prod';
-
 export const authenticateUser = (): Promise<AuthenticateUserResponse> => {
   try {
     return window.insights.chrome.auth.getUser();
   } catch (e) {
     throw new Error(`Error authenticating user: ${e.message}`);
   }
-};
-
-export const getEnvironment = (): Environment => {
-  return window.insights.chrome.getEnvironment() || 'ci';
-};
-
-export const getConfig = (): EnvironmentConfig => {
-  const env = getEnvironment();
-  return config[env];
 };
