@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import {
   Modal,
+  ModalVariant,
   Form,
   FormGroup,
   TextInput,
@@ -10,21 +11,15 @@ import {
   FormSelectOption
 } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
+import useSatelliteVersions, { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import { useCreateSatelliteManifest } from '../../hooks/useCreateSatelliteManifest';
 
 const CreateManifestButtonWithModal: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [version, setVersion] = useState('Select type');
-  const manifestTypeSelectOptions = [
-    {
-      value: 'Select type',
-      label: 'Select type',
-      disabled: true
-    },
-    { value: '6.5', label: '6.5', disabled: false }
-  ];
 
+  const { data } = useSatelliteVersions();
   const mutation = useCreateSatelliteManifest();
 
   const handleModalToggle = () => {
@@ -49,7 +44,7 @@ const CreateManifestButtonWithModal: FC = () => {
         Create new manifest
       </Button>
       <Modal
-        width={'50%'}
+        variant={ModalVariant.medium}
         title="Create new manifest"
         isOpen={isModalOpen}
         onClose={handleModalToggle}
@@ -62,10 +57,13 @@ const CreateManifestButtonWithModal: FC = () => {
           </Button>
         ]}
       >
-        Creating a new manifest allows you to export subscriptions to your on-premise subscription
-        management application.
+        <p style={{ marginBottom: '30px' }}>
+          Creating a new manifest allows you to export subscriptions to your on-premise subscription
+          management application.
+        </p>
         <Form isWidthLimited>
           <FormGroup
+            style={{ margin: '30px 0;' }}
             label="Name"
             labelIcon={
               <Popover
@@ -97,6 +95,7 @@ const CreateManifestButtonWithModal: FC = () => {
               name="simple-form-name-01"
               aria-describedby="simple-form-name-01-helper"
               value={name}
+              placeholder="Name"
               onChange={handleNameChange}
             />
           </FormGroup>
@@ -125,15 +124,29 @@ const CreateManifestButtonWithModal: FC = () => {
             isRequired
             fieldId="simple-form-name-01"
           >
-            <FormSelect value={version} onChange={handleSelectChange} aria-label="FormSelect Input">
-              {manifestTypeSelectOptions.map((option, index) => (
-                <FormSelectOption
-                  isDisabled={option.disabled}
-                  key={index}
-                  value={option.value}
-                  label={option.label}
-                />
-              ))}
+            <FormSelect
+              value={version}
+              onChange={handleSelectChange}
+              aria-label="FormSelect Input"
+              style={{ marginBottom: '30px' }}
+            >
+              <FormSelectOption
+                isDisabled={true}
+                key="select version"
+                value="Select type"
+                label="Select type"
+              />
+              {data?.body.map((satelliteVersion: SatelliteVersion) => {
+                const satelliteVersionName = satelliteVersion.value.replace('sat-', 'Satellite ');
+                return (
+                  <FormSelectOption
+                    isDisabled={false}
+                    key={satelliteVersion.value}
+                    value={satelliteVersion.value}
+                    label={satelliteVersionName}
+                  />
+                );
+              })}
             </FormSelect>
           </FormGroup>
         </Form>
