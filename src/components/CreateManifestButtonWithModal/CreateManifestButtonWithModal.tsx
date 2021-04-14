@@ -3,6 +3,8 @@ import {
   Modal,
   ModalVariant,
   Form,
+  Alert,
+  FormAlert,
   FormGroup,
   TextInput,
   Popover,
@@ -11,6 +13,7 @@ import {
   FormSelectOption
 } from '@patternfly/react-core';
 import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import useSatelliteVersions, { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import { useCreateSatelliteManifest } from '../../hooks/useCreateSatelliteManifest';
 
@@ -18,11 +21,25 @@ const CreateManifestButtonWithModal: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [version, setVersion] = useState('Select type');
+  const [nameValidated, setNameValidated] = useState('noval');
+  const [versionValidated, setVersionValidated] = useState('noval');
+  const [formHasErrors, setFormHasErrors] = useState(false);
 
   const { data } = useSatelliteVersions();
   const mutation = useCreateSatelliteManifest();
 
+  const resetForm = () => {
+    setName('');
+    setVersion('Select type');
+    setNameValidated('noval');
+    setVersionValidated('noval');
+    setFormHasErrors(false);
+  };
+
   const handleModalToggle = () => {
+    if (isModalOpen === true) {
+      resetForm();
+    }
     setIsModalOpen(!isModalOpen);
   };
 
@@ -34,7 +51,26 @@ const CreateManifestButtonWithModal: FC = () => {
     setVersion(value);
   };
 
+  const validateForm = () => {
+    setNameValidated('noval');
+    setVersionValidated('noval');
+    let isValid = true;
+    if (!name.length) {
+      setNameValidated('error');
+      isValid = false;
+    }
+    if (version === 'Select type') {
+      setVersionValidated('error');
+      isValid = false;
+    }
+    setFormHasErrors(!isValid);
+    return isValid;
+  };
+
   const handleFormSubmit = () => {
+    const formIsValid = validateForm();
+    if (formIsValid === false) return;
+
     mutation.mutate({ name, version });
   };
 
@@ -62,9 +98,21 @@ const CreateManifestButtonWithModal: FC = () => {
           management application.
         </p>
         <Form isWidthLimited>
+          {formHasErrors === true && (
+            <FormAlert>
+              <Alert
+                variant="danger"
+                title="You must fill out all required fields before you can proceed."
+                aria-live="polite"
+                isInline
+              />
+            </FormAlert>
+          )}
           <FormGroup
-            style={{ margin: '30px 0;' }}
             label="Name"
+            helperTextInvalid="Please provide a name for your new manifest"
+            validated={nameValidated}
+            helperTextInvalidIcon={<ExclamationCircleIcon />}
             labelIcon={
               <Popover
                 bodyContent={
@@ -101,6 +149,8 @@ const CreateManifestButtonWithModal: FC = () => {
           </FormGroup>
           <FormGroup
             label="Type"
+            helperTextInvalid="Please select a version for your new manifest"
+            validated={versionValidated}
             labelIcon={
               <Popover
                 bodyContent={
@@ -128,7 +178,7 @@ const CreateManifestButtonWithModal: FC = () => {
               value={version}
               onChange={handleSelectChange}
               aria-label="FormSelect Input"
-              style={{ marginBottom: '30px' }}
+              validated={versionValidated}
             >
               <FormSelectOption
                 isDisabled={true}
