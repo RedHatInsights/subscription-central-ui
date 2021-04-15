@@ -6,7 +6,7 @@ export interface CreateManifestParams {
   version: string;
 }
 
-const createSatelliteManifest = (data: CreateManifestParams) => {
+export const createSatelliteManifest = (data: CreateManifestParams) => {
   const { name, version } = data;
   const cs_jwt = Cookies.get('cs_jwt');
   return fetch(
@@ -18,7 +18,7 @@ const createSatelliteManifest = (data: CreateManifestParams) => {
   )
     .then((response) => {
       if (response.status > 200) {
-        throw new Error(`Error creating manifest: ${response.statusText} - ${response.type}`);
+        throw new Error(`Error creating manifest: ${response.statusText}`);
       }
       return response.json();
     })
