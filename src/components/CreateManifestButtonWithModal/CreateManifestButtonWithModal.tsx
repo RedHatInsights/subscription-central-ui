@@ -18,7 +18,12 @@ const CreateManifestButtonWithModal: FC = () => {
       <Button variant="primary" onClick={handleModalToggle}>
         Create new manifest
       </Button>
-      <Modal variant={ModalVariant.medium} isOpen={isModalOpen} onClose={handleModalToggle}>
+      <Modal
+        aria-label="Create satellite manifest"
+        variant={ModalVariant.medium}
+        isOpen={isModalOpen}
+        onClose={handleModalToggle}
+      >
         {isLoading && <CreateManifestFormLoading title="Loading..." />}
         {isError && <CreateManifestFormError />}
         {!isLoading && !isError && (

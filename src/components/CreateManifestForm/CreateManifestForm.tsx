@@ -116,6 +116,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
                     type="button"
                     aria-label="More info for name field"
                     onClick={(e) => e.preventDefault()}
+                    aria-describedby="create-satellite-manifest-form-name"
                     className="pf-c-form__group-label-help"
                   >
                     <HelpIcon noVerticalAlign />
@@ -123,11 +124,12 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
                 </Popover>
               }
               isRequired
-              fieldId="simple-form-name-01"
+              fieldId="create-satellite-manifest-form-name"
             >
               <TextInput
                 isRequired
                 type="text"
+                id="create-satellite-manifest-form-name"
                 value={name}
                 placeholder="Name"
                 onChange={handleNameChange}
@@ -151,19 +153,21 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
                     aria-label="More info for type field"
                     onClick={(e) => e.preventDefault()}
                     className="pf-c-form__group-label-help"
+                    aria-describedby="create-satellite-manifest-form-type"
                   >
                     <HelpIcon noVerticalAlign />
                   </button>
                 </Popover>
               }
               isRequired
-              fieldId="simple-form-name-01"
+              fieldId="create-satellite-manifest-form-type"
             >
               <FormSelect
                 value={version}
                 onChange={handleSelectChange}
                 aria-label="FormSelect Input"
                 validated={versionValidated}
+                id="create-satellite-manifest-form-type"
               >
                 <FormSelectOption
                   isDisabled={true}
@@ -172,13 +176,12 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
                   label="Select type"
                 />
                 {satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
-                  const satelliteVersionName = satelliteVersion.value.replace('sat-', 'Satellite ');
                   return (
                     <FormSelectOption
                       isDisabled={false}
                       key={satelliteVersion.value}
                       value={satelliteVersion.value}
-                      label={satelliteVersionName}
+                      label={satelliteVersion.description}
                     />
                   );
                 })}

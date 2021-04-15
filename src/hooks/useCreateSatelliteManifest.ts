@@ -17,7 +17,6 @@ const createSatelliteManifest = (data: CreateManifestParams) => {
     }
   )
     .then((response) => {
-      console.log('response', response, response.status, typeof response.status);
       if (response.status > 200) {
         throw new Error(`Error creating manifest: ${response.statusText} - ${response.type}`);
       }
