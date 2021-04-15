@@ -19,6 +19,7 @@ describe('Satellite Manifest Panel', () => {
     ];
     const props = {
       data,
+      isFetching: false,
       user: { status: 'loaded', isOrgAdmin: true }
     };
 
@@ -27,7 +28,11 @@ describe('Satellite Manifest Panel', () => {
   });
 
   it('renders no results when there are no results', () => {
-    const props = { data: [] as ManifestEntry[], user: { status: 'loaded', isOrgAdmin: true } };
+    const props = {
+      data: [] as ManifestEntry[],
+      isFetching: false,
+      user: { status: 'loaded', isOrgAdmin: true }
+    };
 
     const { container } = render(<SatelliteManifestPanel {...props} />);
     expect(container).toMatchSnapshot();

@@ -1,12 +1,10 @@
 import React, { useState, FC } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Button,
   ActionGroup,
   Form,
   EmptyState,
   EmptyStateBody,
-  EmptyStateIcon,
   EmptyStateVariant,
   FormGroup,
   TextInput,
@@ -16,8 +14,9 @@ import {
   FormSelectOption
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
-import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
+import CreateManifestFormError from './CreateManifestFormError';
+import CreateManifestFormSuccess from './CreateManifestFormSuccess';
 import { useCreateSatelliteManifest } from '../../hooks/useCreateSatelliteManifest';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import { Processing } from '../emptyState';
@@ -40,6 +39,18 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
 
   const { mutate, isLoading, isError, isSuccess } = useCreateSatelliteManifest();
 
+  const clearErrors = () => {
+    setNameValidated('noval');
+    setVersionValidated('noval');
+  };
+
+  const resetForm = () => {
+    setName('');
+    setVersion('Select type');
+    setNameValidated('noval');
+    setVersionValidated('noval');
+  };
+
   const handleNameChange = (value: string) => {
     if (name.length) {
       setNameValidated('noval');
@@ -50,11 +61,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
   const handleSelectChange = (value: string) => {
     setVersionValidated('noval');
     setVersion(value);
-  };
-
-  const clearErrors = () => {
-    setNameValidated('noval');
-    setVersionValidated('noval');
   };
 
   const validateForm = () => {
@@ -77,13 +83,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
     const formIsValid = validateForm();
     if (!formIsValid) return;
     mutate({ name, version });
-  };
-
-  const resetForm = () => {
-    setName('');
-    setVersion('Select type');
-    setNameValidated('noval');
-    setVersionValidated('noval');
   };
 
   !isModalOpen && resetForm();
@@ -120,7 +119,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
                     type="button"
                     aria-label="More info for name field"
                     onClick={(e) => e.preventDefault()}
-                    aria-describedby="simple-form-name-01"
                     className="pf-c-form__group-label-help"
                   >
                     <HelpIcon noVerticalAlign />
@@ -156,7 +154,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
                     type="button"
                     aria-label="More info for type field"
                     onClick={(e) => e.preventDefault()}
-                    aria-describedby="simple-form-name-01"
                     className="pf-c-form__group-label-help"
                   >
                     <HelpIcon noVerticalAlign />
@@ -212,48 +209,9 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
         </EmptyState>
       )}
       {isSuccess && (
-        <EmptyState variant={EmptyStateVariant.small}>
-          <EmptyStateIcon icon={CheckCircleIcon} color="var(--pf-global--success-color--100)" />
-          <Title headingLevel="h3">Success</Title>
-          <EmptyStateBody>
-            <h4>
-              Your new manifest, <strong>{name}</strong>, has been successfully created.
-            </h4>
-            <Button
-              key="close-window"
-              variant="primary"
-              onClick={handleModalToggle}
-              style={{ marginTop: '20px' }}
-            >
-              Return to page
-            </Button>
-          </EmptyStateBody>
-        </EmptyState>
+        <CreateManifestFormSuccess handleModalToggle={handleModalToggle} manifestName={name} />
       )}
-      {isError && (
-        <EmptyState variant={EmptyStateVariant.small}>
-          <EmptyStateIcon
-            icon={ExclamationCircleIcon}
-            color="var(--pf-global--danger-color--100)"
-          />
-          <Title headingLevel="h3">Something went wrong</Title>
-          <EmptyStateBody>
-            <h4>
-              Try refreshing the page. If the problem persists, contact your organization
-              administrator or visit our <Link to="https://status.redhat.com/">status page</Link>{' '}
-              for known outages.
-            </h4>
-            <Button
-              key="close-window"
-              variant="primary"
-              onClick={handleModalToggle}
-              style={{ marginTop: '20px' }}
-            >
-              Return to page
-            </Button>
-          </EmptyStateBody>
-        </EmptyState>
-      )}
+      {isError && <CreateManifestFormError />}
     </>
   );
 };

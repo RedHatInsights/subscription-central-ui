@@ -11,7 +11,7 @@ import { Processing } from '../../components/emptyState';
 import UserContext from '../../components/Authentication/UserContext';
 
 const SatelliteManifestPage: FC = () => {
-  const { isLoading, error, data } = useSatelliteManifests();
+  const { isLoading, isFetching, error, data } = useSatelliteManifests();
   const { user } = useContext(UserContext);
 
   return (
@@ -24,12 +24,14 @@ const SatelliteManifestPage: FC = () => {
         <>
           {isLoading && <Processing />}
 
-          {!isLoading && data?.length > 0 && <SatelliteManifestPanel data={data} user={user} />}
+          {!isLoading && data?.length > 0 && (
+            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
+          )}
 
           {!isLoading && data?.length === 0 && user.isOrgAdmin === true && <CreateManifestPanel />}
 
           {!isLoading && data?.length === 0 && user.isOrgAdmin === false && (
-            <SatelliteManifestPanel data={data} user={user} />
+            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
 
           {error && <Unavailable />}
