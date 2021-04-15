@@ -13,7 +13,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 5,
+      retry: 3,
       retryDelay: 10 * 1000,
       staleTime: Infinity,
       refetchOnWindowFocus: false,

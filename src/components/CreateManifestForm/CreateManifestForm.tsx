@@ -3,9 +3,6 @@ import {
   Button,
   ActionGroup,
   Form,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateVariant,
   FormGroup,
   TextInput,
   Title,
@@ -16,10 +13,10 @@ import {
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
 import CreateManifestFormError from './CreateManifestFormError';
+import CreateManifestFormLoading from './CreateManifestFormLoading';
 import CreateManifestFormSuccess from './CreateManifestFormSuccess';
 import { useCreateSatelliteManifest } from '../../hooks/useCreateSatelliteManifest';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
-import { Processing } from '../emptyState';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -199,14 +196,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
           </Form>
         </>
       )}
-      {isLoading && (
-        <EmptyState variant={EmptyStateVariant.small}>
-          <Title headingLevel="h3">Creating manifest....</Title>
-          <EmptyStateBody>
-            <Processing />
-          </EmptyStateBody>
-        </EmptyState>
-      )}
+      {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
       {isSuccess && (
         <CreateManifestFormSuccess handleModalToggle={handleModalToggle} manifestName={name} />
       )}

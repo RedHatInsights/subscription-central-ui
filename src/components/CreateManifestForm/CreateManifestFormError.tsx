@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
+  Button,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
@@ -17,7 +17,17 @@ const CreateManifestFormError = () => {
       <EmptyStateBody>
         <h4>
           Try refreshing the page. If the problem persists, contact your organization administrator
-          or visit our <Link to="https://status.redhat.com/">status page</Link> for known outages.
+          or visit our{' '}
+          <Button
+            variant="link"
+            component="a"
+            href="https://status.redhat.com/"
+            target="_blank"
+            isInline
+          >
+            status page
+          </Button>{' '}
+          for known outages.
         </h4>
       </EmptyStateBody>
     </EmptyState>
