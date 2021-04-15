@@ -17,16 +17,7 @@ const CreateManifestButtonWithModal: FC = () => {
       <Button variant="primary" onClick={handleModalToggle}>
         Create new manifest
       </Button>
-      <Modal
-        variant={ModalVariant.medium}
-        title="Create new manifest"
-        isOpen={isModalOpen}
-        onClose={handleModalToggle}
-      >
-        <p style={{ marginBottom: '30px' }}>
-          Creating a new manifest allows you to export subscriptions to your on-premise subscription
-          management application.
-        </p>
+      <Modal variant={ModalVariant.medium} isOpen={isModalOpen} onClose={handleModalToggle}>
         <CreateManifestForm
           satelliteVersions={data?.body}
           handleModalToggle={handleModalToggle}
