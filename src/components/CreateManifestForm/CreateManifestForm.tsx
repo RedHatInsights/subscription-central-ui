@@ -131,7 +131,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
               <TextInput
                 isRequired
                 type="text"
-                aria-describedby="simple-form-name-01-helper"
                 value={name}
                 placeholder="Name"
                 onChange={handleNameChange}

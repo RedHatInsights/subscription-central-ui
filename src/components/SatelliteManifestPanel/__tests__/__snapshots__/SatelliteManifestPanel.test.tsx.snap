@@ -104,7 +104,8 @@ exports[`Satellite Manifest Panel renders correctly 1`] = `
               1
             </b>
              
-            of 
+            of
+             
             <b>
               1
             </b>
@@ -128,7 +129,8 @@ exports[`Satellite Manifest Panel renders correctly 1`] = `
                   1
                 </b>
                  
-                of 
+                of
+                 
                 <b>
                   1
                 </b>
@@ -242,7 +244,8 @@ exports[`Satellite Manifest Panel renders correctly 1`] = `
               <span
                 aria-hidden="true"
               >
-                of 
+                of
+                 
                 1
               </span>
             </div>
@@ -561,7 +564,8 @@ exports[`Satellite Manifest Panel renders correctly 1`] = `
               1
             </b>
              
-            of 
+            of
+             
             <b>
               1
             </b>
@@ -675,7 +679,8 @@ exports[`Satellite Manifest Panel renders correctly 1`] = `
           <span
             aria-hidden="true"
           >
-            of 
+            of
+             
             1
           </span>
         </div>
@@ -847,7 +852,8 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
               0
             </b>
              
-            of 
+            of
+             
             <b>
               0
             </b>
@@ -871,7 +877,8 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
                   0
                 </b>
                  
-                of 
+                of
+                 
                 <b>
                   0
                 </b>
@@ -986,7 +993,8 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
               <span
                 aria-hidden="true"
               >
-                of 
+                of
+                 
                 0
               </span>
             </div>
@@ -1303,7 +1311,8 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
               0
             </b>
              
-            of 
+            of
+             
             <b>
               0
             </b>
@@ -1418,7 +1427,8 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
           <span
             aria-hidden="true"
           >
-            of 
+            of
+             
             0
           </span>
         </div>
