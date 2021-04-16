@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import CreateManifestForm from './CreateManifestForm';
-import CreateManifestFormError from './CreateManifestFormError';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
 import useCreateSatelliteManifest from '../../hooks/useCreateSatelliteManifest';
 import useSatelliteVersions from '../../hooks/useSatelliteVersions';
@@ -19,9 +18,9 @@ const CreateManifestFormContainer: FC<CreateManifestFormContainerProps> = ({
   } = useSatelliteVersions();
 
   const {
+    data: createManifestResponseData,
     mutate,
     isLoading: isCreatingManifest,
-    isError: errorCreatingManifest,
     isSuccess
   } = useCreateSatelliteManifest();
 
@@ -29,17 +28,24 @@ const CreateManifestFormContainer: FC<CreateManifestFormContainerProps> = ({
     mutate({ name, version });
   };
 
+  /**
+   * The API will "succeed", but with an error status, so we
+   * need to check for data to confirm success
+   */
+
+  const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
+  const errorCreatingManifest = isSuccess && !hasCreatedManifest;
+
   return (
     <>
       {isLoadingSatelliteVersions && <CreateManifestFormLoading title="Loading..." />}
-      {errorCreatingManifest && <CreateManifestFormError />}
       {!isLoadingSatelliteVersions && !hasSatelliteVersionsError && (
         <CreateManifestForm
           satelliteVersions={data?.body}
           submitForm={submitForm}
           isLoading={isCreatingManifest}
           isError={errorCreatingManifest}
-          isSuccess={isSuccess}
+          isSuccess={hasCreatedManifest}
           handleModalToggle={handleModalToggle}
         />
       )}
