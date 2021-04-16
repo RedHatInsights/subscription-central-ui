@@ -15,35 +15,26 @@ import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
 import CreateManifestFormError from './CreateManifestFormError';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
 import CreateManifestFormSuccess from './CreateManifestFormSuccess';
-import { useCreateSatelliteManifest } from '../../hooks/useCreateSatelliteManifest';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
   handleModalToggle: () => void;
-  isModalOpen: boolean;
+  submitForm: (name: string, version: string) => void;
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess: boolean;
 }
 
-const CreateManifestForm: FC<CreateManifestFormProps> = ({
-  satelliteVersions,
-  handleModalToggle,
-  isModalOpen
-}) => {
+const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
+  const { satelliteVersions, handleModalToggle, submitForm, isLoading, isError, isSuccess } = props;
+
   const [name, setName] = useState('');
   const [version, setVersion] = useState('Select type');
   const [nameValidated, setNameValidated] = useState('noval');
   const [versionValidated, setVersionValidated] = useState('noval');
 
-  const { mutate, isLoading, isError, isSuccess } = useCreateSatelliteManifest();
-
   const clearErrors = () => {
-    setNameValidated('noval');
-    setVersionValidated('noval');
-  };
-
-  const resetForm = () => {
-    setName('');
-    setVersion('Select type');
     setNameValidated('noval');
     setVersionValidated('noval');
   };
@@ -79,10 +70,8 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
   const handleFormSubmit = () => {
     const formIsValid = validateForm();
     if (!formIsValid) return;
-    mutate({ name, version });
+    submitForm(name, version);
   };
-
-  !isModalOpen && resetForm();
 
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
@@ -188,11 +177,21 @@ const CreateManifestForm: FC<CreateManifestFormProps> = ({
               </FormSelect>
             </FormGroup>
             <ActionGroup>
-              <Button key="confirm" variant="primary" onClick={handleFormSubmit}>
+              <Button
+                key="confirm"
+                id="save-manifest-button"
+                variant="primary"
+                onClick={handleFormSubmit}
+              >
                 Save
               </Button>
 
-              <Button key="cancel" variant="link" onClick={handleModalToggle}>
+              <Button
+                key="cancel"
+                id="cancel-create-manifest-button"
+                variant="link"
+                onClick={handleModalToggle}
+              >
                 Cancel
               </Button>
             </ActionGroup>

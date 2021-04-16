@@ -27,7 +27,7 @@ export const createSatelliteManifest = (data: CreateManifestParams) => {
     });
 };
 
-export const useCreateSatelliteManifest = () => {
+const useCreateSatelliteManifest = () => {
   const queryClient = useQueryClient();
   return useMutation((newManifest: CreateManifestParams) => createSatelliteManifest(newManifest), {
     onSuccess: () => {
@@ -35,3 +35,5 @@ export const useCreateSatelliteManifest = () => {
     }
   });
 };
+
+export { useCreateSatelliteManifest as default };

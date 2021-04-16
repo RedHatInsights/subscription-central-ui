@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { useCreateSatelliteManifest } from '../useCreateSatelliteManifest';
+import useCreateSatelliteManifest from '../useCreateSatelliteManifest';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 
