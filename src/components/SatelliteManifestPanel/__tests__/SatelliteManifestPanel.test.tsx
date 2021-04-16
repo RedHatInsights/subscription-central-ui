@@ -58,4 +58,25 @@ describe('Satellite Manifest Panel', () => {
     );
     expect(container).toMatchSnapshot();
   });
+
+  it('renders loading when refetching data', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const data: ManifestEntry[] = [];
+
+    const props = {
+      data,
+      isFetching: true,
+      user: { status: 'loaded', isOrgAdmin: true }
+    };
+
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...props} />
+      </QueryClientProvider>
+    );
+    expect(container).toMatchSnapshot();
+  });
 });

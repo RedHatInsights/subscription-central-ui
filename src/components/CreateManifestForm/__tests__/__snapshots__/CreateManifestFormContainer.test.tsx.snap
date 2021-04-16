@@ -40,3 +40,44 @@ exports[`Create Manifest Form container renders loading when data is being poste
   </div>
 </div>
 `;
+
+exports[`Create Manifest Form container renders loading when data is loading 1`] = `
+<div>
+  <div
+    class="pf-c-empty-state pf-m-sm"
+  >
+    <div
+      class="pf-c-empty-state__content"
+    >
+      <h3
+        class="pf-c-title pf-m-lg"
+      >
+        Loading...
+      </h3>
+      <div
+        class="pf-c-empty-state__body"
+      >
+        <div
+          class="pf-l-bullseye"
+        >
+          <span
+            aria-valuetext="Loading..."
+            class="pf-c-spinner pf-m-xl"
+            role="progressbar"
+          >
+            <span
+              class="pf-c-spinner__clipper"
+            />
+            <span
+              class="pf-c-spinner__lead-ball"
+            />
+            <span
+              class="pf-c-spinner__tail-ball"
+            />
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
