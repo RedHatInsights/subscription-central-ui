@@ -6,11 +6,8 @@ const { config: webpackConfig, plugins } = config({
   debug: true,
   https: true,
   useFileHash: false,
-
   modules: ['manifests'],
-  ...(process.env.BETA && {
-    deployment: 'beta/apps'
-  })
+  ...(process.env.BETA && { deployment: 'beta/apps' })
 });
 
 plugins.push(
