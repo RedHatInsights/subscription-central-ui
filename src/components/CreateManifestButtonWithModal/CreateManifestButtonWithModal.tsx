@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Modal, ModalVariant, Button } from '@patternfly/react-core';
-import CreateManifestFormContainer from '../CreateManifestForm/CreateManifestFormContainer';
+import { CreateManifestFormContainer } from '../CreateManifestForm';
 
 const CreateManifestButtonWithModal: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
