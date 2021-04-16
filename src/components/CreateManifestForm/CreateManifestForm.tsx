@@ -32,11 +32,13 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const [name, setName] = useState('');
   const [version, setVersion] = useState('Select type');
   const [nameValidated, setNameValidated] = useState('noval');
+  const [nameHasInvalidCharacters, setNameHasInvalidCharacters] = useState(false);
   const [versionValidated, setVersionValidated] = useState('noval');
 
   const clearErrors = () => {
     setNameValidated('noval');
     setVersionValidated('noval');
+    setNameHasInvalidCharacters(false);
   };
 
   const handleNameChange = (value: string) => {
@@ -51,6 +53,19 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     setVersion(value);
   };
 
+  const validateManifestName = (name: string) => {
+    if (name.length >= 100) {
+      return false;
+    }
+    if (name.length === 0) {
+      return true;
+    }
+
+    var regExp = new RegExp('^[0-9A-Za-z_.-]+$');
+    const result = regExp.test(name);
+    return regExp.test(name);
+  };
+
   const validateForm = () => {
     clearErrors();
     let isValid = true;
@@ -58,6 +73,10 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     if (!name.length) {
       setNameValidated('error');
       isValid = false;
+    }
+    if (validateManifestName(name) === false) {
+      setNameValidated('error');
+      setNameHasInvalidCharacters(true);
     }
 
     if (version === 'Select type') {
@@ -72,6 +91,11 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     if (!formIsValid) return;
     submitForm(name, version);
   };
+
+  const nameHelperTextInvalid = nameHasInvalidCharacters
+    ? `Your manifest name must be less than 100 characters and use only numbers, letters,
+       underscores, hyphens, and periods.`
+    : 'Please provide a name for your new manifest';
 
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
@@ -89,7 +113,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           <Form isWidthLimited>
             <FormGroup
               label="Name"
-              helperTextInvalid="Please provide a name for your new manifest"
+              helperTextInvalid={nameHelperTextInvalid}
               validated={nameValidated}
               helperTextInvalidIcon={<ExclamationCircleIcon />}
               labelIcon={

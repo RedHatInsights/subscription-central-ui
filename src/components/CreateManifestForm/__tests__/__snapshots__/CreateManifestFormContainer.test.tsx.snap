@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Create Manifest Form container renders correctly once satellite versions have been loaded 1`] = `
+exports[`Create Manifest Form Container renders correctly once satellite versions have been loaded 1`] = `
 <div>
   <h3
     class="pf-c-title pf-m-2xl"
