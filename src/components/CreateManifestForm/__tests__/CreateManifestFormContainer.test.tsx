@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 const queryClient = new QueryClient();
 
 describe('Create Manifest Form container', () => {
-  it('renders loading when data is being posted', () => {
+  it('renders loading when data is loading', () => {
     const props = { handleModalToggle: () => 'foo' };
     const { container } = render(
       <QueryClientProvider client={queryClient}>
