@@ -9,8 +9,7 @@ const { config: webpackConfig, plugins } = config({
 
   modules: ['manifests'],
   ...(process.env.BETA && {
-    deployment: 'beta/apps',
-    useProxy: true
+    deployment: 'beta/apps'
   })
 });
 
