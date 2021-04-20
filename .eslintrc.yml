@@ -1,6 +1,6 @@
 extends:
-  - 'plugin:@typescript-eslint/recommended'
   - '@redhat-cloud-services/eslint-config-redhat-cloud-services'
+  - 'plugin:@typescript-eslint/recommended'
 
 parser: '@typescript-eslint/parser'
 globals:

@@ -61,7 +61,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
       return true;
     }
 
-    var regExp = new RegExp('^[0-9A-Za-z_.-]+$');
+    const regExp = new RegExp('^[0-9A-Za-z_.-]+$');
     const result = regExp.test(name);
     return regExp.test(name);
   };
