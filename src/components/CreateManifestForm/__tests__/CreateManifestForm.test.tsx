@@ -8,9 +8,9 @@ const queryClient = new QueryClient();
 
 const createManifestFormProps = {
   satelliteVersions: [{ description: 'Satellite v6.2', value: 'sat-6.2' }] as SatelliteVersion[],
-  handleModalToggle: () => 'foo',
+  handleModalToggle: (): any => null,
   isModalOpen: true,
-  submitForm: () => 'foo',
+  submitForm: (): any => null,
   isLoading: false,
   isError: false,
   isSuccess: false

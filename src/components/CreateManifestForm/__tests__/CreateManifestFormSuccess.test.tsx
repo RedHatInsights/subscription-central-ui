@@ -6,7 +6,7 @@ describe('Create Manifest Form Success Message', () => {
   it('renders correctly', () => {
     const props = {
       manifestName: 'new-manifest',
-      handleModalToggle: () => 'foo'
+      handleModalToggle: (): any => null
     };
     const { container } = render(<CreateManifestFormSuccess {...props} />);
     expect(container).toMatchSnapshot();

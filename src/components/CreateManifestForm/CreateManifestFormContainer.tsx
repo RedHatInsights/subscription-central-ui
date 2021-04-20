@@ -29,22 +29,25 @@ const CreateManifestFormContainer: FC<CreateManifestFormContainerProps> = ({
   };
 
   /**
-   * The API will "succeed", but with an error status, so we
-   * need to check for data to confirm success
+   * In case of an error, the API will "succeed",
+   * but with an error status, so we need to
+   * check for data to confirm success
    */
 
   const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
   const errorCreatingManifest = isSuccess && !hasCreatedManifest;
 
+  const formHasError = errorCreatingManifest || hasSatelliteVersionsError;
+
   return (
     <>
       {isLoadingSatelliteVersions && <CreateManifestFormLoading title="Loading..." />}
-      {!isLoadingSatelliteVersions && !hasSatelliteVersionsError && (
+      {!isLoadingSatelliteVersions && (
         <CreateManifestForm
           satelliteVersions={data?.body}
           submitForm={submitForm}
           isLoading={isCreatingManifest}
-          isError={errorCreatingManifest}
+          isError={formHasError}
           isSuccess={hasCreatedManifest}
           handleModalToggle={handleModalToggle}
         />

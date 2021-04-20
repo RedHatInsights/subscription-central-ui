@@ -22,15 +22,17 @@ const SatelliteManifestPage: FC = () => {
       </PageHeader>
       <Main>
         <>
-          {isLoading && <Processing />}
+          {isLoading && !error && <Processing />}
 
-          {!isLoading && data?.length > 0 && (
+          {!isLoading && !error && data?.length > 0 && (
             <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
 
-          {!isLoading && data?.length === 0 && user.isOrgAdmin === true && <CreateManifestPanel />}
+          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === true && (
+            <CreateManifestPanel />
+          )}
 
-          {!isLoading && data?.length === 0 && user.isOrgAdmin === false && (
+          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === false && (
             <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
 

@@ -11,9 +11,10 @@ const queryClient = new QueryClient();
 describe('Create Manifest Form Container', () => {
   it('renders correctly once satellite versions have been loaded', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+      body: [] as SatelliteVersion[],
+      isError: false
     });
-    const props = { handleModalToggle: () => 'foo' };
+    const props = { handleModalToggle: (): any => null };
     const { container } = render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestFormContainer {...props} />

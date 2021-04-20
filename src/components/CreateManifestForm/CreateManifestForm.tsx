@@ -77,6 +77,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     if (validateManifestName(name) === false) {
       setNameValidated('error');
       setNameHasInvalidCharacters(true);
+      isValid = false;
     }
 
     if (version === 'Select type') {
