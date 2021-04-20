@@ -53,10 +53,11 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     setVersion(value);
   };
 
-  const validateManifestName = (name: string) => {
+  const validateNameHasAcceptedChars = (name: string) => {
     if (name.length >= 100) {
       return false;
     }
+
     if (name.length === 0) {
       return true;
     }
@@ -66,25 +67,40 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     return regExp.test(name);
   };
 
-  const validateForm = () => {
+  const validateName = () => {
     clearErrors();
-    let isValid = true;
-
+    let nameIsValid = true;
     if (!name.length) {
       setNameValidated('error');
-      isValid = false;
+      nameIsValid = false;
     }
-    if (validateManifestName(name) === false) {
+    if (validateNameHasAcceptedChars(name) === false) {
       setNameValidated('error');
       setNameHasInvalidCharacters(true);
-      isValid = false;
+      nameIsValid = false;
     }
+    return nameIsValid;
+  };
 
+  const validateVersionSelect = () => {
+    let versionSelectIsValid = true;
     if (version === 'Select type') {
       setVersionValidated('error');
-      isValid = false;
+      versionSelectIsValid = false;
     }
-    return isValid;
+    return versionSelectIsValid;
+  };
+
+  const validateForm = () => {
+    clearErrors();
+    let canSubmit = true;
+    const nameIsValid = validateName();
+    const versionSelectIsValid = validateVersionSelect();
+    if (nameIsValid === false || versionSelectIsValid === false) {
+      canSubmit = false;
+    }
+
+    return canSubmit;
   };
 
   const handleFormSubmit = () => {
@@ -145,6 +161,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               value={name}
               placeholder="Name"
               onChange={handleNameChange}
+              onBlur={validateName}
             />
           </FormGroup>
           <FormGroup
