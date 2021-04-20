@@ -17,7 +17,8 @@ import {
   TableBody,
   SortByDirection,
   sortable,
-  cellWidth
+  cellWidth,
+  expandable
 } from '@patternfly/react-table';
 import { User } from '../Authentication/UserContext';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
@@ -26,6 +27,7 @@ import { NoSearchResults } from '../emptyState';
 import './SatelliteManifestPanel.scss';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
+import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -39,7 +41,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   user
 }) => {
   const [columns] = useState([
-    { title: 'Name', transforms: [sortable] },
+    { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
     { title: 'Version', transforms: [sortable] },
     {
       title: (
@@ -57,6 +59,18 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
   const [sortBy, setSortBy] = useState({ index: 0, direction: SortByDirection.asc });
+  const [rowExpandedStatus, setRowExpandedStatus] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ]);
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
     setPerPage(perPage);
@@ -66,20 +80,24 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const handleSearch = (searchValue: string) => {
     setSearchValue(searchValue);
     setPage(1);
+    collapseAllRows();
   };
 
   const handleSetPage = (_event: React.MouseEvent, page: number) => {
     setPage(page);
+    collapseAllRows();
   };
 
   const clearSearch = () => {
     setSearchValue('');
     setPage(1);
+    collapseAllRows();
   };
 
   const handleSort = (_event: React.MouseEvent, index: number, direction: SortByDirection) => {
     setSortBy({ index, direction });
     setPage(1);
+    collapseAllRows();
   };
 
   const filteredData = () => {
@@ -145,6 +163,39 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     );
   };
 
+  const getRowsWithAllocationDetails = () => {
+    const tableRows = paginatedRows();
+
+    const rowsWithAllocationDetails: any = [];
+    tableRows.forEach((row, i) => {
+      const isOpen = rowExpandedStatus[i];
+      rowsWithAllocationDetails.push({ isOpen, cells: [...row] });
+      const uuid = row[3];
+      const parentIndex = (i + 1) * 2 - 2;
+      const expandedContent = isOpen ? <ManifestEntitlementsListContainer uuid={uuid} /> : '';
+      rowsWithAllocationDetails.push({
+        parent: parentIndex,
+        fullWidth: true,
+        noPadding: true,
+        cells: [{ title: expandedContent }]
+      });
+    });
+
+    return rowsWithAllocationDetails;
+  };
+
+  const toggleAllocationDetails = (event: React.MouseEvent, rowKey: number, isOpen: boolean) => {
+    const rowIndexToUpdate = rowKey / 2;
+    const newRowExpandedStatus = [...rowExpandedStatus];
+    newRowExpandedStatus[rowIndexToUpdate] = isOpen;
+    setRowExpandedStatus(newRowExpandedStatus);
+  };
+
+  const collapseAllRows = () => {
+    const newRowExpandedStatus = new Array(10).fill(false);
+    setRowExpandedStatus(newRowExpandedStatus);
+  };
+
   return (
     <PageSection variant="light">
       <Title headingLevel="h2">
@@ -177,7 +228,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       <Table
         aria-label="Satellite Manifest Table"
         cells={columns}
-        rows={isFetching ? [] : paginatedRows()}
+        rows={isFetching ? [] : getRowsWithAllocationDetails()}
+        onCollapse={toggleAllocationDetails}
         sortBy={sortBy}
         onSort={handleSort}
       >
