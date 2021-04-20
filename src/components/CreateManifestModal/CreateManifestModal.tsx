@@ -21,12 +21,17 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
     data: createManifestResponseData,
     mutate,
     isLoading: isCreatingManifest,
-    isSuccess
+    isSuccess,
+    reset: resetCreateSatelliteManifestQuery
   } = useCreateSatelliteManifest();
 
   const submitForm = (name: string, version: string) => {
     mutate({ name, version });
   };
+
+  if (isModalOpen === false && isSuccess === true) {
+    resetCreateSatelliteManifestQuery();
+  }
 
   /**
    * In case of an error, the API will "succeed",
