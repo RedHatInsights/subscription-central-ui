@@ -8,7 +8,7 @@ jest.mock('../../../hooks/useSatelliteVersions');
 
 const queryClient = new QueryClient();
 
-describe('Create Manifest Form Container', () => {
+describe('Create Manifest Modal', () => {
   it('renders correctly once satellite versions have been loaded', async () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
       body: [] as SatelliteVersion[],
