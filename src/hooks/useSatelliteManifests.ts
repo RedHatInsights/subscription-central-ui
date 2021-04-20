@@ -1,7 +1,7 @@
 import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
 
-export interface ManifestEntry {
+interface ManifestEntry {
   entitlementQuantity: number;
   name: string;
   type: string;
@@ -20,7 +20,7 @@ interface SatelliteManifestAPIData {
   };
 }
 
-export const fetchSatelliteManifestData = (): Promise<any> => {
+const fetchSatelliteManifestData = (): Promise<any> => {
   const jwtToken = Cookies.get('cs_jwt');
   return fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
     headers: { Authorization: `Bearer ${jwtToken}` },
@@ -32,21 +32,21 @@ export const fetchSatelliteManifestData = (): Promise<any> => {
     });
 };
 
-export const getOnlySatelliteManifests = (data: ManifestEntry[] = []): ManifestEntry[] => {
+const getOnlySatelliteManifests = (data: ManifestEntry[] = []): ManifestEntry[] => {
   return data.filter((manifest: ManifestEntry) => manifest.type === 'Satellite');
 };
 
-export const getOnlyManifestsV6AndHigher = (data: ManifestEntry[] = []): ManifestEntry[] => {
+const getOnlyManifestsV6AndHigher = (data: ManifestEntry[] = []): ManifestEntry[] => {
   return data.filter((manifest) => parseInt(manifest.version) >= 6);
 };
 
-export const filterSatelliteData = (data: SatelliteManifestAPIData): ManifestEntry[] => {
+const filterSatelliteData = (data: SatelliteManifestAPIData): ManifestEntry[] => {
   const satelliteData = getOnlySatelliteManifests(data.body);
   const manifestsV6AndHigher = getOnlyManifestsV6AndHigher(satelliteData);
   return manifestsV6AndHigher;
 };
 
-export const getSatelliteManifests = (): Promise<ManifestEntry[]> => {
+const getSatelliteManifests = (): Promise<ManifestEntry[]> => {
   return fetchSatelliteManifestData()
     .then((data: SatelliteManifestAPIData) => filterSatelliteData(data))
     .catch((e: Error) => {
@@ -58,4 +58,12 @@ const useSatelliteManifests = (): QueryObserverResult<ManifestEntry[], unknown> 
   return useQuery('manifests', () => getSatelliteManifests());
 };
 
-export { useSatelliteManifests as default };
+export {
+  ManifestEntry,
+  fetchSatelliteManifestData,
+  filterSatelliteData,
+  getOnlyManifestsV6AndHigher,
+  getOnlySatelliteManifests,
+  getSatelliteManifests,
+  useSatelliteManifests as default
+};

@@ -1,12 +1,12 @@
 import { useQuery } from 'react-query';
 import Cookies from 'js-cookie';
 
-export interface SatelliteVersion {
+interface SatelliteVersion {
   description: string;
   value: string;
 }
 
-export const fetchSatelliteVersions = (): Promise<any> => {
+const fetchSatelliteVersions = (): Promise<any> => {
   const jwtToken = Cookies.get('cs_jwt');
   return fetch('https://api.access.qa.redhat.com/management/v1/allocations/versions', {
     headers: { Authorization: `Bearer ${jwtToken}` },
@@ -22,4 +22,4 @@ const useSatelliteVersions = () => {
   return useQuery('satelliteVersions', () => fetchSatelliteVersions());
 };
 
-export { useSatelliteVersions as default };
+export { fetchSatelliteVersions, SatelliteVersion, useSatelliteVersions as default };

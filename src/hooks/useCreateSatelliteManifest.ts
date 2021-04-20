@@ -1,12 +1,12 @@
 import Cookies from 'js-cookie';
 import { useMutation, useQueryClient } from 'react-query';
 
-export interface CreateManifestParams {
+interface CreateManifestParams {
   name: string;
   version: string;
 }
 
-export const createSatelliteManifest = (data: CreateManifestParams) => {
+const createSatelliteManifest = (data: CreateManifestParams) => {
   const { name, version } = data;
   const jwtToken = Cookies.get('cs_jwt');
   return fetch(
@@ -36,4 +36,4 @@ const useCreateSatelliteManifest = () => {
   });
 };
 
-export { useCreateSatelliteManifest as default };
+export { CreateManifestParams, createSatelliteManifest, useCreateSatelliteManifest as default };
