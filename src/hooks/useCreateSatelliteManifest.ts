@@ -17,13 +17,15 @@ const createSatelliteManifest = (data: CreateManifestParams) => {
     }
   )
     .then((response) => {
-      if (response.status > 200) {
-        throw new Error(`Error creating manifest: ${response.statusText}`);
+      if (response.status !== 200) {
+        throw new Error(
+          `Status Code ${response.status}.  Error creating manifest: ${response.statusText}.  `
+        );
       }
       return response.json();
     })
     .catch((e) => {
-      console.error('Error creating Satellite Manifest data', e);
+      console.error(e);
     });
 };
 
