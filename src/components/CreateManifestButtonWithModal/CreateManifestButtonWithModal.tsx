@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
-import { Modal, ModalVariant, Button } from '@patternfly/react-core';
-import { CreateManifestFormContainer } from '../CreateManifestForm';
+import { Button } from '@patternfly/react-core';
+import CreateManifestModal from '../CreateManifestModal';
 
 const CreateManifestButtonWithModal: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,14 +14,7 @@ const CreateManifestButtonWithModal: FC = () => {
       <Button variant="primary" onClick={handleModalToggle}>
         Create new manifest
       </Button>
-      <Modal
-        aria-label="Create satellite manifest"
-        variant={ModalVariant.medium}
-        isOpen={isModalOpen}
-        onClose={handleModalToggle}
-      >
-        <CreateManifestFormContainer handleModalToggle={handleModalToggle} />
-      </Modal>
+      <CreateManifestModal handleModalToggle={handleModalToggle} isModalOpen={isModalOpen} />
     </>
   );
 };
