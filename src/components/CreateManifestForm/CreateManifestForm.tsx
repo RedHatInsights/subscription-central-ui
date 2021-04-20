@@ -6,9 +6,9 @@ import {
   FormGroup,
   TextInput,
   Title,
-  Popover,
   FormSelect,
-  FormSelectOption
+  FormSelectOption,
+  Tooltip
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
@@ -118,24 +118,23 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               validated={nameValidated}
               helperTextInvalidIcon={<ExclamationCircleIcon />}
               labelIcon={
-                <Popover
-                  bodyContent={
+                <Tooltip
+                  position="top"
+                  content={
                     <div>
                       Provide a name that will help you associate this manifest with a specific
                       organization or on-premise subscription management application.
                     </div>
                   }
                 >
-                  <button
-                    type="button"
-                    aria-label="More info for name field"
-                    onClick={(e) => e.preventDefault()}
-                    aria-describedby="create-satellite-manifest-form-name"
-                    className="pf-c-form__group-label-help"
+                  <span
+                    tabIndex={0}
+                    aria-label="Provide a name that will help you associate this manifest with a specific
+                      organization or on-premise subscription management application."
                   >
-                    <HelpIcon noVerticalAlign />
-                  </button>
-                </Popover>
+                    <HelpIcon />
+                  </span>
+                </Tooltip>
               }
               isRequired
               fieldId="create-satellite-manifest-form-name"
@@ -154,24 +153,23 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               helperTextInvalid="Please select a version for your new manifest"
               validated={versionValidated}
               labelIcon={
-                <Popover
-                  bodyContent={
+                <Tooltip
+                  position="top"
+                  content={
                     <div>
                       Due to variation in supported features, it is important to match the type and
                       version of the subscription management application you are using.
                     </div>
                   }
                 >
-                  <button
-                    type="button"
-                    aria-label="More info for type field"
-                    onClick={(e) => e.preventDefault()}
-                    className="pf-c-form__group-label-help"
-                    aria-describedby="create-satellite-manifest-form-type"
+                  <span
+                    tabIndex={0}
+                    aria-label="Due to variation in supported features, it is important to match the type and
+                    version of the subscription management application you are using."
                   >
-                    <HelpIcon noVerticalAlign />
-                  </button>
-                </Popover>
+                    <HelpIcon />
+                  </span>
+                </Tooltip>
               }
               isRequired
               fieldId="create-satellite-manifest-form-type"
