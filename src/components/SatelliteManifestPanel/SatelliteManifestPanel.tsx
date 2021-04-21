@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 import {
   Badge,
-  Button,
   Flex,
   FlexItem,
   PageSection,
@@ -25,14 +24,20 @@ import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
 import './SatelliteManifestPanel.scss';
-import NoManifestsFound from '../emptyState/NoManifestsFound';
+import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
+import { NoManifestsFound, Processing } from '../emptyState';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
+  isFetching: boolean;
   user: User;
 }
 
-const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({ data, user }) => {
+const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
+  data,
+  isFetching,
+  user
+}) => {
   const [columns] = useState([
     { title: 'Name', transforms: [sortable] },
     { title: 'Version', transforms: [sortable] },
@@ -129,6 +134,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
+        isDisabled={isFetching}
         itemCount={count()}
         perPage={perPage}
         page={page}
@@ -143,7 +149,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     <PageSection variant="light">
       <Title headingLevel="h2">
         Satellite Manifests
-        <Badge isRead>{count()}</Badge>
+        {!isFetching && <Badge isRead>{count()}</Badge>}
       </Title>
       <Flex
         direction={{ default: 'column', md: 'row' }}
@@ -161,7 +167,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             </SplitItem>
             {user.isOrgAdmin === true && (
               <SplitItem>
-                <Button variant="primary">Create new manifest</Button>
+                <CreateManifestButtonWithModal />
               </SplitItem>
             )}
           </Split>
@@ -171,7 +177,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       <Table
         aria-label="Satellite Manifest Table"
         cells={columns}
-        rows={paginatedRows()}
+        rows={isFetching ? [] : paginatedRows()}
         sortBy={sortBy}
         onSort={handleSort}
       >
@@ -179,7 +185,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <TableBody />
       </Table>
       {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
-      {data.length === 0 && <NoManifestsFound />}
+      {!isFetching && data.length === 0 && <NoManifestsFound />}
+      {isFetching && <Processing />}
       {pagination(PaginationVariant.bottom)}
     </PageSection>
   );
