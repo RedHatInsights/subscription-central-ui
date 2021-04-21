@@ -63,7 +63,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             label="Name"
             helperTextInvalid={errors.satelliteManifestName?.message}
             helperTextInvalidIcon={<ExclamationCircleIcon />}
-            validated={errors.satelliteManifestName ? 'error' : 'noval'}
+            validated={errors.satelliteManifestName ? 'error' : 'default'}
             labelIcon={
               <Tooltip
                 position="top"
@@ -97,8 +97,8 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
                   message: 'Your manifest name must be less than 100 characters'
                 },
                 pattern: {
-                  value: /^[0-9A-Za-z_.-]+$/,
-                  message: `Your manifest name must use 
+                  value: /^[0-9A-Za-z_.-]*$/,
+                  message: `Your manifest name may contain
                 only numbers, letters, underscores, hyphens, and periods.`
                 }
               }}
@@ -116,7 +116,8 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           <FormGroup
             label="Type"
             helperTextInvalid={errors.satelliteManifestType?.message}
-            validated={errors.satelliteManifestType ? 'error' : 'noval'}
+            helperTextInvalidIcon={<ExclamationCircleIcon />}
+            validated={errors.satelliteManifestType ? 'error' : 'default'}
             labelIcon={
               <Tooltip
                 position="top"
