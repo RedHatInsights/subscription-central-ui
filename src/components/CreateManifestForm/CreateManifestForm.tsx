@@ -1,4 +1,5 @@
 import React, { useState, FC } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import {
   Button,
   ActionGroup,
@@ -28,91 +29,22 @@ interface CreateManifestFormProps {
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const { satelliteVersions, handleModalToggle, submitForm, isLoading, isError, isSuccess } = props;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({ mode: 'onBlur' });
+  const [manifestName, setManifestName] = useState('');
 
-  const [name, setName] = useState('');
-  const [version, setVersion] = useState('Select type');
-  const [nameValidated, setNameValidated] = useState('noval');
-  const [nameHasInvalidCharacters, setNameHasInvalidCharacters] = useState(false);
-  const [versionValidated, setVersionValidated] = useState('noval');
+  interface FormData {
+    satelliteManifestName: string;
+    satelliteManifestType: string;
+  }
 
-  const clearErrors = () => {
-    setNameValidated('noval');
-    setVersionValidated('noval');
-    setNameHasInvalidCharacters(false);
+  const onSubmit = ({ satelliteManifestName, satelliteManifestType }: FormData): void => {
+    submitForm(satelliteManifestName, satelliteManifestType);
+    setManifestName(satelliteManifestName);
   };
-
-  const handleNameChange = (value: string) => {
-    if (name.length) {
-      setNameValidated('noval');
-    }
-    setName(value);
-  };
-
-  const handleSelectChange = (value: string) => {
-    setVersionValidated('noval');
-    setVersion(value);
-  };
-
-  const validateNameHasAcceptedChars = (name: string) => {
-    if (name.length >= 100) {
-      return false;
-    }
-
-    if (name.length === 0) {
-      return true;
-    }
-
-    const regExp = new RegExp('^[0-9A-Za-z_.-]+$');
-    const result = regExp.test(name);
-    return regExp.test(name);
-  };
-
-  const validateName = () => {
-    clearErrors();
-    let nameIsValid = true;
-    if (!name.length) {
-      setNameValidated('error');
-      nameIsValid = false;
-    }
-    if (validateNameHasAcceptedChars(name) === false) {
-      setNameValidated('error');
-      setNameHasInvalidCharacters(true);
-      nameIsValid = false;
-    }
-    return nameIsValid;
-  };
-
-  const validateVersionSelect = () => {
-    let versionSelectIsValid = true;
-    if (version === 'Select type') {
-      setVersionValidated('error');
-      versionSelectIsValid = false;
-    }
-    return versionSelectIsValid;
-  };
-
-  const validateForm = () => {
-    clearErrors();
-    let canSubmit = true;
-    const nameIsValid = validateName();
-    const versionSelectIsValid = validateVersionSelect();
-    if (nameIsValid === false || versionSelectIsValid === false) {
-      canSubmit = false;
-    }
-
-    return canSubmit;
-  };
-
-  const handleFormSubmit = () => {
-    const formIsValid = validateForm();
-    if (!formIsValid) return;
-    submitForm(name, version);
-  };
-
-  const nameHelperTextInvalid = nameHasInvalidCharacters
-    ? `Your manifest name must be less than 100 characters and use only numbers, letters,
-       underscores, hyphens, and periods.`
-    : 'Please provide a name for your new manifest';
 
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
@@ -129,9 +61,9 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
         <Form isWidthLimited>
           <FormGroup
             label="Name"
-            helperTextInvalid={nameHelperTextInvalid}
-            validated={nameValidated}
+            helperTextInvalid={errors.satelliteManifestName?.message}
             helperTextInvalidIcon={<ExclamationCircleIcon />}
+            validated={errors.satelliteManifestName ? 'error' : 'noval'}
             labelIcon={
               <Tooltip
                 position="top"
@@ -154,20 +86,37 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             isRequired
             fieldId="create-satellite-manifest-form-name"
           >
-            <TextInput
-              isRequired
-              type="text"
-              id="create-satellite-manifest-form-name"
-              value={name}
-              placeholder="Name"
-              onChange={handleNameChange}
-              onBlur={validateName}
+            <Controller
+              name="satelliteManifestName"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: 'Please provide a name for your new manifest',
+                maxLength: {
+                  value: 99,
+                  message: 'Your manifest name must be less than 100 characters'
+                },
+                pattern: {
+                  value: /^[0-9A-Za-z_.-]+$/,
+                  message: `Your manifest name must use 
+                only numbers, letters, underscores, hyphens, and periods.`
+                }
+              }}
+              render={({ field }: any) => (
+                <TextInput
+                  isRequired
+                  type="text"
+                  id="create-satellite-manifest-form-name"
+                  placeholder="Name"
+                  {...field}
+                />
+              )}
             />
           </FormGroup>
           <FormGroup
             label="Type"
-            helperTextInvalid="Please select a version for your new manifest"
-            validated={versionValidated}
+            helperTextInvalid={errors.satelliteManifestType?.message}
+            validated={errors.satelliteManifestType ? 'error' : 'noval'}
             labelIcon={
               <Tooltip
                 position="top"
@@ -190,37 +139,43 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             isRequired
             fieldId="create-satellite-manifest-form-type"
           >
-            <FormSelect
-              value={version}
-              onChange={handleSelectChange}
-              aria-label="FormSelect Input"
-              validated={versionValidated}
-              id="create-satellite-manifest-form-type"
-            >
-              <FormSelectOption
-                isDisabled={true}
-                key="select version"
-                value="Select type"
-                label="Select type"
-              />
-              {satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
-                return (
+            <Controller
+              name="satelliteManifestType"
+              control={control}
+              rules={{ required: 'Please select a version for your new manifest' }}
+              defaultValue=""
+              render={({ field }) => (
+                <FormSelect
+                  aria-label="FormSelect Input"
+                  id="create-satellite-manifest-form-type"
+                  {...field}
+                >
                   <FormSelectOption
-                    isDisabled={false}
-                    key={satelliteVersion.value}
-                    value={satelliteVersion.value}
-                    label={satelliteVersion.description}
+                    isDisabled={true}
+                    key="Select type"
+                    value=""
+                    label="Select type"
                   />
-                );
-              })}
-            </FormSelect>
+                  {satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
+                    return (
+                      <FormSelectOption
+                        isDisabled={false}
+                        key={satelliteVersion.value}
+                        value={satelliteVersion.value}
+                        label={satelliteVersion.description}
+                      />
+                    );
+                  })}
+                </FormSelect>
+              )}
+            />
           </FormGroup>
           <ActionGroup>
             <Button
               key="confirm"
               id="save-manifest-button"
               variant="primary"
-              onClick={handleFormSubmit}
+              onClick={handleSubmit(onSubmit)}
             >
               Save
             </Button>
@@ -244,7 +199,10 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
       {shouldShowForm && renderForm()}
       {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
       {isSuccess && (
-        <CreateManifestFormSuccess handleModalToggle={handleModalToggle} manifestName={name} />
+        <CreateManifestFormSuccess
+          handleModalToggle={handleModalToggle}
+          manifestName={manifestName}
+        />
       )}
       {isError && <CreateManifestFormError />}
     </>
