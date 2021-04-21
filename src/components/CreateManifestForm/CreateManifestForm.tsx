@@ -99,7 +99,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
                 pattern: {
                   value: /^[0-9A-Za-z_.-]*$/,
                   message: `Your manifest name may contain
-                only numbers, letters, underscores, hyphens, and periods.`
+                  only numbers, letters, underscores, hyphens, and periods.`
                 }
               }}
               render={({ field }: any) => (
