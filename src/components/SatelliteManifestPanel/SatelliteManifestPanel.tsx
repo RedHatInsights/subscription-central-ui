@@ -163,16 +163,34 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     );
   };
 
+  interface Row {
+    cells: string[] | { title: '' | React.ReactNode }[];
+    fullWidth?: boolean;
+    noPadding?: boolean;
+    parent?: number;
+    isOpen?: boolean;
+  }
+
   const getRowsWithAllocationDetails = () => {
+    /**
+     * Go through each row and add a toggleable row
+     * with details beneath it.
+     */
+
     const tableRows = paginatedRows();
 
-    const rowsWithAllocationDetails: any = [];
+    const rowsWithAllocationDetails: Row[] = [];
+
     tableRows.forEach((row, i) => {
       const isOpen = rowExpandedStatus[i];
-      rowsWithAllocationDetails.push({ isOpen, cells: [...row] });
       const uuid = row[3];
       const parentIndex = (i + 1) * 2 - 2;
       const expandedContent = isOpen ? <ManifestEntitlementsListContainer uuid={uuid} /> : '';
+
+      // Add original row
+      rowsWithAllocationDetails.push({ isOpen, cells: [...row] });
+
+      // Add details row
       rowsWithAllocationDetails.push({
         parent: parentIndex,
         fullWidth: true,
