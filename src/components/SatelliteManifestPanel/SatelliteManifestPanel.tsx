@@ -157,14 +157,16 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       >
         <FlexItem>
           <Split hasGutter>
-            <SplitItem isFilled>
-              <SearchInput
-                placeholder="Filter by name, version or UUID"
-                value={searchValue}
-                onChange={handleSearch}
-                onClear={clearSearch}
-              />
-            </SplitItem>
+            {data.length > 0 && (
+              <SplitItem isFilled>
+                <SearchInput
+                  placeholder="Filter by name, version or UUID"
+                  value={searchValue}
+                  onChange={handleSearch}
+                  onClear={clearSearch}
+                />
+              </SplitItem>
+            )}
             {user.isOrgAdmin === true && (
               <SplitItem>
                 <CreateManifestButtonWithModal />
