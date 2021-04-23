@@ -8,7 +8,7 @@ jest.mock('../../../hooks/useManifestEntitlements');
 
 const queryClient = new QueryClient();
 
-describe('Manifest Entitlements Container', () => {
+describe('Manifest Entitlements List Container', () => {
   it('renders correctly once entitlements have been loaded', async () => {
     (useManifestEntitlements as jest.Mock).mockReturnValue({
       isLoading: false,
