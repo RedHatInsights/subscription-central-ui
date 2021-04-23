@@ -2,9 +2,10 @@ import React, { FC } from 'react';
 import { Table, TableHeader, TableBody } from '@patternfly/react-table';
 import { Processing } from '../emptyState';
 import './ManifestEntitlementsList.scss';
+import { EntitlementsAttachedData, ManifestEntitlement } from '../../hooks/useManifestEntitlements';
 
 interface ManifestEntitlementsListProps {
-  entitlementsData: any;
+  entitlementsData: EntitlementsAttachedData;
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
@@ -33,22 +34,25 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
     return `${year}-${month}-${day}`;
   };
 
-  let rows = [];
+  type row = [string, string, string, number, string, string];
+  let rows = [] as row[];
 
   if (entitlementsData?.value) {
-    rows = entitlementsData?.value.map((entitlement: any) => {
-      const formattedStartDate = getFormattedDate(entitlement.startDate);
-      const formattedEndDate = getFormattedDate(entitlement.endDate);
+    rows = entitlementsData?.value.map(
+      (entitlement: ManifestEntitlement): row => {
+        const formattedStartDate = getFormattedDate(entitlement.startDate);
+        const formattedEndDate = getFormattedDate(entitlement.endDate);
 
-      return [
-        entitlement.subscriptionName || '',
-        entitlement.sku,
-        entitlement.contractNumber,
-        entitlement.entitlementQuantity,
-        formattedStartDate || '',
-        formattedEndDate || ''
-      ];
-    });
+        return [
+          entitlement.subscriptionName || '',
+          entitlement.sku,
+          entitlement.contractNumber,
+          entitlement.entitlementQuantity,
+          formattedStartDate || '',
+          formattedEndDate || ''
+        ];
+      }
+    );
   }
 
   const actions = [

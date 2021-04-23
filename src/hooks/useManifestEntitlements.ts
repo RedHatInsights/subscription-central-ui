@@ -11,20 +11,22 @@ interface ManifestEntitlement {
   subscriptionName?: string;
 }
 
-interface ManifestEntitlements {
+interface ManifestEntitlementsData {
   body: {
     contentAccessMode: string;
     createdBy: string;
     createdDate: string;
-    entitlementsAttached: {
-      valid: boolean;
-      reason?: string;
-      value?: ManifestEntitlement[];
-    };
+    entitlementsAttached: EntitlementsAttachedData;
   };
 }
 
-const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlements> => {
+interface EntitlementsAttachedData {
+  valid: boolean;
+  reason?: string;
+  value?: ManifestEntitlement[];
+}
+
+const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlementsData> => {
   const cs_jwt = Cookies.get('cs_jwt');
   return fetch(
     `https://api.access.qa.redhat.com/management/v1/allocations/${uuid}?include=entitlements`,
@@ -41,8 +43,13 @@ const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlements> =>
 
 const useManifestEntitlements = (
   uuid: string
-): QueryObserverResult<ManifestEntitlements, unknown> => {
+): QueryObserverResult<ManifestEntitlementsData, unknown> => {
   return useQuery<any, Error>(['manifestEntitlements', uuid], () => getManifestEntitlements(uuid));
 };
 
-export { ManifestEntitlements, ManifestEntitlement, useManifestEntitlements as default };
+export {
+  EntitlementsAttachedData,
+  ManifestEntitlementsData,
+  ManifestEntitlement,
+  useManifestEntitlements as default
+};

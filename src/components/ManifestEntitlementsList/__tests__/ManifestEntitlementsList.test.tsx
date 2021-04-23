@@ -59,7 +59,10 @@ describe('Manifest Entitlements List', () => {
       isLoading: true,
       isSuccess: false,
       isError: false,
-      entitlementsData: {}
+      entitlementsData: {
+        valid: false,
+        reason: 'No Allocations found'
+      }
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();
