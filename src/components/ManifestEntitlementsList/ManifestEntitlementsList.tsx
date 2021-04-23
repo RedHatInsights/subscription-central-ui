@@ -34,12 +34,12 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
     return `${year}-${month}-${day}`;
   };
 
-  type row = [string, string, string, number, string, string];
-  let rows = [] as row[];
+  type ManifestEntitlementListRow = [string, string, string, number, string, string];
+  let rows = [] as ManifestEntitlementListRow[];
 
   if (entitlementsData?.value) {
     rows = entitlementsData?.value.map(
-      (entitlement: ManifestEntitlement): row => {
+      (entitlement: ManifestEntitlement): ManifestEntitlementListRow => {
         const formattedStartDate = getFormattedDate(entitlement.startDate);
         const formattedEndDate = getFormattedDate(entitlement.endDate);
 
