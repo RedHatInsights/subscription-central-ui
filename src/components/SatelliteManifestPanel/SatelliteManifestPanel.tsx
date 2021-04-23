@@ -58,7 +58,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
-  const [sortBy, setSortBy] = useState({ index: 0, direction: SortByDirection.asc });
+  const [sortBy, setSortBy] = useState({ index: 1, direction: SortByDirection.asc });
   const [rowExpandedStatus, setRowExpandedStatus] = useState([
     false,
     false,
@@ -123,11 +123,19 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   const sortedRows = () => {
     const { direction, index } = sortBy;
+    /**
+     * This adjustedIndex is necessary because Patternfly
+     * has a strange quirk where, when a table has an
+     * onCollapse attribute, its index starts at 1, which throws off
+     * the sorting without the adjustment.
+     */
+
+    const adjustedIndex = index - 1;
     const directionFactor = direction === SortByDirection.desc ? -1 : 1;
 
     return filteredRows().sort((a: [string, string, string], b: [string, string, string]) => {
-      const term1 = (a[index] || '').toLowerCase();
-      const term2 = (b[index] || '').toLowerCase();
+      const term1 = (a[adjustedIndex] || '').toLowerCase();
+      const term2 = (b[adjustedIndex] || '').toLowerCase();
       if (term1 < term2) {
         return -1 * directionFactor;
       } else if (term1 > term2) {
