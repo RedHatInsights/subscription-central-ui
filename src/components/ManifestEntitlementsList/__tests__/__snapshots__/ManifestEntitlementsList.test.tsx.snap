@@ -1,0 +1,213 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Manifest Entitlements List renders correctly 1`] = `
+<div>
+  <table
+    aria-label="Allocations table"
+    class="manifests_entitlement-list-table pf-c-table pf-m-grid-md pf-m-no-border-rows"
+    data-ouia-component-id="OUIA-Generated-Table-2"
+    data-ouia-component-type="PF4/Table"
+    data-ouia-safe="true"
+    role="grid"
+  >
+    <thead
+      class="manifest-entitlements-list-header"
+    >
+      <tr
+        class=""
+        data-ouia-component-id="OUIA-Generated-TableRow-1"
+        data-ouia-component-type="PF4/TableRow"
+        data-ouia-safe="true"
+      >
+        <th
+          class=""
+          data-key="0"
+          data-label="Subscription name"
+          scope="col"
+        >
+          Subscription name
+        </th>
+        <th
+          class=""
+          data-key="1"
+          data-label="SKU"
+          scope="col"
+        >
+          SKU
+        </th>
+        <th
+          class=""
+          data-key="2"
+          data-label="Contract number"
+          scope="col"
+        >
+          Contract number
+        </th>
+        <th
+          class=""
+          data-key="3"
+          data-label="Quantity"
+          scope="col"
+        >
+          Quantity
+        </th>
+        <th
+          class=""
+          data-key="4"
+          data-label="Start date"
+          scope="col"
+        >
+          Start date
+        </th>
+        <th
+          class=""
+          data-key="5"
+          data-label="End date"
+          scope="col"
+        >
+          End date
+        </th>
+        <td
+          class=""
+          data-key="6"
+          data-label=""
+        />
+      </tr>
+    </thead>
+    <tbody
+      class=""
+      role="rowgroup"
+    >
+      <tr
+        class=""
+        data-ouia-component-id="OUIA-Generated-TableRow-2"
+        data-ouia-component-type="PF4/TableRow"
+        data-ouia-safe="true"
+      >
+        <td
+          class=""
+          data-key="0"
+          data-label="Subscription name"
+        />
+        <td
+          class=""
+          data-key="1"
+          data-label="SKU"
+        >
+          sku123
+        </td>
+        <td
+          class=""
+          data-key="2"
+          data-label="Contract number"
+        >
+          12345
+        </td>
+        <td
+          class=""
+          data-key="3"
+          data-label="Quantity"
+        >
+          10
+        </td>
+        <td
+          class=""
+          data-key="4"
+          data-label="Start date"
+        >
+          2021-01-01
+        </td>
+        <td
+          class=""
+          data-key="5"
+          data-label="End date"
+        >
+          2022-01-01
+        </td>
+        <td
+          class="pf-c-table__action"
+          data-key="6"
+        >
+          <div
+            class="pf-c-dropdown pf-m-align-right"
+            data-ouia-component-id="OUIA-Generated-Dropdown-1"
+            data-ouia-component-type="PF4/Dropdown"
+            data-ouia-safe="true"
+          >
+            <button
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-label="Actions"
+              class="pf-c-dropdown__toggle pf-m-plain"
+              id="pf-dropdown-toggle-id-0"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="currentColor"
+                height="1em"
+                role="img"
+                style="vertical-align: -0.125em;"
+                viewBox="0 0 192 512"
+                width="1em"
+              >
+                <path
+                  d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"
+                />
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Manifest Entitlements List renders correctly when no entitlements are attached to the manifest 1`] = `
+<div>
+  <p
+    class="no-entitlements-reason"
+  >
+    No Entitlements are attached to the Allocation
+  </p>
+</div>
+`;
+
+exports[`Manifest Entitlements List renders loading when loading 1`] = `
+<div>
+  <div
+    class="entitlement-list-loading-container"
+  >
+    <div
+      class="pf-l-bullseye"
+    >
+      <span
+        aria-valuetext="Loading..."
+        class="pf-c-spinner pf-m-xl"
+        role="progressbar"
+      >
+        <span
+          class="pf-c-spinner__clipper"
+        />
+        <span
+          class="pf-c-spinner__lead-ball"
+        />
+        <span
+          class="pf-c-spinner__tail-ball"
+        />
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Manifest Entitlements List renders with an error message when the API call fails 1`] = `
+<div>
+  <p
+    class="no-entitlements-reason"
+  >
+    No Entitlements are attached to the Allocation
+  </p>
+</div>
+`;

@@ -37,8 +37,9 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
 
   if (entitlementsData?.value) {
     rows = entitlementsData?.value.map((entitlement: any) => {
-      const formattedStartDate = getFormattedDate(entitlementsData.startDate);
-      const formattedEndDate = getFormattedDate(entitlementsData.endDate);
+      const formattedStartDate = getFormattedDate(entitlement.startDate);
+      const formattedEndDate = getFormattedDate(entitlement.endDate);
+
       return [
         entitlement.subscriptionName || '',
         entitlement.sku,
@@ -54,12 +55,14 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
     {
       title: 'Remove Subscription',
       onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+        // placeholder for now
         console.log('clicked on Some action, on row: ', rowId, rowData);
       }
     },
     {
       title: 'Move Subscription',
       onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+        // placeholder for now
         console.log('clicked on Some action, on row: ', rowId, rowData);
       }
     }
