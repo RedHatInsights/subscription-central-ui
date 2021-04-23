@@ -1,7 +1,30 @@
-import { useQuery } from 'react-query';
+import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
 
-const getManifestEntitlements = (uuid: string): any => {
+interface ManifestEntitlement {
+  id: string;
+  sku: string;
+  contractNumber: string;
+  entitlementQuantity: number;
+  startDate?: string;
+  endDate?: string;
+  subscriptionName?: string;
+}
+
+interface ManifestEntitlements {
+  body: {
+    contentAccessMode: string;
+    createdBy: string;
+    createdDate: string;
+    entitlementsAttached: {
+      valid: boolean;
+      reason?: string;
+      value?: ManifestEntitlement[];
+    };
+  };
+}
+
+const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlements> => {
   const cs_jwt = Cookies.get('cs_jwt');
   return fetch(
     `https://api.access.qa.redhat.com/management/v1/allocations/${uuid}?include=entitlements`,
@@ -16,8 +39,10 @@ const getManifestEntitlements = (uuid: string): any => {
     });
 };
 
-const useManifestEntitlements = (uuid: string) => {
+const useManifestEntitlements = (
+  uuid: string
+): QueryObserverResult<ManifestEntitlements, unknown> => {
   return useQuery<any, Error>(['manifestEntitlements', uuid], () => getManifestEntitlements(uuid));
 };
 
-export { useManifestEntitlements as default };
+export { ManifestEntitlements, ManifestEntitlement, useManifestEntitlements as default };
