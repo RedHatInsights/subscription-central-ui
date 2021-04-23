@@ -59,18 +59,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
   const [sortBy, setSortBy] = useState({ index: 1, direction: SortByDirection.asc });
-  const [rowExpandedStatus, setRowExpandedStatus] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ]);
+  const [rowExpandedStatus, setRowExpandedStatus] = useState(new Array(10).fill(false));
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
     setPerPage(perPage);
