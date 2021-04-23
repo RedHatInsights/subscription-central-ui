@@ -16,9 +16,6 @@ describe('Manifest Entitlements Container', () => {
       isError: false,
       data: {
         body: {
-          contentAccessMode: 'Entitlement Access',
-          createdBy: 'john.doe@redhat.com',
-          createdDate: '2021-01-26T18:01:13.000Z',
           entitlementsAttached: {
             valid: true,
             value: [
