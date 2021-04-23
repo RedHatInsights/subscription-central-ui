@@ -74,7 +74,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
 
   return (
     <>
-      {isLoading && (
+      {isLoading && !isError && (
         <div className="entitlement-list-loading-container">
           <Processing />
         </div>
