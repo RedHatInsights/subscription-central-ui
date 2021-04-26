@@ -48,8 +48,8 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
           entitlement.sku,
           entitlement.contractNumber,
           entitlement.entitlementQuantity,
-          formattedStartDate || '',
-          formattedEndDate || ''
+          formattedStartDate,
+          formattedEndDate
         ];
       }
     );
@@ -80,7 +80,9 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
         </div>
       )}
       {isSuccess && !entitlementsData.valid && (
-        <p className="no-entitlements-reason">{entitlementsData.reason}</p>
+        <div className="no-entitlements-reason">
+          <p>{entitlementsData.reason}</p>
+        </div>
       )}
       {isSuccess && entitlementsData.valid && (
         <Table
@@ -91,7 +93,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
           actions={actions}
           className="manifests_entitlement-list-table"
         >
-          <TableHeader className="manifest-entitlements-list-header" />
+          <TableHeader />
           <TableBody />
         </Table>
       )}

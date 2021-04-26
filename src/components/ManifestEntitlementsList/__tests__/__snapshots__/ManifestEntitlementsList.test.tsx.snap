@@ -11,7 +11,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
     role="grid"
   >
     <thead
-      class="manifest-entitlements-list-header"
+      class=""
     >
       <tr
         class=""
@@ -166,11 +166,13 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
 
 exports[`Manifest Entitlements List renders correctly when no entitlements are attached to the manifest 1`] = `
 <div>
-  <p
+  <div
     class="no-entitlements-reason"
   >
-    No Entitlements are attached to the Allocation
-  </p>
+    <p>
+      No Entitlements are attached to the Allocation
+    </p>
+  </div>
 </div>
 `;
 
@@ -204,10 +206,12 @@ exports[`Manifest Entitlements List renders loading when loading 1`] = `
 
 exports[`Manifest Entitlements List renders with an error message when the API call fails 1`] = `
 <div>
-  <p
+  <div
     class="no-entitlements-reason"
   >
-    No Entitlements are attached to the Allocation
-  </p>
+    <p>
+      No Entitlements are attached to the Allocation
+    </p>
+  </div>
 </div>
 `;

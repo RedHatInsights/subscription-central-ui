@@ -11,7 +11,7 @@ exports[`Manifest Entitlements List Container renders correctly once entitlement
     role="grid"
   >
     <thead
-      class="manifest-entitlements-list-header"
+      class=""
     >
       <tr
         class=""
