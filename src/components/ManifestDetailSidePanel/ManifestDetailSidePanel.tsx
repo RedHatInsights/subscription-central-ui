@@ -11,15 +11,15 @@ import {
 import { ErrorMessage, Processing } from '../emptyState';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
-import './ManifestDetailDrawer.scss';
+import './ManifestDetailSidePanel.scss';
 
-interface ManifestDetailDrawerProps {
+interface ManifestDetailSidePanelProps {
   uuid: string;
   onCloseClick: () => void;
   openCurrentEntitlementsListFromPanel: () => void;
 }
 
-const ManifestDetailDrawer: FC<ManifestDetailDrawerProps> = ({
+const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   uuid,
   onCloseClick,
   openCurrentEntitlementsListFromPanel
@@ -173,4 +173,4 @@ const ManifestDetailDrawer: FC<ManifestDetailDrawerProps> = ({
   );
 };
 
-export default ManifestDetailDrawer;
+export default ManifestDetailSidePanel;

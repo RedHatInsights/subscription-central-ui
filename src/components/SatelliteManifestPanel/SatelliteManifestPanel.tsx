@@ -32,7 +32,7 @@ import './SatelliteManifestPanel.scss';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
-import ManifestDetailDrawer from '../ManifestDetailDrawer';
+import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -261,7 +261,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   // The ternary here is to avoid calling the API when collapsed.
   const panelContent = detailsDrawerIsExpanded ? (
-    <ManifestDetailDrawer
+    <ManifestDetailSidePanel
       uuid={currentDetailUUID}
       onCloseClick={closeDetailsPanel}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
