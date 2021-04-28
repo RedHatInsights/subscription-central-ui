@@ -13,7 +13,7 @@ import {
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
-import CreateManifestFormError from './CreateManifestFormError';
+import ErrorMessage from '../emptyState/ErrorMessage';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
 import CreateManifestFormSuccess from './CreateManifestFormSuccess';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
@@ -205,7 +205,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           manifestName={manifestName}
         />
       )}
-      {isError && <CreateManifestFormError />}
+      {isError && <ErrorMessage />}
     </>
   );
 };

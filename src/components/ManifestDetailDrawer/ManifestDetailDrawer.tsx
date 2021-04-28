@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import {
   Button,
   DrawerPanelContent,
@@ -8,35 +8,32 @@ import {
   Grid,
   GridItem
 } from '@patternfly/react-core';
-import { Processing } from '../emptyState';
-import './ManifestDetailDrawer.scss';
+import { ErrorMessage, Processing } from '../emptyState';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
+import useManifestEntitlements from '../../hooks/useManifestEntitlements';
+import './ManifestDetailDrawer.scss';
 
 interface ManifestDetailDrawerProps {
-  manifestData: any;
-  isLoading: boolean;
-  isFetching: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  isExpanded: boolean;
-  onExpand: () => void;
+  uuid: string;
   onCloseClick: () => void;
   openCurrentEntitlementsListFromPanel: () => void;
 }
 
 const ManifestDetailDrawer: FC<ManifestDetailDrawerProps> = ({
-  manifestData,
-  isLoading,
-  isFetching,
-  isSuccess,
-  isError,
-  isExpanded,
-  onExpand,
+  uuid,
   onCloseClick,
   openCurrentEntitlementsListFromPanel
 }) => {
+  const drawerRef = useRef(null);
+
+  const { isLoading, isFetching, isSuccess, isError, data } = useManifestEntitlements(uuid);
+
+  useEffect(() => {
+    drawerRef.current && drawerRef.current.focus();
+  }, [isSuccess]);
+
   const DetailsContent = () => {
-    if (!manifestData) return;
+    if (!data?.body) return <ErrorMessage />;
 
     const {
       uuid,
@@ -48,11 +45,13 @@ const ManifestDetailDrawer: FC<ManifestDetailDrawerProps> = ({
       lastModified,
       entitlementsAttachedQuantity,
       contentAccessMode
-    } = manifestData;
+    } = data.body;
 
     return (
       <div className="manifest-details-content">
-        <h3>{name}</h3>
+        <h3 tabIndex={isSuccess ? 0 : -1} ref={drawerRef}>
+          {name}
+        </h3>
         <h4>Details</h4>
         <Grid>
           <GridItem span={6}>
@@ -149,7 +148,12 @@ const ManifestDetailDrawer: FC<ManifestDetailDrawerProps> = ({
   };
 
   const Loading = () => (
-    <div className="manifest-detail-drawer-loading">
+    <div
+      className="manifest-detail-drawer-loading"
+      aria-label="Loading Manifest Details"
+      tabIndex={isSuccess ? 0 : -1}
+      ref={drawerRef}
+    >
       <Processing />
     </div>
   );
@@ -160,7 +164,7 @@ const ManifestDetailDrawer: FC<ManifestDetailDrawerProps> = ({
         {isLoading && <Loading />}
         {isFetching && !isLoading && <Loading />}
         {isSuccess && <DetailsContent />}
-        {isError && 'Something went wrong.  Please refresh the page and try again.'}
+        {isError && <ErrorMessage />}
         <DrawerActions>
           <DrawerCloseButton onClick={onCloseClick} />
         </DrawerActions>

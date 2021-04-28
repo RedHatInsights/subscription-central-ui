@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useState, useRef } from 'react';
 import {
   Badge,
+  Button,
   Drawer,
   DrawerContent,
   DrawerContentBody,
@@ -31,7 +32,7 @@ import './SatelliteManifestPanel.scss';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
-import { ManifestDetailDrawerContainer } from '../ManifestDetailDrawer';
+import ManifestDetailDrawer from '../ManifestDetailDrawer';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -64,20 +65,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [searchValue, setSearchValue] = useState('');
   const [sortBy, setSortBy] = useState({ index: 1, direction: SortByDirection.asc });
   const [rowExpandedStatus, setRowExpandedStatus] = useState(new Array(10).fill(false));
-
-  /**
-   * Work for TEAMNADO-1992
-   */
-
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
 
   const drawerRef = useRef(null);
-
-  const onExpand = () => {
-    drawerRef.current && drawerRef.current.focus();
-  };
 
   const openDetailsPanel = (uuid: string, rowIndex: number): void => {
     setCurrentDetailUUID(uuid);
@@ -98,9 +90,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
     return [
       <>
-        <span style={{ color: 'blue' }} onClick={() => openDetailsPanel(uuid, rowIndex)}>
+        <Button variant="link" onClick={() => openDetailsPanel(uuid, rowIndex)}>
           {name}
-        </span>
+        </Button>
       </>,
       version,
       scaStatus,
@@ -267,18 +259,19 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus(newRowExpandedStatus);
   };
 
-  const panelContent = (
-    <ManifestDetailDrawerContainer
+  // The ternary here is to avoid calling the API when collapsed.
+  const panelContent = detailsDrawerIsExpanded ? (
+    <ManifestDetailDrawer
       uuid={currentDetailUUID}
-      isExpanded={detailsDrawerIsExpanded}
-      onExpand={onExpand}
       onCloseClick={closeDetailsPanel}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
     />
+  ) : (
+    <></>
   );
 
   return (
-    <Drawer isExpanded={detailsDrawerIsExpanded} onExpand={onExpand}>
+    <Drawer isExpanded={detailsDrawerIsExpanded}>
       <DrawerContent panelContent={panelContent}>
         <DrawerContentBody>
           <PageSection variant="light">

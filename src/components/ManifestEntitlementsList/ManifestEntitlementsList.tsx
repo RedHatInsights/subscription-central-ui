@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useRef, useEffect } from 'react';
 import { Table, TableHeader, TableBody } from '@patternfly/react-table';
 import { Processing } from '../emptyState';
 import './ManifestEntitlementsList.scss';
@@ -17,6 +17,12 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
   isSuccess,
   isError
 }) => {
+  const listTableRef = useRef(null);
+
+  useEffect(() => {
+    listTableRef.current && listTableRef.current.focus();
+  }, [isSuccess]);
+
   const columns = [
     'Subscription name',
     'SKU',
@@ -34,17 +40,34 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
     return `${year}-${month}-${day}`;
   };
 
-  type ManifestEntitlementListRow = [string, string, string, number, string, string];
+  type ManifestEntitlementListRow = [
+    string | React.ReactNode,
+    string,
+    string,
+    number,
+    string,
+    string
+  ];
   let rows = [] as ManifestEntitlementListRow[];
 
   if (entitlementsData?.value) {
     rows = entitlementsData?.value.map(
-      (entitlement: ManifestEntitlement): ManifestEntitlementListRow => {
+      (entitlement: ManifestEntitlement, index): ManifestEntitlementListRow => {
         const formattedStartDate = getFormattedDate(entitlement.startDate);
         const formattedEndDate = getFormattedDate(entitlement.endDate);
+        let subscriptionName: string | React.ReactNode = entitlement.subscriptionName;
 
+        if (index === 0) {
+          subscriptionName = (
+            <>
+              <span tabIndex={0} ref={listTableRef}>
+                {entitlement.subscriptionName}
+              </span>
+            </>
+          );
+        }
         return [
-          entitlement.subscriptionName || '',
+          subscriptionName,
           entitlement.sku,
           entitlement.contractNumber,
           entitlement.entitlementQuantity,
@@ -81,7 +104,9 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
       )}
       {isSuccess && !entitlementsData.valid && (
         <div className="no-entitlements-reason">
-          <p>{entitlementsData.reason}</p>
+          <p tabIndex={isSuccess ? 0 : -1} ref={listTableRef}>
+            {entitlementsData.reason}
+          </p>
         </div>
       )}
       {isSuccess && entitlementsData.valid && (

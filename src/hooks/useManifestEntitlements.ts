@@ -17,6 +17,12 @@ interface ManifestEntitlementsData {
     createdBy: string;
     createdDate: string;
     entitlementsAttached: EntitlementsAttachedData;
+    entitlementsAttachedQuantity: number;
+    lastModified: string;
+    name: string;
+    type: string;
+    uuid: string;
+    version: string;
   };
 }
 
