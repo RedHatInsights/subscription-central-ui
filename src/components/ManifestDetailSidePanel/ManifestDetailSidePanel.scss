@@ -10,19 +10,25 @@
 
   h4 {
     font-size: 18px;
-    margin: 1.5em 0 0.8em;
+    margin: 10px 0;
     font-weight: 600;
   }
 
   p {
     font-size: 14px;
-    margin: 0.4em 0;
+    margin: 4px 0;
   }
+
+  .manifest-details-open-entitlements-button {
+    padding: 0;
+    margin: 4px 0;
+  }
+
   .manifest-details-delete-text {
     margin-top: 30px;
   }
 
   button.pf-m-tertiary {
-    margin-top: 20px;
+    margin-top: 30px;
   }
 }

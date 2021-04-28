@@ -38,7 +38,6 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     const {
       uuid,
       name,
-      type,
       version,
       createdDate,
       createdBy,
@@ -46,6 +45,14 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       entitlementsAttachedQuantity,
       contentAccessMode
     } = data.body;
+
+    const formatDate = (dateString: string) => {
+      return new Date(dateString).toLocaleString('en-US', {
+        month: 'long',
+        year: 'numeric',
+        day: 'numeric'
+      });
+    };
 
     return (
       <div className="manifest-details-content">
@@ -102,7 +109,11 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
             </p>
           </GridItem>
           <GridItem span={6}>
-            <Button variant="link" onClick={openCurrentEntitlementsListFromPanel}>
+            <Button
+              variant="link"
+              onClick={openCurrentEntitlementsListFromPanel}
+              className="manifest-details-open-entitlements-button"
+            >
               {entitlementsAttachedQuantity}
             </Button>
           </GridItem>
@@ -116,7 +127,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
             </p>
           </GridItem>
           <GridItem span={6}>
-            <p>{createdDate}</p>
+            <p>{formatDate(createdDate)}</p>
           </GridItem>
 
           <GridItem span={6}>
@@ -134,7 +145,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
             </p>
           </GridItem>
           <GridItem span={6}>
-            <p>{lastModified}</p>
+            <p>{formatDate(lastModified)}</p>
           </GridItem>
         </Grid>
         <Button variant="tertiary">Export manifest</Button>
