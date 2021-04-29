@@ -24,7 +24,6 @@ interface SatelliteManifestAPIData {
 const fetchSatelliteManifestData = (): Promise<any> => {
   const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
-  console.log('api', rhsmAPIBase);
   return fetch(`${rhsmAPIBase}/management/v1/allocations`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
