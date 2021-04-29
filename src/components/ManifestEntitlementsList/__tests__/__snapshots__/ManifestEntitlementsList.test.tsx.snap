@@ -88,7 +88,11 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
           class=""
           data-key="0"
           data-label="Subscription name"
-        />
+        >
+          <span
+            tabindex="0"
+          />
+        </td>
         <td
           class=""
           data-key="1"
@@ -169,7 +173,9 @@ exports[`Manifest Entitlements List renders correctly when no entitlements are a
   <div
     class="no-entitlements-reason"
   >
-    <p>
+    <p
+      tabindex="0"
+    >
       No Entitlements are attached to the Allocation
     </p>
   </div>
@@ -209,7 +215,9 @@ exports[`Manifest Entitlements List renders with an error message when the API c
   <div
     class="no-entitlements-reason"
   >
-    <p>
+    <p
+      tabindex="0"
+    >
       No Entitlements are attached to the Allocation
     </p>
   </div>

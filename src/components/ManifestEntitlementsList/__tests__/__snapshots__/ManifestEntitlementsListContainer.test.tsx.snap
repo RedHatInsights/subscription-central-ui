@@ -88,7 +88,11 @@ exports[`Manifest Entitlements List Container renders correctly once entitlement
           class=""
           data-key="0"
           data-label="Subscription name"
-        />
+        >
+          <span
+            tabindex="0"
+          />
+        </td>
         <td
           class=""
           data-key="1"
