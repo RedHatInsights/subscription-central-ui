@@ -17,11 +17,6 @@ describe('Manifest Detail Side Panel', () => {
       isLoading: true
     }));
 
-    const props = {
-      uuid: 'abc123',
-      onCloseClick: (): any => undefined,
-      openCurrentEntitlementsListFromPanel: (): any => undefined
-    };
     const { container } = render(<ManifestDetailSidePanel {...props} />);
     expect(container).toMatchSnapshot();
   });
@@ -29,6 +24,18 @@ describe('Manifest Detail Side Panel', () => {
   it('renders with an error message when an error occurs', () => {
     (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
       isError: true
+    }));
+
+    const { container } = render(<ManifestDetailSidePanel {...props} />);
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders with an error message when the API response does not have 200 status and no data is returned', () => {
+    (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
+      isError: false,
+      isLoading: false,
+      isSuccess: true,
+      data: {}
     }));
 
     const { container } = render(<ManifestDetailSidePanel {...props} />);
