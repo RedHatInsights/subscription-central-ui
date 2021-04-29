@@ -1,5 +1,6 @@
 import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
+import { getConfig } from '../utilities/platformServices';
 
 interface ManifestEntry {
   entitlementQuantity: number;
@@ -22,7 +23,9 @@ interface SatelliteManifestAPIData {
 
 const fetchSatelliteManifestData = (): Promise<any> => {
   const jwtToken = Cookies.get('cs_jwt');
-  return fetch('https://api.access.qa.redhat.com/management/v1/allocations', {
+  const { rhsmAPIBase } = getConfig();
+  console.log('api', rhsmAPIBase);
+  return fetch(`${rhsmAPIBase}/management/v1/allocations`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
   })
