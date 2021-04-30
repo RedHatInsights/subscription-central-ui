@@ -10,7 +10,7 @@ const { config: webpackConfig, plugins } = config({
   ...(process.env.BETA && { deployment: 'beta/apps' })
 });
 
-const dotEnvParams = {
+let dotEnvParams = {
   defaults: resolve(__dirname, '../.env')
 };
 
