@@ -12,7 +12,7 @@ const { config: webpackConfig, plugins } = config({
 
 const envFileName = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
 const envPath = resolve(__dirname, `../${envFileName}`);
-plugins.push(new Dotenv({ path: envPath }));
+plugins.push(new Dotenv({ path: envPath, defaults: resolve(__dirname, '../.env') }));
 
 plugins.push(
   require('@redhat-cloud-services/frontend-components-config/federated-modules')({
