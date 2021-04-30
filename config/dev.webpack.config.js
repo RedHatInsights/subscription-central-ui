@@ -11,7 +11,7 @@ const { config: webpackConfig, plugins } = config({
   ...(process.env.BETA && { deployment: 'beta/apps' })
 });
 
-const envFileName = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env.development';
+const envFileName = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
 const envPath = resolve(__dirname, `../${envFileName}`);
 plugins.push(new Dotenv({ path: envPath, defaults: resolve(__dirname, '../.env') }));
 
