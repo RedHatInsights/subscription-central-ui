@@ -11,13 +11,15 @@ const { config: webpackConfig, plugins } = config({
   ...(process.env.BETA && { deployment: 'beta/apps' })
 });
 
-let envFileName = '.env';
+const dotEnvParams = {
+  defaults: resolve(__dirname, '../.env')
+};
+
 if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
-  envFileName = `.env.${process.env.NODE_ENV}`;
+  dotEnvParams.path = resolve(__dirname, `../.env.${process.env.NODE_ENV}`);
 }
 
-const envPath = resolve(__dirname, `../${envFileName}`);
-plugins.push(new Dotenv({ path: envPath, defaults: resolve(__dirname, '../.env') }));
+plugins.push(new Dotenv({ ...dotEnvParams }));
 
 plugins.push(
   require('@redhat-cloud-services/frontend-components-config/federated-modules')({
