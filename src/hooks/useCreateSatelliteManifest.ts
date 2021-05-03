@@ -10,7 +10,7 @@ const createSatelliteManifest = (data: CreateManifestParams) => {
   const { name, version } = data;
   const jwtToken = Cookies.get('cs_jwt');
   return fetch(
-    `${process.env.API_HOST}/management/v1/allocations?name=${name}&version=${version}`,
+    `https://api.access.qa.redhat.com/management/v1/allocations?name=${name}&version=${version}`,
     {
       method: 'POST',
       headers: { Authorization: `Bearer ${jwtToken}` }

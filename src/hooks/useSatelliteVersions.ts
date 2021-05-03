@@ -8,7 +8,7 @@ interface SatelliteVersion {
 
 const fetchSatelliteVersions = (): Promise<any> => {
   const jwtToken = Cookies.get('cs_jwt');
-  return fetch(`${process.env.API_HOST}/management/v1/allocations/versions`, {
+  return fetch('https://api.access.qa.redhat.com/management/v1/allocations/versions', {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
   })
