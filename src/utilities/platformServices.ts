@@ -1,4 +1,4 @@
-import config, { EnvironmentConfig, Config } from '../config';
+import config, { EnvironmentConfig } from './config/config';
 
 declare global {
   interface Window {
