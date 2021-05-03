@@ -9,12 +9,16 @@ export interface EnvironmentConfig {
   rhsmAPIBase: string;
 }
 
+const sharedConfig = {
+  rhsmAPIBase: 'https://api.access.qa.redhat.com'
+};
+
 const config: Config = {
   ci: {
-    rhsmAPIBase: 'https://api.access.qa.redhat.com'
+    ...sharedConfig
   },
   qa: {
-    rhsmAPIBase: 'https://api.access.qa.redhat.com'
+    ...sharedConfig
   },
   stage: {
     rhsmAPIBase: 'https://api.access.stage.redhat.com'
