@@ -1,4 +1,4 @@
-import { authenticateUser } from '../platformServices';
+import { authenticateUser, getConfig } from '../platformServices';
 
 beforeEach(() => {
   jest.clearAllMocks();
