@@ -1,3 +1,5 @@
+import config, { EnvironmentConfig } from './config/config';
+
 declare global {
   interface Window {
     insights: any;
@@ -34,4 +36,15 @@ export const authenticateUser = (): Promise<AuthenticateUserResponse> => {
   } catch (e) {
     throw new Error(`Error authenticating user: ${e.message}`);
   }
+};
+
+type AppEnvironment = 'ci' | 'qa' | 'stage' | 'prod';
+
+export const getEnvironment = (): AppEnvironment => {
+  return window?.insights?.chrome?.getEnvironment() || 'ci';
+};
+
+export const getConfig = (): EnvironmentConfig => {
+  const env = getEnvironment();
+  return config[env];
 };
