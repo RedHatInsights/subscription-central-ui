@@ -1,5 +1,6 @@
 import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
+import { getConfig } from '../utilities/platformServices';
 
 interface ManifestEntitlement {
   id: string;
@@ -28,13 +29,11 @@ interface EntitlementsAttachedData {
 
 const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlementsData> => {
   const cs_jwt = Cookies.get('cs_jwt');
-  return fetch(
-    `https://api.access.qa.redhat.com/management/v1/allocations/${uuid}?include=entitlements`,
-    {
-      headers: { Authorization: `Bearer ${cs_jwt}` },
-      mode: 'cors'
-    }
-  )
+  const { rhsmAPIBase } = getConfig();
+  return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}?include=entitlements`, {
+    headers: { Authorization: `Bearer ${cs_jwt}` },
+    mode: 'cors'
+  })
     .then((response) => response.json())
     .catch((e) => {
       console.error('Error fetching Manifest Entitlements data', e);
