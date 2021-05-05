@@ -34,7 +34,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   }, [isSuccess]);
 
   const DetailsContent = () => {
-    // Scenario when API "succeeds" but not with a 200 status
+    // This handles the scenario when the API "succeeds" but not with a 200 status
     if (!data?.body) return <ErrorMessage />;
 
     const {
