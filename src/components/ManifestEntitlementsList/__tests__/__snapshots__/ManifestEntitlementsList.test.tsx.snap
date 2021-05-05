@@ -20,7 +20,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
         data-ouia-safe="true"
       >
         <th
-          class=""
+          class="pf-m-nowrap"
           data-key="0"
           data-label="Subscription name"
           scope="col"
@@ -28,7 +28,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
           Subscription name
         </th>
         <th
-          class=""
+          class="pf-m-nowrap"
           data-key="1"
           data-label="SKU"
           scope="col"
@@ -36,7 +36,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
           SKU
         </th>
         <th
-          class=""
+          class="pf-m-nowrap"
           data-key="2"
           data-label="Contract number"
           scope="col"
@@ -44,7 +44,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
           Contract number
         </th>
         <th
-          class=""
+          class="pf-m-nowrap"
           data-key="3"
           data-label="Quantity"
           scope="col"
@@ -52,7 +52,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
           Quantity
         </th>
         <th
-          class=""
+          class="pf-m-nowrap"
           data-key="4"
           data-label="Start date"
           scope="col"
@@ -60,7 +60,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
           Start date
         </th>
         <th
-          class=""
+          class="pf-m-nowrap"
           data-key="5"
           data-label="End date"
           scope="col"

@@ -1,5 +1,5 @@
 import React, { FC, useRef, useEffect } from 'react';
-import { Table, TableHeader, TableBody } from '@patternfly/react-table';
+import { Table, TableHeader, TableBody, nowrap } from '@patternfly/react-table';
 import { Processing } from '../emptyState';
 import './ManifestEntitlementsList.scss';
 import { EntitlementsAttachedData, ManifestEntitlement } from '../../hooks/useManifestEntitlements';
@@ -24,12 +24,30 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
   }, [isSuccess]);
 
   const columns = [
-    'Subscription name',
-    'SKU',
-    'Contract number',
-    'Quantity',
-    'Start date',
-    'End date'
+    {
+      title: 'Subscription name',
+      transforms: [nowrap]
+    },
+    {
+      title: 'SKU',
+      transforms: [nowrap]
+    },
+    {
+      title: 'Contract number',
+      transforms: [nowrap]
+    },
+    {
+      title: 'Quantity',
+      transforms: [nowrap]
+    },
+    {
+      title: 'Start date',
+      transforms: [nowrap]
+    },
+    {
+      title: 'End date',
+      transforms: [nowrap]
+    }
   ];
 
   const getFormattedDate = (date: string) => {
