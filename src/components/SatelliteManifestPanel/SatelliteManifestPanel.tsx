@@ -33,6 +33,7 @@ import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
+import DeleteConfirmationModal from '../DeleteConfirmationModal';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -68,6 +69,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
+  const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false);
+  const [currentUuid, setCurrentUuid] = useState('');
+  const [currentName, setCurrentName] = useState('');
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -299,6 +303,26 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     />
   );
 
+  const handleDeleteConfirmationModalToggle = () => {
+    setIsDeleteConfirmationModalOpen(!isDeleteConfirmationModalOpen);
+  };
+
+  const actions = () => {
+    return [
+      {
+        title: 'Delete',
+        // eslint-disable-next-line
+        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+          const uuid = rowData.uuid.title;
+          const name = data.find((entry) => entry.uuid == uuid).name;
+          setCurrentUuid(uuid);
+          setCurrentName(name);
+          handleDeleteConfirmationModalToggle();
+        }
+      }
+    ];
+  };
+
   return (
     <PageSection variant="light">
       <Drawer isExpanded={detailsDrawerIsExpanded}>
@@ -340,6 +364,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
               onCollapse={toggleAllocationDetails}
               sortBy={sortBy}
               onSort={handleSort}
+              actions={actions()}
             >
               <TableHeader />
               <TableBody />
@@ -348,6 +373,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             {!isFetching && data.length === 0 && <NoManifestsFound />}
             {isFetching && <Processing />}
             {pagination(PaginationVariant.bottom)}
+            <DeleteConfirmationModal
+              uuid={currentUuid}
+              name={currentName}
+              isOpen={isDeleteConfirmationModalOpen}
+              handleModalToggle={handleDeleteConfirmationModalToggle}
+            />
           </DrawerContentBody>
         </DrawerContent>
       </Drawer>
