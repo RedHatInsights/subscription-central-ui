@@ -20,6 +20,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
   const listTableRef = useRef(null);
 
   useEffect(() => {
+    // This sets focus properly once the API has succeeded
     listTableRef.current && listTableRef.current.focus();
   }, [isSuccess]);
 

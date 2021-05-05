@@ -29,7 +29,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   const { isLoading, isFetching, isSuccess, isError, data } = useManifestEntitlements(uuid);
 
   useEffect(() => {
-    // sets focus properly for this when the API has succeeded
+    // This sets focus properly for this when the API has succeeded
     drawerRef.current && drawerRef.current.focus();
   }, [isSuccess]);
 
