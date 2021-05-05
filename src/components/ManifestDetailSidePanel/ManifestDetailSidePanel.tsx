@@ -169,13 +169,23 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     </div>
   );
 
+  const ManifestDetailsInnerContent = () => {
+    if (isError === true) {
+      return <ErrorMessage />;
+    }
+    if (isLoading === true || isFetching === true) {
+      return <Loading />;
+    }
+
+    if (isSuccess === true) {
+      return <DetailsContent />;
+    }
+  };
+
   return (
     <DrawerPanelContent>
       <DrawerHead>
-        {isLoading && <Loading />}
-        {isFetching && !isLoading && <Loading />}
-        {isSuccess && <DetailsContent />}
-        {isError && <ErrorMessage />}
+        <ManifestDetailsInnerContent />
         <DrawerActions>
           <DrawerCloseButton onClick={onCloseClick} />
         </DrawerActions>
