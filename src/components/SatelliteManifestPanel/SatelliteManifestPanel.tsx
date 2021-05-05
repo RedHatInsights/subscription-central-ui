@@ -200,7 +200,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   interface Row {
-    cells: any; // (string | JSX.Element)[] | { title: '' | React.ReactNode }[];
+    cells: (string | JSX.Element | { title: React.ReactNode })[];
     fullWidth?: boolean;
     noPadding?: boolean;
     parent?: number;
