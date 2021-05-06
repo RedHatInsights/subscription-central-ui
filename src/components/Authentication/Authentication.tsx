@@ -17,13 +17,14 @@ const Authentication: FC = ({ children }) => {
      */
 
     setUser({ status: 'loading', isOrgAdmin: null });
-
     authenticateUser()
       .then((response) => {
         setUser({ status: 'loaded', isOrgAdmin: response.identity.user.is_org_admin });
+        window.insights?.chrome?.hideGlobalFilter();
       })
       .catch(() => {
         setUser({ status: 'error', isOrgAdmin: null });
+        window.insights?.chrome?.hideGlobalFilter();
       });
   }, [location.pathname]);
 

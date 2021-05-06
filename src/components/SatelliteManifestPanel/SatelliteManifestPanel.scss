@@ -1,3 +1,5 @@
+@import '~@patternfly/patternfly/sass-utilities/_all.scss';
+
 h2.pf-c-title {
   margin-bottom: 20px;
 }
@@ -8,4 +10,10 @@ h2.pf-c-title {
 
 .pf-c-table {
   margin-top: 30px;
+}
+
+@media (min-width: $pf-global--breakpoint--md) {
+  .pf-c-search-input {
+    min-width: 270px;
+  }
 }
