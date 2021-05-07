@@ -30,8 +30,13 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
 
   useEffect(() => {
     if (drawerRef.current) {
-      drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      drawerRef.current.focus({ preventScroll: true });
+      if (isSuccess === true) {
+        drawerRef.current.focus({ preventScroll: true });
+      } else {
+        // Drawer is loading
+        drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        drawerRef.current.focus({ preventScroll: true });
+      }
     }
   }, [isSuccess]);
 

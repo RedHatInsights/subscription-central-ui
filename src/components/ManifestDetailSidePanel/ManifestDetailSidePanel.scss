@@ -1,5 +1,9 @@
 .manifest-detail-drawer-loading {
-  margin: 50px 0;
+  margin-right: -50px;
+  min-height: calc(100vh - 247px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .manifest-details-content {
