@@ -29,8 +29,8 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   const { isLoading, isFetching, isSuccess, isError, data } = useManifestEntitlements(uuid);
 
   useEffect(() => {
-    // This sets focus properly once the API has succeeded
-    drawerRef.current && drawerRef.current.focus();
+    drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    drawerRef.current.focus({ preventScroll: true });
   }, [isSuccess]);
 
   const DetailsContent = () => {
