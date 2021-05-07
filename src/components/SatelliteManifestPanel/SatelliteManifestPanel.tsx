@@ -259,20 +259,24 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus(newRowExpandedStatus);
   };
 
-  // The ternary here is to avoid calling the API when collapsed.
-  const panelContent = detailsDrawerIsExpanded ? (
-    <ManifestDetailSidePanel
-      uuid={currentDetailUUID}
-      onCloseClick={closeDetailsPanel}
-      openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
-    />
-  ) : (
-    <></>
-  );
+  const panelContent = () => {
+    if (detailsDrawerIsExpanded === true) {
+      return (
+        <ManifestDetailSidePanel
+          uuid={currentDetailUUID}
+          onCloseClick={closeDetailsPanel}
+          openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
+        />
+      );
+    } else {
+      // This blank panelContent is to avoid calling the API when collapsed.
+      return <></>;
+    }
+  };
 
   return (
     <Drawer isExpanded={detailsDrawerIsExpanded}>
-      <DrawerContent panelContent={panelContent}>
+      <DrawerContent panelContent={panelContent()}>
         <DrawerContentBody>
           <PageSection variant="light">
             <Title headingLevel="h2">
