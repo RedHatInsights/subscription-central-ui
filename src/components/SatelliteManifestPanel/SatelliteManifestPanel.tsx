@@ -83,10 +83,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   const formatRow = (row: string[], rowIndex: number) => {
-    const name: string = row[0];
-    const version = `${row[1]}`;
-    const scaStatus: string = row[2];
-    const uuid: string = row[3];
+    const name = row[0];
+    const version = row[1];
+    const scaStatus = row[2];
+    const uuid = row[3];
 
     return [
       <>
