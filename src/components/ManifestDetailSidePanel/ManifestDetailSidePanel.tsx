@@ -69,7 +69,8 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       return new Date(dateString).toLocaleString('en-US', {
         month: 'long',
         year: 'numeric',
-        day: 'numeric'
+        day: 'numeric',
+        timeZone: 'America/New_York'
       });
     };
 

@@ -134,7 +134,7 @@ exports[`Manifest Detail Side Panel renders successfully with data when data is 
             <div
               class="pf-l-grid__item pf-m-6-col"
             >
-              January 1, 2020
+              December 31, 2019
             </div>
             <div
               class="pf-l-grid__item pf-m-6-col"
@@ -158,7 +158,7 @@ exports[`Manifest Detail Side Panel renders successfully with data when data is 
             <div
               class="pf-l-grid__item pf-m-6-col"
             >
-              January 1, 2021
+              December 31, 2020
             </div>
           </div>
           <button
