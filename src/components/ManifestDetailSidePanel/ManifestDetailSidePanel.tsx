@@ -82,7 +82,6 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
         </Grid>
 
         <h4>Subscriptions</h4>
-
         <Grid>
           <GridItem span={6}>
             <strong>
@@ -91,6 +90,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
             </strong>
           </GridItem>
           <GridItem span={6}>{contentAccessMode}</GridItem>
+
           <GridItem span={6}>
             <strong>Quantity</strong>
           </GridItem>
