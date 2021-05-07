@@ -7,6 +7,7 @@ jest.mock('../../../hooks/useManifestEntitlements');
 
 describe('Manifest Detail Side Panel', () => {
   const props = {
+    isExpanded: true,
     uuid: 'abc123',
     onCloseClick: (): any => undefined,
     openCurrentEntitlementsListFromPanel: (): any => undefined

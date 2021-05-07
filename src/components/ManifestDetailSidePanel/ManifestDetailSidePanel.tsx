@@ -14,31 +14,39 @@ import useManifestEntitlements from '../../hooks/useManifestEntitlements';
 import './ManifestDetailSidePanel.scss';
 
 interface ManifestDetailSidePanelProps {
+  isExpanded: boolean;
   uuid: string;
   onCloseClick: () => void;
   openCurrentEntitlementsListFromPanel: () => void;
 }
 
 const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
+  isExpanded,
   uuid,
   onCloseClick,
   openCurrentEntitlementsListFromPanel
 }) => {
   const drawerRef = useRef(null);
-
   const { isLoading, isFetching, isSuccess, isError, data } = useManifestEntitlements(uuid);
 
+  const scrollToPageTop = () => {
+    document
+      .querySelector('.pf-c-drawer__body .pf-c-title')
+      .scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const focusOnSidePanel = () => {
+    setTimeout(() => {
+      drawerRef?.current?.focus({ preventScroll: true });
+    }, 0);
+  };
+
   useEffect(() => {
-    if (drawerRef.current) {
-      if (isSuccess === true) {
-        drawerRef.current.focus({ preventScroll: true });
-      } else {
-        // Drawer is loading
-        drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        drawerRef.current.focus({ preventScroll: true });
-      }
+    if (isExpanded === true) {
+      scrollToPageTop();
+      focusOnSidePanel();
     }
-  }, [isSuccess]);
+  }, [isExpanded, isSuccess, isLoading]);
 
   const DetailsContent = () => {
     // This handles the scenario when the API "succeeds" but not with a 200 status
@@ -141,7 +149,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     <div
       className="manifest-detail-drawer-loading"
       aria-label="Loading Manifest Details"
-      tabIndex={isSuccess ? 0 : -1}
+      tabIndex={isLoading ? 0 : -1}
       ref={drawerRef}
     >
       <Processing />

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useRef } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import {
   Badge,
   Button,
@@ -68,8 +68,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
-
-  const drawerRef = useRef(null);
 
   const openDetailsPanel = (uuid: string, rowIndex: number): void => {
     setCurrentDetailUUID(uuid);
@@ -259,26 +257,20 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus(newRowExpandedStatus);
   };
 
-  const panelContent = () => {
-    if (detailsDrawerIsExpanded === true) {
-      return (
-        <ManifestDetailSidePanel
-          uuid={currentDetailUUID}
-          onCloseClick={closeDetailsPanel}
-          openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
-        />
-      );
-    } else {
-      // This blank panelContent is to avoid calling the API when collapsed.
-      return <></>;
-    }
-  };
+  const panelContent = (
+    <ManifestDetailSidePanel
+      uuid={currentDetailUUID}
+      onCloseClick={closeDetailsPanel}
+      isExpanded={detailsDrawerIsExpanded}
+      openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
+    />
+  );
 
   return (
-    <Drawer isExpanded={detailsDrawerIsExpanded}>
-      <DrawerContent panelContent={panelContent()}>
-        <DrawerContentBody>
-          <PageSection variant="light">
+    <PageSection variant="light">
+      <Drawer isExpanded={detailsDrawerIsExpanded}>
+        <DrawerContent panelContent={panelContent}>
+          <DrawerContentBody>
             <Title headingLevel="h2">
               Satellite Manifests
               {!isFetching && <Badge isRead>{count()}</Badge>}
@@ -323,10 +315,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             {!isFetching && data.length === 0 && <NoManifestsFound />}
             {isFetching && <Processing />}
             {pagination(PaginationVariant.bottom)}
-          </PageSection>
-        </DrawerContentBody>
-      </DrawerContent>
-    </Drawer>
+          </DrawerContentBody>
+        </DrawerContent>
+      </Drawer>
+    </PageSection>
   );
 };
 
