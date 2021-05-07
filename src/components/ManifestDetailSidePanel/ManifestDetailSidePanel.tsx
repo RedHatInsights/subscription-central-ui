@@ -38,11 +38,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   };
 
   const focusOnSidePanel = () => {
-    setTimeout(() => {
-      if (drawerRef.current) {
-        drawerRef.current.focus({ preventScroll: true });
-      }
-    }, 0);
+    if (drawerRef.current) {
+      drawerRef.current.focus({ preventScroll: true });
+    }
   };
 
   useEffect(() => {
