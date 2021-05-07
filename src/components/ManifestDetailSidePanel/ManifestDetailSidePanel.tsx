@@ -92,7 +92,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           </GridItem>
           <GridItem span={6}>{contentAccessMode}</GridItem>
           <GridItem span={6}>
-            <strong>Subscription Quantity</strong>
+            <strong>Quantity</strong>
           </GridItem>
           <GridItem span={6}>
             <Button
