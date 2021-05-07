@@ -66,51 +66,33 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
         <h4>Details</h4>
         <Grid>
           <GridItem span={6}>
-            <p>
-              <strong>Name</strong>
-            </p>
+            <strong>Name</strong>
           </GridItem>
-          <GridItem span={6}>
-            <p>{name}</p>
-          </GridItem>
+          <GridItem span={6}>{name}</GridItem>
 
           <GridItem span={6}>
-            <p>
-              <strong>Type</strong>
-            </p>
+            <strong>Type</strong>
           </GridItem>
-          <GridItem span={6}>
-            <p>Satellite {version}</p>
-          </GridItem>
+          <GridItem span={6}>Satellite {version}</GridItem>
 
           <GridItem span={6}>
-            <p>
-              <strong>UUID</strong>
-            </p>
+            <strong>UUID</strong>
           </GridItem>
-          <GridItem span={6}>
-            <p>{uuid}</p>
-          </GridItem>
+          <GridItem span={6}>{uuid}</GridItem>
         </Grid>
 
         <h4>Subscriptions</h4>
 
         <Grid>
           <GridItem span={6}>
-            <p>
-              <strong>
-                Simple content access
-                <SCAInfoIconWithPopover />
-              </strong>
-            </p>
+            <strong>
+              Simple content access
+              <SCAInfoIconWithPopover />
+            </strong>
           </GridItem>
+          <GridItem span={6}>{contentAccessMode}</GridItem>
           <GridItem span={6}>
-            <p>{contentAccessMode}</p>
-          </GridItem>
-          <GridItem span={6}>
-            <p>
-              <strong>Subscriptions</strong>
-            </p>
+            <strong>Subscription Quantity</strong>
           </GridItem>
           <GridItem span={6}>
             <Button
@@ -126,31 +108,19 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
         <h4>History</h4>
         <Grid>
           <GridItem span={6}>
-            <p>
-              <strong>Created</strong>
-            </p>
+            <strong>Created</strong>
           </GridItem>
-          <GridItem span={6}>
-            <p>{formatDate(createdDate)}</p>
-          </GridItem>
+          <GridItem span={6}>{formatDate(createdDate)}</GridItem>
 
           <GridItem span={6}>
-            <p>
-              <strong>Created by</strong>
-            </p>
+            <strong>Created by</strong>
           </GridItem>
-          <GridItem span={6}>
-            <p>{createdBy}</p>
-          </GridItem>
+          <GridItem span={6}>{createdBy}</GridItem>
 
           <GridItem span={6}>
-            <p>
-              <strong>Last modified date</strong>
-            </p>
+            <strong>Last modified date</strong>
           </GridItem>
-          <GridItem span={6}>
-            <p>{formatDate(lastModified)}</p>
-          </GridItem>
+          <GridItem span={6}>{formatDate(lastModified)}</GridItem>
         </Grid>
         <Button variant="tertiary">Export manifest</Button>
         <p className="manifest-details-delete-text">
