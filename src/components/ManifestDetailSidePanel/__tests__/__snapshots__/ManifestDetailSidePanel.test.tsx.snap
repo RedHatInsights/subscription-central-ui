@@ -243,7 +243,7 @@ exports[`Manifest Detail Side Panel renders with a spinner when loading 1`] = `
         <div
           aria-label="Loading Manifest Details"
           class="manifest-detail-drawer-loading"
-          tabindex="-1"
+          tabindex="0"
         >
           <div
             class="pf-l-bullseye"

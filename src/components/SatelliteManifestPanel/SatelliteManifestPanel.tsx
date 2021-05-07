@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useRef } from 'react';
 import {
   Badge,
   Button,
@@ -68,7 +68,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
-
+  const titleRef = useRef(null);
   const openDetailsPanel = (uuid: string, rowIndex: number): void => {
     setCurrentDetailUUID(uuid);
     setCurrentDetailRowIndex(rowIndex);
@@ -262,6 +262,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       uuid={currentDetailUUID}
       onCloseClick={closeDetailsPanel}
       isExpanded={detailsDrawerIsExpanded}
+      titleRef={titleRef}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
     />
   );
@@ -272,7 +273,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <DrawerContent panelContent={panelContent}>
           <DrawerContentBody>
             <Title headingLevel="h2">
-              Satellite Manifests
+              <span ref={titleRef}>Satellite Manifests</span>
               {!isFetching && <Badge isRead>{count()}</Badge>}
             </Title>
             <Flex
