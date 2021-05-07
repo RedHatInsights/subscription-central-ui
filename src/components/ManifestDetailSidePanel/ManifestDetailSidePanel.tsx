@@ -174,12 +174,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   const ManifestDetailsInnerContent = () => {
     if (isError === true) {
       return <ErrorMessage />;
-    }
-    if (isLoading === true || isFetching === true) {
+    } else if (isLoading === true || isFetching === true) {
       return <Loading />;
-    }
-
-    if (isSuccess === true) {
+    } else if (isSuccess === true) {
       return <DetailsContent />;
     }
   };
