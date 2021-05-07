@@ -20,8 +20,10 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
   const listTableRef = useRef(null);
 
   useEffect(() => {
-    listTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    listTableRef.current.focus({ preventScroll: true });
+    if (listTableRef.current) {
+      listTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      listTableRef.current.focus({ preventScroll: true });
+    }
   }, [isSuccess]);
 
   const columns = [

@@ -29,8 +29,10 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   const { isLoading, isFetching, isSuccess, isError, data } = useManifestEntitlements(uuid);
 
   useEffect(() => {
-    drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    drawerRef.current.focus({ preventScroll: true });
+    if (drawerRef.current) {
+      drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      drawerRef.current.focus({ preventScroll: true });
+    }
   }, [isSuccess]);
 
   const DetailsContent = () => {
