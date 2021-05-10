@@ -1,0 +1,39 @@
+.manifest-detail-drawer-loading {
+  margin-right: -50px;
+  min-height: calc(100vh - 247px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.manifest-details-content {
+  font-size: 14px;
+
+  .pf-l-grid__item {
+    padding: 4px 0;
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  h4 {
+    font-size: 18px;
+    margin: 10px 0;
+    font-weight: 600;
+  }
+
+  .manifest-details-open-entitlements-button {
+    padding: 0;
+    margin: 4px 0;
+  }
+
+  .manifest-details-delete-text {
+    margin-top: 30px;
+  }
+
+  button.pf-m-tertiary {
+    margin-top: 30px;
+  }
+}

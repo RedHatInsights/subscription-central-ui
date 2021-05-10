@@ -1,6 +1,10 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useRef, createRef } from 'react';
 import {
   Badge,
+  Button,
+  Drawer,
+  DrawerContent,
+  DrawerContentBody,
   Flex,
   FlexItem,
   PageSection,
@@ -28,6 +32,7 @@ import './SatelliteManifestPanel.scss';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
+import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -60,6 +65,58 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [searchValue, setSearchValue] = useState('');
   const [sortBy, setSortBy] = useState({ index: 1, direction: SortByDirection.asc });
   const [rowExpandedStatus, setRowExpandedStatus] = useState(new Array(10).fill(false));
+  const [currentDetailUUID, setCurrentDetailUUID] = useState('');
+  const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
+  const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
+
+  const titleRef = useRef<HTMLSpanElement>(null);
+  const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
+  const entitlementsRowRefs = new Array(10)
+    .fill(null)
+    .map(() => useRef<HTMLSpanElement | HTMLParagraphElement>(null));
+
+  const scrollToPageTop = () => {
+    if (titleRef?.current) {
+      titleRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const focusOnSidePanel = () => {
+    if (drawerRef?.current) {
+      drawerRef.current.focus({ preventScroll: true });
+    }
+  };
+
+  const openDetailsPanel = (uuid: string, rowIndex: number): void => {
+    setCurrentDetailUUID(uuid);
+    setCurrentDetailRowIndex(rowIndex);
+    setDetailsDrawerIsExpanded(true);
+    scrollToPageTop();
+    focusOnSidePanel();
+  };
+
+  const closeDetailsPanel = () => {
+    setCurrentDetailUUID('');
+    setDetailsDrawerIsExpanded(false);
+  };
+
+  const formatRow = (row: string[], rowIndex: number) => {
+    const name = row[0];
+    const version = row[1];
+    const scaStatus = row[2];
+    const uuid = row[3];
+
+    return [
+      <>
+        <Button variant="link" onClick={() => openDetailsPanel(uuid, rowIndex)}>
+          {name}
+        </Button>
+      </>,
+      version,
+      scaStatus,
+      uuid
+    ];
+  };
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
     setPerPage(perPage);
@@ -161,7 +218,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   interface Row {
-    cells: string[] | { title: '' | React.ReactNode }[];
+    cells: (string | JSX.Element | { title: React.ReactNode })[];
     fullWidth?: boolean;
     noPadding?: boolean;
     parent?: number;
@@ -182,10 +239,18 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       const isOpen = rowExpandedStatus[i];
       const uuid = row[3];
       const parentIndex = (i + 1) * 2 - 2;
-      const expandedContent = isOpen ? <ManifestEntitlementsListContainer uuid={uuid} /> : '';
+      const expandedContent = isOpen ? (
+        <ManifestEntitlementsListContainer
+          uuid={uuid}
+          entitlementsRowRef={entitlementsRowRefs[i]}
+        />
+      ) : (
+        ''
+      );
 
+      const formattedRow = formatRow(row, i);
       // Add original row
-      rowsWithAllocationDetails.push({ isOpen, cells: [...row] });
+      rowsWithAllocationDetails.push({ isOpen, cells: [...formattedRow] });
 
       // Add details row
       rowsWithAllocationDetails.push({
@@ -206,57 +271,86 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus(newRowExpandedStatus);
   };
 
+  const openCurrentEntitlementsListFromPanel = () => {
+    closeDetailsPanel();
+
+    const newRowExpandedStatus = [...rowExpandedStatus];
+    newRowExpandedStatus[currentDetailRowIndex] = true;
+    setRowExpandedStatus(newRowExpandedStatus);
+    const currentRowRef = entitlementsRowRefs[currentDetailRowIndex];
+    if (currentRowRef?.current) {
+      currentRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   const collapseAllRows = () => {
     const newRowExpandedStatus = new Array(10).fill(false);
     setRowExpandedStatus(newRowExpandedStatus);
   };
 
+  const panelContent = (
+    <ManifestDetailSidePanel
+      uuid={currentDetailUUID}
+      onCloseClick={closeDetailsPanel}
+      isExpanded={detailsDrawerIsExpanded}
+      titleRef={titleRef}
+      drawerRef={drawerRef}
+      openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
+    />
+  );
+
   return (
     <PageSection variant="light">
-      <Title headingLevel="h2">
-        Satellite Manifests
-        {!isFetching && <Badge isRead>{count()}</Badge>}
-      </Title>
-      <Flex
-        direction={{ default: 'column', md: 'row' }}
-        justifyContent={{ default: 'justifyContentSpaceBetween' }}
-      >
-        <FlexItem>
-          <Split hasGutter>
-            {data.length > 0 && (
-              <SplitItem isFilled>
-                <SearchInput
-                  placeholder="Filter by name, version or UUID"
-                  value={searchValue}
-                  onChange={handleSearch}
-                  onClear={clearSearch}
-                />
-              </SplitItem>
-            )}
-            {user.isOrgAdmin === true && (
-              <SplitItem>
-                <CreateManifestButtonWithModal />
-              </SplitItem>
-            )}
-          </Split>
-        </FlexItem>
-        <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
-      </Flex>
-      <Table
-        aria-label="Satellite Manifest Table"
-        cells={columns}
-        rows={isFetching ? [] : getRowsWithAllocationDetails()}
-        onCollapse={toggleAllocationDetails}
-        sortBy={sortBy}
-        onSort={handleSort}
-      >
-        <TableHeader />
-        <TableBody />
-      </Table>
-      {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
-      {!isFetching && data.length === 0 && <NoManifestsFound />}
-      {isFetching && <Processing />}
-      {pagination(PaginationVariant.bottom)}
+      <Drawer isExpanded={detailsDrawerIsExpanded}>
+        <DrawerContent panelContent={panelContent}>
+          <DrawerContentBody>
+            <Title headingLevel="h2">
+              <span ref={titleRef}>Satellite Manifests</span>
+              {!isFetching && <Badge isRead>{count()}</Badge>}
+            </Title>
+            <Flex
+              direction={{ default: 'column', md: 'row' }}
+              justifyContent={{ default: 'justifyContentSpaceBetween' }}
+            >
+              <FlexItem>
+                <Split hasGutter>
+                  {data.length > 0 && (
+                    <SplitItem isFilled>
+                      <SearchInput
+                        placeholder="Filter by name, version or UUID"
+                        value={searchValue}
+                        onChange={handleSearch}
+                        onClear={clearSearch}
+                      />
+                    </SplitItem>
+                  )}
+                  {user.isOrgAdmin === true && (
+                    <SplitItem>
+                      <CreateManifestButtonWithModal />
+                    </SplitItem>
+                  )}
+                </Split>
+              </FlexItem>
+              <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
+            </Flex>
+            <Table
+              aria-label="Satellite Manifest Table"
+              cells={columns}
+              rows={isFetching ? [] : getRowsWithAllocationDetails()}
+              onCollapse={toggleAllocationDetails}
+              sortBy={sortBy}
+              onSort={handleSort}
+            >
+              <TableHeader />
+              <TableBody />
+            </Table>
+            {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
+            {!isFetching && data.length === 0 && <NoManifestsFound />}
+            {isFetching && <Processing />}
+            {pagination(PaginationVariant.bottom)}
+          </DrawerContentBody>
+        </DrawerContent>
+      </Drawer>
     </PageSection>
   );
 };
