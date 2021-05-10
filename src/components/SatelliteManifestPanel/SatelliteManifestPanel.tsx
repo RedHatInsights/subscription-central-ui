@@ -70,14 +70,29 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
 
   const titleRef = useRef<HTMLSpanElement>(null);
+  const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
   const entitlementsRowRefs = new Array(10)
     .fill(null)
     .map(() => useRef<HTMLSpanElement | HTMLParagraphElement>(null));
+
+  const scrollToPageTop = () => {
+    if (titleRef?.current) {
+      titleRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const focusOnSidePanel = () => {
+    if (drawerRef?.current) {
+      drawerRef.current.focus({ preventScroll: true });
+    }
+  };
 
   const openDetailsPanel = (uuid: string, rowIndex: number): void => {
     setCurrentDetailUUID(uuid);
     setCurrentDetailRowIndex(rowIndex);
     setDetailsDrawerIsExpanded(true);
+    scrollToPageTop();
+    focusOnSidePanel();
   };
 
   const closeDetailsPanel = () => {
@@ -279,6 +294,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       onCloseClick={closeDetailsPanel}
       isExpanded={detailsDrawerIsExpanded}
       titleRef={titleRef}
+      drawerRef={drawerRef}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
     />
   );
