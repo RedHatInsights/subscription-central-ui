@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useRef, createRef } from 'react';
+import React, { FunctionComponent, useState, useRef } from 'react';
 import {
   Badge,
   Button,
@@ -28,11 +28,12 @@ import { User } from '../Authentication/UserContext';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
-import './SatelliteManifestPanel.scss';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
+import SCAStatusSwitch from '../SCAStatusSwitch';
+import './SatelliteManifestPanel.scss';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -113,7 +114,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         </Button>
       </>,
       version,
-      scaStatus,
+      <>
+        <SCAStatusSwitch key={`sca-status-${rowIndex}`} scaStatus={scaStatus} uuid={uuid} />
+      </>,
       uuid
     ];
   };
@@ -158,12 +161,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   const filteredRows = () => {
     return filteredData().map((entry: ManifestEntry) => {
-      return [
-        entry.name || '',
-        entry.version || '',
-        entry.simpleContentAccess || '',
-        entry.uuid || ''
-      ];
+      let scaStatus = entry.simpleContentAccess || 'disabled';
+      if (parseFloat(entry.version) <= 6.2) {
+        scaStatus = 'disallowed';
+      }
+
+      return [entry.name || '', entry.version || '', scaStatus, entry.uuid || ''];
     });
   };
 
