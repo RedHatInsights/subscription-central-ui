@@ -4,9 +4,11 @@ import useManifestEntitlements from '../../hooks/useManifestEntitlements';
 
 interface ManifestEntitlementsListContainerProps {
   uuid: string;
+  entitlementsRowRef: React.MutableRefObject<HTMLSpanElement | HTMLParagraphElement>;
 }
 const ManifestEntitlementsListContainer: FC<ManifestEntitlementsListContainerProps> = ({
-  uuid
+  uuid,
+  entitlementsRowRef
 }) => {
   const { isLoading, isSuccess, isError, data } = useManifestEntitlements(uuid);
 
@@ -16,6 +18,7 @@ const ManifestEntitlementsListContainer: FC<ManifestEntitlementsListContainerPro
       isSuccess={isSuccess}
       isError={isError}
       entitlementsData={data?.body?.entitlementsAttached}
+      entitlementsRowRef={entitlementsRowRef}
     />
   );
 };

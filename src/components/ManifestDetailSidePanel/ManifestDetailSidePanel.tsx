@@ -15,7 +15,7 @@ import './ManifestDetailSidePanel.scss';
 
 interface ManifestDetailSidePanelProps {
   isExpanded: boolean;
-  titleRef: React.MutableRefObject<any>;
+  titleRef: React.MutableRefObject<HTMLSpanElement>;
   uuid: string;
   onCloseClick: () => void;
   openCurrentEntitlementsListFromPanel: () => void;
@@ -28,11 +28,11 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   onCloseClick,
   openCurrentEntitlementsListFromPanel
 }) => {
-  const drawerRef = useRef(null);
+  const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
   const { isLoading, isFetching, isSuccess, isError, data } = useManifestEntitlements(uuid);
 
   const scrollToPageTop = () => {
-    if (titleRef.current) {
+    if (titleRef?.current) {
       titleRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useRef } from 'react';
+import React, { FunctionComponent, useState, useRef, createRef } from 'react';
 import {
   Badge,
   Button,
@@ -68,7 +68,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
-  const titleRef = useRef(null);
+  const entitlementsRowRefs = new Array(10)
+    .fill(null)
+    .map(() => useRef<HTMLSpanElement | HTMLParagraphElement>(null));
+  const titleRef = useRef<HTMLSpanElement>(null);
   const openDetailsPanel = (uuid: string, rowIndex: number): void => {
     setCurrentDetailUUID(uuid);
     setCurrentDetailRowIndex(rowIndex);
@@ -219,7 +222,14 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       const isOpen = rowExpandedStatus[i];
       const uuid = row[3];
       const parentIndex = (i + 1) * 2 - 2;
-      const expandedContent = isOpen ? <ManifestEntitlementsListContainer uuid={uuid} /> : '';
+      const expandedContent = isOpen ? (
+        <ManifestEntitlementsListContainer
+          uuid={uuid}
+          entitlementsRowRef={entitlementsRowRefs[i]}
+        />
+      ) : (
+        ''
+      );
 
       const formattedRow = formatRow(row, i);
       // Add original row
@@ -250,6 +260,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const newRowExpandedStatus = [...rowExpandedStatus];
     newRowExpandedStatus[currentDetailRowIndex] = true;
     setRowExpandedStatus(newRowExpandedStatus);
+    const currentRowRef = entitlementsRowRefs[currentDetailRowIndex];
+    if (currentRowRef?.current) {
+      currentRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   const collapseAllRows = () => {

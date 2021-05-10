@@ -1,4 +1,4 @@
-import React, { FC, useRef, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Table, TableHeader, TableBody, nowrap } from '@patternfly/react-table';
 import { Processing } from '../emptyState';
 import './ManifestEntitlementsList.scss';
@@ -9,20 +9,20 @@ interface ManifestEntitlementsListProps {
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
+  entitlementsRowRef: React.MutableRefObject<HTMLSpanElement | HTMLParagraphElement>;
 }
 
 const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
   entitlementsData,
   isLoading,
   isSuccess,
-  isError
+  isError,
+  entitlementsRowRef
 }) => {
-  const listTableRef = useRef(null);
-
   useEffect(() => {
-    if (listTableRef.current) {
-      listTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      listTableRef.current.focus({ preventScroll: true });
+    if (entitlementsRowRef?.current) {
+      entitlementsRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      entitlementsRowRef.current.focus({ preventScroll: true });
     }
   }, [isSuccess]);
 
@@ -81,7 +81,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
         if (index === 0) {
           subscriptionName = (
             <>
-              <span tabIndex={0} ref={listTableRef}>
+              <span tabIndex={isSuccess ? 0 : -1} ref={entitlementsRowRef}>
                 {entitlement.subscriptionName}
               </span>
             </>
@@ -125,7 +125,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
       )}
       {isSuccess && !entitlementsData.valid && (
         <div className="no-entitlements-reason">
-          <p tabIndex={isSuccess ? 0 : -1} ref={listTableRef}>
+          <p tabIndex={isSuccess ? 0 : -1} ref={entitlementsRowRef}>
             {entitlementsData.reason}
           </p>
         </div>

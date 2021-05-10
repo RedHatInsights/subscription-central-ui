@@ -9,7 +9,7 @@ describe('Manifest Detail Side Panel', () => {
   const props = {
     isExpanded: true,
     uuid: 'abc123',
-    titleRef: {} as React.MutableRefObject<any>,
+    titleRef: null as React.MutableRefObject<HTMLSpanElement>,
     onCloseClick: (): any => undefined,
     openCurrentEntitlementsListFromPanel: (): any => undefined
   };
