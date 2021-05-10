@@ -9,7 +9,7 @@ interface ManifestEntitlementsListProps {
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
-  entitlementsRowRef: React.MutableRefObject<HTMLSpanElement | HTMLParagraphElement>;
+  entitlementsRowRef: React.MutableRefObject<any>;
 }
 
 const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
@@ -73,22 +73,12 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
 
   if (entitlementsData?.value) {
     rows = entitlementsData?.value.map(
-      (entitlement: ManifestEntitlement, index): ManifestEntitlementListRow => {
+      (entitlement: ManifestEntitlement): ManifestEntitlementListRow => {
         const formattedStartDate = getFormattedDate(entitlement.startDate);
         const formattedEndDate = getFormattedDate(entitlement.endDate);
-        let subscriptionName: string | React.ReactNode = entitlement.subscriptionName;
 
-        if (index === 0) {
-          subscriptionName = (
-            <>
-              <span tabIndex={isSuccess ? 0 : -1} ref={entitlementsRowRef}>
-                {entitlement.subscriptionName}
-              </span>
-            </>
-          );
-        }
         return [
-          subscriptionName,
+          entitlement.subscriptionName,
           entitlement.sku,
           entitlement.contractNumber,
           entitlement.entitlementQuantity,
@@ -131,17 +121,19 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
         </div>
       )}
       {isSuccess && entitlementsData.valid && (
-        <Table
-          aria-label="Allocations table"
-          cells={columns}
-          rows={rows}
-          borders={false}
-          actions={actions}
-          className="manifests_entitlement-list-table"
-        >
-          <TableHeader />
-          <TableBody />
-        </Table>
+        <div ref={entitlementsRowRef}>
+          <Table
+            aria-label="Allocations table"
+            cells={columns}
+            rows={rows}
+            borders={false}
+            actions={actions}
+            className="manifests_entitlement-list-table"
+          >
+            <TableHeader />
+            <TableBody />
+          </Table>
+        </div>
       )}
       {isError && 'Something went wrong.  Please refresh the page and try again.'}
     </>

@@ -68,10 +68,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
+
+  const titleRef = useRef<HTMLSpanElement>(null);
   const entitlementsRowRefs = new Array(10)
     .fill(null)
     .map(() => useRef<HTMLSpanElement | HTMLParagraphElement>(null));
-  const titleRef = useRef<HTMLSpanElement>(null);
+
   const openDetailsPanel = (uuid: string, rowIndex: number): void => {
     setCurrentDetailUUID(uuid);
     setCurrentDetailRowIndex(rowIndex);
