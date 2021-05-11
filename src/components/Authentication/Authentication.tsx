@@ -24,6 +24,9 @@ const Authentication: FC = ({ children }) => {
       })
       .catch(() => {
         setUser({ status: 'error', isOrgAdmin: null });
+      })
+      .finally(() => {
+        window.insights?.chrome?.hideGlobalFilter();
       });
   }, [location.pathname]);
 
