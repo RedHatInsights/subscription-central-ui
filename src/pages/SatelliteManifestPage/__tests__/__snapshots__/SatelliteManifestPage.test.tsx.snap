@@ -609,7 +609,9 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
                       data-key="3"
                       data-label="column-3"
                     >
-                      disallowed
+                      <p>
+                        N/A
+                      </p>
                     </td>
                     <td
                       class=""
