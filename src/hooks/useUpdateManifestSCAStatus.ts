@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import { useMutation, useQueryClient, UseMutationResult } from 'react-query';
 import { getConfig } from '../utilities/platformServices';
+import { ManifestEntry } from './useSatelliteManifests';
 
 interface UpdateManifestSCAStatusParams {
   uuid: string;
@@ -40,8 +41,23 @@ const useUpdateManifestSCAStatus = (): UseMutationResult<any, unknown> => {
     (updateManifestSCAStatusParams: UpdateManifestSCAStatusParams) =>
       updateManifestSCAStatus(updateManifestSCAStatusParams),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('manifests');
+      onSuccess: (data, updateManifestSCAStatusParams) => {
+        if (!data) return;
+        console.log(updateManifestSCAStatusParams);
+
+        const { uuid, newSCAStatus } = updateManifestSCAStatusParams;
+
+        queryClient.setQueryData('manifests', (oldData: ManifestEntry[]) =>
+          oldData.map((el) => {
+            if (el.uuid === uuid) {
+              const newEl = el;
+              newEl.simpleContentAccess = newSCAStatus;
+              return newEl;
+            } else {
+              return el;
+            }
+          })
+        );
       }
     }
   );
