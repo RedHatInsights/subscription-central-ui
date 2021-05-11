@@ -32,7 +32,10 @@ describe('Manifest Entitlements List Container', () => {
         }
       }
     });
-    const props = { uuid: 'abc123' };
+    const props = {
+      uuid: 'abc123',
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
+    };
     const { container } = render(
       <QueryClientProvider client={queryClient}>
         <ManifestEntitlementsListContainer {...props} />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import {
   Button,
   EmptyState,
@@ -9,7 +9,7 @@ import {
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 
-const CreateManifestFormError = () => {
+const ErrorMessage: FC = () => {
   return (
     <EmptyState variant={EmptyStateVariant.small}>
       <EmptyStateIcon icon={ExclamationCircleIcon} color="var(--pf-global--danger-color--100)" />
@@ -34,4 +34,4 @@ const CreateManifestFormError = () => {
   );
 };
 
-export default CreateManifestFormError;
+export default ErrorMessage;

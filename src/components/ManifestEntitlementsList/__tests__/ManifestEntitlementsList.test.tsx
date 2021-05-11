@@ -20,7 +20,8 @@ describe('Manifest Entitlements List', () => {
             endDate: '2022-01-01T00:00:00.000Z'
           }
         ]
-      }
+      },
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();
@@ -34,7 +35,8 @@ describe('Manifest Entitlements List', () => {
       entitlementsData: {
         valid: false,
         reason: 'No Entitlements are attached to the Allocation'
-      }
+      },
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();
@@ -48,7 +50,8 @@ describe('Manifest Entitlements List', () => {
       entitlementsData: {
         valid: false,
         reason: 'No Entitlements are attached to the Allocation'
-      }
+      },
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();
@@ -62,7 +65,8 @@ describe('Manifest Entitlements List', () => {
       entitlementsData: {
         valid: false,
         reason: 'No Allocations found'
-      }
+      },
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();

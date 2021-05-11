@@ -3,4 +3,7 @@
   margin-left: 5px;
   margin-top: 1px;
   margin-bottom: -1px;
+  &:hover {
+    cursor: pointer;
+  }
 }
