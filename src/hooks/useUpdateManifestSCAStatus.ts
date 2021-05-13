@@ -23,7 +23,7 @@ const updateManifestSCAStatus = (data: UpdateManifestSCAStatusParams): Promise<R
     body: JSON.stringify(requestData)
   })
     .then((response) => {
-      if (response.status !== 200) {
+      if (response.status !== 200 && response.status !== 204) {
         throw new Error(
           `Status Code ${response.status}.  Error updating SCA status: ${response.statusText}.  `
         );
@@ -43,7 +43,6 @@ const useUpdateManifestSCAStatus = (): UseMutationResult<any, unknown> => {
     {
       onSuccess: (data, updateManifestSCAStatusParams) => {
         if (!data) return;
-        console.log(updateManifestSCAStatusParams);
 
         const { uuid, newSCAStatus } = updateManifestSCAStatusParams;
 

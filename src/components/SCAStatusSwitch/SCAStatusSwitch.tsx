@@ -47,6 +47,7 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
     return (
       <>
         <Switch
+          data-testid="sca-status-switch"
           aria-label={`SCA Status for this Manifest is ${scaStatus}`}
           isChecked={isChecked}
           onChange={handleChange}
