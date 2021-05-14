@@ -35,6 +35,22 @@ const updateManifestSCAStatus = (data: UpdateManifestSCAStatusParams): Promise<R
     });
 };
 
+const updateManifestSCAQueryData = (
+  oldManifestEntryData: ManifestEntry[],
+  uuid: string,
+  newSCAStatus: string
+): ManifestEntry[] => {
+  return oldManifestEntryData.map((manifestEntry) => {
+    if (manifestEntry.uuid === uuid) {
+      const updatedManifestEntry = manifestEntry;
+      updatedManifestEntry.simpleContentAccess = newSCAStatus;
+      return updatedManifestEntry;
+    } else {
+      return manifestEntry;
+    }
+  });
+};
+
 const useUpdateManifestSCAStatus = (): UseMutationResult<Response, unknown> => {
   const queryClient = useQueryClient();
   return useMutation(
@@ -42,20 +58,10 @@ const useUpdateManifestSCAStatus = (): UseMutationResult<Response, unknown> => {
       updateManifestSCAStatus(updateManifestSCAStatusParams),
     {
       onSuccess: (data, updateManifestSCAStatusParams) => {
-        if (!data) return;
-
         const { uuid, newSCAStatus } = updateManifestSCAStatusParams;
 
-        queryClient.setQueryData('manifests', (oldData: ManifestEntry[]) =>
-          oldData.map((manifestEntry) => {
-            if (manifestEntry.uuid === uuid) {
-              const newManifestEntry = manifestEntry;
-              newManifestEntry.simpleContentAccess = newSCAStatus;
-              return newManifestEntry;
-            } else {
-              return manifestEntry;
-            }
-          })
+        queryClient.setQueryData('manifests', (oldManifestEntryData: ManifestEntry[]) =>
+          updateManifestSCAQueryData(oldManifestEntryData, uuid, newSCAStatus)
         );
       }
     }
