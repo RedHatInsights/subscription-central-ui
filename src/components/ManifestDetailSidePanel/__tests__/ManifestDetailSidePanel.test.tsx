@@ -59,7 +59,7 @@ describe('Manifest Detail Side Panel', () => {
           createdBy: 'Jane Doe',
           lastModified: '2021-01-01T00:00:00.000Z',
           entitlementsAttachedQuantity: 10,
-          contentAccessMode: 'Enabled'
+          simpleContentAccess: 'enabled'
         }
       }
     }));
