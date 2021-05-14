@@ -47,13 +47,13 @@ const useUpdateManifestSCAStatus = (): UseMutationResult<any, unknown> => {
         const { uuid, newSCAStatus } = updateManifestSCAStatusParams;
 
         queryClient.setQueryData('manifests', (oldData: ManifestEntry[]) =>
-          oldData.map((el) => {
-            if (el.uuid === uuid) {
-              const newEl = el;
-              newEl.simpleContentAccess = newSCAStatus;
-              return newEl;
+          oldData.map((manifestEntry) => {
+            if (manifestEntry.uuid === uuid) {
+              const newManifestEntry = manifestEntry;
+              newManifestEntry.simpleContentAccess = newSCAStatus;
+              return newManifestEntry;
             } else {
-              return el;
+              return manifestEntry;
             }
           })
         );
