@@ -8,7 +8,14 @@ interface UpdateManifestSCAStatusParams {
   newSCAStatus: string;
 }
 
-const updateManifestSCAStatus = (data: UpdateManifestSCAStatusParams): Promise<Response> => {
+interface UpdateManifestSCAStatus {
+  success: boolean;
+  status: number;
+}
+
+const updateManifestSCAStatus = (
+  data: UpdateManifestSCAStatusParams
+): Promise<void | UpdateManifestSCAStatus> => {
   const { uuid, newSCAStatus } = data;
   const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
@@ -28,7 +35,7 @@ const updateManifestSCAStatus = (data: UpdateManifestSCAStatusParams): Promise<R
           `Status Code ${response.status}.  Error updating SCA status: ${response.statusText}.  `
         );
       }
-      return response.json();
+      return { success: true, status: response.status };
     })
     .catch((e) => {
       console.error(e);
@@ -51,13 +58,18 @@ const updateManifestSCAQueryData = (
   });
 };
 
-const useUpdateManifestSCAStatus = (): UseMutationResult<Response, unknown> => {
+const useUpdateManifestSCAStatus = (): UseMutationResult<
+  void | UpdateManifestSCAStatus,
+  unknown
+> => {
   const queryClient = useQueryClient();
   return useMutation(
     (updateManifestSCAStatusParams: UpdateManifestSCAStatusParams) =>
       updateManifestSCAStatus(updateManifestSCAStatusParams),
     {
       onSuccess: (data, updateManifestSCAStatusParams) => {
+        if (!data) return;
+
         const { uuid, newSCAStatus } = updateManifestSCAStatusParams;
 
         queryClient.setQueryData('manifests', (oldManifestEntryData: ManifestEntry[]) =>

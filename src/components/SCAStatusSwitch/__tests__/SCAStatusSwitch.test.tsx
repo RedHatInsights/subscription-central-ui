@@ -37,7 +37,7 @@ describe('SCAStatusSwitch', () => {
       isError: false,
       isLoading: false,
       isSuccess: true,
-      data: {}
+      data: null
     }));
 
     const { container } = render(<SCAStatusSwitch {...props} />);
@@ -48,7 +48,8 @@ describe('SCAStatusSwitch', () => {
     (useUpdateManifestSCAStatus as jest.Mock).mockImplementation(() => ({
       isError: false,
       isSuccess: true,
-      isLoading: false
+      isLoading: false,
+      data: { success: true, status: 204 }
     }));
 
     const { container } = render(<SCAStatusSwitch {...props} />);
@@ -59,7 +60,8 @@ describe('SCAStatusSwitch', () => {
     (useUpdateManifestSCAStatus as jest.Mock).mockImplementation(() => ({
       isError: false,
       isSuccess: true,
-      isLoading: false
+      isLoading: false,
+      data: { success: true, status: 204 }
     }));
     const props = {
       scaStatus: 'disabled',
