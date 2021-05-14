@@ -27,7 +27,10 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
   if (hasError === true) {
     return (
       <>
-        <ExclamationCircleIcon color="var(--pf-global--danger-color--100)" />
+        <ExclamationCircleIcon
+          color="var(--pf-global--danger-color--100)"
+          className="sca-status-error-icon"
+        />
         <span className="sca-status-error-msg">
           Something went wrong. Please refresh the page and try again.
         </span>
@@ -36,7 +39,7 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
   }
 
   if (isLoading === true) {
-    return <Spinner size="lg" />;
+    return <Spinner size="lg" className="sca-status-spinner" />;
   } else if (scaStatus === 'disallowed') {
     return (
       <>
@@ -51,6 +54,8 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
           aria-label={`SCA Status for this Manifest is ${scaStatus}`}
           isChecked={isChecked}
           onChange={handleChange}
+          label="Enabled"
+          labelOff="Disabled"
         />
       </>
     );
