@@ -115,7 +115,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       </>,
       version,
       <>
-        <SCAStatusSwitch key={`sca-status-${rowIndex}`} scaStatus={scaStatus} uuid={uuid} />
+        <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
       </>,
       uuid
     ];
