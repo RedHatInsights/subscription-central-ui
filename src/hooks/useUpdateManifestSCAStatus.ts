@@ -35,7 +35,7 @@ const updateManifestSCAStatus = (data: UpdateManifestSCAStatusParams): Promise<R
     });
 };
 
-const useUpdateManifestSCAStatus = (): UseMutationResult<any, unknown> => {
+const useUpdateManifestSCAStatus = (): UseMutationResult<Response, unknown> => {
   const queryClient = useQueryClient();
   return useMutation(
     (updateManifestSCAStatusParams: UpdateManifestSCAStatusParams) =>
