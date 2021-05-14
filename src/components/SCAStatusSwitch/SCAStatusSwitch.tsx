@@ -36,9 +36,7 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
         </span>
       </>
     );
-  }
-
-  if (isLoading === true) {
+  } else if (isLoading === true) {
     return <Spinner size="lg" className="sca-status-spinner" />;
   } else if (scaStatus === 'disallowed') {
     return (
