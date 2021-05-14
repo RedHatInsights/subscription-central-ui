@@ -14,7 +14,7 @@ interface ManifestEntitlement {
 
 interface ManifestEntitlementsData {
   body: {
-    simpleContentAccess: string;
+    contentAccessMode: string;
     createdBy: string;
     createdDate: string;
     entitlementsAttached: EntitlementsAttachedData;

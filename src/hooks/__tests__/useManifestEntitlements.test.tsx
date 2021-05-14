@@ -43,7 +43,7 @@ describe('useManifestEntitlements hook', () => {
           }
         ]
       },
-      simpleContentAccess: 'enabled'
+      contentAccessMode: 'Entitlement Access'
     };
 
     fetch.mockResponseOnce(JSON.stringify(mockResponse));

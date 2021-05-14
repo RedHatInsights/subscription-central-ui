@@ -63,7 +63,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       createdBy,
       lastModified,
       entitlementsAttachedQuantity,
-      simpleContentAccess
+      contentAccessMode
     } = data.body;
 
     const formatDate = (dateString: string) => {
@@ -106,7 +106,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
               <SCAInfoIconWithPopover />
             </strong>
           </GridItem>
-          <GridItem span={6}>{simpleContentAccess}</GridItem>
+          <GridItem span={6}>{contentAccessMode}</GridItem>
 
           <GridItem span={6}>
             <strong>Quantity</strong>
