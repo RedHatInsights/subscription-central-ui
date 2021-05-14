@@ -15,13 +15,13 @@ exports[`SCAStatusSwitch renders successfully as disabled when success is return
     data-ouia-component-id="OUIA-Generated-Switch-2"
     data-ouia-component-type="PF4/Switch"
     data-ouia-safe="true"
-    for="pf-1621018661133j2nlvp4wyk"
+    for="pf-1621018940475466uq3o9o4o"
   >
     <input
       aria-label="SCA Status for this Manifest is disabled"
       class="pf-c-switch__input"
       data-testid="sca-status-switch"
-      id="pf-1621018661133j2nlvp4wyk"
+      id="pf-1621018940475466uq3o9o4o"
       type="checkbox"
     />
     <span
@@ -56,14 +56,14 @@ exports[`SCAStatusSwitch renders successfully as enabled when success is returne
     data-ouia-component-id="OUIA-Generated-Switch-1"
     data-ouia-component-type="PF4/Switch"
     data-ouia-safe="true"
-    for="pf-1621018661118dmq6xrljl8s"
+    for="pf-1621018940464cjral8skvln"
   >
     <input
       aria-label="SCA Status for this Manifest is enabled"
       checked=""
       class="pf-c-switch__input"
       data-testid="sca-status-switch"
-      id="pf-1621018661118dmq6xrljl8s"
+      id="pf-1621018940464cjral8skvln"
       type="checkbox"
     />
     <span
