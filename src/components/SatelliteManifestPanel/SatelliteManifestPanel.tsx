@@ -229,6 +229,17 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     isOpen?: boolean;
   }
 
+  const handleDeleteConfirmationModalToggle = () => {
+    setIsDeleteConfirmationModalOpen(!isDeleteConfirmationModalOpen);
+  };
+
+  const openDeleteConfirmation = (uuid: string) => {
+    const name = data.find((entry) => entry.uuid == uuid).name;
+    setCurrentUuid(uuid);
+    setCurrentName(name);
+    handleDeleteConfirmationModalToggle();
+  };
+
   const getRowsWithAllocationDetails = () => {
     /**
      * Go through each row and add a toggleable row
@@ -300,12 +311,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       titleRef={titleRef}
       drawerRef={drawerRef}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
+      deleteManifest={openDeleteConfirmation}
     />
   );
-
-  const handleDeleteConfirmationModalToggle = () => {
-    setIsDeleteConfirmationModalOpen(!isDeleteConfirmationModalOpen);
-  };
 
   const actions = () => {
     return [
@@ -313,11 +321,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         title: 'Delete',
         // eslint-disable-next-line
         onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          const uuid = rowData.uuid.title;
-          const name = data.find((entry) => entry.uuid == uuid).name;
-          setCurrentUuid(uuid);
-          setCurrentName(name);
-          handleDeleteConfirmationModalToggle();
+          openDeleteConfirmation(rowData.uuid.title);
         }
       }
     ];
