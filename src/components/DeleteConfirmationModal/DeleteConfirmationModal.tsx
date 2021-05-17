@@ -1,7 +1,18 @@
 import React, { FunctionComponent } from 'react';
-import { Button, Checkbox, List, ListItem, Modal, ModalVariant } from '@patternfly/react-core';
+import {
+  Button,
+  Checkbox,
+  List,
+  ListItem,
+  Modal,
+  ModalVariant,
+  Text,
+  TextContent,
+  TextVariants
+} from '@patternfly/react-core';
 import useDeleteSatelliteManifest from '../../hooks/useDeleteSatelliteManifest';
 import { Processing } from '../emptyState';
+import './DeleteConfirmationModal.scss';
 
 interface DeleteConfirmationModalProps {
   handleModalToggle: () => void;
@@ -53,8 +64,10 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
       return <Processing />;
     } else {
       return (
-        <>
-          <p>Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:</p>
+        <TextContent>
+          <Text component={TextVariants.p}>
+            Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:
+          </Text>
           <List>
             <ListItem>Delete all subscriptions that are attached to running hosts.</ListItem>
             <ListItem>Delete all subscriptions attached to activation keys.</ListItem>
@@ -64,16 +77,16 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
               keys.
             </ListItem>
           </List>
-          <p>
+          <Text component={TextVariants.p}>
             <strong>Caution: This operation is permanent and cannot be undone!</strong>
-          </p>
+          </Text>
           <Checkbox
             label="Are you sure you want to delete this manifest?"
             isChecked={checked}
             id="confirmation_checkbox"
             onChange={handleCheckbox}
           />
-        </>
+        </TextContent>
       );
     }
   };
@@ -84,10 +97,8 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
       onClose={closeModal}
       title={`Delete ${name}`}
       variant={ModalVariant.small}
-      className="manifests"
       titleIconVariant="warning"
       actions={actions()}
-      style={{ overflow: 'visible' }}
     >
       {content()}
     </Modal>
