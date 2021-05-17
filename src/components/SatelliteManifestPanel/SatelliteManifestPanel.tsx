@@ -33,7 +33,7 @@ import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
-import DeleteConfirmationModal from '../DeleteConfirmationModal';
+import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -69,7 +69,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
-  const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false);
+  const [
+    isDeleteManifestConfirmationModalOpen,
+    setIsDeleteManifestConfirmationModalOpen
+  ] = useState(false);
   const [currentDeletionUuid, setCurrentDeletionUuid] = useState('');
 
   const titleRef = useRef<HTMLSpanElement>(null);
@@ -232,13 +235,13 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     return data.find((entry) => entry.uuid == uuid)?.name;
   };
 
-  const handleDeleteConfirmationModalToggle = () => {
-    setIsDeleteConfirmationModalOpen(!isDeleteConfirmationModalOpen);
+  const handleDeleteManifestConfirmationModalToggle = () => {
+    setIsDeleteManifestConfirmationModalOpen(!isDeleteManifestConfirmationModalOpen);
   };
 
   const openDeleteConfirmation = (uuid: string) => {
     setCurrentDeletionUuid(uuid);
-    handleDeleteConfirmationModalToggle();
+    handleDeleteManifestConfirmationModalToggle();
   };
 
   const getRowsWithAllocationDetails = () => {
@@ -378,11 +381,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             {!isFetching && data.length === 0 && <NoManifestsFound />}
             {isFetching && <Processing />}
             {pagination(PaginationVariant.bottom)}
-            <DeleteConfirmationModal
+            <DeleteManifestConfirmationModal
               uuid={currentDeletionUuid}
               name={getManifestName(currentDeletionUuid)}
-              isOpen={isDeleteConfirmationModalOpen}
-              handleModalToggle={handleDeleteConfirmationModalToggle}
+              isOpen={isDeleteManifestConfirmationModalOpen}
+              handleModalToggle={handleDeleteManifestConfirmationModalToggle}
             />
           </DrawerContentBody>
         </DrawerContent>

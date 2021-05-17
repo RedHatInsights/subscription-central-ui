@@ -12,16 +12,16 @@ import {
 } from '@patternfly/react-core';
 import useDeleteSatelliteManifest from '../../hooks/useDeleteSatelliteManifest';
 import { Processing } from '../emptyState';
-import './DeleteConfirmationModal.scss';
+import './DeleteManifestConfirmationModal.scss';
 
-interface DeleteConfirmationModalProps {
+interface DeleteManifestConfirmationModalProps {
   handleModalToggle: () => void;
   isOpen: boolean;
   name: string;
   uuid: string;
 }
 
-const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> = ({
+const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmationModalProps> = ({
   handleModalToggle,
   isOpen,
   name,
@@ -105,4 +105,4 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
   );
 };
 
-export default DeleteConfirmationModal;
+export default DeleteManifestConfirmationModal;
