@@ -1,7 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import { Button, Checkbox, List, ListItem, Modal, ModalVariant } from '@patternfly/react-core';
-import { getConfig } from '../../utilities/platformServices';
-import Cookies from 'js-cookie';
 import useDeleteSatelliteManifest from '../../hooks/useDeleteSatelliteManifest';
 import { Processing } from '../emptyState';
 
@@ -18,17 +16,21 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
   name,
   uuid
 }) => {
-  const [confirmed, setConfirmed] = React.useState(false);
+  const [checked, setChecked] = React.useState(false);
   const { isLoading: isDeletingManifest, mutate: deleteManifest } = useDeleteSatelliteManifest();
+
+  const handleCheckbox = (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
+
+  const closeModal = () => {
+    handleModalToggle();
+    setChecked(false);
+  };
 
   const handleConfirmation = () => {
     deleteManifest(uuid);
-    handleModalToggle();
-    setConfirmed(false);
-  };
-
-  const handleCheckbox = (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmed(event.target.checked);
+    closeModal();
   };
 
   const actions = () => {
@@ -36,15 +38,10 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
       return [];
     } else {
       return [
-        <Button key="cancel" variant="link" onClick={handleModalToggle}>
+        <Button key="cancel" variant="link" onClick={closeModal}>
           NO, CANCEL
         </Button>,
-        <Button
-          key="confirm"
-          variant="primary"
-          isDisabled={!confirmed}
-          onClick={handleConfirmation}
-        >
+        <Button key="confirm" variant="primary" isDisabled={!checked} onClick={handleConfirmation}>
           YES, DELETE
         </Button>
       ];
@@ -72,7 +69,7 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
           </p>
           <Checkbox
             label="Are you sure you want to delete this manifest?"
-            isChecked={confirmed}
+            isChecked={checked}
             id="confirmation_checkbox"
             onChange={handleCheckbox}
           />
@@ -84,7 +81,7 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
   return (
     <Modal
       isOpen={isOpen || isDeletingManifest}
-      onClose={handleModalToggle}
+      onClose={closeModal}
       title={`Delete ${name}`}
       variant={ModalVariant.small}
       className="manifests"
