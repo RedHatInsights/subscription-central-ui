@@ -9,7 +9,7 @@ interface ManifestEntry {
   url: string;
   uuid: string;
   version: string;
-  simpleContentAccess?: string;
+  simpleContentAccess: string;
 }
 
 interface SatelliteManifestAPIData {
