@@ -78,7 +78,7 @@ const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> =
             </ListItem>
           </List>
           <Text component={TextVariants.p}>
-            <strong>Caution: This operation is permanent and cannot be undone!</strong>
+            <strong>Caution: this operation is permanent and cannot be undone.</strong>
           </Text>
           <Checkbox
             label="Are you sure you want to delete this manifest?"
