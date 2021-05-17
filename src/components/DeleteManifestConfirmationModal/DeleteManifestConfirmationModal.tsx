@@ -2,17 +2,18 @@ import React, { FunctionComponent } from 'react';
 import {
   Button,
   Checkbox,
+  EmptyState,
+  EmptyStateIcon,
   List,
   ListItem,
   Modal,
   ModalVariant,
+  Spinner,
   Text,
   TextContent,
   TextVariants
 } from '@patternfly/react-core';
 import useDeleteSatelliteManifest from '../../hooks/useDeleteSatelliteManifest';
-import { Processing } from '../emptyState';
-import './DeleteManifestConfirmationModal.scss';
 
 interface DeleteManifestConfirmationModalProps {
   handleModalToggle: () => void;
@@ -61,7 +62,11 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
 
   const content = () => {
     if (isDeletingManifest) {
-      return <Processing />;
+      return (
+        <EmptyState>
+          <EmptyStateIcon variant="container" component={Spinner} />
+        </EmptyState>
+      );
     } else {
       return (
         <TextContent>
