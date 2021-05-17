@@ -73,7 +73,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     isDeleteManifestConfirmationModalOpen,
     setIsDeleteManifestConfirmationModalOpen
   ] = useState(false);
-  const [currentDeletionUuid, setCurrentDeletionUuid] = useState('');
+  const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -240,7 +240,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   const openDeleteConfirmation = (uuid: string) => {
-    setCurrentDeletionUuid(uuid);
+    setCurrentDeletionUUID(uuid);
     handleDeleteManifestConfirmationModalToggle();
   };
 
@@ -323,7 +323,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     return [
       {
         title: 'Delete',
-        // eslint-disable-next-line
         onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
           openDeleteConfirmation(rowData.uuid.title);
         }
@@ -382,8 +381,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             {isFetching && <Processing />}
             {pagination(PaginationVariant.bottom)}
             <DeleteManifestConfirmationModal
-              uuid={currentDeletionUuid}
-              name={getManifestName(currentDeletionUuid)}
+              uuid={currentDeletionUUID}
+              name={getManifestName(currentDeletionUUID)}
               isOpen={isDeleteManifestConfirmationModalOpen}
               handleModalToggle={handleDeleteManifestConfirmationModalToggle}
             />
