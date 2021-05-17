@@ -70,8 +70,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
   const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false);
-  const [currentUuid, setCurrentUuid] = useState('');
-  const [currentName, setCurrentName] = useState('');
+  const [currentDeletionUuid, setCurrentDeletionUuid] = useState('');
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -229,14 +228,16 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     isOpen?: boolean;
   }
 
+  const getManifestName = (uuid: string) => {
+    return data.find((entry) => entry.uuid == uuid)?.name;
+  };
+
   const handleDeleteConfirmationModalToggle = () => {
     setIsDeleteConfirmationModalOpen(!isDeleteConfirmationModalOpen);
   };
 
   const openDeleteConfirmation = (uuid: string) => {
-    const name = data.find((entry) => entry.uuid == uuid).name;
-    setCurrentUuid(uuid);
-    setCurrentName(name);
+    setCurrentDeletionUuid(uuid);
     handleDeleteConfirmationModalToggle();
   };
 
@@ -378,8 +379,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             {isFetching && <Processing />}
             {pagination(PaginationVariant.bottom)}
             <DeleteConfirmationModal
-              uuid={currentUuid}
-              name={currentName}
+              uuid={currentDeletionUuid}
+              name={getManifestName(currentDeletionUuid)}
               isOpen={isDeleteConfirmationModalOpen}
               handleModalToggle={handleDeleteConfirmationModalToggle}
             />
