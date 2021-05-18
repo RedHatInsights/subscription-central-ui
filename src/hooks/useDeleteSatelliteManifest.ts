@@ -12,7 +12,8 @@ const deleteSatelliteManifest = (uuid: string) => {
     mode: 'cors'
   })
     .then((response) => {
-      if (response.status != 200) {
+      console.log(response);
+      if (response.status != 200 && response.status != 204) {
         throw new Error(
           `Status Code ${response.status}.  Error deleting manifest: ${response.statusText}.`
         );

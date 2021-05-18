@@ -17,6 +17,7 @@ import useDeleteSatelliteManifest from '../../hooks/useDeleteSatelliteManifest';
 
 interface DeleteManifestConfirmationModalProps {
   handleModalToggle: () => void;
+  onSuccess: () => void;
   isOpen: boolean;
   name: string;
   uuid: string;
@@ -24,12 +25,18 @@ interface DeleteManifestConfirmationModalProps {
 
 const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmationModalProps> = ({
   handleModalToggle,
+  onSuccess,
   isOpen,
   name,
   uuid
 }) => {
   const [checked, setChecked] = React.useState(false);
-  const { isLoading: isDeletingManifest, mutate: deleteManifest } = useDeleteSatelliteManifest();
+  const {
+    isLoading: isDeletingManifest,
+    isSuccess: manifestDeleted,
+    mutate: deleteManifest,
+    reset: resetRequestStatus
+  } = useDeleteSatelliteManifest();
 
   const handleCheckbox = (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -40,9 +47,10 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     setChecked(false);
   };
 
-  const handleConfirmation = () => {
-    deleteManifest(uuid);
+  const resetModal = () => {
     closeModal();
+    resetRequestStatus();
+    onSuccess();
   };
 
   const actions = () => {
@@ -53,7 +61,12 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
         <Button key="cancel" variant="link" onClick={closeModal}>
           NO, CANCEL
         </Button>,
-        <Button key="confirm" variant="primary" isDisabled={!checked} onClick={handleConfirmation}>
+        <Button
+          key="confirm"
+          variant="primary"
+          isDisabled={!checked}
+          onClick={() => deleteManifest(uuid)}
+        >
           YES, DELETE
         </Button>
       ];
@@ -96,9 +109,10 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     }
   };
 
+  if (manifestDeleted) resetModal();
   return (
     <Modal
-      isOpen={isOpen || isDeletingManifest}
+      isOpen={isOpen}
       onClose={closeModal}
       title={`Delete ${name}`}
       variant={ModalVariant.small}

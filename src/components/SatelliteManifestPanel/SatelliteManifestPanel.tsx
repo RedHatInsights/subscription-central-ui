@@ -385,6 +385,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
               name={getManifestName(currentDeletionUUID)}
               isOpen={isDeleteManifestConfirmationModalOpen}
               handleModalToggle={handleDeleteManifestConfirmationModalToggle}
+              onSuccess={closeDetailsPanel}
             />
           </DrawerContentBody>
         </DrawerContent>
