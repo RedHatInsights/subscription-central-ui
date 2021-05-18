@@ -10,19 +10,13 @@ const deleteSatelliteManifest = (uuid: string) => {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
-  })
-    .then((response) => {
-      console.log(response);
-      if (response.status != 200 && response.status != 204) {
-        throw new Error(
-          `Status Code ${response.status}.  Error deleting manifest: ${response.statusText}.`
-        );
-      }
-      return response.json();
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+  }).then((response) => {
+    if (response.status != 204) {
+      throw new Error(
+        `Status Code ${response.status}.  Error deleting manifest: ${response.statusText}.`
+      );
+    }
+  });
 };
 
 const useDeleteSatelliteManifest = () => {

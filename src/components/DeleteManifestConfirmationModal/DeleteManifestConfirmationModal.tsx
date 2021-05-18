@@ -32,11 +32,13 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
 }) => {
   const [checked, setChecked] = React.useState(false);
   const {
+    isError: manifestFailedToDelete,
     isLoading: isDeletingManifest,
     isSuccess: manifestDeleted,
     mutate: deleteManifest,
     reset: resetRequestStatus
   } = useDeleteSatelliteManifest();
+  const requestCompleted = manifestDeleted || manifestFailedToDelete;
 
   const handleCheckbox = (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -50,7 +52,6 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
   const resetModal = () => {
     closeModal();
     resetRequestStatus();
-    onSuccess();
   };
 
   const actions = () => {
@@ -109,7 +110,8 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     }
   };
 
-  if (manifestDeleted) resetModal();
+  if (requestCompleted) resetModal();
+  if (manifestDeleted) onSuccess();
   return (
     <Modal
       isOpen={isOpen}
