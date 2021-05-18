@@ -239,7 +239,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setIsDeleteManifestConfirmationModalOpen(!isDeleteManifestConfirmationModalOpen);
   };
 
-  const openDeleteConfirmation = (uuid: string) => {
+  const openDeleteConfirmationModal = (uuid: string) => {
     setCurrentDeletionUUID(uuid);
     handleDeleteManifestConfirmationModalToggle();
   };
@@ -315,7 +315,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       titleRef={titleRef}
       drawerRef={drawerRef}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
-      deleteManifest={openDeleteConfirmation}
+      deleteManifest={openDeleteConfirmationModal}
     />
   );
 
@@ -324,7 +324,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       {
         title: 'Delete',
         onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          openDeleteConfirmation(rowData.uuid.title);
+          openDeleteConfirmationModal(rowData.uuid.title);
         }
       }
     ];
