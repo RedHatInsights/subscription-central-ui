@@ -16,7 +16,6 @@ describe('useDeleteSatelliteManifest hook', () => {
   let status: number;
 
   beforeEach(() => {
-    //jest.clearAllMocks();
     fetch.mockResponseOnce(JSON.stringify({}), { status: status });
     queryClient.setQueryData('manifests', [{ uuid: '00000000-0000-0000-0000-000000000000' }]);
     result.current.mutate('00000000-0000-0000-0000-000000000000');
