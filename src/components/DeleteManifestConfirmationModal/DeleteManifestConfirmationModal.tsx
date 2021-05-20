@@ -64,7 +64,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
         </Button>,
         <Button
           key="confirm"
-          variant="primary"
+          variant="danger"
           isDisabled={!checked}
           onClick={() => deleteManifest(uuid)}
         >
@@ -116,7 +116,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     <Modal
       isOpen={isOpen}
       onClose={closeModal}
-      title={`Delete ${name}`}
+      title={isDeletingManifest ? `Deleting ${name}...` : `Delete ${name}`}
       variant={ModalVariant.small}
       titleIconVariant="warning"
       actions={actions()}
