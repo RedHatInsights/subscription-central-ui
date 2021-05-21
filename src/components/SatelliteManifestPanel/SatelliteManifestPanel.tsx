@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useRef } from 'react';
+import React, { FunctionComponent, useState, useReducer, useRef } from 'react';
 import {
   Badge,
   Button,
@@ -41,6 +41,10 @@ interface SatelliteManifestPanelProps {
   user: User;
 }
 
+interface BooleanDictionary {
+  [key: string]: boolean;
+}
+
 const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
   data,
   isFetching,
@@ -65,7 +69,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
   const [sortBy, setSortBy] = useState({ index: 1, direction: SortByDirection.asc });
-  const [rowExpandedStatus, setRowExpandedStatus] = useState(new Array(10).fill(false));
+  const [rowExpandedStatus, setRowExpandedStatus] = useState<BooleanDictionary>({});
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
@@ -74,6 +78,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setIsDeleteManifestConfirmationModalOpen
   ] = useState(false);
   const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -255,8 +260,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const rowsWithAllocationDetails: Row[] = [];
 
     tableRows.forEach((row, i) => {
-      const isOpen = rowExpandedStatus[i];
       const uuid = row[3];
+      const isOpen = rowExpandedStatus[uuid] || false;
       const parentIndex = (i + 1) * 2 - 2;
       const expandedContent = isOpen ? (
         <ManifestEntitlementsListContainer
@@ -283,19 +288,20 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     return rowsWithAllocationDetails;
   };
 
-  const toggleAllocationDetails = (event: React.MouseEvent, rowKey: number, isOpen: boolean) => {
-    const rowIndexToUpdate = rowKey / 2;
-    const newRowExpandedStatus = [...rowExpandedStatus];
-    newRowExpandedStatus[rowIndexToUpdate] = isOpen;
-    setRowExpandedStatus(newRowExpandedStatus);
+  const toggleAllocationDetails = (
+    event: React.MouseEvent,
+    rowKey: number,
+    isOpen: boolean,
+    rowData: any
+  ) => {
+    const uuid: string = rowData.uuid.title;
+    rowExpandedStatus[uuid] = !rowExpandedStatus[uuid];
+    forceUpdate();
   };
 
   const openCurrentEntitlementsListFromPanel = () => {
     closeDetailsPanel();
-
-    const newRowExpandedStatus = [...rowExpandedStatus];
-    newRowExpandedStatus[currentDetailRowIndex] = true;
-    setRowExpandedStatus(newRowExpandedStatus);
+    rowExpandedStatus[currentDetailUUID] = true;
     const currentRowRef = entitlementsRowRefs[currentDetailRowIndex];
     if (currentRowRef?.current) {
       currentRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -303,8 +309,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   const collapseAllRows = () => {
-    const newRowExpandedStatus = new Array(10).fill(false);
-    setRowExpandedStatus(newRowExpandedStatus);
+    setRowExpandedStatus({});
   };
 
   const panelContent = (
