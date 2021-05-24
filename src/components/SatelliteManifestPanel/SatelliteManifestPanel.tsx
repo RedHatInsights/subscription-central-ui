@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useReducer, useRef } from 'react';
+import React, { FunctionComponent, useState, useRef } from 'react';
 import {
   Badge,
   Button,
@@ -78,7 +78,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setIsDeleteManifestConfirmationModalOpen
   ] = useState(false);
   const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -288,6 +287,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     return rowsWithAllocationDetails;
   };
 
+  const toggleRowExpansion = (rowUUID: string, expanded: boolean) => {
+    const newRowExpandedStatus = { ...rowExpandedStatus };
+    newRowExpandedStatus[rowUUID] = expanded;
+    setRowExpandedStatus(newRowExpandedStatus);
+  };
+
   const toggleAllocationDetails = (
     event: React.MouseEvent,
     rowKey: number,
@@ -295,13 +300,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     rowData: any
   ) => {
     const uuid: string = rowData.uuid.title;
-    rowExpandedStatus[uuid] = !rowExpandedStatus[uuid];
-    forceUpdate();
+    toggleRowExpansion(uuid, !rowExpandedStatus[uuid]);
   };
 
   const openCurrentEntitlementsListFromPanel = () => {
     closeDetailsPanel();
-    rowExpandedStatus[currentDetailUUID] = true;
+    toggleRowExpansion(currentDetailUUID, true);
     const currentRowRef = entitlementsRowRefs[currentDetailRowIndex];
     if (currentRowRef?.current) {
       currentRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
