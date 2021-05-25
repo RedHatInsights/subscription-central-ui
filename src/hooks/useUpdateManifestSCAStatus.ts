@@ -49,7 +49,7 @@ const updateManifestSCAQueryData = (
 ): ManifestEntry[] => {
   return oldManifestEntryData.map((manifestEntry) => {
     if (manifestEntry.uuid === uuid) {
-      const updatedManifestEntry = manifestEntry;
+      const updatedManifestEntry = { ...manifestEntry };
       updatedManifestEntry.simpleContentAccess = newSCAStatus;
       return updatedManifestEntry;
     } else {
