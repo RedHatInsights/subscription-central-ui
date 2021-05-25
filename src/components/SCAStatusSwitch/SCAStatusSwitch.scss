@@ -5,7 +5,9 @@
 
 .sca-status-error-msg {
   font-size: 12px;
-  margin-left: 5px;
+  line-height: 1.4em;
+  width: calc(100% - 23px);
+  float: right;
 }
 
 .sca-status-spinner {
