@@ -12,7 +12,8 @@ describe('Manifest Detail Side Panel', () => {
     titleRef: null as React.MutableRefObject<HTMLSpanElement>,
     drawerRef: null as React.MutableRefObject<HTMLDivElement>,
     onCloseClick: (): any => undefined,
-    openCurrentEntitlementsListFromPanel: (): any => undefined
+    openCurrentEntitlementsListFromPanel: (): any => undefined,
+    deleteManifest: (): any => undefined
   };
 
   it('renders with a spinner when loading', () => {

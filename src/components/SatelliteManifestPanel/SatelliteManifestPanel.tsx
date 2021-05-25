@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useRef, createRef } from 'react';
+import React, { FunctionComponent, useState, useRef } from 'react';
 import {
   Badge,
   Button,
@@ -33,11 +33,16 @@ import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
+import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
   isFetching: boolean;
   user: User;
+}
+
+interface BooleanDictionary {
+  [key: string]: boolean;
 }
 
 const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
@@ -64,10 +69,15 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
   const [sortBy, setSortBy] = useState({ index: 1, direction: SortByDirection.asc });
-  const [rowExpandedStatus, setRowExpandedStatus] = useState(new Array(10).fill(false));
+  const [rowExpandedStatus, setRowExpandedStatus] = useState<BooleanDictionary>({});
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
+  const [
+    isDeleteManifestConfirmationModalOpen,
+    setIsDeleteManifestConfirmationModalOpen
+  ] = useState(false);
+  const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -225,6 +235,19 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     isOpen?: boolean;
   }
 
+  const getManifestName = (uuid: string) => {
+    return data.find((entry) => entry.uuid == uuid)?.name;
+  };
+
+  const handleDeleteManifestConfirmationModalToggle = () => {
+    setIsDeleteManifestConfirmationModalOpen(!isDeleteManifestConfirmationModalOpen);
+  };
+
+  const openDeleteConfirmationModal = (uuid: string) => {
+    setCurrentDeletionUUID(uuid);
+    handleDeleteManifestConfirmationModalToggle();
+  };
+
   const getRowsWithAllocationDetails = () => {
     /**
      * Go through each row and add a toggleable row
@@ -236,8 +259,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const rowsWithAllocationDetails: Row[] = [];
 
     tableRows.forEach((row, i) => {
-      const isOpen = rowExpandedStatus[i];
       const uuid = row[3];
+      const isOpen = rowExpandedStatus[uuid] || false;
       const parentIndex = (i + 1) * 2 - 2;
       const expandedContent = isOpen ? (
         <ManifestEntitlementsListContainer
@@ -264,19 +287,25 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     return rowsWithAllocationDetails;
   };
 
-  const toggleAllocationDetails = (event: React.MouseEvent, rowKey: number, isOpen: boolean) => {
-    const rowIndexToUpdate = rowKey / 2;
-    const newRowExpandedStatus = [...rowExpandedStatus];
-    newRowExpandedStatus[rowIndexToUpdate] = isOpen;
+  const toggleRowExpansion = (rowUUID: string, expanded: boolean) => {
+    const newRowExpandedStatus = { ...rowExpandedStatus };
+    newRowExpandedStatus[rowUUID] = expanded;
     setRowExpandedStatus(newRowExpandedStatus);
+  };
+
+  const toggleAllocationDetails = (
+    event: React.MouseEvent,
+    rowKey: number,
+    isOpen: boolean,
+    rowData: any
+  ) => {
+    const uuid: string = rowData.uuid.title;
+    toggleRowExpansion(uuid, !rowExpandedStatus[uuid]);
   };
 
   const openCurrentEntitlementsListFromPanel = () => {
     closeDetailsPanel();
-
-    const newRowExpandedStatus = [...rowExpandedStatus];
-    newRowExpandedStatus[currentDetailRowIndex] = true;
-    setRowExpandedStatus(newRowExpandedStatus);
+    toggleRowExpansion(currentDetailUUID, true);
     const currentRowRef = entitlementsRowRefs[currentDetailRowIndex];
     if (currentRowRef?.current) {
       currentRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -284,8 +313,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   const collapseAllRows = () => {
-    const newRowExpandedStatus = new Array(10).fill(false);
-    setRowExpandedStatus(newRowExpandedStatus);
+    setRowExpandedStatus({});
   };
 
   const panelContent = (
@@ -296,8 +324,20 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       titleRef={titleRef}
       drawerRef={drawerRef}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
+      deleteManifest={openDeleteConfirmationModal}
     />
   );
+
+  const actions = () => {
+    return [
+      {
+        title: 'Delete',
+        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+          openDeleteConfirmationModal(rowData.uuid.title);
+        }
+      }
+    ];
+  };
 
   return (
     <PageSection variant="light">
@@ -340,6 +380,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
               onCollapse={toggleAllocationDetails}
               sortBy={sortBy}
               onSort={handleSort}
+              actions={actions()}
             >
               <TableHeader />
               <TableBody />
@@ -348,6 +389,13 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             {!isFetching && data.length === 0 && <NoManifestsFound />}
             {isFetching && <Processing />}
             {pagination(PaginationVariant.bottom)}
+            <DeleteManifestConfirmationModal
+              uuid={currentDeletionUUID}
+              name={getManifestName(currentDeletionUUID)}
+              isOpen={isDeleteManifestConfirmationModalOpen}
+              handleModalToggle={handleDeleteManifestConfirmationModalToggle}
+              onSuccess={closeDetailsPanel}
+            />
           </DrawerContentBody>
         </DrawerContent>
       </Drawer>
