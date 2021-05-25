@@ -30,7 +30,7 @@ const updateManifestSCAStatus = (
     body: JSON.stringify(requestData)
   })
     .then((response) => {
-      if (response.status !== 200 && response.status !== 204) {
+      if (response.status !== 204) {
         throw new Error(
           `Status Code ${response.status}.  Error updating SCA status: ${response.statusText}.  `
         );

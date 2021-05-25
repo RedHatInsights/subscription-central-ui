@@ -2,109 +2,66 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import useUpdateManifestSCAStatus from '../useUpdateManifestSCAStatus';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import { ManifestEntry } from '../useSatelliteManifests';
+import { renderHook } from '@testing-library/react-hooks';
 
 enableFetchMocks();
+
+const queryClient = new QueryClient();
+const wrapper = ({ children }: any) => {
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
   fetch.resetMocks();
+
+  queryClient.setQueryData('manifests', [
+    { simpleContentAccess: 'enabled', uuid: '00000000-0000-0000-0000-000000000000' },
+    { simpleContentAccess: 'enabled', uuid: '00000000-0000-0000-0000-000000000001' }
+  ]);
 });
 
-const queryClient = new QueryClient();
-
 describe('useUpdateManifestSCAStatus hook', () => {
-  it('returns success when given correct inputs', async () => {
-    const mockResponse = { status: 204 };
-    fetch.mockResponseOnce(JSON.stringify(mockResponse));
+  it('updates the SCA status to enabled when it receives a 204 status', async () => {
+    fetch.mockResponseOnce(JSON.stringify({}), { status: 204 });
 
-    const Page = () => {
-      const { mutate, isSuccess } = useUpdateManifestSCAStatus();
-      return (
-        <div>
-          <h1 data-testid="title">{isSuccess && 'Success'}</h1>
-          <button onClick={() => mutate({ uuid: 'abc123', newSCAStatus: 'enabled' })}>
-            mutate
-          </button>
-        </div>
-      );
-    };
-
-    queryClient.setQueryData('manifests', (): ManifestEntry[] => {
-      return [] as ManifestEntry[];
+    const { result, waitFor } = renderHook(() => useUpdateManifestSCAStatus(), { wrapper });
+    result.current.mutate({
+      uuid: '00000000-0000-0000-0000-000000000000',
+      newSCAStatus: 'disabled'
     });
 
-    const { getByTestId, getByText } = render(
-      <QueryClientProvider client={queryClient}>
-        <Page />
-      </QueryClientProvider>
-    );
+    await waitFor(() => result.current.isSuccess);
 
-    expect(getByTestId('title').textContent).toBe('');
-    fireEvent.click(getByText('mutate'));
-    await waitFor(() => getByTestId('title'));
-    expect(getByTestId('title').textContent).toBe('Success');
+    const updatedManifests: {
+      simpleContentAccess: string;
+      uuid: string;
+    }[] = queryClient.getQueryData('manifests');
+
+    expect(updatedManifests[0].simpleContentAccess).toEqual('disabled');
   });
 
-  it('correctly updates the SCA status from enabled to disabled after the successful API call', async () => {
-    const mockResponse = { status: 204 };
-    fetch.mockResponseOnce(JSON.stringify(mockResponse));
+  it('does not update the SCA status to enabled when it receives a 403 status', async () => {
+    const originalError = console.error;
+    console.error = jest.fn();
 
-    const Page = () => {
-      const { mutate, isSuccess } = useUpdateManifestSCAStatus();
-      return (
-        <div>
-          <h1 data-testid="title">{isSuccess && 'Success'}</h1>
-          <button onClick={() => mutate({ uuid: 'abc123', newSCAStatus: 'disabled' })}>
-            mutate
-          </button>
-        </div>
-      );
-    };
+    fetch.mockResponseOnce(JSON.stringify({}), { status: 403 });
 
-    const manifest1: ManifestEntry = {
-      entitlementQuantity: 1,
-      name: 'foo',
-      type: 'Satellite',
-      url: 'foo.com',
-      uuid: 'abc123',
-      version: '6.8',
-      simpleContentAccess: 'enabled'
-    };
-
-    const manifest2: ManifestEntry = {
-      entitlementQuantity: 10,
-      name: 'foo',
-      type: 'Satellite',
-      url: 'foo.com',
-      uuid: '123456',
-      version: '6.8',
-      simpleContentAccess: 'enabled'
-    };
-
-    queryClient.setQueryData('manifests', (): ManifestEntry[] => {
-      return [manifest1, manifest2] as ManifestEntry[];
+    const { result, waitFor } = renderHook(() => useUpdateManifestSCAStatus(), { wrapper });
+    result.current.mutate({
+      uuid: '00000000-0000-0000-0000-000000000000',
+      newSCAStatus: 'disabled'
     });
 
-    expect(queryClient.getQueryData('manifests')).toEqual([manifest1, manifest2]);
+    await waitFor(() => result.current.isSuccess);
 
-    const { getByTestId, getByText } = render(
-      <QueryClientProvider client={queryClient}>
-        <Page />
-      </QueryClientProvider>
-    );
+    const updatedManifests: {
+      simpleContentAccess: string;
+      uuid: string;
+    }[] = queryClient.getQueryData('manifests');
 
-    fireEvent.click(getByText('mutate'));
-    await waitFor(() => getByTestId('title'));
-    expect(getByTestId('title').textContent).toBe('Success');
-    const updatedManifestData = [
-      {
-        ...manifest1,
-        simpleContentAccess: 'disabled'
-      },
-      manifest2
-    ];
-    expect(queryClient.getQueryData('manifests')).toEqual(updatedManifestData);
+    expect(updatedManifests[0].simpleContentAccess).toEqual('enabled');
+
+    console.error = originalError;
   });
 });
