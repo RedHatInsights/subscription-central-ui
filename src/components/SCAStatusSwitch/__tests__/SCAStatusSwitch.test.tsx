@@ -33,7 +33,7 @@ describe('SCAStatusSwitch', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders with an error message when the API response does not have 200 status and no data is returned', () => {
+  it('renders with an error message when the API response does not have 204 status and no data is returned', () => {
     (useUpdateManifestSCAStatus as jest.Mock).mockImplementation(() => ({
       isError: false,
       isLoading: false,

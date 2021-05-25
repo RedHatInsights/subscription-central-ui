@@ -8,6 +8,7 @@ interface SCAStatusSwitchProps {
   scaStatus: string;
   uuid: string;
 }
+
 const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
   const isChecked = scaStatus.toLowerCase() === 'enabled';
 

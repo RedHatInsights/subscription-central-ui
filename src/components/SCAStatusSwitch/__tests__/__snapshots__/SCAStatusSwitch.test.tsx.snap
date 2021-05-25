@@ -123,7 +123,7 @@ exports[`SCAStatusSwitch renders with an error message when an error occurs 1`] 
 </div>
 `;
 
-exports[`SCAStatusSwitch renders with an error message when the API response does not have 200 status and no data is returned 1`] = `
+exports[`SCAStatusSwitch renders with an error message when the API response does not have 204 status and no data is returned 1`] = `
 <div>
   <svg
     aria-hidden="true"
