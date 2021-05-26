@@ -534,6 +534,11 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
                         </div>
                       </button>
                     </th>
+                    <td
+                      class=""
+                      data-key="5"
+                      data-label=""
+                    />
                   </tr>
                 </thead>
                 <tbody
@@ -620,6 +625,40 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
                     >
                       00000000-0000-0000-0000-000000000000
                     </td>
+                    <td
+                      class="pf-c-table__action"
+                      data-key="5"
+                    >
+                      <div
+                        class="pf-c-dropdown pf-m-align-right"
+                        data-ouia-component-id="OUIA-Generated-Dropdown-1"
+                        data-ouia-component-type="PF4/Dropdown"
+                        data-ouia-safe="true"
+                      >
+                        <button
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          aria-label="Actions"
+                          class="pf-c-dropdown__toggle pf-m-plain"
+                          id="pf-dropdown-toggle-id-1"
+                          type="button"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            fill="currentColor"
+                            height="1em"
+                            role="img"
+                            style="vertical-align: -0.125em;"
+                            viewBox="0 0 192 512"
+                            width="1em"
+                          >
+                            <path
+                              d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                   <tr
                     class="pf-c-table__expandable-row"
@@ -638,6 +677,10 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
                         class="pf-c-table__expandable-row-content"
                       />
                     </td>
+                    <td
+                      class="pf-c-table__action"
+                      data-key="5"
+                    />
                   </tr>
                 </tbody>
               </table>
@@ -1490,6 +1533,11 @@ exports[`Satellite Manifests Page renders the empty table with no manifests foun
                         </div>
                       </button>
                     </th>
+                    <td
+                      class=""
+                      data-key="5"
+                      data-label=""
+                    />
                   </tr>
                 </thead>
                 <tbody

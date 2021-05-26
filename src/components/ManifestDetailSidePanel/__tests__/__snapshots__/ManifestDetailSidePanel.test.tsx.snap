@@ -94,7 +94,7 @@ exports[`Manifest Detail Side Panel renders successfully with data when data is 
             <div
               class="pf-l-grid__item pf-m-6-col"
             >
-              Enabled
+              enabled
             </div>
             <div
               class="pf-l-grid__item pf-m-6-col"

@@ -20,6 +20,7 @@ interface ManifestDetailSidePanelProps {
   uuid: string;
   onCloseClick: () => void;
   openCurrentEntitlementsListFromPanel: () => void;
+  deleteManifest: (uuid: string) => void;
 }
 
 const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
@@ -28,7 +29,8 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   drawerRef,
   uuid,
   onCloseClick,
-  openCurrentEntitlementsListFromPanel
+  openCurrentEntitlementsListFromPanel,
+  deleteManifest
 }) => {
   const { isLoading, isFetching, isSuccess, isError, data } = useManifestEntitlements(uuid);
 
@@ -63,7 +65,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       createdBy,
       lastModified,
       entitlementsAttachedQuantity,
-      contentAccessMode
+      simpleContentAccess
     } = data.body;
 
     const formatDate = (dateString: string) => {
@@ -106,7 +108,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
               <SCAInfoIconWithPopover />
             </strong>
           </GridItem>
-          <GridItem span={6}>{contentAccessMode}</GridItem>
+          <GridItem span={6}>{simpleContentAccess}</GridItem>
 
           <GridItem span={6}>
             <strong>Quantity</strong>
@@ -144,7 +146,14 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           Deleting a subscription allocation is <strong>STRONGLY</strong> discouraged. This action
           should only be taken in extreme circumstances or for debugging purposes
         </p>
-        <Button variant="tertiary">Delete manifest</Button>
+        <Button
+          variant="tertiary"
+          onClick={() => {
+            deleteManifest(uuid);
+          }}
+        >
+          Delete manifest
+        </Button>
       </div>
     );
   };

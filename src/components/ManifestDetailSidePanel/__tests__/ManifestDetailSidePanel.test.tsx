@@ -12,7 +12,8 @@ describe('Manifest Detail Side Panel', () => {
     titleRef: null as React.MutableRefObject<HTMLSpanElement>,
     drawerRef: null as React.MutableRefObject<HTMLDivElement>,
     onCloseClick: (): any => undefined,
-    openCurrentEntitlementsListFromPanel: (): any => undefined
+    openCurrentEntitlementsListFromPanel: (): any => undefined,
+    deleteManifest: (): any => undefined
   };
 
   it('renders with a spinner when loading', () => {
@@ -59,7 +60,7 @@ describe('Manifest Detail Side Panel', () => {
           createdBy: 'Jane Doe',
           lastModified: '2021-01-01T00:00:00.000Z',
           entitlementsAttachedQuantity: 10,
-          contentAccessMode: 'Enabled'
+          simpleContentAccess: 'enabled'
         }
       }
     }));

@@ -1,0 +1,2 @@
+import DeleteManifestConfirmationModal from './DeleteManifestConfirmationModal';
+export default DeleteManifestConfirmationModal;

@@ -22,7 +22,8 @@ describe('Satellite Manifest Panel', () => {
         url: 'www.example.com',
         uuid: '00000000-0000-0000-0000-000000000000',
         version: '1.2.3',
-        entitlementQuantity: 5
+        entitlementQuantity: 5,
+        simpleContentAccess: 'enabled'
       }
     ];
 
