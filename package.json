@@ -48,6 +48,9 @@
     ],
     "setupFiles": [
       "<rootDir>/config/setupTests.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/config/setupTestsBeforeEach.js"
     ]
   },
   "transformIgnorePatterns": [
