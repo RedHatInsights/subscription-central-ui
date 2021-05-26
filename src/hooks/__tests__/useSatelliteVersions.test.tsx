@@ -6,6 +6,11 @@ import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 
 enableFetchMocks();
 
+beforeEach(() => {
+  jest.clearAllMocks();
+  fetch.resetMocks();
+});
+
 const queryClient = new QueryClient();
 
 interface wrapperProps {

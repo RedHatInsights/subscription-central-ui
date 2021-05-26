@@ -44,6 +44,10 @@ const mockAuthenticateUser = (orgAdminStatus: boolean) => {
   });
 };
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 describe('Satellite Manifests Page', () => {
   it('renders correctly with satellite data', async () => {
     window.insights = {};

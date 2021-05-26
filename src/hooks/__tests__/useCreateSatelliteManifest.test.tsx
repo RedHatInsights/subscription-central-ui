@@ -6,6 +6,11 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 
 enableFetchMocks();
 
+beforeEach(() => {
+  jest.clearAllMocks();
+  fetch.resetMocks();
+});
+
 const queryClient = new QueryClient();
 
 describe('useCreateSatelliteManifest hook', () => {

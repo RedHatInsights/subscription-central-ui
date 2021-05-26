@@ -5,6 +5,10 @@ import useUpdateManifestSCAStatus from '../../../hooks/useUpdateManifestSCAStatu
 
 jest.mock('../../../hooks/useUpdateManifestSCAStatus');
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 describe('SCAStatusSwitch', () => {
   const props = {
     scaStatus: 'enabled',
