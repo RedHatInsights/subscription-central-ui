@@ -14,7 +14,7 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
 
   const { data, mutate, isLoading, isError, isSuccess } = useUpdateManifestSCAStatus();
 
-  const hasError = isError === true || (isSuccess && !data);
+  const failedUpdatingSCAStatus = isError === true || (isSuccess && !data);
 
   const updateManifestSCAStatus = (uuid: string, currentSCAStatus: string) => {
     const newSCAStatus = currentSCAStatus.toLowerCase() === 'enabled' ? 'disabled' : 'enabled';
@@ -25,7 +25,7 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
     updateManifestSCAStatus(uuid, scaStatus);
   };
 
-  if (hasError === true) {
+  if (failedUpdatingSCAStatus === true) {
     return (
       <>
         <ExclamationCircleIcon
