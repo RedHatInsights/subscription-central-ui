@@ -1,7 +1,6 @@
 import { authenticateUser, getConfig } from '../platformServices';
 
 beforeEach(() => {
-  jest.clearAllMocks();
   window.insights = {
     chrome: {
       auth: {
