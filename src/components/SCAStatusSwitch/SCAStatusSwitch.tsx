@@ -25,40 +25,42 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
     updateManifestSCAStatus(uuid, scaStatus);
   };
 
+  const ErrorState = () => (
+    <>
+      <ExclamationCircleIcon
+        color="var(--pf-global--danger-color--100)"
+        className="sca-status-error-icon"
+      />
+      <span className="sca-status-error-msg">
+        Something went wrong. Please refresh the page and try again.
+      </span>
+    </>
+  );
+
+  const LoadingState = () => <Spinner size="lg" className="sca-status-spinner" />;
+
+  const DisallowedState = () => <p>N/A</p>;
+
+  const SCASwitch = () => (
+    <Switch
+      id={`sca-status-switch-${uuid}`}
+      data-testid="sca-status-switch"
+      aria-label={`SCA Status for this Manifest is ${scaStatus}`}
+      isChecked={isChecked}
+      onChange={handleChange}
+      label="Enabled"
+      labelOff="Disabled"
+    />
+  );
+
   if (failedUpdatingSCAStatus === true) {
-    return (
-      <>
-        <ExclamationCircleIcon
-          color="var(--pf-global--danger-color--100)"
-          className="sca-status-error-icon"
-        />
-        <span className="sca-status-error-msg">
-          Something went wrong. Please refresh the page and try again.
-        </span>
-      </>
-    );
+    return <ErrorState />;
   } else if (isLoading === true) {
-    return <Spinner size="lg" className="sca-status-spinner" />;
+    return <LoadingState />;
   } else if (scaStatus === 'disallowed') {
-    return (
-      <>
-        <p>N/A</p>
-      </>
-    );
+    return <DisallowedState />;
   } else {
-    return (
-      <>
-        <Switch
-          id={`sca-status-switch-${uuid}`}
-          data-testid="sca-status-switch"
-          aria-label={`SCA Status for this Manifest is ${scaStatus}`}
-          isChecked={isChecked}
-          onChange={handleChange}
-          label="Enabled"
-          labelOff="Disabled"
-        />
-      </>
-    );
+    return <SCASwitch />;
   }
 };
 
