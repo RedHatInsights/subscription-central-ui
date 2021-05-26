@@ -12,7 +12,6 @@ const wrapper = ({ children }: any) => {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
   fetch.resetMocks();
 
   queryClient.setQueryData('manifests', [
