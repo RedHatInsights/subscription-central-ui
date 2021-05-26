@@ -118,15 +118,15 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const uuid = row[3];
 
     return [
-      <>
+      <React.Fragment key={`button-${uuid}`}>
         <Button variant="link" onClick={() => openDetailsPanel(uuid, rowIndex)}>
           {name}
         </Button>
-      </>,
+      </React.Fragment>,
       version,
-      <>
+      <React.Fragment key={`scastatusswitch-${uuid}`}>
         <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
-      </>,
+      </React.Fragment>,
       uuid
     ];
   };
