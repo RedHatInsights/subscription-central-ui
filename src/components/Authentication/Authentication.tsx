@@ -17,7 +17,7 @@ const Authentication: FC = ({ children }) => {
      * On every rerender, based on URL change (location.pathname),
      * reset the user's status to loading before authenticating again.
      */
-    queryClient.invalidateQueries('users');
+    queryClient.invalidateQueries('userStatus');
   }, [location.pathname]);
 
   if (isError === true) {
