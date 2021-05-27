@@ -7,10 +7,10 @@ import { Provider } from 'react-redux';
 import { init } from '../../../store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
-import useUserStatus from '../../../hooks/useUserStatus';
+import useUserPermissions from '../../../hooks/useUserPermissions';
 
 jest.mock('../../../hooks/useSatelliteManifests');
-jest.mock('../../../hooks/useUserStatus');
+jest.mock('../../../hooks/useUserPermissions');
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useLocation: () => ({
@@ -31,7 +31,7 @@ const SatellitePage = () => (
 );
 
 const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean) => {
-  (useUserStatus as jest.Mock).mockReturnValue({
+  (useUserPermissions as jest.Mock).mockReturnValue({
     isLoading: isLoading,
     isFetching: false,
     isSuccess: true,
@@ -66,7 +66,7 @@ describe('Satellite Manifests Page', () => {
 
     const { container } = render(<SatellitePage />);
 
-    await waitFor(() => expect(useUserStatus).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(2));
     expect(container).toMatchSnapshot();
   });
 
@@ -83,7 +83,7 @@ describe('Satellite Manifests Page', () => {
     const { container } = render(<SatellitePage />);
 
     expect(container).toMatchSnapshot();
-    await waitFor(() => expect(useUserStatus).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(1));
   });
 
   it('renders the empty state with Create Manifest button when no results are returned and user is org admin', async () => {
@@ -98,7 +98,7 @@ describe('Satellite Manifests Page', () => {
 
     const { container } = render(<SatellitePage />);
 
-    await waitFor(() => expect(useUserStatus).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(2));
 
     expect(container).toMatchSnapshot();
   });
@@ -115,7 +115,7 @@ describe('Satellite Manifests Page', () => {
 
     const { container } = render(<SatellitePage />);
 
-    await waitFor(() => expect(useUserStatus).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(2));
 
     expect(container).toMatchSnapshot();
   });
@@ -132,7 +132,7 @@ describe('Satellite Manifests Page', () => {
     mockAuthenticateUser(isLoading, isOrgAdmin);
 
     const { container } = render(<SatellitePage />);
-    await waitFor(() => expect(useUserStatus).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(2));
     expect(container).toMatchSnapshot();
   });
 });

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import useUserStatus from '../useUserStatus';
+import useUserPermissions from '../useUserPermissions';
 import * as PlatformServices from '../../utilities/platformServices';
 import { renderHook } from '@testing-library/react-hooks';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
@@ -23,7 +23,7 @@ const wrapper = ({ children }: wrapperProps) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('useUserStatus hook', () => {
+describe('useUserPermissions hook', () => {
   it('gets the user status back from two API calls', async () => {
     // const mockResponse = { body: [{ value: 'sat-6.9', description: 'Satellite 6.9' }] };
     // fetch.mockResponseOnce(JSON.stringify(mockResponse));
@@ -37,7 +37,7 @@ describe('useUserStatus hook', () => {
       }
     });
 
-    const { result, waitFor } = renderHook(() => useUserStatus(), { wrapper });
+    const { result, waitFor } = renderHook(() => useUserPermissions(), { wrapper });
 
     await waitFor(() => result.current.isSuccess);
 

@@ -3,12 +3,12 @@ import { QueryClient } from 'react-query';
 import { useLocation } from 'react-router-dom';
 import { Processing } from '../emptyState';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
-import useUserStatus from '../../hooks/useUserStatus';
+import useUserPermissions from '../../hooks/useUserPermissions';
 
 const Authentication: FC = ({ children }) => {
   const location = useLocation();
 
-  const { isLoading, isFetching, isSuccess, isError } = useUserStatus();
+  const { isLoading, isFetching, isSuccess, isError } = useUserPermissions();
 
   const queryClient = new QueryClient();
 
@@ -17,7 +17,7 @@ const Authentication: FC = ({ children }) => {
      * On every rerender, based on URL change (location.pathname),
      * reset the user's status to loading before authenticating again.
      */
-    queryClient.invalidateQueries('userStatus');
+    queryClient.invalidateQueries('useUserPermissions');
   }, [location.pathname]);
 
   if (isError === true) {

@@ -8,12 +8,12 @@ import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import { CreateManifestPanel } from '../../components/emptyState';
 import { Processing } from '../../components/emptyState';
-import useUserStatus from '../../hooks/useUserStatus';
+import useUserPermissions from '../../hooks/useUserPermissions';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
   // This pulls user in from cache.
-  const { data: user } = useUserStatus();
+  const { data: userPermissions } = useUserPermissions();
 
   const MainContent = () => {
     if (error) {
@@ -21,11 +21,23 @@ const SatelliteManifestPage: FC = () => {
     } else if (isLoading) {
       return <Processing />;
     } else if (data?.length > 0) {
-      return <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />;
-    } else if (data?.length === 0 && user.isOrgAdmin === true) {
+      return (
+        <SatelliteManifestPanel
+          data={data}
+          userPermissions={userPermissions}
+          isFetching={isFetching}
+        />
+      );
+    } else if (data?.length === 0 && userPermissions.isOrgAdmin === true) {
       return <CreateManifestPanel />;
-    } else if (data?.length === 0 && user?.isOrgAdmin === false) {
-      return <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />;
+    } else if (data?.length === 0 && userPermissions?.isOrgAdmin === false) {
+      return (
+        <SatelliteManifestPanel
+          data={data}
+          userPermissions={userPermissions}
+          isFetching={isFetching}
+        />
+      );
     } else {
       return <Unavailable />;
     }

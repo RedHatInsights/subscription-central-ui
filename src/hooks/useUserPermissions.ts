@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from 'react-query';
 import Cookies from 'js-cookie';
 import { getConfig, authenticateUser } from '../utilities/platformServices';
 
-interface User {
+interface UserPermissions {
   isOrgAdmin: boolean;
   isSCACapable: boolean;
 }
@@ -22,26 +22,31 @@ const fetchSCACapableStatus = (): Promise<SCACapableStatusResponse> => {
   })
     .then((response) => response.json())
     .catch((e) => {
-      console.error('Error fetching Satellite Versions', e);
+      console.error('Error fetching SCA Capable Status', e);
     });
 };
 
-const getUser = (): Promise<User | void> => {
+const getUserPermissions = (): Promise<UserPermissions | void> => {
   return Promise.all([authenticateUser()])
     .then(([userStatus]) => {
-      const formattedUserStatus: User = {
+      const userPermissions: UserPermissions = {
         isOrgAdmin: userStatus.identity.user.is_org_admin,
         isSCACapable: true
       };
-      return formattedUserStatus;
+      return userPermissions;
     })
     .catch((e) => {
       console.error('Error fetching User status', e);
     });
 };
 
-const useUserStatus = (): UseQueryResult<User, unknown> => {
-  return useQuery('userStatus', () => getUser());
+const useUserPermissions = (): UseQueryResult<UserPermissions, unknown> => {
+  return useQuery('userPermissions', () => getUserPermissions());
 };
 
-export { fetchSCACapableStatus, getUser, useUserStatus as default, User };
+export {
+  fetchSCACapableStatus,
+  getUserPermissions,
+  useUserPermissions as default,
+  UserPermissions
+};
