@@ -30,7 +30,7 @@ describe('Satellite Manifest Panel', () => {
     const props = {
       data,
       isFetching: false,
-      user: { status: 'loaded', isOrgAdmin: true }
+      user: { status: 'loaded', isOrgAdmin: true, isSCACapable: true }
     };
 
     const { container } = render(
@@ -49,7 +49,7 @@ describe('Satellite Manifest Panel', () => {
     const props = {
       data: [] as ManifestEntry[],
       isFetching: false,
-      user: { status: 'loaded', isOrgAdmin: true }
+      user: { status: 'loaded', isOrgAdmin: true, isSCACapable: true }
     };
 
     const { container } = render(
@@ -70,7 +70,7 @@ describe('Satellite Manifest Panel', () => {
     const props = {
       data,
       isFetching: true,
-      user: { status: 'loaded', isOrgAdmin: true }
+      user: { status: 'loaded', isOrgAdmin: true, isSCACapable: true }
     };
 
     const { container } = render(

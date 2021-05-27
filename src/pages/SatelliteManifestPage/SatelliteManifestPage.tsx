@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { withRouter } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
@@ -8,11 +8,28 @@ import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import { CreateManifestPanel } from '../../components/emptyState';
 import { Processing } from '../../components/emptyState';
-import UserContext from '../../components/Authentication/UserContext';
+import useUserStatus from '../../hooks/useUserStatus';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
-  const { user } = useContext(UserContext);
+  // This pulls user in from cache.
+  const { data: user } = useUserStatus();
+
+  const MainContent = () => {
+    if (error) {
+      return <Unavailable />;
+    } else if (isLoading) {
+      return <Processing />;
+    } else if (data?.length > 0) {
+      return <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />;
+    } else if (data?.length === 0 && user.isOrgAdmin === true) {
+      return <CreateManifestPanel />;
+    } else if (data?.length === 0 && user?.isOrgAdmin === false) {
+      return <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />;
+    } else {
+      return <Unavailable />;
+    }
+  };
 
   return (
     <>
@@ -21,23 +38,7 @@ const SatelliteManifestPage: FC = () => {
         <p>Export subscriptions to your on-premise subscription management application</p>
       </PageHeader>
       <Main>
-        <>
-          {isLoading && !error && <Processing />}
-
-          {!isLoading && !error && data?.length > 0 && (
-            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
-          )}
-
-          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === true && (
-            <CreateManifestPanel />
-          )}
-
-          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === false && (
-            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
-          )}
-
-          {error && <Unavailable />}
-        </>
+        <MainContent />
       </Main>
     </>
   );

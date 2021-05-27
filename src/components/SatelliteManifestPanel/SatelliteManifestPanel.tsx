@@ -24,7 +24,7 @@ import {
   cellWidth,
   expandable
 } from '@patternfly/react-table';
-import { User } from '../Authentication/UserContext';
+import { User } from '../../hooks/useUserStatus';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
@@ -39,7 +39,7 @@ import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal'
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
   isFetching: boolean;
-  user: User;
+  user: any;
 }
 
 interface BooleanDictionary {
@@ -51,20 +51,30 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   isFetching,
   user
 }) => {
-  const [columns] = useState([
-    { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
-    { title: 'Version', transforms: [sortable] },
-    {
-      title: (
-        <>
-          Simple Content Access
-          <SCAInfoIconWithPopover />
-        </>
-      ),
-      transforms: [sortable, cellWidth(20)]
-    },
-    { title: 'UUID', transforms: [sortable] }
-  ]);
+  const getColumns = (user: User) => {
+    const columns = [
+      { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
+      { title: 'Version', transforms: [sortable] },
+      {
+        title: (
+          <>
+            Simple Content Access
+            <SCAInfoIconWithPopover />
+          </>
+        ),
+        transforms: [sortable, cellWidth(20)]
+      },
+      { title: 'UUID', transforms: [sortable] }
+    ];
+
+    if (user?.isSCACapable === false) {
+      // remove SCA Status column
+      columns.splice(2, 1);
+    }
+    return columns;
+  };
+
+  const columns = getColumns(user);
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -111,13 +121,13 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setDetailsDrawerIsExpanded(false);
   };
 
-  const formatRow = (row: string[], rowIndex: number) => {
+  const formatRow = (row: string[], rowIndex: number, user: User) => {
     const name = row[0];
     const version = row[1];
     const scaStatus = row[2];
     const uuid = row[3];
 
-    return [
+    const formattedRow = [
       <React.Fragment key={`button-${uuid}`}>
         <Button variant="link" onClick={() => openDetailsPanel(uuid, rowIndex)}>
           {name}
@@ -129,6 +139,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       </React.Fragment>,
       uuid
     ];
+    if (user.isSCACapable === false) {
+      // remove SCA Status column
+      formattedRow.splice(2, 1);
+    }
+    return formattedRow;
   };
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
@@ -274,7 +289,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         ''
       );
 
-      const formattedRow = formatRow(row, i);
+      const formattedRow = formatRow(row, i, user);
       // Add original row
       rowsWithAllocationDetails.push({ isOpen, cells: [...formattedRow] });
 
