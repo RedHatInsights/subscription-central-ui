@@ -10,7 +10,7 @@ jest.mock('../../../hooks/useSatelliteVersions');
 const queryClient = new QueryClient();
 
 describe('Satellite Manifest Panel', () => {
-  it('renders correctly', () => {
+  it('renders correctly with SCA column when user is SCA Capable', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
       body: [] as SatelliteVersion[]
     });
@@ -31,6 +31,37 @@ describe('Satellite Manifest Panel', () => {
       data,
       isFetching: false,
       user: { status: 'loaded', isOrgAdmin: true, isSCACapable: true }
+    };
+
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...props} />
+      </QueryClientProvider>
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders correctly without SCA column when user is not SCA Capable', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const data: ManifestEntry[] = [
+      {
+        name: 'Sputnik',
+        type: 'Satellite',
+        url: 'www.example.com',
+        uuid: '00000000-0000-0000-0000-000000000000',
+        version: '1.2.3',
+        entitlementQuantity: 5,
+        simpleContentAccess: 'enabled'
+      }
+    ];
+
+    const props = {
+      data,
+      isFetching: false,
+      user: { status: 'loaded', isOrgAdmin: true, isSCACapable: false }
     };
 
     const { container } = render(
