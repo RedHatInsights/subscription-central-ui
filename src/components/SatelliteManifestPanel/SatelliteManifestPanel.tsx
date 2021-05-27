@@ -28,11 +28,12 @@ import { User } from '../Authentication/UserContext';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
-import './SatelliteManifestPanel.scss';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
+import SCAStatusSwitch from '../SCAStatusSwitch';
+import './SatelliteManifestPanel.scss';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
 
 interface SatelliteManifestPanelProps {
@@ -117,13 +118,15 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const uuid = row[3];
 
     return [
-      <>
+      <React.Fragment key={`button-${uuid}`}>
         <Button variant="link" onClick={() => openDetailsPanel(uuid, rowIndex)}>
           {name}
         </Button>
-      </>,
+      </React.Fragment>,
       version,
-      scaStatus,
+      <React.Fragment key={`scastatusswitch-${uuid}`}>
+        <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
+      </React.Fragment>,
       uuid
     ];
   };
@@ -168,12 +171,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   const filteredRows = () => {
     return filteredData().map((entry: ManifestEntry) => {
-      return [
-        entry.name || '',
-        entry.version || '',
-        entry.simpleContentAccess || '',
-        entry.uuid || ''
-      ];
+      let scaStatus = entry.simpleContentAccess || 'disabled';
+      if (parseFloat(entry.version) <= 6.2) {
+        scaStatus = 'disallowed';
+      }
+
+      return [entry.name || '', entry.version || '', scaStatus, entry.uuid || ''];
     });
   };
 

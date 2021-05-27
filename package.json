@@ -43,6 +43,7 @@
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
     },
+    "clearMocks": true,
     "roots": [
       "<rootDir>/src/"
     ],
