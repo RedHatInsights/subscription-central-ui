@@ -67,7 +67,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       { title: 'UUID', transforms: [sortable] }
     ];
 
-    if (userPermissions?.isSCACapable === false) {
+    if (userPermissions.isSCACapable === false) {
       // remove SCA Status column
       columns.splice(2, 1);
     }

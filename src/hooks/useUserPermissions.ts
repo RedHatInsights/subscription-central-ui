@@ -22,7 +22,7 @@ const fetchSCACapableStatus = (): Promise<SCACapableStatusResponse> => {
   }).then((response) => response.json());
 };
 
-const getUserPermissions = (): Promise<UserPermissions | void> => {
+const getUserPermissions = (): Promise<UserPermissions> => {
   return Promise.all([authenticateUser()]).then(([userStatus]) => {
     const userPermissions: UserPermissions = {
       isOrgAdmin: userStatus.identity.user.is_org_admin,
