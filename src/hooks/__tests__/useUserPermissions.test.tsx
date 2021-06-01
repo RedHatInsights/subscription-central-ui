@@ -3,7 +3,7 @@ import useUserPermissions from '../useUserPermissions';
 import * as PlatformServices from '../../utilities/platformServices';
 import { renderHook } from '@testing-library/react-hooks';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
-import { createWrapper } from '../../utilities/testHelpers';
+import { createReactQueryWrapper } from '../../utilities/testHelpers';
 
 jest.mock('../../utilities/platformServices');
 
@@ -24,7 +24,7 @@ describe('useUserPermissions hook', () => {
     });
 
     const { result, waitFor } = renderHook(() => useUserPermissions(), {
-      wrapper: createWrapper()
+      wrapper: createReactQueryWrapper()
     });
 
     await waitFor(() => result.current.isSuccess);
@@ -37,7 +37,7 @@ describe('useUserPermissions hook', () => {
     (authenticateUser as jest.Mock).mockRejectedValue({ status: 'error' });
 
     const { result, waitFor } = renderHook(() => useUserPermissions(), {
-      wrapper: createWrapper()
+      wrapper: createReactQueryWrapper()
     });
 
     await waitFor(() => result.current.isSuccess);
