@@ -6,7 +6,7 @@ interface wrapperProps {
   children: ReactNode;
 }
 
-export const createWrapper = (): WrapperComponent<unknown> => {
+export const createReactQueryWrapper = (): WrapperComponent<unknown> => {
   const queryClient = new QueryClient();
   const wrapper = ({ children }: wrapperProps) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
