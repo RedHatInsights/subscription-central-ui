@@ -1,4 +1,3 @@
-import React from 'react';
 import useUserPermissions from '../useUserPermissions';
 import * as PlatformServices from '../../utilities/platformServices';
 import { renderHook } from '@testing-library/react-hooks';
