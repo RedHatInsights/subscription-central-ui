@@ -75,11 +75,11 @@ const updateManifestEntitlementsData = (
 
   if (!oldEntitlementsData) return;
 
-  const newEntitlementData = {
+  const newEntitlementsData = {
     body: { ...oldEntitlementsData.body, simpleContentAccess: newSCAStatus }
   };
 
-  queryClient.setQueryData(['manifestEntitlements', uuid], newEntitlementData);
+  queryClient.setQueryData(['manifestEntitlements', uuid], newEntitlementsData);
 };
 
 const useUpdateManifestSCAStatus = (): UseMutationResult<
