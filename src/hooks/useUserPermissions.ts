@@ -19,11 +19,7 @@ const fetchSCACapableStatus = (): Promise<SCACapableStatusResponse> => {
   return fetch(`${rhsmAPIBase}/management/v1/org`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
-  })
-    .then((response) => response.json())
-    .catch((e) => {
-      console.error('Error fetching SCA Capable Status', e);
-    });
+  }).then((response) => response.json());
 };
 
 const getUserPermissions = (): Promise<UserPermissions | void> => {
