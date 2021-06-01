@@ -19,15 +19,15 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const SatellitePage = () => (
-  <Authentication>
-    <Provider store={init().getStore()}>
-      <Router>
-        <QueryClientProvider client={queryClient}>
+  <QueryClientProvider client={queryClient}>
+    <Authentication>
+      <Provider store={init().getStore()}>
+        <Router>
           <SatelliteManifestPage />
-        </QueryClientProvider>
-      </Router>
-    </Provider>
-  </Authentication>
+        </Router>
+      </Provider>
+    </Authentication>
+  </QueryClientProvider>
 );
 
 const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean) => {
