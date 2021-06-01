@@ -24,7 +24,7 @@ const wrapper = ({ children }: wrapperProps) => (
 );
 
 describe('useUserPermissions hook', () => {
-  it('gets the user status back from two API calls', async () => {
+  it('gets the user permissions back from two API calls', async () => {
     // const mockResponse = { body: [{ value: 'sat-6.9', description: 'Satellite 6.9' }] };
     // fetch.mockResponseOnce(JSON.stringify(mockResponse));
     const { authenticateUser } = PlatformServices;
