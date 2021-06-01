@@ -27,17 +27,13 @@ const fetchSCACapableStatus = (): Promise<SCACapableStatusResponse> => {
 };
 
 const getUserPermissions = (): Promise<UserPermissions | void> => {
-  return Promise.all([authenticateUser()])
-    .then(([userStatus]) => {
-      const userPermissions: UserPermissions = {
-        isOrgAdmin: userStatus.identity.user.is_org_admin,
-        isSCACapable: true
-      };
-      return userPermissions;
-    })
-    .catch((e) => {
-      console.error('Error fetching User status', e);
-    });
+  return Promise.all([authenticateUser()]).then(([userStatus]) => {
+    const userPermissions: UserPermissions = {
+      isOrgAdmin: userStatus.identity.user.is_org_admin,
+      isSCACapable: true
+    };
+    return userPermissions;
+  });
 };
 
 const useUserPermissions = (): UseQueryResult<UserPermissions, unknown> => {

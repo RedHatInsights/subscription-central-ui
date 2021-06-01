@@ -6,8 +6,8 @@ interface wrapperProps {
   children: ReactNode;
 }
 
-export const createReactQueryWrapper = (): WrapperComponent<unknown> => {
-  const queryClient = new QueryClient();
+export const createQueryWrapper = (): WrapperComponent<unknown> => {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const wrapper = ({ children }: wrapperProps) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
