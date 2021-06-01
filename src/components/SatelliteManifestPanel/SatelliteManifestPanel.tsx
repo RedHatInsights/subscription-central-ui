@@ -39,7 +39,7 @@ import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal'
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
   isFetching: boolean;
-  userPermissions: any;
+  userPermissions: UserPermissions;
 }
 
 interface BooleanDictionary {
