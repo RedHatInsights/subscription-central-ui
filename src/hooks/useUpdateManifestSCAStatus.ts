@@ -1,7 +1,8 @@
 import Cookies from 'js-cookie';
-import { useMutation, useQueryClient, UseMutationResult } from 'react-query';
+import { useMutation, useQueryClient, UseMutationResult, QueryClient } from 'react-query';
 import { getConfig } from '../utilities/platformServices';
 import { ManifestEntry } from './useSatelliteManifests';
+import { ManifestEntitlementsData } from './useManifestEntitlements';
 
 interface UpdateManifestSCAStatusParams {
   uuid: string;
@@ -43,11 +44,13 @@ const updateManifestSCAStatus = (
 };
 
 const updateManifestSCAQueryData = (
-  oldManifestEntryData: ManifestEntry[],
+  queryClient: QueryClient,
   uuid: string,
   newSCAStatus: string
-): ManifestEntry[] => {
-  return oldManifestEntryData.map((manifestEntry) => {
+): void => {
+  const oldManifestEntryData: ManifestEntry[] = queryClient.getQueryData('manifests');
+
+  const newManifestEntryData: ManifestEntry[] = oldManifestEntryData.map((manifestEntry) => {
     if (manifestEntry.uuid === uuid) {
       const updatedManifestEntry = { ...manifestEntry };
       updatedManifestEntry.simpleContentAccess = newSCAStatus;
@@ -56,6 +59,27 @@ const updateManifestSCAQueryData = (
       return manifestEntry;
     }
   });
+
+  queryClient.setQueryData('manifests', newManifestEntryData);
+};
+
+const updateManifestEntitlementsData = (
+  queryClient: QueryClient,
+  uuid: string,
+  newSCAStatus: string
+): void => {
+  const oldEntitlementsData: ManifestEntitlementsData = queryClient.getQueryData([
+    'manifestEntitlements',
+    uuid
+  ]);
+
+  if (!oldEntitlementsData) return;
+
+  const newEntitlementsData = {
+    body: { ...oldEntitlementsData.body, simpleContentAccess: newSCAStatus }
+  };
+
+  queryClient.setQueryData(['manifestEntitlements', uuid], newEntitlementsData);
 };
 
 const useUpdateManifestSCAStatus = (): UseMutationResult<
@@ -72,9 +96,9 @@ const useUpdateManifestSCAStatus = (): UseMutationResult<
 
         const { uuid, newSCAStatus } = updateManifestSCAStatusParams;
 
-        queryClient.setQueryData('manifests', (oldManifestEntryData: ManifestEntry[]) =>
-          updateManifestSCAQueryData(oldManifestEntryData, uuid, newSCAStatus)
-        );
+        updateManifestSCAQueryData(queryClient, uuid, newSCAStatus);
+
+        updateManifestEntitlementsData(queryClient, uuid, newSCAStatus);
       }
     }
   );

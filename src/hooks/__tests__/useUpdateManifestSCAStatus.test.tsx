@@ -18,6 +18,10 @@ beforeEach(() => {
     { simpleContentAccess: 'enabled', uuid: '00000000-0000-0000-0000-000000000000' },
     { simpleContentAccess: 'enabled', uuid: '00000000-0000-0000-0000-000000000001' }
   ]);
+
+  queryClient.setQueryData(['manifestEntitlements', '00000000-0000-0000-0000-000000000000'], {
+    body: { simpleContentAccess: 'enabled' }
+  });
 });
 
 describe('useUpdateManifestSCAStatus hook', () => {
@@ -37,7 +41,12 @@ describe('useUpdateManifestSCAStatus hook', () => {
       uuid: string;
     }[] = queryClient.getQueryData('manifests');
 
+    const updatedEntitlements: {
+      body: { simpleContentAccess: string };
+    } = queryClient.getQueryData(['manifestEntitlements', '00000000-0000-0000-0000-000000000000']);
+
     expect(updatedManifests[0].simpleContentAccess).toEqual('disabled');
+    expect(updatedEntitlements.body.simpleContentAccess).toEqual('disabled');
   });
 
   it('does not update the SCA status to enabled when it receives a 403 status', async () => {
