@@ -8,12 +8,15 @@ import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import { CreateManifestPanel } from '../../components/emptyState';
 import { Processing } from '../../components/emptyState';
-import useUserPermissions from '../../hooks/useUserPermissions';
+import { useQueryClient } from 'react-query';
+import { UserPermissions } from '../../hooks/useUserPermissions';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
   // This pulls user in from cache.
-  const { data: userPermissions } = useUserPermissions();
+  const queryClient = useQueryClient();
+
+  const userPermissions: UserPermissions = queryClient.getQueryData('userPermissions');
 
   const MainContent = () => {
     if (error) {

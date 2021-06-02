@@ -18,6 +18,8 @@ jest.mock('react-router-dom', () => ({
   })
 }));
 
+const queryClient = new QueryClient();
+
 const SatellitePage = () => (
   <QueryClientProvider client={queryClient}>
     <Authentication>
@@ -41,9 +43,9 @@ const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean) => {
       isSCACapable: true
     }
   });
-};
 
-const queryClient = new QueryClient();
+  queryClient.setQueryData('userPermissions', { isSCACapable: true, isOrgAdmin: orgAdminStatus });
+};
 
 describe('Satellite Manifests Page', () => {
   it('renders correctly with satellite data', async () => {
@@ -66,7 +68,7 @@ describe('Satellite Manifests Page', () => {
 
     const { container } = render(<SatellitePage />);
 
-    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(1));
     expect(container).toMatchSnapshot();
   });
 
@@ -98,7 +100,7 @@ describe('Satellite Manifests Page', () => {
 
     const { container } = render(<SatellitePage />);
 
-    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
   });
@@ -115,7 +117,7 @@ describe('Satellite Manifests Page', () => {
 
     const { container } = render(<SatellitePage />);
 
-    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(1));
 
     expect(container).toMatchSnapshot();
   });
@@ -132,7 +134,7 @@ describe('Satellite Manifests Page', () => {
     mockAuthenticateUser(isLoading, isOrgAdmin);
 
     const { container } = render(<SatellitePage />);
-    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(useUserPermissions).toHaveBeenCalledTimes(1));
     expect(container).toMatchSnapshot();
   });
 });
