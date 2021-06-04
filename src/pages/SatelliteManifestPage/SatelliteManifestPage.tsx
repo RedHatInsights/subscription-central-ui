@@ -17,34 +17,6 @@ const SatelliteManifestPage: FC = () => {
   const queryClient = useQueryClient();
   const userPermissions: UserPermissions = queryClient.getQueryData('userPermissions');
 
-  const MainContent = () => {
-    if (error) {
-      return <Unavailable />;
-    } else if (isLoading) {
-      return <Processing />;
-    } else if (data?.length > 0) {
-      return (
-        <SatelliteManifestPanel
-          data={data}
-          userPermissions={userPermissions}
-          isFetching={isFetching}
-        />
-      );
-    } else if (data?.length === 0 && userPermissions.isOrgAdmin === true) {
-      return <CreateManifestPanel />;
-    } else if (data?.length === 0 && userPermissions?.isOrgAdmin === false) {
-      return (
-        <SatelliteManifestPanel
-          data={data}
-          userPermissions={userPermissions}
-          isFetching={isFetching}
-        />
-      );
-    } else {
-      return <Unavailable />;
-    }
-  };
-
   return (
     <>
       <PageHeader>
@@ -52,7 +24,31 @@ const SatelliteManifestPage: FC = () => {
         <p>Export subscriptions to your on-premise subscription management application</p>
       </PageHeader>
       <Main>
-        <MainContent />
+        <>
+          {isLoading && !error && <Processing />}
+
+          {!isLoading && !error && data?.length > 0 && (
+            <SatelliteManifestPanel
+              data={data}
+              userPermissions={userPermissions}
+              isFetching={isFetching}
+            />
+          )}
+
+          {!isLoading && !error && data?.length === 0 && userPermissions.isOrgAdmin === true && (
+            <CreateManifestPanel />
+          )}
+
+          {!isLoading && !error && data?.length === 0 && userPermissions.isOrgAdmin === false && (
+            <SatelliteManifestPanel
+              data={data}
+              userPermissions={userPermissions}
+              isFetching={isFetching}
+            />
+          )}
+
+          {error && <Unavailable />}
+        </>
       </Main>
     </>
   );
