@@ -8,28 +8,32 @@ interface UserPermissions {
 }
 
 interface SCACapableStatusResponse {
-  id: string;
-  simpleContentAccessCapable: boolean;
-  simpleContentAccess: 'enabled' | 'disabled';
+  body: {
+    id: string;
+    simpleContentAccess: 'enabled' | 'disabled';
+    simpleContentAccessCapable: boolean;
+  };
 }
 
 const fetchSCACapableStatus = (): Promise<SCACapableStatusResponse> => {
   const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/org`, {
+  return fetch(`${rhsmAPIBase}/management/v1/organization`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
   }).then((response) => response.json());
 };
 
 const getUserPermissions = (): Promise<UserPermissions> => {
-  return Promise.all([authenticateUser()]).then(([userStatus]) => {
-    const userPermissions: UserPermissions = {
-      isOrgAdmin: userStatus.identity.user.is_org_admin,
-      isSCACapable: true
-    };
-    return userPermissions;
-  });
+  return Promise.all([authenticateUser(), fetchSCACapableStatus()]).then(
+    ([userStatus, scaStatusResponse]) => {
+      const userPermissions: UserPermissions = {
+        isOrgAdmin: userStatus.identity.user.is_org_admin,
+        isSCACapable: scaStatusResponse.body.simpleContentAccessCapable
+      };
+      return userPermissions;
+    }
+  );
 };
 
 const useUserPermissions = (): UseQueryResult<UserPermissions, unknown> => {
@@ -39,6 +43,7 @@ const useUserPermissions = (): UseQueryResult<UserPermissions, unknown> => {
 export {
   fetchSCACapableStatus,
   getUserPermissions,
+  SCACapableStatusResponse,
   useUserPermissions as default,
   UserPermissions
 };
