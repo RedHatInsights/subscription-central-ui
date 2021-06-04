@@ -13,8 +13,8 @@ import { UserPermissions } from '../../hooks/useUserPermissions';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
-  const queryClient = useQueryClient();
 
+  const queryClient = useQueryClient();
   const userPermissions: UserPermissions = queryClient.getQueryData('userPermissions');
 
   const MainContent = () => {
