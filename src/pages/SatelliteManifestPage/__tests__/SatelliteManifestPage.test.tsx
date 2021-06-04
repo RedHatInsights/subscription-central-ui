@@ -49,6 +49,7 @@ const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean) => {
 
 describe('Satellite Manifests Page', () => {
   it('renders correctly with satellite data', async () => {
+    window.insights = {};
     const isLoading = false;
     const isOrgAdmin = true;
     mockAuthenticateUser(isLoading, isOrgAdmin);
@@ -73,6 +74,7 @@ describe('Satellite Manifests Page', () => {
   });
 
   it('renders loading when it has not received a response back', async () => {
+    window.insights = {};
     const isLoading = true;
     const isOrgAdmin = true;
     mockAuthenticateUser(isLoading, isOrgAdmin);
@@ -89,6 +91,7 @@ describe('Satellite Manifests Page', () => {
   });
 
   it('renders the empty state with Create Manifest button when no results are returned and user is org admin', async () => {
+    window.insights = {};
     const isLoading = false;
     const isOrgAdmin = true;
     mockAuthenticateUser(isLoading, isOrgAdmin);
@@ -106,6 +109,7 @@ describe('Satellite Manifests Page', () => {
   });
 
   it('renders the empty table with no manifests found message, when no manifests returned via API, and user is not org_admin', async () => {
+    window.insights = {};
     const isLoading = false;
     const isOrgAdmin = false;
     mockAuthenticateUser(isLoading, isOrgAdmin);
@@ -123,6 +127,7 @@ describe('Satellite Manifests Page', () => {
   });
 
   it('renders with an error message when an API fails', async () => {
+    window.insights = {};
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
       error: true,
