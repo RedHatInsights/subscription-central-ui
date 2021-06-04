@@ -32,11 +32,13 @@ describe('useUserPermissions hook', () => {
         simpleContentAccessCapable: true
       }
     };
+
     fetch.mockResponseOnce(JSON.stringify(mockSCAStatusResponse));
 
     const { result, waitFor } = renderHook(() => useUserPermissions(), {
       wrapper: createQueryWrapper()
     });
+
     await waitFor(() => result.current.isSuccess);
 
     expect(result.current.data).toEqual({ isOrgAdmin: true, isSCACapable: true });
