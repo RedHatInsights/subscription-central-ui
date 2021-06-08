@@ -51,7 +51,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   isFetching,
   user
 }) => {
-  const getColumns = () => {
+  const getManifestPanelColumns = () => {
     const columns = [
       { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
       { title: 'Version', transforms: [sortable] },
@@ -391,7 +391,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             </Flex>
             <Table
               aria-label="Satellite Manifest Table"
-              cells={getColumns()}
+              cells={getManifestPanelColumns()}
               rows={isFetching ? [] : getRowsWithAllocationDetails()}
               onCollapse={toggleAllocationDetails}
               sortBy={sortBy}
