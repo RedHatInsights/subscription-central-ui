@@ -1,9 +1,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import useManifestEntitlements from '../../../hooks/useManifestEntitlements';
 
 jest.mock('../../../hooks/useManifestEntitlements');
+
+const queryClient = new QueryClient();
+queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: true });
 
 describe('Manifest Detail Side Panel', () => {
   const props = {
@@ -21,7 +25,11 @@ describe('Manifest Detail Side Panel', () => {
       isLoading: true
     }));
 
-    const { container } = render(<ManifestDetailSidePanel {...props} />);
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ManifestDetailSidePanel {...props} />
+      </QueryClientProvider>
+    );
     expect(container).toMatchSnapshot();
   });
 
@@ -30,7 +38,11 @@ describe('Manifest Detail Side Panel', () => {
       isError: true
     }));
 
-    const { container } = render(<ManifestDetailSidePanel {...props} />);
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ManifestDetailSidePanel {...props} />
+      </QueryClientProvider>
+    );
     expect(container).toMatchSnapshot();
   });
 
@@ -42,7 +54,11 @@ describe('Manifest Detail Side Panel', () => {
       data: {}
     }));
 
-    const { container } = render(<ManifestDetailSidePanel {...props} />);
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ManifestDetailSidePanel {...props} />
+      </QueryClientProvider>
+    );
     expect(container).toMatchSnapshot();
   });
 
@@ -65,7 +81,40 @@ describe('Manifest Detail Side Panel', () => {
       }
     }));
 
-    const { container } = render(<ManifestDetailSidePanel {...props} />);
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ManifestDetailSidePanel {...props} />
+      </QueryClientProvider>
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  it("renders successfully with data, but showing 'administratively disabled' for SCA status when user is not SCA capable", () => {
+    (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
+      isError: false,
+      isSuccess: true,
+      isLoading: false,
+      data: {
+        body: {
+          uuid: 'abc123',
+          name: 'John Doe',
+          version: '6.9',
+          createdDate: '2020-01-01T00:00:00.000Z',
+          createdBy: 'Jane Doe',
+          lastModified: '2021-01-01T00:00:00.000Z',
+          entitlementsAttachedQuantity: 10,
+          simpleContentAccess: 'enabled'
+        }
+      }
+    }));
+
+    queryClient.setQueryData('user', { isSCACapable: false, isOrgAdmin: true });
+
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ManifestDetailSidePanel {...props} />
+      </QueryClientProvider>
+    );
     expect(container).toMatchSnapshot();
   });
 });
