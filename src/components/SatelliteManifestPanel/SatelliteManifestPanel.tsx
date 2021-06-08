@@ -51,29 +51,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   isFetching,
   user
 }) => {
-  const getManifestPanelColumns = () => {
-    const columns = [
-      { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
-      { title: 'Version', transforms: [sortable] },
-      {
-        title: (
-          <>
-            Simple Content Access
-            <SCAInfoIconWithPopover />
-          </>
-        ),
-        transforms: [sortable, cellWidth(20)]
-      },
-      { title: 'UUID', transforms: [sortable] }
-    ];
-
-    if (user.isSCACapable === false) {
-      // remove SCA Status column
-      columns.splice(2, 1);
-    }
-    return columns;
-  };
-
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
@@ -117,6 +94,29 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const closeDetailsPanel = () => {
     setCurrentDetailUUID('');
     setDetailsDrawerIsExpanded(false);
+  };
+
+  const getTableHeaders = () => {
+    const tableHeaders = [
+      { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
+      { title: 'Version', transforms: [sortable] },
+      {
+        title: (
+          <>
+            Simple Content Access
+            <SCAInfoIconWithPopover />
+          </>
+        ),
+        transforms: [sortable, cellWidth(20)]
+      },
+      { title: 'UUID', transforms: [sortable] }
+    ];
+
+    if (user.isSCACapable === false) {
+      // remove SCA Status column
+      tableHeaders.splice(2, 1);
+    }
+    return tableHeaders;
   };
 
   const formatRow = (row: string[], rowIndex: number) => {
@@ -391,7 +391,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             </Flex>
             <Table
               aria-label="Satellite Manifest Table"
-              cells={getManifestPanelColumns()}
+              cells={getTableHeaders()}
               rows={isFetching ? [] : getRowsWithAllocationDetails()}
               onCollapse={toggleAllocationDetails}
               sortBy={sortBy}
