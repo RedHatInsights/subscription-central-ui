@@ -9,13 +9,13 @@ import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable'
 import { CreateManifestPanel } from '../../components/emptyState';
 import { Processing } from '../../components/emptyState';
 import { useQueryClient } from 'react-query';
-import { UserPermissions } from '../../hooks/useUserPermissions';
+import { User } from '../../hooks/useUser';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
 
   const queryClient = useQueryClient();
-  const userPermissions: UserPermissions = queryClient.getQueryData('userPermissions');
+  const user: User = queryClient.getQueryData('user');
 
   return (
     <>
@@ -28,23 +28,15 @@ const SatelliteManifestPage: FC = () => {
           {isLoading && !error && <Processing />}
 
           {!isLoading && !error && data?.length > 0 && (
-            <SatelliteManifestPanel
-              data={data}
-              userPermissions={userPermissions}
-              isFetching={isFetching}
-            />
+            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
 
-          {!isLoading && !error && data?.length === 0 && userPermissions.isOrgAdmin === true && (
+          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === true && (
             <CreateManifestPanel />
           )}
 
-          {!isLoading && !error && data?.length === 0 && userPermissions.isOrgAdmin === false && (
-            <SatelliteManifestPanel
-              data={data}
-              userPermissions={userPermissions}
-              isFetching={isFetching}
-            />
+          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === false && (
+            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
 
           {error && <Unavailable />}

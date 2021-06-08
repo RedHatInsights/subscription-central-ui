@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import { authenticateUser } from '../../utilities/platformServices';
-import useUserPermissions from '../useUserPermissions';
+import useUser from '../useUser';
 import { createQueryWrapper } from '../../utilities/testHelpers';
 
 enableFetchMocks();
@@ -15,7 +15,7 @@ jest.mock('../../utilities/platformServices', () => ({
   authenticateUser: jest.fn()
 }));
 
-describe('useUserPermissions hook', () => {
+describe('useUser hook', () => {
   it('gets the user permissions back from two API calls', async () => {
     (authenticateUser as jest.Mock).mockResolvedValue({
       identity: {
@@ -35,7 +35,7 @@ describe('useUserPermissions hook', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockSCAStatusResponse));
 
-    const { result, waitFor } = renderHook(() => useUserPermissions(), {
+    const { result, waitFor } = renderHook(() => useUser(), {
       wrapper: createQueryWrapper()
     });
 
@@ -50,7 +50,7 @@ describe('useUserPermissions hook', () => {
 
     (authenticateUser as jest.Mock).mockRejectedValue({ status: 'error' });
 
-    const { result, waitFor } = renderHook(() => useUserPermissions(), {
+    const { result, waitFor } = renderHook(() => useUser(), {
       wrapper: createQueryWrapper()
     });
 

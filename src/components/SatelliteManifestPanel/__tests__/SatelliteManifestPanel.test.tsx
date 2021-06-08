@@ -30,7 +30,7 @@ describe('Satellite Manifest Panel', () => {
     const props = {
       data,
       isFetching: false,
-      userPermissions: { isOrgAdmin: true, isSCACapable: true }
+      user: { isOrgAdmin: true, isSCACapable: true }
     };
 
     const { container } = render(
@@ -61,7 +61,7 @@ describe('Satellite Manifest Panel', () => {
     const props = {
       data,
       isFetching: false,
-      userPermissions: { isOrgAdmin: true, isSCACapable: false }
+      user: { isOrgAdmin: true, isSCACapable: false }
     };
 
     const { container } = render(
@@ -80,7 +80,7 @@ describe('Satellite Manifest Panel', () => {
     const props = {
       data: [] as ManifestEntry[],
       isFetching: false,
-      userPermissions: { isOrgAdmin: true, isSCACapable: true }
+      user: { isOrgAdmin: true, isSCACapable: true }
     };
 
     const { container } = render(
@@ -101,7 +101,7 @@ describe('Satellite Manifest Panel', () => {
     const props = {
       data,
       isFetching: true,
-      userPermissions: { isOrgAdmin: true, isSCACapable: true }
+      user: { isOrgAdmin: true, isSCACapable: true }
     };
 
     const { container } = render(

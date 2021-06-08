@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from 'react-query';
 import Cookies from 'js-cookie';
 import { getConfig, authenticateUser } from '../utilities/platformServices';
 
-interface UserPermissions {
+interface User {
   isOrgAdmin: boolean;
   isSCACapable: boolean;
 }
@@ -24,26 +24,20 @@ const fetchSCACapableStatus = (): Promise<SCACapableStatusResponse> => {
   }).then((response) => response.json());
 };
 
-const getUserPermissions = (): Promise<UserPermissions> => {
+const getUser = (): Promise<User> => {
   return Promise.all([authenticateUser(), fetchSCACapableStatus()]).then(
     ([userStatus, scaStatusResponse]) => {
-      const userPermissions: UserPermissions = {
+      const user: User = {
         isOrgAdmin: userStatus.identity.user.is_org_admin === true,
         isSCACapable: scaStatusResponse.body.simpleContentAccessCapable === true
       };
-      return userPermissions;
+      return user;
     }
   );
 };
 
-const useUserPermissions = (): UseQueryResult<UserPermissions, unknown> => {
-  return useQuery('userPermissions', () => getUserPermissions());
+const useUser = (): UseQueryResult<User, unknown> => {
+  return useQuery('user', () => getUser());
 };
 
-export {
-  fetchSCACapableStatus,
-  getUserPermissions,
-  SCACapableStatusResponse,
-  useUserPermissions as default,
-  UserPermissions
-};
+export { fetchSCACapableStatus, getUser, SCACapableStatusResponse, useUser as default, User };

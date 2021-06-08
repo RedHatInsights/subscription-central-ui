@@ -24,7 +24,7 @@ import {
   cellWidth,
   expandable
 } from '@patternfly/react-table';
-import { UserPermissions } from '../../hooks/useUserPermissions';
+import { User } from '../../hooks/useUser';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
@@ -39,7 +39,7 @@ import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal'
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
   isFetching: boolean;
-  userPermissions: UserPermissions;
+  user: User;
 }
 
 interface BooleanDictionary {
@@ -49,9 +49,9 @@ interface BooleanDictionary {
 const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
   data,
   isFetching,
-  userPermissions
+  user
 }) => {
-  const getColumns = (userPermissions: UserPermissions) => {
+  const getColumns = (user: User) => {
     const columns = [
       { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
       { title: 'Version', transforms: [sortable] },
@@ -67,14 +67,14 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       { title: 'UUID', transforms: [sortable] }
     ];
 
-    if (userPermissions.isSCACapable === false) {
+    if (user.isSCACapable === false) {
       // remove SCA Status column
       columns.splice(2, 1);
     }
     return columns;
   };
 
-  const columns = getColumns(userPermissions);
+  const columns = getColumns(user);
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -121,7 +121,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setDetailsDrawerIsExpanded(false);
   };
 
-  const formatRow = (row: string[], rowIndex: number, userPermissions: UserPermissions) => {
+  const formatRow = (row: string[], rowIndex: number, user: User) => {
     const name = row[0];
     const version = row[1];
     const scaStatus = row[2];
@@ -139,7 +139,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       </React.Fragment>,
       uuid
     ];
-    if (userPermissions.isSCACapable === false) {
+    if (user.isSCACapable === false) {
       // remove SCA Status column
       formattedRow.splice(2, 1);
     }
@@ -289,7 +289,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         ''
       );
 
-      const formattedRow = formatRow(row, i, userPermissions);
+      const formattedRow = formatRow(row, i, user);
       // Add original row
       rowsWithAllocationDetails.push({ isOpen, cells: [...formattedRow] });
 
@@ -382,7 +382,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                       />
                     </SplitItem>
                   )}
-                  {userPermissions.isOrgAdmin === true && (
+                  {user.isOrgAdmin === true && (
                     <SplitItem>
                       <CreateManifestButtonWithModal />
                     </SplitItem>
