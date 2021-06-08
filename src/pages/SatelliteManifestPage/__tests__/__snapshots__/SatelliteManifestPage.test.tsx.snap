@@ -11,7 +11,7 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
       widget-type="InsightsPageHeaderTitle"
     >
        
-      Satellite Manifests
+      Manifests
        
     </h1>
     <p>
@@ -41,7 +41,7 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
                 class="pf-c-title pf-m-xl"
               >
                 <span>
-                  Satellite Manifests
+                  Manifests
                 </span>
                 <span
                   class="pf-c-badge pf-m-read"
@@ -1000,7 +1000,7 @@ exports[`Satellite Manifests Page renders the empty state with Create Manifest b
       widget-type="InsightsPageHeaderTitle"
     >
        
-      Satellite Manifests
+      Manifests
        
     </h1>
     <p>
@@ -1068,7 +1068,7 @@ exports[`Satellite Manifests Page renders the empty table with no manifests foun
       widget-type="InsightsPageHeaderTitle"
     >
        
-      Satellite Manifests
+      Manifests
        
     </h1>
     <p>
@@ -1098,7 +1098,7 @@ exports[`Satellite Manifests Page renders the empty table with no manifests foun
                 class="pf-c-title pf-m-xl"
               >
                 <span>
-                  Satellite Manifests
+                  Manifests
                 </span>
                 <span
                   class="pf-c-badge pf-m-read"
@@ -1870,7 +1870,7 @@ exports[`Satellite Manifests Page renders with an error message when an API fail
       widget-type="InsightsPageHeaderTitle"
     >
        
-      Satellite Manifests
+      Manifests
        
     </h1>
     <p>

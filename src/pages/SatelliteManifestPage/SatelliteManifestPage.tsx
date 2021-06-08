@@ -20,7 +20,7 @@ const SatelliteManifestPage: FC = () => {
   return (
     <>
       <PageHeader>
-        <PageHeaderTitle title="Satellite Manifests" />
+        <PageHeaderTitle title="Manifests" />
         <p>Export subscriptions to your on-premise subscription management application</p>
       </PageHeader>
       <Main>

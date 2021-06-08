@@ -21,7 +21,7 @@ exports[`Satellite Manifest Panel renders correctly with SCA column when user is
               class="pf-c-title pf-m-xl"
             >
               <span>
-                Satellite Manifests
+                Manifests
               </span>
               <span
                 class="pf-c-badge pf-m-read"
@@ -965,7 +965,7 @@ exports[`Satellite Manifest Panel renders correctly without SCA column when user
               class="pf-c-title pf-m-xl"
             >
               <span>
-                Satellite Manifests
+                Manifests
               </span>
               <span
                 class="pf-c-badge pf-m-read"
@@ -1847,7 +1847,7 @@ exports[`Satellite Manifest Panel renders loading when refetching data 1`] = `
               class="pf-c-title pf-m-xl"
             >
               <span>
-                Satellite Manifests
+                Manifests
               </span>
             </h2>
             <div
@@ -2625,7 +2625,7 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
               class="pf-c-title pf-m-xl"
             >
               <span>
-                Satellite Manifests
+                Manifests
               </span>
               <span
                 class="pf-c-badge pf-m-read"
