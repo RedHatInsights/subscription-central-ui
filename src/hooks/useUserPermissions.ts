@@ -28,8 +28,8 @@ const getUserPermissions = (): Promise<UserPermissions> => {
   return Promise.all([authenticateUser(), fetchSCACapableStatus()]).then(
     ([userStatus, scaStatusResponse]) => {
       const userPermissions: UserPermissions = {
-        isOrgAdmin: userStatus.identity.user.is_org_admin,
-        isSCACapable: scaStatusResponse.body.simpleContentAccessCapable
+        isOrgAdmin: userStatus.identity.user.is_org_admin === true,
+        isSCACapable: scaStatusResponse.body.simpleContentAccessCapable === true
       };
       return userPermissions;
     }
