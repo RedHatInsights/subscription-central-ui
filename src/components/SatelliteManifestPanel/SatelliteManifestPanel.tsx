@@ -51,7 +51,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   isFetching,
   user
 }) => {
-  const getColumns = (user: User) => {
+  const getColumns = () => {
     const columns = [
       { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
       { title: 'Version', transforms: [sortable] },
@@ -73,8 +73,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     }
     return columns;
   };
-
-  const columns = getColumns(user);
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -121,7 +119,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setDetailsDrawerIsExpanded(false);
   };
 
-  const formatRow = (row: string[], rowIndex: number, user: User) => {
+  const formatRow = (row: string[], rowIndex: number) => {
     const name = row[0];
     const version = row[1];
     const scaStatus = row[2];
@@ -289,7 +287,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         ''
       );
 
-      const formattedRow = formatRow(row, i, user);
+      const formattedRow = formatRow(row, i);
       // Add original row
       rowsWithAllocationDetails.push({ isOpen, cells: [...formattedRow] });
 
@@ -393,7 +391,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             </Flex>
             <Table
               aria-label="Satellite Manifest Table"
-              cells={columns}
+              cells={getColumns()}
               rows={isFetching ? [] : getRowsWithAllocationDetails()}
               onCollapse={toggleAllocationDetails}
               sortBy={sortBy}
