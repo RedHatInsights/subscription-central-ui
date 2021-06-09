@@ -89,7 +89,7 @@ describe('Manifest Detail Side Panel', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it("renders successfully with data, but showing 'administratively disabled' for SCA status when user is not SCA capable", () => {
+  it("shows 'administratively disabled' for SCA status when user is not SCA capable", () => {
     (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
       isError: false,
       isSuccess: true,

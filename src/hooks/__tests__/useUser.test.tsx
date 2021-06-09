@@ -44,7 +44,7 @@ describe('useUser hook', () => {
     expect(result.current.data).toEqual({ isOrgAdmin: true, isSCACapable: true });
   });
 
-  it('does not return anything and sets react-query status as isError if the Authenticate User API call fails', async () => {
+  it('does not return anything if the Authenticate User API call fails', async () => {
     const originalError = console.error;
     console.error = jest.fn();
 
