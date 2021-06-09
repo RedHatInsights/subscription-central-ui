@@ -24,7 +24,7 @@ import {
   cellWidth,
   expandable
 } from '@patternfly/react-table';
-import { User } from '../Authentication/UserContext';
+import { User } from '../../hooks/useUser';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
@@ -51,21 +51,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   isFetching,
   user
 }) => {
-  const [columns] = useState([
-    { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
-    { title: 'Version', transforms: [sortable] },
-    {
-      title: (
-        <>
-          Simple Content Access
-          <SCAInfoIconWithPopover />
-        </>
-      ),
-      transforms: [sortable, cellWidth(20)]
-    },
-    { title: 'UUID', transforms: [sortable] }
-  ]);
-
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
@@ -111,13 +96,36 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setDetailsDrawerIsExpanded(false);
   };
 
+  const getTableHeaders = () => {
+    const tableHeaders = [
+      { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
+      { title: 'Version', transforms: [sortable] },
+      {
+        title: (
+          <>
+            Simple Content Access
+            <SCAInfoIconWithPopover />
+          </>
+        ),
+        transforms: [sortable, cellWidth(20)]
+      },
+      { title: 'UUID', transforms: [sortable] }
+    ];
+
+    if (user.isSCACapable === false) {
+      // remove SCA Status column
+      tableHeaders.splice(2, 1);
+    }
+    return tableHeaders;
+  };
+
   const formatRow = (row: string[], rowIndex: number) => {
     const name = row[0];
     const version = row[1];
     const scaStatus = row[2];
     const uuid = row[3];
 
-    return [
+    const formattedRow = [
       <React.Fragment key={`button-${uuid}`}>
         <Button variant="link" onClick={() => openDetailsPanel(uuid, rowIndex)}>
           {name}
@@ -129,6 +137,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       </React.Fragment>,
       uuid
     ];
+    if (user.isSCACapable === false) {
+      // remove SCA Status column
+      formattedRow.splice(2, 1);
+    }
+    return formattedRow;
   };
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
@@ -348,7 +361,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <DrawerContent panelContent={panelContent}>
           <DrawerContentBody>
             <Title headingLevel="h2">
-              <span ref={titleRef}>Satellite Manifests</span>
+              <span ref={titleRef}>Manifests</span>
               {!isFetching && <Badge isRead>{count()}</Badge>}
             </Title>
             <Flex
@@ -378,7 +391,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             </Flex>
             <Table
               aria-label="Satellite Manifest Table"
-              cells={columns}
+              cells={getTableHeaders()}
               rows={isFetching ? [] : getRowsWithAllocationDetails()}
               onCollapse={toggleAllocationDetails}
               sortBy={sortBy}

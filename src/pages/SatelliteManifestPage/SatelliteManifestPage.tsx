@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { withRouter } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
@@ -8,16 +8,19 @@ import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import { CreateManifestPanel } from '../../components/emptyState';
 import { Processing } from '../../components/emptyState';
-import UserContext from '../../components/Authentication/UserContext';
+import { useQueryClient } from 'react-query';
+import { User } from '../../hooks/useUser';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
-  const { user } = useContext(UserContext);
+
+  const queryClient = useQueryClient();
+  const user: User = queryClient.getQueryData('user');
 
   return (
     <>
       <PageHeader>
-        <PageHeaderTitle title="Satellite Manifests" />
+        <PageHeaderTitle title="Manifests" />
         <p>Export subscriptions to your on-premise subscription management application</p>
       </PageHeader>
       <Main>

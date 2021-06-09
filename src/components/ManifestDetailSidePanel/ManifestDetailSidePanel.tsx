@@ -1,4 +1,5 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect } from 'react';
+import { useQueryClient } from 'react-query';
 import {
   Button,
   DrawerPanelContent,
@@ -11,6 +12,7 @@ import {
 import { ErrorMessage, Processing } from '../emptyState';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
+import { User } from '../../hooks/useUser';
 import './ManifestDetailSidePanel.scss';
 
 interface ManifestDetailSidePanelProps {
@@ -33,6 +35,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   deleteManifest
 }) => {
   const { isLoading, isFetching, isSuccess, isError, data } = useManifestEntitlements(uuid);
+
+  const queryClient = useQueryClient();
+  const user: User = queryClient.getQueryData('user');
 
   const scrollToPageTop = () => {
     if (titleRef?.current) {
@@ -108,7 +113,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
               <SCAInfoIconWithPopover />
             </strong>
           </GridItem>
-          <GridItem span={6}>{simpleContentAccess}</GridItem>
+          <GridItem span={6}>
+            {user.isSCACapable === true ? simpleContentAccess : 'administratively disabled'}
+          </GridItem>
 
           <GridItem span={6}>
             <strong>Quantity</strong>
