@@ -23,6 +23,7 @@ import './ManifestDetailSidePanel.scss';
 
 interface ManifestDetailSidePanelProps {
   isExpanded: boolean;
+  shouldTriggerManifestExport: boolean;
   titleRef: React.MutableRefObject<HTMLSpanElement>;
   drawerRef: React.MutableRefObject<HTMLDivElement | HTMLHeadingElement>;
   uuid: string;
@@ -33,6 +34,7 @@ interface ManifestDetailSidePanelProps {
 
 const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   isExpanded,
+  shouldTriggerManifestExport,
   titleRef,
   drawerRef,
   uuid,
@@ -55,7 +57,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     isError: errorExportingManifest,
     isSuccess: successExportingManifest,
     remove: resetExportManifestDataQuery
-  } = useExportSatelliteManifest(uuid);
+  } = useExportSatelliteManifest(uuid, shouldTriggerManifestExport);
 
   const queryClient = useQueryClient();
   const user: User = queryClient.getQueryData('user');
@@ -210,19 +212,14 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
 
   const SuccessExportingManifestMessage = () => (
     <EmptyState variant={EmptyStateVariant.small}>
-      <Title headingLevel="h3">Success</Title>
+      <Title headingLevel="h3">Manifest exported successfully.</Title>
       <EmptyStateBody>
-        <p>To download your manifest, click the download button below.</p>
-        <Button variant="primary" href={window.URL.createObjectURL(exportedManifestData)} download>
-          Download Manifest
-        </Button>
-        <Button
-          style={{ marginTop: '30px' }}
-          variant="secondary"
-          onClick={resetExportManifestDataQuery}
-        >
-          Return to Details
-        </Button>
+        <p>
+          To download your manifest,{' '}
+          <a href={window.URL.createObjectURL(exportedManifestData)} download>
+            click here.
+          </a>
+        </p>
       </EmptyStateBody>
     </EmptyState>
   );

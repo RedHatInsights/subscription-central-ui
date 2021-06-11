@@ -85,13 +85,12 @@ const exportManifest = async (uuid: string) => {
   return downloadManifestResponse;
 };
 
-const useExportSatelliteManifest = (uuid: string): QueryObserverResult<Blob, Error> => {
+const useExportSatelliteManifest = (
+  uuid: string,
+  shouldLoadOnRender: boolean
+): QueryObserverResult<Blob, Error> => {
   return useQuery<Blob, Error>(['exportedManifests', uuid], () => exportManifest(uuid), {
-    /**
-     * 'Enabled: false' means do not run this hook immediately
-     * on component render——only on click of export button
-     */
-    enabled: false,
+    enabled: shouldLoadOnRender,
     retryDelay: 5 * 60 * 1000
   });
 };

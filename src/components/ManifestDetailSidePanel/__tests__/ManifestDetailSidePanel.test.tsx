@@ -12,6 +12,7 @@ queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: true });
 describe('Manifest Detail Side Panel', () => {
   const props = {
     isExpanded: true,
+    shouldTriggerManifestExport: false,
     uuid: 'abc123',
     titleRef: null as React.MutableRefObject<HTMLSpanElement>,
     drawerRef: null as React.MutableRefObject<HTMLDivElement>,

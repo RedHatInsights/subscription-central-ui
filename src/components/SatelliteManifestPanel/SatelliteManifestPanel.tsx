@@ -64,6 +64,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setIsDeleteManifestConfirmationModalOpen
   ] = useState(false);
   const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
+  const [shouldTriggerManifestExport, setShouldTriggerManifestExport] = useState(false);
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -94,6 +95,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const closeDetailsPanel = () => {
     setCurrentDetailUUID('');
     setDetailsDrawerIsExpanded(false);
+    setShouldTriggerManifestExport(false);
   };
 
   const getTableHeaders = () => {
@@ -341,11 +343,19 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       drawerRef={drawerRef}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
       deleteManifest={openDeleteConfirmationModal}
+      shouldTriggerManifestExport={shouldTriggerManifestExport}
     />
   );
 
   const actions = () => {
     return [
+      {
+        title: 'Export',
+        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+          openDetailsPanel(rowData.uuid.title, rowId / 2);
+          setShouldTriggerManifestExport(true);
+        }
+      },
       {
         title: 'Delete',
         onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
