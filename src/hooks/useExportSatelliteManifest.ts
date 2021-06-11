@@ -27,13 +27,35 @@ const triggerManifestExport = (uuid: string): Promise<ExportSatelliteManifestRes
   });
 };
 
-const getManifestExportStatus = (uuid: string, exportJobID: string): Promise<PollResponse> => {
+const sleep = (milliseconds: number) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
+const getManifestExportStatus = async (
+  uuid: string,
+  exportJobID: string
+): Promise<PollResponse> => {
   const cs_jwt = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}/exportJob/${exportJobID}`, {
-    headers: { Authorization: `Bearer ${cs_jwt}` },
-    mode: 'cors'
-  }).then((response) => response.json());
+  const response = await fetch(
+    `${rhsmAPIBase}/management/v1/allocations/${uuid}/exportJob/${exportJobID}`,
+    {
+      headers: { Authorization: `Bearer ${cs_jwt}` },
+      mode: 'cors'
+    }
+  );
+
+  if (response.status === 200) {
+    return response.json();
+  }
+
+  if (response.status === 202 || response.status === 404) {
+    // Export not ready, we need to pause and retry.
+    await sleep(5000);
+    return getManifestExportStatus(uuid, exportJobID);
+  }
+
+  throw new Error('Error fetching status of exported manifest');
 };
 
 const downloadExportedManifest = (uuid: string, exportID: string): Promise<Blob> => {
@@ -48,20 +70,29 @@ const downloadExportedManifest = (uuid: string, exportID: string): Promise<Blob>
 };
 
 const exportManifest = async (uuid: string) => {
-  const triggerRes = await triggerManifestExport(uuid);
+  const triggerExportResponse = await triggerManifestExport(uuid);
 
-  const exportStatusRes = await getManifestExportStatus(uuid, triggerRes.body.exportJobID);
+  const exportStatusResponse = await getManifestExportStatus(
+    uuid,
+    triggerExportResponse.body.exportJobID
+  );
 
-  const downloadRes = await downloadExportedManifest(uuid, exportStatusRes.body.exportID);
+  const downloadManifestResponse = await downloadExportedManifest(
+    uuid,
+    exportStatusResponse.body.exportID
+  );
 
-  return downloadRes;
+  return downloadManifestResponse;
 };
 
-const useExportSatelliteManifest = (uuid: string): QueryObserverResult<any, Error> => {
+const useExportSatelliteManifest = (uuid: string): QueryObserverResult<Blob, Error> => {
   return useQuery<Blob, Error>(['exportedManifests', uuid], () => exportManifest(uuid), {
-    // Do not run this hook immediately——only on click of export button
-    enabled: false
-    // retryDelay: 3 * 60 * 1000
+    /**
+     * 'Enabled: false' means do not run this hook immediately
+     * on component render——only on click of export button
+     */
+    enabled: false,
+    retryDelay: 5 * 60 * 1000
   });
 };
 
