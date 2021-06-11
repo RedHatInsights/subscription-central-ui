@@ -2,21 +2,21 @@ import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
 import { getConfig } from '../utilities/platformServices';
 
-interface ExportSatelliteManifestResponse {
+interface TriggerManifestExportResponse {
   body: {
     exportJobID: string;
     href: string;
   };
 }
 
-interface PollResponse {
+interface ExportManifestStatusResponse {
   body: {
     exportID: string;
     href: string;
   };
 }
 
-const triggerManifestExport = (uuid: string): Promise<ExportSatelliteManifestResponse> => {
+const triggerManifestExport = (uuid: string): Promise<TriggerManifestExportResponse> => {
   const cs_jwt = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
   return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}/export`, {
@@ -34,7 +34,7 @@ const sleep = (milliseconds: number) => {
 const getManifestExportStatus = async (
   uuid: string,
   exportJobID: string
-): Promise<PollResponse> => {
+): Promise<ExportManifestStatusResponse> => {
   const cs_jwt = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
   const response = await fetch(
