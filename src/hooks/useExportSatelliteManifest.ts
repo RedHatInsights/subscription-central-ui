@@ -69,7 +69,7 @@ const downloadExportedManifest = (uuid: string, exportID: string): Promise<Blob>
     .then((zipFile) => zipFile);
 };
 
-const exportManifest = async (uuid: string) => {
+const exportManifest = async (uuid: string): Promise<Blob> => {
   const triggerExportResponse = await triggerManifestExport(uuid);
 
   const exportStatusResponse = await getManifestExportStatus(
