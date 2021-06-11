@@ -70,19 +70,13 @@ const downloadExportedManifest = (uuid: string, exportID: string): Promise<Blob>
 };
 
 const exportManifest = async (uuid: string): Promise<Blob> => {
-  const triggerExportResponse = await triggerManifestExport(uuid);
+  const triggerResponse = await triggerManifestExport(uuid);
 
-  const exportStatusResponse = await getManifestExportStatus(
-    uuid,
-    triggerExportResponse.body.exportJobID
-  );
+  const statusResponse = await getManifestExportStatus(uuid, triggerResponse.body.exportJobID);
 
-  const downloadManifestResponse = await downloadExportedManifest(
-    uuid,
-    exportStatusResponse.body.exportID
-  );
+  const downloadResponse = await downloadExportedManifest(uuid, statusResponse.body.exportID);
 
-  return downloadManifestResponse;
+  return downloadResponse;
 };
 
 const useExportSatelliteManifest = (
