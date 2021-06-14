@@ -8,7 +8,6 @@ import useExportSatelliteManifest, {
   TriggerManifestExportResponse
 } from '../useExportSatelliteManifest';
 import { createQueryWrapper } from '../../utilities/testHelpers';
-import _ from 'lodash';
 
 enableFetchMocks();
 
