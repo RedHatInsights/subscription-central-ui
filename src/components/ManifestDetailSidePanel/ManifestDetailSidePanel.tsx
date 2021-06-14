@@ -88,15 +88,16 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     }
   };
 
-  if (successExportingManifest === true) {
+  if (successExportingManifest === true && exportDownloadURL?.length === 0) {
     setExportDownloadURL(window.URL.createObjectURL(exportedManifestData));
   }
 
   const handleCloseClick = () => {
     onCloseClick();
 
-    if (exportedManifestData) {
+    if (exportDownloadURL.length) {
       window.URL.revokeObjectURL(exportDownloadURL);
+      setExportDownloadURL('');
     }
 
     setTimeout(() => {

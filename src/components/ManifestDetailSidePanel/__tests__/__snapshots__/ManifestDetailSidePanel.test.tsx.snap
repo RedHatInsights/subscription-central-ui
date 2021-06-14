@@ -116,17 +116,11 @@ exports[`Manifest Detail Side Panel renders export success message when triggeri
               <p>
                 To download your manifest,
                  
-                <button
-                  aria-disabled="false"
-                  class="pf-c-button pf-m-link pf-m-inline"
-                  data-ouia-component-id="OUIA-Generated-Button-link-5"
-                  data-ouia-component-type="PF4/Button"
-                  data-ouia-safe="true"
+                <a
                   download=""
-                  type="button"
                 >
                   click here.
-                </button>
+                </a>
               </p>
             </div>
           </div>
