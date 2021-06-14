@@ -9,6 +9,8 @@ import NotificationsPortal from '@redhat-cloud-services/frontend-components-noti
 // eslint-disable-next-line max-len
 import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import NotificationProvider from './contexts/NotificationProvider';
+import Notifications from './components/Notifications/Notifications';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,8 +38,11 @@ const App = (props) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NotificationsPortal />
-      <Routes childProps={props} />
+      <NotificationProvider>
+        <Notifications />
+        <NotificationsPortal />
+        <Routes childProps={props} />
+      </NotificationProvider>
     </QueryClientProvider>
   );
 };

@@ -14,6 +14,7 @@ import {
   TextVariants
 } from '@patternfly/react-core';
 import useDeleteSatelliteManifest from '../../hooks/useDeleteSatelliteManifest';
+import useNotifications from '../../hooks/useNotifications';
 
 interface DeleteManifestConfirmationModalProps {
   handleModalToggle: () => void;
@@ -31,6 +32,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
   uuid
 }) => {
   const [checked, setChecked] = React.useState(false);
+  const { addSuccessNotification, addErrorNotification } = useNotifications();
   const {
     isError: manifestFailedToDelete,
     isLoading: isDeletingManifest,
@@ -111,7 +113,13 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
   };
 
   if (requestCompleted) resetModal();
-  if (manifestDeleted) onSuccess();
+  if (manifestDeleted) {
+    onSuccess();
+    addSuccessNotification('The manifest was successfully deleted.');
+  } else if (manifestFailedToDelete) {
+    addErrorNotification('Something went wrong with deleting the manifest. Please try again.');
+  }
+
   return (
     <Modal
       isOpen={isOpen}
