@@ -89,4 +89,11 @@ const useExportSatelliteManifest = (
   });
 };
 
-export { useExportSatelliteManifest as default };
+export {
+  ExportManifestStatusResponse,
+  downloadExportedManifest,
+  getManifestExportStatus,
+  triggerManifestExport,
+  TriggerManifestExportResponse,
+  useExportSatelliteManifest as default
+};
