@@ -95,10 +95,6 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     }, 200);
   };
 
-  const handleExportManifestClick = () => {
-    exportManifest();
-  };
-
   const LoadingDetailsContent = () => (
     <div
       className="manifest-detail-drawer-loading"
@@ -200,7 +196,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           </GridItem>
           <GridItem span={6}>{formatDate(lastModified)}</GridItem>
         </Grid>
-        <Button variant="tertiary" onClick={handleExportManifestClick}>
+        <Button variant="tertiary" onClick={exportManifest}>
           Export manifest
         </Button>
         <p className="manifest-details-delete-text">
