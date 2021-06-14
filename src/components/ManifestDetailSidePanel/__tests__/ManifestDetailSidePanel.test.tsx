@@ -3,8 +3,10 @@ import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import useManifestEntitlements from '../../../hooks/useManifestEntitlements';
+import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifest';
 
 jest.mock('../../../hooks/useManifestEntitlements');
+jest.mock('../../../hooks/useExportSatelliteManifest');
 
 const queryClient = new QueryClient();
 queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: true });
@@ -25,6 +27,7 @@ describe('Manifest Detail Side Panel', () => {
     (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
       isLoading: true
     }));
+    (useExportSatelliteManifest as jest.Mock).mockImplementation(() => ({}));
 
     const { container } = render(
       <QueryClientProvider client={queryClient}>
@@ -110,6 +113,41 @@ describe('Manifest Detail Side Panel', () => {
     }));
 
     queryClient.setQueryData('user', { isSCACapable: false, isOrgAdmin: true });
+
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ManifestDetailSidePanel {...props} />
+      </QueryClientProvider>
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders export loading message when triggering export', () => {
+    (useManifestEntitlements as jest.Mock).mockImplementation(() => ({}));
+    (useExportSatelliteManifest as jest.Mock).mockImplementation(() => ({
+      isFetching: true
+    }));
+
+    props.shouldTriggerManifestExport = true;
+
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ManifestDetailSidePanel {...props} />
+      </QueryClientProvider>
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders export success message when triggering export', () => {
+    (useManifestEntitlements as jest.Mock).mockImplementation(() => ({}));
+    (useExportSatelliteManifest as jest.Mock).mockImplementation(() => ({
+      isFetching: false,
+      isSuccess: true,
+      data: new Blob(['foo'], { type: 'application/zip' })
+    }));
+    global.URL.createObjectURL = jest.fn();
+
+    props.shouldTriggerManifestExport = true;
 
     const { container } = render(
       <QueryClientProvider client={queryClient}>
