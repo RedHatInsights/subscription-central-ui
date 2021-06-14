@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import {
   Button,
@@ -41,6 +41,8 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   openCurrentEntitlementsListFromPanel,
   deleteManifest
 }) => {
+  const [exportDownloadURL, setExportDownloadURL] = useState('');
+
   const {
     data: entitlementData,
     isLoading: isLoadingEntitlementData,
@@ -86,8 +88,16 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     }
   };
 
+  if (successExportingManifest === true) {
+    setExportDownloadURL(window.URL.createObjectURL(exportedManifestData));
+  }
+
   const handleCloseClick = () => {
     onCloseClick();
+
+    if (exportedManifestData) {
+      window.URL.revokeObjectURL(exportDownloadURL);
+    }
 
     setTimeout(() => {
       // Delay to avoid content flicker on animated close
@@ -234,14 +244,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       <EmptyStateBody>
         <p>
           To download your manifest,{' '}
-          <Button
-            isInline
-            variant="link"
-            href={window.URL.createObjectURL(exportedManifestData)}
-            download
-          >
+          <a href={exportDownloadURL} download>
             click here.
-          </Button>
+          </a>
         </p>
       </EmptyStateBody>
     </EmptyState>
