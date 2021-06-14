@@ -14,7 +14,6 @@ import {
   Title
 } from '@patternfly/react-core';
 import { ErrorMessage, Processing } from '../emptyState';
-import { CreateManifestFormLoading } from '../CreateManifestForm';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
 import { User } from '../../hooks/useUser';
@@ -52,7 +51,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
 
   const {
     data: exportedManifestData,
-    isFetching: isFetchingManifest,
+    isFetching: isFetchingManifestExport,
     refetch: exportManifest,
     isError: errorExportingManifest,
     isSuccess: successExportingManifest,
@@ -67,7 +66,13 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       scrollToPageTop();
       focusOnSidePanel();
     }
-  }, [isExpanded, successFetchingEntitlementData, isLoadingEntitlementData]);
+  }, [
+    isExpanded,
+    successFetchingEntitlementData,
+    isLoadingEntitlementData,
+    isFetchingManifestExport,
+    successExportingManifest
+  ]);
 
   const scrollToPageTop = () => {
     if (titleRef?.current) {
@@ -82,13 +87,28 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   };
 
   const handleCloseClick = () => {
-    resetExportManifestDataQuery();
     onCloseClick();
+
+    setTimeout(() => {
+      // Delay to avoid content flicker on animated close
+      resetExportManifestDataQuery();
+    }, 200);
   };
 
   const handleExportManifestClick = () => {
     exportManifest();
   };
+
+  const LoadingDetailsContent = () => (
+    <div
+      className="manifest-detail-drawer-loading"
+      aria-label="Loading Manifest Details"
+      tabIndex={isLoadingEntitlementData ? 0 : -1}
+      ref={drawerRef}
+    >
+      <Processing />
+    </div>
+  );
 
   const DetailsContent = () => {
     // This handles the scenario when the API "succeeds" but not with a 200 status
@@ -199,26 +219,33 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     );
   };
 
-  const Loading = () => (
-    <div
-      className="manifest-detail-drawer-loading"
-      aria-label="Loading Manifest Details"
-      tabIndex={isLoadingEntitlementData ? 0 : -1}
-      ref={drawerRef}
-    >
-      <Processing />
-    </div>
+  const LoadingExportingManifestMessage = () => (
+    <EmptyState variant={EmptyStateVariant.small}>
+      <Title headingLevel="h3" ref={drawerRef} tabIndex={isFetchingManifestExport ? 0 : -1}>
+        Exporting manifest. Please wait
+      </Title>
+      <EmptyStateBody>
+        <Processing />
+      </EmptyStateBody>
+    </EmptyState>
   );
 
   const SuccessExportingManifestMessage = () => (
     <EmptyState variant={EmptyStateVariant.small}>
-      <Title headingLevel="h3">Manifest exported successfully.</Title>
+      <Title headingLevel="h3" ref={drawerRef} tabIndex={successExportingManifest ? 0 : -1}>
+        Manifest exported successfully.
+      </Title>
       <EmptyStateBody>
         <p>
           To download your manifest,{' '}
-          <a href={window.URL.createObjectURL(exportedManifestData)} download>
+          <Button
+            isInline
+            variant="link"
+            href={window.URL.createObjectURL(exportedManifestData)}
+            download
+          >
             click here.
-          </a>
+          </Button>
         </p>
       </EmptyStateBody>
     </EmptyState>
@@ -227,12 +254,12 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   const ManifestDetailsInnerContent = () => {
     if (errorFetchingEntitlementData === true || errorExportingManifest === true) {
       return <ErrorMessage />;
-    } else if (isFetchingManifest === true) {
-      return <CreateManifestFormLoading title="Exporting manifest. Please wait." />;
+    } else if (isFetchingManifestExport === true) {
+      return <LoadingExportingManifestMessage />;
     } else if (successExportingManifest === true) {
       return <SuccessExportingManifestMessage />;
     } else if (isLoadingEntitlementData === true || isFetchingEntitlementData === true) {
-      return <Loading />;
+      return <LoadingDetailsContent />;
     } else if (successFetchingEntitlementData === true) {
       return <DetailsContent />;
     }

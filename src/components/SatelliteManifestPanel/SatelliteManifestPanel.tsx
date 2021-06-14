@@ -93,9 +93,15 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   const closeDetailsPanel = () => {
-    setCurrentDetailUUID('');
     setDetailsDrawerIsExpanded(false);
-    setShouldTriggerManifestExport(false);
+    setTimeout(() => {
+      /** Delay to avoid content flicker on animated close
+      /* Intentionally longer than child delay in Side Panel, because
+      /* otherwise the UUID is lost and query isn't reset.
+      */
+      setShouldTriggerManifestExport(false);
+      setCurrentDetailUUID('');
+    }, 300);
   };
 
   const getTableHeaders = () => {
@@ -129,7 +135,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
     const formattedRow = [
       <React.Fragment key={`button-${uuid}`}>
-        <Button variant="link" onClick={() => openDetailsPanel(uuid, rowIndex)}>
+        <Button variant="link" onClick={() => handleRowManifestClick(uuid, rowIndex)}>
           {name}
         </Button>
       </React.Fragment>,
@@ -303,6 +309,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     });
 
     return rowsWithAllocationDetails;
+  };
+
+  const handleRowManifestClick = (uuid: string, rowIndex: number) => {
+    setShouldTriggerManifestExport(false);
+    openDetailsPanel(uuid, rowIndex);
   };
 
   const toggleRowExpansion = (rowUUID: string, expanded: boolean) => {
