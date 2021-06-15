@@ -13,6 +13,7 @@ import {
   GridItem,
   Title
 } from '@patternfly/react-core';
+import ArrowLeftIcon from '@patternfly/react-icons/dist/js/icons/arrow-left-icon';
 import { ErrorMessage, Processing } from '../emptyState';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
@@ -42,6 +43,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   deleteManifest
 }) => {
   const [exportDownloadURL, setExportDownloadURL] = useState('');
+  const [hasReturnedToDetails, setHasReturnedToDetails] = useState(false);
 
   const {
     data: entitlementData,
@@ -51,6 +53,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     isError: errorFetchingEntitlementData
   } = useManifestEntitlements(uuid);
 
+  const shouldExportManifestOnRender = shouldTriggerManifestExport && !hasReturnedToDetails;
   const {
     data: exportedManifestData,
     isFetching: isFetchingManifestExport,
@@ -58,7 +61,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     isError: errorExportingManifest,
     isSuccess: successExportingManifest,
     remove: resetExportManifestDataQuery
-  } = useExportSatelliteManifest(uuid, shouldTriggerManifestExport);
+  } = useExportSatelliteManifest(uuid, shouldExportManifestOnRender);
 
   const queryClient = useQueryClient();
   const user: User = queryClient.getQueryData('user');
@@ -81,6 +84,15 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       titleRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
+  const returnToDetails = () => {
+    resetExportManifestDataQuery();
+    setHasReturnedToDetails(true);
+  };
+
+  if (successExportingManifest === true && hasReturnedToDetails === true) {
+    setHasReturnedToDetails(false);
+  }
 
   const focusOnSidePanel = () => {
     if (drawerRef?.current) {
@@ -243,12 +255,15 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
         Manifest exported successfully.
       </Title>
       <EmptyStateBody>
-        <p>
-          To download your manifest,{' '}
+        <div className="manifest-details-download-manifest">
           <a href={exportDownloadURL} download>
-            click here.
+            <Button variant="primary">Download Manifest</Button>
           </a>
-        </p>
+          <Button style={{ marginTop: '10px' }} variant="link" onClick={returnToDetails}>
+            <ArrowLeftIcon style={{ marginRight: '7px' }} />
+            Back to details
+          </Button>
+        </div>
       </EmptyStateBody>
     </EmptyState>
   );

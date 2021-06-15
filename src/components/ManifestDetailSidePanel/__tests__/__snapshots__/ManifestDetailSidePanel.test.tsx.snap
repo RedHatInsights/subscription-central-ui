@@ -113,15 +113,48 @@ exports[`Manifest Detail Side Panel renders export success message when triggeri
             <div
               class="pf-c-empty-state__body"
             >
-              <p>
-                To download your manifest,
-                 
+              <div
+                class="manifest-details-download-manifest"
+              >
                 <a
                   download=""
                 >
-                  click here.
+                  <button
+                    aria-disabled="false"
+                    class="pf-c-button pf-m-primary"
+                    data-ouia-component-id="OUIA-Generated-Button-primary-1"
+                    data-ouia-component-type="PF4/Button"
+                    data-ouia-safe="true"
+                    type="button"
+                  >
+                    Download Manifest
+                  </button>
                 </a>
-              </p>
+                <button
+                  aria-disabled="false"
+                  class="pf-c-button pf-m-link"
+                  data-ouia-component-id="OUIA-Generated-Button-link-5"
+                  data-ouia-component-type="PF4/Button"
+                  data-ouia-safe="true"
+                  style="margin-top: 10px;"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    fill="currentColor"
+                    height="1em"
+                    role="img"
+                    style="margin-right: 7px;"
+                    viewBox="0 0 448 512"
+                    width="1em"
+                  >
+                    <path
+                      d="M257.5 445.1l-22.2 22.2c-9.4 9.4-24.6 9.4-33.9 0L7 273c-9.4-9.4-9.4-24.6 0-33.9L201.4 44.7c9.4-9.4 24.6-9.4 33.9 0l22.2 22.2c9.5 9.5 9.3 25-.4 34.3L136.6 216H424c13.3 0 24 10.7 24 24v32c0 13.3-10.7 24-24 24H136.6l120.5 114.8c9.8 9.3 10 24.8.4 34.3z"
+                    />
+                  </svg>
+                  Back to details
+                </button>
+              </div>
             </div>
           </div>
         </div>
