@@ -6,9 +6,12 @@ import {
   DrawerHead,
   DrawerActions,
   DrawerCloseButton,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateVariant,
   Grid,
   GridItem,
-  Spinner
+  Title
 } from '@patternfly/react-core';
 import { ErrorMessage, Processing } from '../emptyState';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
@@ -91,12 +94,16 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
 
   const handleCloseClick = () => {
     onCloseClick();
-    resetExportManifestDataQuery();
 
     if (exportDownloadURL.length) {
       window.URL.revokeObjectURL(exportDownloadURL);
       setExportDownloadURL('');
     }
+
+    setTimeout(() => {
+      // Delay to avoid content flicker on animated close
+      resetExportManifestDataQuery();
+    }, 200);
   };
 
   const LoadingDetailsContent = () => (
@@ -109,32 +116,6 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       <Processing />
     </div>
   );
-
-  const ExportManifestContent = () => {
-    if (successExportingManifest) {
-      return (
-        <p className="manifest-detail-export-success">
-          Manifest exported successfully. To download your manifest,{' '}
-          <a href={exportDownloadURL} download>
-            click here.
-          </a>
-        </p>
-      );
-    } else if (isFetchingManifestExport) {
-      return (
-        <div className="manifest-detail-export-loading">
-          <Spinner size="md" />
-          <p>Exporting your manifest. Please wait.</p>
-        </div>
-      );
-    } else {
-      return (
-        <Button variant="tertiary" onClick={exportManifest}>
-          Export manifest
-        </Button>
-      );
-    }
-  };
 
   const DetailsContent = () => {
     // This handles the scenario when the API "succeeds" but not with a 200 status
@@ -226,7 +207,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           </GridItem>
           <GridItem span={6}>{formatDate(lastModified)}</GridItem>
         </Grid>
-        <ExportManifestContent />
+        <Button variant="tertiary" onClick={exportManifest}>
+          Export manifest
+        </Button>
         <p className="manifest-details-delete-text">
           Deleting a subscription allocation is <strong>STRONGLY</strong> discouraged. This action
           should only be taken in extreme circumstances or for debugging purposes
@@ -243,9 +226,40 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     );
   };
 
+  const LoadingExportingManifestMessage = () => (
+    <EmptyState variant={EmptyStateVariant.small}>
+      <Title headingLevel="h3" ref={drawerRef} tabIndex={isFetchingManifestExport ? 0 : -1}>
+        Exporting manifest. Please wait
+      </Title>
+      <EmptyStateBody>
+        <Processing />
+      </EmptyStateBody>
+    </EmptyState>
+  );
+
+  const SuccessExportingManifestMessage = () => (
+    <EmptyState variant={EmptyStateVariant.small}>
+      <Title headingLevel="h3" ref={drawerRef} tabIndex={successExportingManifest ? 0 : -1}>
+        Manifest exported successfully.
+      </Title>
+      <EmptyStateBody>
+        <p>
+          To download your manifest,{' '}
+          <a href={exportDownloadURL} download>
+            click here.
+          </a>
+        </p>
+      </EmptyStateBody>
+    </EmptyState>
+  );
+
   const ManifestDetailsInnerContent = () => {
     if (errorFetchingEntitlementData === true || errorExportingManifest === true) {
       return <ErrorMessage />;
+    } else if (isFetchingManifestExport === true) {
+      return <LoadingExportingManifestMessage />;
+    } else if (successExportingManifest === true) {
+      return <SuccessExportingManifestMessage />;
     } else if (isLoadingEntitlementData === true || isFetchingEntitlementData === true) {
       return <LoadingDetailsContent />;
     } else if (successFetchingEntitlementData === true) {

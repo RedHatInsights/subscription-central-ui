@@ -94,8 +94,14 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   const closeDetailsPanel = () => {
     setDetailsDrawerIsExpanded(false);
-    setShouldTriggerManifestExport(false);
-    setCurrentDetailUUID('');
+    setTimeout(() => {
+      /** Delay to avoid content flicker on animated close
+      /* Intentionally longer than child delay in Side Panel, because
+      /* otherwise the UUID is lost and query isn't reset.
+      */
+      setShouldTriggerManifestExport(false);
+      setCurrentDetailUUID('');
+    }, 300);
   };
 
   const getTableHeaders = () => {
