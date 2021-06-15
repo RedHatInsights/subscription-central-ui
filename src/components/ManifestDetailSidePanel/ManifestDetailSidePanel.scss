@@ -33,7 +33,25 @@
     margin-top: 30px;
   }
 
-  button.pf-m-tertiary {
+  button.pf-m-tertiary,
+  .manifest-detail-export-loading,
+  .manifest-detail-export-success {
     margin-top: 30px;
+  }
+
+  .manifest-detail-export-loading {
+    .pf-c-spinner {
+      margin-top: 5px;
+      margin-bottom: -5px;
+    }
+
+    p {
+      display: inline-block;
+      margin-left: 10px;
+    }
+  }
+
+  .manifest-detail-export-success a {
+    font-weight: 700;
   }
 }
