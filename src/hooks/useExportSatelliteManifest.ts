@@ -81,8 +81,8 @@ const useExportSatelliteManifest = (
 ): QueryObserverResult<Blob, Error> => {
   return useQuery<Blob, Error>(['exportedManifests', uuid], () => exportManifest(uuid), {
     enabled: shouldLoadOnRender,
-    // Longer retry delay because exporting some manifests takes longer than 10 seconds.
-    retryDelay: 1 * 60 * 1000
+    // retries off because export can potentially take 10+ minutes.
+    retry: false
   });
 };
 
