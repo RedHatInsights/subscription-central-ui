@@ -7,13 +7,13 @@ const Notifications: FC = () => {
 
   return (
     <AlertGroup isToast>
-      {notifications.map((notification, index) => (
+      {notifications.map((notification) => (
         <Alert
           isLiveRegion
           timeout={true}
           title={notification.message}
           variant={notification.type}
-          key={index}
+          key={notification.key}
         />
       ))}
     </AlertGroup>

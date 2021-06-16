@@ -4,6 +4,7 @@ import { NotificationContext } from '../contexts/NotificationProvider';
 interface Notification {
   type: string;
   message: string;
+  key: string;
 }
 
 interface Notifications {
