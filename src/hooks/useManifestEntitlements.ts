@@ -34,10 +34,10 @@ interface EntitlementsAttachedData {
 }
 
 const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlementsData> => {
-  const cs_jwt = Cookies.get('cs_jwt');
+  const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
   return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}?include=entitlements`, {
-    headers: { Authorization: `Bearer ${cs_jwt}` },
+    headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
   })
     .then((response) => response.json())

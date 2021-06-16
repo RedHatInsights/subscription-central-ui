@@ -17,10 +17,10 @@ interface ExportManifestStatusResponse {
 }
 
 const triggerManifestExport = (uuid: string): Promise<TriggerManifestExportResponse> => {
-  const cs_jwt = Cookies.get('cs_jwt');
+  const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
   return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}/export`, {
-    headers: { Authorization: `Bearer ${cs_jwt}` },
+    headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
   }).then((response) => {
     return response.json();
@@ -35,38 +35,34 @@ const getManifestExportStatus = async (
   uuid: string,
   exportJobID: string
 ): Promise<ExportManifestStatusResponse> => {
-  const cs_jwt = Cookies.get('cs_jwt');
+  const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
   const response = await fetch(
     `${rhsmAPIBase}/management/v1/allocations/${uuid}/exportJob/${exportJobID}`,
     {
-      headers: { Authorization: `Bearer ${cs_jwt}` },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       mode: 'cors'
     }
   );
 
   if (response.status === 200) {
     return response.json();
-  }
-
-  if (response.status === 202 || response.status === 404) {
+  } else if (response.status === 202 || response.status === 404) {
     // Export not ready, we need to pause and retry.
     await sleep(5000);
     return getManifestExportStatus(uuid, exportJobID);
+  } else {
+    throw new Error('Error fetching status of exported manifest');
   }
-
-  throw new Error('Error fetching status of exported manifest');
 };
 
 const downloadExportedManifest = (uuid: string, exportID: string): Promise<Blob> => {
-  const cs_jwt = Cookies.get('cs_jwt');
+  const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
   return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}/export/${exportID}`, {
-    headers: { Authorization: `Bearer ${cs_jwt}`, 'Content-type': 'application/zip' },
+    headers: { Authorization: `Bearer ${jwtToken}`, 'Content-type': 'application/zip' },
     mode: 'cors'
-  })
-    .then((response) => response.blob())
-    .then((zipFile) => zipFile);
+  }).then((response) => response.blob());
 };
 
 const exportManifest = async (uuid: string): Promise<Blob> => {
@@ -85,7 +81,8 @@ const useExportSatelliteManifest = (
 ): QueryObserverResult<Blob, Error> => {
   return useQuery<Blob, Error>(['exportedManifests', uuid], () => exportManifest(uuid), {
     enabled: shouldLoadOnRender,
-    retryDelay: 5 * 60 * 1000
+    // Longer retry delay because exporting some manifests takes longer than 10 seconds.
+    retryDelay: 1 * 60 * 1000
   });
 };
 
