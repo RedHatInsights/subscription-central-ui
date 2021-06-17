@@ -3,19 +3,19 @@ import { v4 as uuid } from 'uuid';
 
 const NotificationContext = React.createContext({
   notifications: [],
-  addNotification: (type: string, message: string) => {}
+  addNotification: (variant: 'success' | 'danger' | 'info', message: string) => {}
 });
 
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = (type: string, message: string) => {
-    setNotifications([...notifications, { type: type, message: message, key: uuid() }]);
+  const addNotification = (variant: string, message: string) => {
+    setNotifications([...notifications, { variant: variant, message: message, key: uuid() }]);
   };
 
   const contextValue = {
     notifications,
-    addNotification: (type: string, message: string) => addNotification(type, message)
+    addNotification: (variant: string, message: string) => addNotification(variant, message)
   };
 
   return (

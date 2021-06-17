@@ -12,7 +12,7 @@ const Notifications: FC = () => {
           isLiveRegion
           timeout={true}
           title={notification.message}
-          variant={notification.type}
+          variant={notification.variant}
           key={notification.key}
         />
       ))}

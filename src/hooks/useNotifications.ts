@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { NotificationContext } from '../contexts/NotificationProvider';
 
 interface Notification {
-  type: string;
+  variant: string;
   message: string;
   key: string;
 }
