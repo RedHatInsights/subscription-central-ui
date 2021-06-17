@@ -112,13 +112,13 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     }
   };
 
-  if (requestCompleted) resetModal();
   if (manifestDeleted) {
     onSuccess();
-    addSuccessNotification('The manifest was successfully deleted.');
+    addSuccessNotification(`Your manifest, ${name}, was successfully deleted.`);
   } else if (manifestFailedToDelete) {
-    addErrorNotification('Something went wrong with deleting the manifest. Please try again.');
+    addErrorNotification('Something went wrong. Please try again.');
   }
+  if (requestCompleted) resetModal();
 
   return (
     <Modal
