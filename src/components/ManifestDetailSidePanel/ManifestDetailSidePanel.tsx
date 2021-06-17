@@ -106,6 +106,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
 
   const handleCloseClick = () => {
     onCloseClick();
+    setHasReturnedToDetails(false);
 
     if (exportDownloadURL.length) {
       window.URL.revokeObjectURL(exportDownloadURL);
