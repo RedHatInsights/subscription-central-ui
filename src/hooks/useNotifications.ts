@@ -26,7 +26,7 @@ const useNotifications = (): Notifications => {
   };
 
   const addInfoNotification = (message: string) => {
-    addNotification('success', message);
+    addNotification('info', message);
   };
 
   return { notifications, addSuccessNotification, addErrorNotification, addInfoNotification };
