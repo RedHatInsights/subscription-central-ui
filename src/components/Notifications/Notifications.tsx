@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { Alert, AlertGroup } from '@patternfly/react-core';
+import { Alert, AlertActionCloseButton, AlertGroup } from '@patternfly/react-core';
 import useNotifications from '../../hooks/useNotifications';
 
 const Notifications: FC = () => {
-  const { notifications } = useNotifications();
+  const { notifications, removeNotification } = useNotifications();
 
   return (
     <AlertGroup isToast>
@@ -14,6 +14,13 @@ const Notifications: FC = () => {
           title={notification.message}
           variant={notification.variant}
           key={notification.key}
+          actionClose={
+            <AlertActionCloseButton
+              title={notification.message}
+              variantLable={`${notification.variant} alert`}
+              onClose={() => removeNotification(notification.key)}
+            />
+          }
         />
       ))}
     </AlertGroup>

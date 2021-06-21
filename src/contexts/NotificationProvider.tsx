@@ -1,9 +1,10 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, { FC, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 const NotificationContext = React.createContext({
   notifications: [],
-  addNotification: (variant: 'success' | 'danger' | 'info', message: string) => {}
+  addNotification: (variant: 'success' | 'danger' | 'info', message: string) => {},
+  removeNotification: (key: string) => {}
 });
 
 const NotificationProvider: FC = ({ children }) => {
@@ -13,9 +14,14 @@ const NotificationProvider: FC = ({ children }) => {
     setNotifications([...notifications, { variant: variant, message: message, key: uuid() }]);
   };
 
+  const removeNotification = (key: string) => {
+    setNotifications(notifications.filter((notification) => notification.key !== key));
+  };
+
   const contextValue = {
     notifications,
-    addNotification: (variant: string, message: string) => addNotification(variant, message)
+    addNotification: (variant: string, message: string) => addNotification(variant, message),
+    removeNotification: (key: string) => removeNotification(key)
   };
 
   return (

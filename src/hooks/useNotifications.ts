@@ -12,10 +12,11 @@ interface Notifications {
   addSuccessNotification(message: string): void;
   addErrorNotification(message: string): void;
   addInfoNotification(message: string): void;
+  removeNotification(key: string): void;
 }
 
 const useNotifications = (): Notifications => {
-  const { notifications, addNotification } = useContext(NotificationContext);
+  const { notifications, addNotification, removeNotification } = useContext(NotificationContext);
 
   const addSuccessNotification = (message: string) => {
     addNotification('success', message);
@@ -29,7 +30,13 @@ const useNotifications = (): Notifications => {
     addNotification('info', message);
   };
 
-  return { notifications, addSuccessNotification, addErrorNotification, addInfoNotification };
+  return {
+    notifications,
+    addSuccessNotification,
+    addErrorNotification,
+    addInfoNotification,
+    removeNotification
+  };
 };
 
 export default useNotifications;
