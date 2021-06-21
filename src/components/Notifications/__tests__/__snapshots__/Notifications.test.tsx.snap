@@ -49,14 +49,13 @@ exports[`Notifications renders correctly 1`] = `
           >
             <button
               aria-disabled="false"
-              aria-label="Close Success alert: alert: Some stuff went well!"
+              aria-label="Close success alert alert: Some stuff went well!"
               class="pf-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-1"
               data-ouia-component-type="PF4/Button"
               data-ouia-safe="true"
               title="Some stuff went well!"
               type="button"
-              variantlable="success alert"
             >
               <svg
                 aria-hidden="true"
@@ -118,14 +117,13 @@ exports[`Notifications renders correctly 1`] = `
           >
             <button
               aria-disabled="false"
-              aria-label="Close Danger alert: alert: Some other stuff did not."
+              aria-label="Close danger alert alert: Some other stuff did not."
               class="pf-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-2"
               data-ouia-component-type="PF4/Button"
               data-ouia-safe="true"
               title="Some other stuff did not."
               type="button"
-              variantlable="danger alert"
             >
               <svg
                 aria-hidden="true"
@@ -187,14 +185,13 @@ exports[`Notifications renders correctly 1`] = `
           >
             <button
               aria-disabled="false"
-              aria-label="Close Info alert: alert: And this happened."
+              aria-label="Close info alert alert: And this happened."
               class="pf-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-3"
               data-ouia-component-type="PF4/Button"
               data-ouia-safe="true"
               title="And this happened."
               type="button"
-              variantlable="info alert"
             >
               <svg
                 aria-hidden="true"

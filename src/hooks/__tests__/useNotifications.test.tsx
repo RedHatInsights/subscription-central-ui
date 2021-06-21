@@ -49,4 +49,15 @@ describe('useNotifications', () => {
       expect(result.current.notifications[0].variant).toBe('info');
     });
   });
+
+  describe('removeNotification', () => {
+    it('removes a notification', async () => {
+      const { result } = renderHook(() => useNotifications(), { wrapper });
+      act(() => result.current.addInfoNotification('Random notification'));
+      expect(result.current.notifications).toHaveLength(1);
+      const key = result.current.notifications[0].key;
+      act(() => result.current.removeNotification(key));
+      expect(result.current.notifications).toHaveLength(0);
+    });
+  });
 });

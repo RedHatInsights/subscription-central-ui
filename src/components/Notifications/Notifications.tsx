@@ -17,7 +17,7 @@ const Notifications: FC = () => {
           actionClose={
             <AlertActionCloseButton
               title={notification.message}
-              variantLable={`${notification.variant} alert`}
+              variantLabel={`${notification.variant} alert`}
               onClose={() => removeNotification(notification.key)}
             />
           }

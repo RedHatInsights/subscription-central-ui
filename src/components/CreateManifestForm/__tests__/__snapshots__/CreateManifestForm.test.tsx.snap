@@ -226,5 +226,3 @@ exports[`Create Manifest Form renders loading when data is being posted 1`] = `
   </div>
 </div>
 `;
-
-exports[`Create Manifest Form renders success when data has been successfully posted 1`] = `<div />`;
