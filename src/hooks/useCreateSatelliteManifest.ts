@@ -14,18 +14,14 @@ const createSatelliteManifest = (data: CreateManifestParams) => {
   return fetch(`${rhsmAPIBase}/management/v1/allocations?name=${name}&version=${version}`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${jwtToken}` }
-  })
-    .then((response) => {
-      if (response.status !== 200) {
-        throw new Error(
-          `Status Code ${response.status}.  Error creating manifest: ${response.statusText}.  `
-        );
-      }
-      return response.json();
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw new Error(
+        `Status Code ${response.status}.  Error creating manifest: ${response.statusText}.  `
+      );
+    }
+    return response.json();
+  });
 };
 
 const useCreateSatelliteManifest = () => {

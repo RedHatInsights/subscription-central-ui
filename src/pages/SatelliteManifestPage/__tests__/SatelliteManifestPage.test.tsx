@@ -12,7 +12,7 @@ import useUser from '../../../hooks/useUser';
 jest.mock('../../../hooks/useSatelliteManifests');
 jest.mock('../../../hooks/useUser');
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+  ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
   useLocation: () => ({
     pathname: '/'
   })
