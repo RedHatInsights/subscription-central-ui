@@ -37,16 +37,6 @@ describe('Create Manifest Form', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders success when data has been successfully posted', () => {
-    const props = { ...createManifestFormProps, isSuccess: true };
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <CreateManifestForm {...props} />
-      </QueryClientProvider>
-    );
-    expect(container).toMatchSnapshot();
-  });
-
   it('displays errors correctly', async () => {
     const props = { ...createManifestFormProps };
 

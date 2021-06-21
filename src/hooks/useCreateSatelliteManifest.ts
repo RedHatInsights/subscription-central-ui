@@ -31,8 +31,8 @@ const createSatelliteManifest = (data: CreateManifestParams) => {
 const useCreateSatelliteManifest = () => {
   const queryClient = useQueryClient();
   return useMutation((newManifest: CreateManifestParams) => createSatelliteManifest(newManifest), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('manifests');
+    onSuccess: (data: any) => {
+      if (typeof data !== 'undefined') queryClient.invalidateQueries('manifests');
     }
   });
 };

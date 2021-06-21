@@ -13,10 +13,9 @@ import {
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
-import ErrorMessage from '../emptyState/ErrorMessage';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
-import CreateManifestFormSuccess from './CreateManifestFormSuccess';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
+import useNotifications from '../../hooks/useNotifications';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -35,6 +34,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     formState: { errors }
   } = useForm({ mode: 'onBlur' });
   const [manifestName, setManifestName] = useState('');
+  const { addSuccessNotification, addErrorNotification } = useNotifications();
 
   interface FormData {
     satelliteManifestName: string;
@@ -47,6 +47,14 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   };
 
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
+
+  if (isSuccess) {
+    addSuccessNotification(`Your new manifest, ${manifestName}, has been successfully created.`);
+    handleModalToggle();
+  } else if (isError) {
+    addErrorNotification('Something went wrong. Please try again.');
+    handleModalToggle();
+  }
 
   const renderForm = () => {
     return (
@@ -199,13 +207,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     <>
       {shouldShowForm && renderForm()}
       {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
-      {isSuccess && (
-        <CreateManifestFormSuccess
-          handleModalToggle={handleModalToggle}
-          manifestName={manifestName}
-        />
-      )}
-      {isError && <ErrorMessage />}
     </>
   );
 };

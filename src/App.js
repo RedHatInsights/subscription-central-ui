@@ -10,7 +10,7 @@ import NotificationsPortal from '@redhat-cloud-services/frontend-components-noti
 import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import NotificationProvider from './contexts/NotificationProvider';
-import Notifications from './components/Notifications/Notifications';
+import Notifications from './components/Notifications';
 
 const queryClient = new QueryClient({
   defaultOptions: {
