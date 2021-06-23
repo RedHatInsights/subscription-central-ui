@@ -1,16 +1,10 @@
 import { getRegistry } from '@redhat-cloud-services/frontend-components-utilities/Registry';
 import promiseMiddleware from 'redux-promise-middleware';
-// eslint-disable-next-line max-len
-import notificationsMiddleware from '@redhat-cloud-services/frontend-components-notifications/notificationsMiddleware';
 
 let registry;
 
 export function init(...middleware) {
-  registry = getRegistry({}, [
-    promiseMiddleware,
-    notificationsMiddleware({ errorDescriptionKey: ['detail', 'stack'] }),
-    ...middleware
-  ]);
+  registry = getRegistry({}, [promiseMiddleware, ...middleware]);
   return registry;
 }
 
