@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { NotificationContext } from '../contexts/NotificationProvider';
+import { NotificationContext, NotificationVariantType } from '../contexts/NotificationProvider';
 
 interface Notification {
-  variant: string;
+  variant: NotificationVariantType;
   message: string;
   key: string;
 }

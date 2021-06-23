@@ -49,10 +49,10 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
   if (isSuccess) {
-    addSuccessNotification(`Your new manifest, ${manifestName}, has been successfully created.`);
+    addSuccessNotification(`Manifest ${manifestName} created`);
     handleModalToggle();
   } else if (isError) {
-    addErrorNotification('Something went wrong. Please try again.');
+    addErrorNotification('Something went wrong. Please try again');
     handleModalToggle();
   }
 

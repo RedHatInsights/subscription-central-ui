@@ -1,16 +1,18 @@
 import React, { FC, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
+type NotificationVariantType = 'success' | 'danger' | 'info';
+
 const NotificationContext = React.createContext({
   notifications: [],
-  addNotification: (variant: 'success' | 'danger' | 'info', message: string) => {},
+  addNotification: (variant: NotificationVariantType, message: string) => {},
   removeNotification: (key: string) => {}
 });
 
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = (variant: string, message: string) => {
+  const addNotification = (variant: NotificationVariantType, message: string) => {
     setNotifications([...notifications, { variant: variant, message: message, key: uuid() }]);
   };
 
@@ -20,7 +22,9 @@ const NotificationProvider: FC = ({ children }) => {
 
   const contextValue = {
     notifications,
-    addNotification: (variant: string, message: string) => addNotification(variant, message),
+    addNotification: (variant: NotificationVariantType, message: string) => {
+      addNotification(variant, message);
+    },
     removeNotification: (key: string) => removeNotification(key)
   };
 
@@ -29,4 +33,4 @@ const NotificationProvider: FC = ({ children }) => {
   );
 };
 
-export { NotificationContext, NotificationProvider as default };
+export { NotificationVariantType, NotificationContext, NotificationProvider as default };
