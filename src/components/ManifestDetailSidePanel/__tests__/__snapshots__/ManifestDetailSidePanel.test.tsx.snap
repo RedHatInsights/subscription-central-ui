@@ -273,6 +273,7 @@ exports[`Manifest Detail Side Panel renders successfully with data when data is 
                 <svg
                   aria-hidden="true"
                   class="sca-more-info-icon"
+                  data-testid="sca-more-info-icon"
                   fill="currentColor"
                   height="1em"
                   role="img"
@@ -769,6 +770,7 @@ exports[`Manifest Detail Side Panel shows 'administratively disabled' for SCA st
                 <svg
                   aria-hidden="true"
                   class="sca-more-info-icon"
+                  data-testid="sca-more-info-icon"
                   fill="currentColor"
                   height="1em"
                   role="img"

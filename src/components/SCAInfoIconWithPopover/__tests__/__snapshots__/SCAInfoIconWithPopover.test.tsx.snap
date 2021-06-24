@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SCA Info Icon With Popover renders the popover properly when the icon is clicked 1`] = `
+<body>
+  <div>
+    <svg
+      aria-hidden="true"
+      class="sca-more-info-icon"
+      data-testid="sca-more-info-icon"
+      fill="currentColor"
+      height="1em"
+      role="img"
+      style="vertical-align: -0.125em;"
+      viewBox="0 0 512 512"
+      width="1em"
+    >
+      <path
+        d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+      />
+    </svg>
+  </div>
+  <div
+    aria-describedby="popover-pf-16245514884274zxxc6eehvb-body"
+    aria-labelledby="popover-pf-16245514884274zxxc6eehvb-header"
+    aria-modal="true"
+    class="pf-c-popover pf-m-top"
+    data-popper-escaped="true"
+    data-popper-placement="top"
+    data-popper-reference-hidden="true"
+    role="dialog"
+    style="opacity: 1; transition: opacity 300ms cubic-bezier(.54, 1.5, .38, 1.11); position: absolute; left: 0px; top: 0px; z-index: 9999; bottom: 0px; transform: translate(0px, -25px);"
+  >
+    <div
+      class="pf-c-popover__arrow"
+    />
+    <div
+      class="pf-c-popover__content"
+    >
+      <button
+        aria-disabled="false"
+        aria-label="Close"
+        class="pf-c-button pf-m-plain"
+        data-ouia-component-id="OUIA-Generated-Button-plain-1"
+        data-ouia-component-type="PF4/Button"
+        data-ouia-safe="true"
+        style="pointer-events: auto;"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          fill="currentColor"
+          height="1em"
+          role="img"
+          style="vertical-align: -0.125em;"
+          viewBox="0 0 352 512"
+          width="1em"
+        >
+          <path
+            d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+          />
+        </svg>
+      </button>
+      <h6
+        class="pf-c-title pf-m-md"
+        id="popover-pf-16245514884274zxxc6eehvb-header"
+      >
+        Simple Content Access
+      </h6>
+      <div
+        class="pf-c-popover__body"
+        id="popover-pf-16245514884274zxxc6eehvb-body"
+      >
+        <p
+          data-testid="sca-more-info-paragraph"
+        >
+          Simple content access is a set of capabilities that enables a change in the way Red Hat manages its subscription and entitlement enforcement model. When enabled, you are allowed to consume content on your systems without strict entitlement enforcement.
+        </p>
+      </div>
+      <footer
+        class="pf-c-popover__footer"
+        id="popover-pf-16245514884274zxxc6eehvb-footer"
+      >
+        <a
+          aria-disabled="false"
+          class="pf-c-button pf-m-link pf-m-inline"
+          data-ouia-component-id="OUIA-Generated-Button-link-1"
+          data-ouia-component-type="PF4/Button"
+          data-ouia-safe="true"
+          href="https://access.redhat.com/documentation/en-us/subscription_central/2020-10/html/getting_started_with_subscription_watch_with_simple_content_access/assembly-activating-simplecontent#con-what-is-simplecontent_assembly-simplecontent-ctxt"
+          target="_blank"
+        >
+          Learn more about enabling simple content access on an existing Satellite allocation and manifest
+          <span
+            class="pf-c-button__icon pf-m-end"
+          >
+            <svg
+              aria-hidden="true"
+              fill="currentColor"
+              height="1em"
+              role="img"
+              style="vertical-align: -0.125em;"
+              viewBox="0 0 512 512"
+              width="1em"
+            >
+              <path
+                d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"
+              />
+            </svg>
+          </span>
+        </a>
+      </footer>
+    </div>
+  </div>
+</body>
+`;

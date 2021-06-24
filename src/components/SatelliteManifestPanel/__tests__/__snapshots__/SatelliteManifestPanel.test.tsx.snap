@@ -443,6 +443,7 @@ exports[`Satellite Manifest Panel renders correctly with SCA column when user is
                           <svg
                             aria-hidden="true"
                             class="sca-more-info-icon"
+                            data-testid="sca-more-info-icon"
                             fill="currentColor"
                             height="1em"
                             role="img"
@@ -2221,6 +2222,7 @@ exports[`Satellite Manifest Panel renders loading when refetching data 1`] = `
                           <svg
                             aria-hidden="true"
                             class="sca-more-info-icon"
+                            data-testid="sca-more-info-icon"
                             fill="currentColor"
                             height="1em"
                             role="img"
@@ -3004,6 +3006,7 @@ exports[`Satellite Manifest Panel renders no results when there are no results 1
                           <svg
                             aria-hidden="true"
                             class="sca-more-info-icon"
+                            data-testid="sca-more-info-icon"
                             fill="currentColor"
                             height="1em"
                             role="img"
