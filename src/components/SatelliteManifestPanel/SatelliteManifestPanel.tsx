@@ -65,6 +65,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   ] = useState(false);
   const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
   const [shouldTriggerManifestExport, setShouldTriggerManifestExport] = useState(false);
+  const [currentDeletionName, setCurrentDeletionName] = useState('');
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -269,6 +270,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   const openDeleteConfirmationModal = (uuid: string) => {
     setCurrentDeletionUUID(uuid);
+    setCurrentDeletionName(getManifestName(uuid));
     handleDeleteManifestConfirmationModalToggle();
   };
 
@@ -428,7 +430,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             {pagination(PaginationVariant.bottom)}
             <DeleteManifestConfirmationModal
               uuid={currentDeletionUUID}
-              name={getManifestName(currentDeletionUUID)}
+              name={currentDeletionName}
               isOpen={isDeleteManifestConfirmationModalOpen}
               handleModalToggle={handleDeleteManifestConfirmationModalToggle}
               onSuccess={closeDetailsPanel}
