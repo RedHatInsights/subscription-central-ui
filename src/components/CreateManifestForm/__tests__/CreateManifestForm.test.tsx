@@ -52,4 +52,16 @@ describe('Create Manifest Form', () => {
     const typeAlert = await screen.findAllByText('Please select a version for your new manifest');
     expect(typeAlert).toHaveLength(1);
   });
+
+  it('closes the create manifest modal on success', async () => {
+    const props = { ...createManifestFormProps, isSuccess: true };
+
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
+
+    expect(container).toMatchSnapshot();
+  });
 });
