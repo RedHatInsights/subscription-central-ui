@@ -136,7 +136,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
     const formattedRow = [
       <React.Fragment key={`button-${uuid}`}>
-        <Button variant="link" onClick={() => handleRowManifestClick(uuid, rowIndex)}>
+        <Button
+          data-testid={`expand-details-button-${rowIndex}`}
+          variant="link"
+          onClick={() => handleRowManifestClick(uuid, rowIndex)}
+        >
           {name}
         </Button>
       </React.Fragment>,
