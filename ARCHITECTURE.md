@@ -9,7 +9,6 @@ The React app bundled using [Webpack](https://webpack.js.org) includes:
   - Uses the HTML5 history API (pushState, replaceState and the popstate event) to keep UI in sync with the URL
 - [React-redux](https://github.com/reactjs/react-redux) for managing global state (usually for API calls)
   - There is helper function used to create store with option to plug reducers on the fly called [getRegistry](https://github.com/RedHatInsights/frontend-components/blob/master/packages/utils/doc/redux.md#reducer-registry)
-  - @redhat-cloud-services/frontend-components-notifications/redux is provided for chromed notifications
 - [React.lazy and React.Suspense](https://reactjs.org/docs/code-splitting.html#reactlazy) for asynchronously loading components
 
 These assets are loaded via [Insights chrome](https://github.com/RedHatInsights/insights-chrome) which provides user auth, top and side nav (aka chroming), and a `<main id="root">` to inject into.

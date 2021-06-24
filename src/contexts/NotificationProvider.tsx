@@ -5,8 +5,8 @@ type NotificationVariantType = 'success' | 'danger' | 'info';
 
 const NotificationContext = React.createContext({
   notifications: [],
-  addNotification: (variant: NotificationVariantType, message: string) => {},
-  removeNotification: (key: string) => {}
+  addNotification: (variant: NotificationVariantType, message: string) => null,
+  removeNotification: (key: string) => null
 });
 
 const NotificationProvider: FC = ({ children }) => {
