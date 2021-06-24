@@ -32,19 +32,21 @@ const SatellitePage = () => (
   </QueryClientProvider>
 );
 
-const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean) => {
+const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean, isError: boolean) => {
   (useUser as jest.Mock).mockReturnValue({
     isLoading: isLoading,
     isFetching: false,
     isSuccess: true,
-    isError: false,
+    isError: isError,
     data: {
       isOrgAdmin: orgAdminStatus,
       isSCACapable: true
     }
   });
 
-  queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: orgAdminStatus });
+  if (isError === false) {
+    queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: orgAdminStatus });
+  }
 };
 
 describe('Satellite Manifests Page', () => {
@@ -52,7 +54,8 @@ describe('Satellite Manifests Page', () => {
     window.insights = {};
     const isLoading = false;
     const isOrgAdmin = true;
-    mockAuthenticateUser(isLoading, isOrgAdmin);
+    const isError = false;
+    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -77,7 +80,8 @@ describe('Satellite Manifests Page', () => {
     window.insights = {};
     const isLoading = true;
     const isOrgAdmin = true;
-    mockAuthenticateUser(isLoading, isOrgAdmin);
+    const isError = false;
+    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: true,
@@ -94,7 +98,8 @@ describe('Satellite Manifests Page', () => {
     window.insights = {};
     const isLoading = false;
     const isOrgAdmin = true;
-    mockAuthenticateUser(isLoading, isOrgAdmin);
+    const isError = false;
+    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -112,7 +117,8 @@ describe('Satellite Manifests Page', () => {
     window.insights = {};
     const isLoading = false;
     const isOrgAdmin = false;
-    mockAuthenticateUser(isLoading, isOrgAdmin);
+    const isError = false;
+    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -136,7 +142,26 @@ describe('Satellite Manifests Page', () => {
 
     const isLoading = false;
     const isOrgAdmin = false;
-    mockAuthenticateUser(isLoading, isOrgAdmin);
+    const isError = false;
+    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
+
+    const { container } = render(<SatellitePage />);
+    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders an error message when user call fails', async () => {
+    window.insights = {};
+    (useSatelliteManifests as jest.Mock).mockReturnValue({
+      isLoading: false,
+      error: true,
+      data: undefined
+    });
+
+    const isLoading = false;
+    const isOrgAdmin = false;
+    const isError = true;
+    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
 
     const { container } = render(<SatellitePage />);
     await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
