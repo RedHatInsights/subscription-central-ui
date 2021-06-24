@@ -41,22 +41,6 @@ describe('useCreateSatelliteManifest hook', () => {
     expect(getByTestId('title').textContent).toBe('Success');
   });
 
-  // it('does not return anything if the Create Manifest fails', async () => {
-  //   const originalError = console.error;
-  //   console.error = jest.fn();
-
-  //   (authenticateUser as jest.Mock).mockRejectedValue({ status: 'error' });
-
-  //   const { result, waitFor } = renderHook(() => useUser(), {
-  //     wrapper: createQueryWrapper()
-  //   });
-
-  //   await waitFor(() => result.current.isError);
-
-  //   expect(result.current.data).toEqual(undefined);
-  //   console.error = originalError;
-  // });
-
   it('returns an error if status is not 200 when given correct inputs', async () => {
     const originalError = console.error;
     console.error = jest.fn();

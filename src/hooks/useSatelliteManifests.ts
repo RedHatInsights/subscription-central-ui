@@ -24,10 +24,14 @@ interface SatelliteManifestAPIData {
 const fetchSatelliteManifestData = (): Promise<any> => {
   const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations?type=Satellite`, {
+  return fetch(`${rhsmAPIBase}/management/v1/allocations`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
   }).then((response) => response.json());
+};
+
+const getOnlySatelliteManifests = (data: ManifestEntry[] = []): ManifestEntry[] => {
+  return data.filter((manifest: ManifestEntry) => manifest.type === 'Satellite');
 };
 
 const getOnlyManifestsV6AndHigher = (data: ManifestEntry[] = []): ManifestEntry[] => {
@@ -35,7 +39,6 @@ const getOnlyManifestsV6AndHigher = (data: ManifestEntry[] = []): ManifestEntry[
 };
 
 const filterSatelliteData = (data: SatelliteManifestAPIData): ManifestEntry[] => {
-  console.log('here', data.body);
   const manifestsV6AndHigher = getOnlyManifestsV6AndHigher(data.body);
   return manifestsV6AndHigher;
 };
