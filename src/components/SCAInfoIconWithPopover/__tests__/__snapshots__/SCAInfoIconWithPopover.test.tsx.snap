@@ -20,8 +20,8 @@ exports[`SCA Info Icon With Popover renders the popover properly when the icon i
     </svg>
   </div>
   <div
-    aria-describedby="popover-pf-16245514884274zxxc6eehvb-body"
-    aria-labelledby="popover-pf-16245514884274zxxc6eehvb-header"
+    aria-describedby="popover-pf-16245517392829upmxku02x6-body"
+    aria-labelledby="popover-pf-16245517392829upmxku02x6-header"
     aria-modal="true"
     class="pf-c-popover pf-m-top"
     data-popper-escaped="true"
@@ -62,13 +62,13 @@ exports[`SCA Info Icon With Popover renders the popover properly when the icon i
       </button>
       <h6
         class="pf-c-title pf-m-md"
-        id="popover-pf-16245514884274zxxc6eehvb-header"
+        id="popover-pf-16245517392829upmxku02x6-header"
       >
         Simple Content Access
       </h6>
       <div
         class="pf-c-popover__body"
-        id="popover-pf-16245514884274zxxc6eehvb-body"
+        id="popover-pf-16245517392829upmxku02x6-body"
       >
         <p
           data-testid="sca-more-info-paragraph"
@@ -78,7 +78,7 @@ exports[`SCA Info Icon With Popover renders the popover properly when the icon i
       </div>
       <footer
         class="pf-c-popover__footer"
-        id="popover-pf-16245514884274zxxc6eehvb-footer"
+        id="popover-pf-16245517392829upmxku02x6-footer"
       >
         <a
           aria-disabled="false"
