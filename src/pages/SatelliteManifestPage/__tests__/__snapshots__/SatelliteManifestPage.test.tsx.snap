@@ -1057,6 +1057,30 @@ exports[`Satellite Manifests Page renders loading when it has not received a res
 </div>
 `;
 
+exports[`Satellite Manifests Page renders loading when the user status call is still loading 1`] = `
+<div>
+  <div
+    class="pf-l-bullseye"
+  >
+    <span
+      aria-valuetext="Loading..."
+      class="pf-c-spinner pf-m-xl"
+      role="progressbar"
+    >
+      <span
+        class="pf-c-spinner__clipper"
+      />
+      <span
+        class="pf-c-spinner__lead-ball"
+      />
+      <span
+        class="pf-c-spinner__tail-ball"
+      />
+    </span>
+  </div>
+</div>
+`;
+
 exports[`Satellite Manifests Page renders the empty state with Create Manifest button when no results are returned and user is org admin 1`] = `
 <div>
   <section

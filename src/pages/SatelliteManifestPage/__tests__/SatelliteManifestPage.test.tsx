@@ -76,6 +76,26 @@ describe('Satellite Manifests Page', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('renders loading when the user status call is still loading', async () => {
+    window.insights = {};
+    const isLoading = true;
+    const isOrgAdmin = true;
+    const isError = false;
+    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
+
+    (useSatelliteManifests as jest.Mock).mockReturnValue({
+      isLoading: true,
+      data: [],
+      error: false,
+      isError: false
+    });
+
+    const { container } = render(<SatellitePage />);
+
+    expect(container).toMatchSnapshot();
+    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
+  });
+
   it('renders loading when it has not received a response back', async () => {
     window.insights = {};
     const isLoading = false;
