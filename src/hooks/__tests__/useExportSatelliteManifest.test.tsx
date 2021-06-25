@@ -62,6 +62,16 @@ describe('getManifestExportStatus method', () => {
     const result = await getManifestExportStatus('123456', 'abc123');
     expect(result).toEqual(exportManifestStatusResponse);
   });
+
+  it('throws an error if not 200, 202 or 404', async () => {
+    fetch.mockResponseOnce(JSON.stringify({}), { status: 401 });
+
+    try {
+      await getManifestExportStatus('123456', 'abc123');
+    } catch (e) {
+      expect(e.message).toEqual('Error fetching status of exported manifest');
+    }
+  });
 });
 
 describe('downloadExportedManifest', () => {
