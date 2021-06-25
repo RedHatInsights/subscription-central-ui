@@ -107,10 +107,7 @@ export const filterDataBySearchTerm = (
   });
 };
 
-export const countCurrentlyShowingManifests = (
-  data: ManifestEntry[],
-  searchValue: string
-): number => {
+export const countManifests = (data: ManifestEntry[], searchValue: string): number => {
   const filteredData = filterDataBySearchTerm(data, searchValue);
   return filteredData.length;
 };

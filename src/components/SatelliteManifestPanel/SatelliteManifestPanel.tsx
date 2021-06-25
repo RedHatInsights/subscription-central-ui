@@ -17,7 +17,7 @@ import {
 import { Table, TableHeader, TableBody, SortByDirection } from '@patternfly/react-table';
 import {
   BooleanDictionary,
-  countCurrentlyShowingManifests,
+  countManifests,
   getTableHeaders,
   getManifestName,
   getRowsWithAllocationDetails
@@ -206,9 +206,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
           <DrawerContentBody>
             <Title headingLevel="h2">
               <span ref={titleRef}>Manifests</span>
-              {!isFetching && (
-                <Badge isRead>{countCurrentlyShowingManifests(data, searchValue)}</Badge>
-              )}
+              {!isFetching && <Badge isRead>{countManifests(data, searchValue)}</Badge>}
             </Title>
             <Flex
               direction={{ default: 'column', md: 'row' }}
@@ -236,7 +234,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
               <FlexItem align={{ default: 'alignRight' }}>
                 <Pagination
                   isDisabled={isFetching}
-                  itemCount={countCurrentlyShowingManifests(data, searchValue)}
+                  itemCount={countManifests(data, searchValue)}
                   perPage={perPage}
                   page={page}
                   onSetPage={handleSetPage}
@@ -271,14 +269,14 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
               <TableHeader />
               <TableBody />
             </Table>
-            {countCurrentlyShowingManifests(data, searchValue) === 0 && data.length > 0 && (
+            {countManifests(data, searchValue) === 0 && data.length > 0 && (
               <NoSearchResults clearFilters={clearSearch} />
             )}
             {!isFetching && data.length === 0 && <NoManifestsFound />}
             {isFetching && <Processing />}
             <Pagination
               isDisabled={isFetching}
-              itemCount={countCurrentlyShowingManifests(data, searchValue)}
+              itemCount={countManifests(data, searchValue)}
               perPage={perPage}
               page={page}
               onSetPage={handleSetPage}
