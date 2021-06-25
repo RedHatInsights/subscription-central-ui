@@ -78,14 +78,16 @@ describe('Satellite Manifests Page', () => {
 
   it('renders loading when it has not received a response back', async () => {
     window.insights = {};
-    const isLoading = true;
+    const isLoading = false;
     const isOrgAdmin = true;
     const isError = false;
     mockAuthenticateUser(isLoading, isOrgAdmin, isError);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: true,
-      data: []
+      data: [],
+      error: false,
+      isError: false
     });
 
     const { container } = render(<SatellitePage />);

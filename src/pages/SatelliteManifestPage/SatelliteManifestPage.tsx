@@ -17,6 +17,20 @@ const SatelliteManifestPage: FC = () => {
   const queryClient = useQueryClient();
   const user: User = queryClient.getQueryData('user');
 
+  const MainContent = () => {
+    if (error) {
+      return <Unavailable />;
+    } else if (isLoading) {
+      return <Processing />;
+    } else if (data?.length > 0) {
+      return <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />;
+    } else if (data?.length === 0 && user.isOrgAdmin === true) {
+      return <CreateManifestPanel />;
+    } else if (data?.length === 0 && user.isOrgAdmin === false) {
+      return <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />;
+    }
+  };
+
   return (
     <>
       <PageHeader>
@@ -24,23 +38,7 @@ const SatelliteManifestPage: FC = () => {
         <p>Export subscriptions to your on-premise subscription management application</p>
       </PageHeader>
       <Main>
-        <>
-          {isLoading && !error && <Processing />}
-
-          {!isLoading && !error && data?.length > 0 && (
-            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
-          )}
-
-          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === true && (
-            <CreateManifestPanel />
-          )}
-
-          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === false && (
-            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
-          )}
-
-          {error && <Unavailable />}
-        </>
+        <MainContent />
       </Main>
     </>
   );
