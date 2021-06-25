@@ -30,11 +30,11 @@ const fetchSatelliteManifestData = (): Promise<any> => {
   }).then((response) => response.json());
 };
 
-const getOnlySatelliteManifests = (data: ManifestEntry[] = []): ManifestEntry[] => {
+const getOnlySatelliteManifests = (data: ManifestEntry[]): ManifestEntry[] => {
   return data.filter((manifest: ManifestEntry) => manifest.type === 'Satellite');
 };
 
-const getOnlyManifestsV6AndHigher = (data: ManifestEntry[] = []): ManifestEntry[] => {
+const getOnlyManifestsV6AndHigher = (data: ManifestEntry[]): ManifestEntry[] => {
   return data.filter((manifest) => parseInt(manifest.version) >= 6);
 };
 
