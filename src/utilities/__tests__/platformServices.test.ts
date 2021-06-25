@@ -31,10 +31,14 @@ describe('Authenticate User method', () => {
   });
 
   it('should throw an error if rejected', () => {
-    window.insights.chrome.auth.getUser = jest.fn().mockRejectedValue({
-      error: 'Error getting user'
+    window.insights.chrome.auth.getUser = jest.fn().mockImplementation(() => {
+      throw new Error('Error getting user');
     });
 
-    expect(authenticateUser()).rejects.toEqual({ error: 'Error getting user' });
+    try {
+      authenticateUser();
+    } catch (e) {
+      expect(e.message).toEqual('Error authenticating user: Error getting user');
+    }
   });
 });
