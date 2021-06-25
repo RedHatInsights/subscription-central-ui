@@ -7,7 +7,7 @@ const Notifications: FC = () => {
 
   return (
     <AlertGroup isToast>
-      {notifications.map((notification) => (
+      {notifications.map((notification, i) => (
         <Alert
           isLiveRegion
           timeout={true}
@@ -16,6 +16,7 @@ const Notifications: FC = () => {
           key={notification.key}
           actionClose={
             <AlertActionCloseButton
+              data-testid={`notification-close-btn-${i}`}
               title={notification.message}
               variantLabel={`${notification.variant} alert`}
               onClose={() => removeNotification(notification.key)}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import Notifications from '../Notifications';
 import useNotifications from '../../../hooks/useNotifications';
 
@@ -16,5 +16,16 @@ describe('Notifications', () => {
     });
     render(<Notifications />);
     expect(document.body).toMatchSnapshot();
+  });
+
+  it('calls the remove notifications method on click of the X', () => {
+    const mockRemoveNotification = jest.fn();
+    (useNotifications as jest.Mock).mockReturnValue({
+      notifications: [{ message: 'Some stuff went well!', variant: 'success', key: '123' }],
+      removeNotification: mockRemoveNotification
+    });
+    const { getByTestId } = render(<Notifications />);
+    fireEvent.click(getByTestId('notification-close-btn-0'));
+    expect(mockRemoveNotification).toHaveBeenCalledTimes(1);
   });
 });
