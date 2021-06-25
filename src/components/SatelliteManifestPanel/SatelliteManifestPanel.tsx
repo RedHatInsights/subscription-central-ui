@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useState, useRef } from 'react';
 import {
   Badge,
-  Button,
   Drawer,
   DrawerContent,
   DrawerContentBody,
@@ -15,24 +14,20 @@ import {
   SplitItem,
   Title
 } from '@patternfly/react-core';
+import { Table, TableHeader, TableBody, SortByDirection } from '@patternfly/react-table';
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  SortByDirection,
-  sortable,
-  cellWidth,
-  expandable
-} from '@patternfly/react-table';
+  BooleanDictionary,
+  countCurrentlyShowingManifests,
+  getTableHeaders,
+  getManifestName,
+  getRowsWithAllocationDetails
+} from './satelliteManifestPanelUtils';
 import { User } from '../../hooks/useUser';
-import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { NoManifestsFound, Processing } from '../emptyState';
-import ManifestEntitlementsListContainer from '../ManifestEntitlementsList';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
-import SCAStatusSwitch from '../SCAStatusSwitch';
 import './SatelliteManifestPanel.scss';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
 
@@ -40,10 +35,6 @@ interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
   isFetching: boolean;
   user: User;
-}
-
-interface BooleanDictionary {
-  [key: string]: boolean;
 }
 
 const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
@@ -105,58 +96,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     }, 300);
   };
 
-  const getTableHeaders = () => {
-    const tableHeaders = [
-      { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
-      { title: 'Version', transforms: [sortable] },
-      {
-        title: (
-          <>
-            Simple Content Access
-            <SCAInfoIconWithPopover />
-          </>
-        ),
-        transforms: [sortable, cellWidth(20)]
-      },
-      { title: 'UUID', transforms: [sortable] }
-    ];
-
-    if (user.isSCACapable === false) {
-      // remove SCA Status column
-      tableHeaders.splice(2, 1);
-    }
-    return tableHeaders;
-  };
-
-  const formatRow = (row: string[], rowIndex: number) => {
-    const name = row[0];
-    const version = row[1];
-    const scaStatus = row[2];
-    const uuid = row[3];
-
-    const formattedRow = [
-      <React.Fragment key={`button-${uuid}`}>
-        <Button
-          data-testid={`expand-details-button-${rowIndex}`}
-          variant="link"
-          onClick={() => handleRowManifestClick(uuid, rowIndex)}
-        >
-          {name}
-        </Button>
-      </React.Fragment>,
-      version,
-      <React.Fragment key={`scastatusswitch-${uuid}`}>
-        <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
-      </React.Fragment>,
-      uuid
-    ];
-    if (user.isSCACapable === false) {
-      // remove SCA Status column
-      formattedRow.splice(2, 1);
-    }
-    return formattedRow;
-  };
-
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
     setPerPage(perPage);
     setPage(1);
@@ -185,139 +124,17 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     collapseAllRows();
   };
 
-  const filteredData = () => {
-    return data.filter((entry: ManifestEntry) => {
-      return (
-        (entry.name || '').toLowerCase().includes(searchValue.toLowerCase().trim()) ||
-        (entry.version || '').toLowerCase().includes(searchValue.toLowerCase().trim()) ||
-        (entry.uuid || '').toLowerCase().includes(searchValue.toLowerCase().trim())
-      );
-    });
-  };
-
-  const filteredRows = () => {
-    return filteredData().map((entry: ManifestEntry) => {
-      let scaStatus = entry.simpleContentAccess || 'disabled';
-      if (parseFloat(entry.version) <= 6.2) {
-        scaStatus = 'disallowed';
-      }
-
-      return [entry.name || '', entry.version || '', scaStatus, entry.uuid || ''];
-    });
-  };
-
-  const sortedRows = () => {
-    const { direction, index } = sortBy;
-    /**
-     * This adjustedIndex is necessary because Patternfly
-     * has a strange quirk where, when a table has an
-     * onCollapse attribute, its index starts at 1, which throws off
-     * the sorting without the adjustment.
-     */
-
-    const adjustedIndex = index - 1;
-    const directionFactor = direction === SortByDirection.desc ? -1 : 1;
-
-    return filteredRows().sort((a: [string, string, string], b: [string, string, string]) => {
-      const term1 = (a[adjustedIndex] || '').toLowerCase();
-      const term2 = (b[adjustedIndex] || '').toLowerCase();
-      if (term1 < term2) {
-        return -1 * directionFactor;
-      } else if (term1 > term2) {
-        return 1 * directionFactor;
-      } else {
-        return 0;
-      }
-    });
-  };
-
-  const paginatedRows = () => {
-    const first = (page - 1) * perPage;
-    const last = first + perPage;
-
-    return sortedRows().slice(first, last);
-  };
-
-  const count = () => {
-    return filteredData().length;
-  };
-
-  const pagination = (variant = PaginationVariant.top) => {
-    return (
-      <Pagination
-        isDisabled={isFetching}
-        itemCount={count()}
-        perPage={perPage}
-        page={page}
-        onSetPage={handleSetPage}
-        onPerPageSelect={handlePerPageSelect}
-        variant={variant}
-      />
-    );
-  };
-
-  interface Row {
-    cells: (string | JSX.Element | { title: React.ReactNode })[];
-    fullWidth?: boolean;
-    noPadding?: boolean;
-    parent?: number;
-    isOpen?: boolean;
-  }
-
-  const getManifestName = (uuid: string) => {
-    return data.find((entry) => entry.uuid == uuid)?.name;
-  };
-
   const handleDeleteManifestConfirmationModalToggle = () => {
     setIsDeleteManifestConfirmationModalOpen(!isDeleteManifestConfirmationModalOpen);
   };
 
   const openDeleteConfirmationModal = (uuid: string) => {
     setCurrentDeletionUUID(uuid);
-    setCurrentDeletionName(getManifestName(uuid));
+    setCurrentDeletionName(getManifestName(data, uuid));
     handleDeleteManifestConfirmationModalToggle();
   };
 
-  const getRowsWithAllocationDetails = () => {
-    /**
-     * Go through each row and add a toggleable row
-     * with details beneath it.
-     */
-
-    const tableRows = paginatedRows();
-
-    const rowsWithAllocationDetails: Row[] = [];
-
-    tableRows.forEach((row, i) => {
-      const uuid = row[3];
-      const isOpen = rowExpandedStatus[uuid] || false;
-      const parentIndex = (i + 1) * 2 - 2;
-      const expandedContent = isOpen ? (
-        <ManifestEntitlementsListContainer
-          uuid={uuid}
-          entitlementsRowRef={entitlementsRowRefs[i]}
-        />
-      ) : (
-        ''
-      );
-
-      const formattedRow = formatRow(row, i);
-      // Add original row
-      rowsWithAllocationDetails.push({ isOpen, cells: [...formattedRow] });
-
-      // Add details row
-      rowsWithAllocationDetails.push({
-        parent: parentIndex,
-        fullWidth: true,
-        noPadding: true,
-        cells: [{ title: expandedContent }]
-      });
-    });
-
-    return rowsWithAllocationDetails;
-  };
-
-  const handleRowManifestClick = (uuid: string, rowIndex: number) => {
+  const handleRowManifestClick = (uuid: string, rowIndex: number): void => {
     setShouldTriggerManifestExport(false);
     openDetailsPanel(uuid, rowIndex);
   };
@@ -389,7 +206,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
           <DrawerContentBody>
             <Title headingLevel="h2">
               <span ref={titleRef}>Manifests</span>
-              {!isFetching && <Badge isRead>{count()}</Badge>}
+              {!isFetching && (
+                <Badge isRead>{countCurrentlyShowingManifests(data, searchValue)}</Badge>
+              )}
             </Title>
             <Flex
               direction={{ default: 'column', md: 'row' }}
@@ -414,12 +233,36 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   )}
                 </Split>
               </FlexItem>
-              <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
+              <FlexItem align={{ default: 'alignRight' }}>
+                <Pagination
+                  isDisabled={isFetching}
+                  itemCount={countCurrentlyShowingManifests(data, searchValue)}
+                  perPage={perPage}
+                  page={page}
+                  onSetPage={handleSetPage}
+                  onPerPageSelect={handlePerPageSelect}
+                  variant={PaginationVariant.top}
+                />
+              </FlexItem>
             </Flex>
             <Table
               aria-label="Satellite Manifest Table"
-              cells={getTableHeaders()}
-              rows={isFetching ? [] : getRowsWithAllocationDetails()}
+              cells={getTableHeaders(user)}
+              rows={
+                isFetching
+                  ? []
+                  : getRowsWithAllocationDetails(
+                      data,
+                      user,
+                      searchValue,
+                      page,
+                      perPage,
+                      rowExpandedStatus,
+                      handleRowManifestClick,
+                      entitlementsRowRefs,
+                      sortBy
+                    )
+              }
               onCollapse={toggleAllocationDetails}
               sortBy={sortBy}
               onSort={handleSort}
@@ -428,10 +271,20 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
               <TableHeader />
               <TableBody />
             </Table>
-            {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
+            {countCurrentlyShowingManifests(data, searchValue) === 0 && data.length > 0 && (
+              <NoSearchResults clearFilters={clearSearch} />
+            )}
             {!isFetching && data.length === 0 && <NoManifestsFound />}
             {isFetching && <Processing />}
-            {pagination(PaginationVariant.bottom)}
+            <Pagination
+              isDisabled={isFetching}
+              itemCount={countCurrentlyShowingManifests(data, searchValue)}
+              perPage={perPage}
+              page={page}
+              onSetPage={handleSetPage}
+              onPerPageSelect={handlePerPageSelect}
+              variant={PaginationVariant.bottom}
+            />
             <DeleteManifestConfirmationModal
               uuid={currentDeletionUUID}
               name={currentDeletionName}
