@@ -7,7 +7,7 @@ describe('SCA Info Icon With Popover', () => {
     const testFunctionShouldNotFire = jest.fn();
 
     const { getByTestId } = render(
-      <div data-testid="bubble-test-wrapper" onClick={testFunctionShouldNotFire}>
+      <div onClick={testFunctionShouldNotFire}>
         <SCAInfoIconWithPopover />
       </div>
     );
