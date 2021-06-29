@@ -72,7 +72,26 @@ describe('Satellite Manifest Panel', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders no results when there are no results', () => {
+  it('renders no results when there are no results and user is not admin', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const props = {
+      data: [] as ManifestEntry[],
+      isFetching: false,
+      user: { isOrgAdmin: false, isSCACapable: true }
+    };
+
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...props} />
+      </QueryClientProvider>
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders a blank state  when there are no results and user is admin', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
       body: [] as SatelliteVersion[]
     });
@@ -96,7 +115,17 @@ describe('Satellite Manifest Panel', () => {
       body: [] as SatelliteVersion[]
     });
 
-    const data: ManifestEntry[] = [];
+    const data: ManifestEntry[] = [
+      {
+        name: 'Sputnik',
+        type: 'Satellite',
+        url: 'www.example.com',
+        uuid: '00000000-0000-0000-0000-000000000000',
+        version: '1.2.3',
+        entitlementQuantity: 5,
+        simpleContentAccess: 'enabled'
+      }
+    ];
 
     const props = {
       data,

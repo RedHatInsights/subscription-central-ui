@@ -25,6 +25,7 @@ import {
   expandable
 } from '@patternfly/react-table';
 import { User } from '../../hooks/useUser';
+import { CreateManifestPanel } from '../../components/emptyState';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
@@ -379,66 +380,71 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   return (
-    <PageSection variant="light">
-      <Drawer isExpanded={detailsDrawerIsExpanded}>
-        <DrawerContent panelContent={panelContent}>
-          <DrawerContentBody>
-            <Title headingLevel="h2">
-              <span ref={titleRef}>Manifests</span>
-              {!isFetching && <Badge isRead>{count()}</Badge>}
-            </Title>
-            <Flex
-              direction={{ default: 'column', md: 'row' }}
-              justifyContent={{ default: 'justifyContentSpaceBetween' }}
-            >
-              <FlexItem>
-                <Split hasGutter>
-                  {data.length > 0 && (
-                    <SplitItem isFilled>
-                      <SearchInput
-                        placeholder="Filter by name, version or UUID"
-                        value={searchValue}
-                        onChange={handleSearch}
-                        onClear={clearSearch}
-                      />
-                    </SplitItem>
-                  )}
-                  {user.isOrgAdmin === true && (
-                    <SplitItem>
-                      <CreateManifestButtonWithModal />
-                    </SplitItem>
-                  )}
-                </Split>
-              </FlexItem>
-              <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
-            </Flex>
-            <Table
-              aria-label="Satellite Manifest Table"
-              cells={getTableHeaders()}
-              rows={isFetching ? [] : getRowsWithAllocationDetails()}
-              onCollapse={toggleAllocationDetails}
-              sortBy={sortBy}
-              onSort={handleSort}
-              actions={actions()}
-            >
-              <TableHeader />
-              <TableBody />
-            </Table>
-            {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
-            {!isFetching && data.length === 0 && <NoManifestsFound />}
-            {isFetching && <Processing />}
-            {pagination(PaginationVariant.bottom)}
-            <DeleteManifestConfirmationModal
-              uuid={currentDeletionUUID}
-              name={currentDeletionName}
-              isOpen={isDeleteManifestConfirmationModalOpen}
-              handleModalToggle={handleDeleteManifestConfirmationModalToggle}
-              onSuccess={closeDetailsPanel}
-            />
-          </DrawerContentBody>
-        </DrawerContent>
-      </Drawer>
-    </PageSection>
+    <>
+      {data?.length === 0 && user.isOrgAdmin && <CreateManifestPanel />}
+      {(data?.length > 0 || !user.isOrgAdmin) && (
+        <PageSection variant="light">
+          <Drawer isExpanded={detailsDrawerIsExpanded}>
+            <DrawerContent panelContent={panelContent}>
+              <DrawerContentBody>
+                <Title headingLevel="h2">
+                  <span ref={titleRef}>Manifests</span>
+                  {!isFetching && <Badge isRead>{count()}</Badge>}
+                </Title>
+                <Flex
+                  direction={{ default: 'column', md: 'row' }}
+                  justifyContent={{ default: 'justifyContentSpaceBetween' }}
+                >
+                  <FlexItem>
+                    <Split hasGutter>
+                      {data.length > 0 && (
+                        <SplitItem isFilled>
+                          <SearchInput
+                            placeholder="Filter by name, version or UUID"
+                            value={searchValue}
+                            onChange={handleSearch}
+                            onClear={clearSearch}
+                          />
+                        </SplitItem>
+                      )}
+                      {user.isOrgAdmin === true && (
+                        <SplitItem>
+                          <CreateManifestButtonWithModal />
+                        </SplitItem>
+                      )}
+                    </Split>
+                  </FlexItem>
+                  <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
+                </Flex>
+                <Table
+                  aria-label="Satellite Manifest Table"
+                  cells={getTableHeaders()}
+                  rows={isFetching ? [] : getRowsWithAllocationDetails()}
+                  onCollapse={toggleAllocationDetails}
+                  sortBy={sortBy}
+                  onSort={handleSort}
+                  actions={actions()}
+                >
+                  <TableHeader />
+                  <TableBody />
+                </Table>
+                {count() === 0 && data.length > 0 && <NoSearchResults clearFilters={clearSearch} />}
+                {!isFetching && data.length === 0 && <NoManifestsFound />}
+                {isFetching && <Processing />}
+                {pagination(PaginationVariant.bottom)}
+              </DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
+        </PageSection>
+      )}
+      <DeleteManifestConfirmationModal
+        uuid={currentDeletionUUID}
+        name={currentDeletionName}
+        isOpen={isDeleteManifestConfirmationModalOpen}
+        handleModalToggle={handleDeleteManifestConfirmationModalToggle}
+        onSuccess={closeDetailsPanel}
+      />
+    </>
   );
 };
 
