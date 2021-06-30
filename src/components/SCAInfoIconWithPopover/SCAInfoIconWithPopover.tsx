@@ -16,7 +16,7 @@ const SCAInfoIconWithPopover: FunctionComponent = () => {
         aria-label="Learn more about Simple Content Access"
         headerContent="Simple Content Access"
         bodyContent={
-          <p data-testid="sca-more-info-paragraph">
+          <p>
             Simple content access is a set of capabilities that enables a change in the way Red Hat
             manages its subscription and entitlement enforcement model. When enabled, you are
             allowed to consume content on your systems without strict entitlement enforcement.
