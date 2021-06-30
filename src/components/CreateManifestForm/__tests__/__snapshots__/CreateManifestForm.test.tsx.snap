@@ -1,7 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Create Manifest Form closes the create manifest modal on success 1`] = `<div />`;
-
 exports[`Create Manifest Form renders correctly when data is loaded 1`] = `
 <div>
   <h3
