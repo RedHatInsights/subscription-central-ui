@@ -170,6 +170,20 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus({});
   };
 
+  const pagination = (variant = PaginationVariant.top) => {
+    return (
+      <Pagination
+        isDisabled={isFetching}
+        itemCount={countManifests(data, searchValue)}
+        perPage={perPage}
+        page={page}
+        onSetPage={handleSetPage}
+        onPerPageSelect={handlePerPageSelect}
+        variant={variant}
+      />
+    );
+  };
+
   const panelContent = (
     <ManifestDetailSidePanel
       uuid={currentDetailUUID}
@@ -236,17 +250,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                       )}
                     </Split>
                   </FlexItem>
-                  <FlexItem align={{ default: 'alignRight' }}>
-                    <Pagination
-                      isDisabled={isFetching}
-                      itemCount={countManifests(data, searchValue)}
-                      perPage={perPage}
-                      page={page}
-                      onSetPage={handleSetPage}
-                      onPerPageSelect={handlePerPageSelect}
-                      variant={PaginationVariant.top}
-                    />
-                  </FlexItem>
+                  <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
                 </Flex>
                 <Table
                   aria-label="Satellite Manifest Table"
@@ -279,15 +283,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 )}
                 {!isFetching && data.length === 0 && <NoManifestsFound />}
                 {isFetching && <Processing />}
-                <Pagination
-                  isDisabled={isFetching}
-                  itemCount={countManifests(data, searchValue)}
-                  perPage={perPage}
-                  page={page}
-                  onSetPage={handleSetPage}
-                  onPerPageSelect={handlePerPageSelect}
-                  variant={PaginationVariant.bottom}
-                />
+                {pagination(PaginationVariant.bottom)}
               </DrawerContentBody>
             </DrawerContent>
           </Drawer>
