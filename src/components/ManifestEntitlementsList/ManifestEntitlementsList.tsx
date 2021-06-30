@@ -89,6 +89,23 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
     );
   }
 
+  const actions = [
+    {
+      title: 'Remove Subscription',
+      onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+        // placeholder for now
+        console.log('clicked on Some action, on row: ', rowId, rowData);
+      }
+    },
+    {
+      title: 'Move Subscription',
+      onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+        // placeholder for now
+        console.log('clicked on Some action, on row: ', rowId, rowData);
+      }
+    }
+  ];
+
   return (
     <>
       {isLoading && !isError && (
@@ -110,6 +127,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
             cells={columns}
             rows={rows}
             borders={false}
+            actions={actions}
             className="manifests_entitlement-list-table"
           >
             <TableHeader />
