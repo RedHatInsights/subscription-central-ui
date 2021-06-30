@@ -6,7 +6,6 @@ import { PageHeaderTitle } from '@redhat-cloud-services/frontend-components/Page
 import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
-import { CreateManifestPanel } from '../../components/emptyState';
 import { Processing } from '../../components/emptyState';
 import { useQueryClient } from 'react-query';
 import { User } from '../../hooks/useUser';
@@ -27,15 +26,7 @@ const SatelliteManifestPage: FC = () => {
         <>
           {isLoading && !error && <Processing />}
 
-          {!isLoading && !error && data?.length > 0 && (
-            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
-          )}
-
-          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === true && (
-            <CreateManifestPanel />
-          )}
-
-          {!isLoading && !error && data?.length === 0 && user.isOrgAdmin === false && (
+          {!isLoading && !error && (
             <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
 
