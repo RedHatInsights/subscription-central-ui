@@ -21,6 +21,6 @@ describe('SCA Info Icon With Popover', () => {
       ).toBeDefined();
     });
 
-    expect(testFunctionShouldNotFire).toHaveBeenCalledTimes(0);
+    expect(testFunctionShouldNotFire).not.toHaveBeenCalled();
   });
 });
