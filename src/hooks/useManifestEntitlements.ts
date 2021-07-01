@@ -39,11 +39,7 @@ const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlementsData
   return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}?include=entitlements`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
-  })
-    .then((response) => response.json())
-    .catch((e) => {
-      console.error('Error fetching Manifest Entitlements data', e);
-    });
+  }).then((response) => response.json());
 };
 
 const useManifestEntitlements = (

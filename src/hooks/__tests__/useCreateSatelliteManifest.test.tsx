@@ -40,4 +40,35 @@ describe('useCreateSatelliteManifest hook', () => {
     await waitFor(() => getByTestId('title'));
     expect(getByTestId('title').textContent).toBe('Success');
   });
+
+  it('returns an error if status is not 200 when given correct inputs', async () => {
+    const originalError = console.error;
+    console.error = jest.fn();
+    fetch.mockResponseOnce(JSON.stringify({}), { status: 401 });
+
+    const Page = () => {
+      const { mutate, isError } = useCreateSatelliteManifest();
+      return (
+        <div>
+          <h1 data-testid="title">{isError && 'Error'}</h1>
+          <button onClick={() => mutate({ name: 'my-manifest', version: 'sat-6.2' })}>
+            mutate
+          </button>
+        </div>
+      );
+    };
+
+    const { getByTestId, getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <Page />
+      </QueryClientProvider>
+    );
+
+    expect(getByTestId('title').textContent).toBe('');
+    fireEvent.click(getByText('mutate'));
+    await waitFor(() => getByTestId('title'));
+    expect(getByTestId('title').textContent).toBe('Error');
+
+    console.error = originalError;
+  });
 });

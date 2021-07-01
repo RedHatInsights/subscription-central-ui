@@ -31,6 +31,7 @@ const SCAInfoIconWithPopover: FunctionComponent = () => {
       >
         <InfoIcon
           className="sca-more-info-icon"
+          data-testid="sca-more-info-icon"
           onClick={(event) => {
             event.stopPropagation();
           }}

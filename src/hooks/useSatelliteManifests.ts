@@ -27,33 +27,26 @@ const fetchSatelliteManifestData = (): Promise<any> => {
   return fetch(`${rhsmAPIBase}/management/v1/allocations`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
-  })
-    .then((response) => response.json())
-    .catch((e) => {
-      console.error('Error fetching Satellite Manifest data', e);
-    });
+  }).then((response) => response.json());
 };
 
-const getOnlySatelliteManifests = (data: ManifestEntry[] = []): ManifestEntry[] => {
+const getOnlySatelliteManifests = (data: ManifestEntry[]): ManifestEntry[] => {
   return data.filter((manifest: ManifestEntry) => manifest.type === 'Satellite');
 };
 
-const getOnlyManifestsV6AndHigher = (data: ManifestEntry[] = []): ManifestEntry[] => {
+const getOnlyManifestsV6AndHigher = (data: ManifestEntry[]): ManifestEntry[] => {
   return data.filter((manifest) => parseInt(manifest.version) >= 6);
 };
 
 const filterSatelliteData = (data: SatelliteManifestAPIData): ManifestEntry[] => {
-  const satelliteData = getOnlySatelliteManifests(data.body);
-  const manifestsV6AndHigher = getOnlyManifestsV6AndHigher(satelliteData);
+  const manifestsV6AndHigher = getOnlyManifestsV6AndHigher(data.body);
   return manifestsV6AndHigher;
 };
 
 const getSatelliteManifests = (): Promise<ManifestEntry[]> => {
-  return fetchSatelliteManifestData()
-    .then((data: SatelliteManifestAPIData) => filterSatelliteData(data))
-    .catch((e: Error) => {
-      throw new Error(`Error fetching Satellite Manifest data: ${e.message}`);
-    });
+  return fetchSatelliteManifestData().then((data: SatelliteManifestAPIData) =>
+    filterSatelliteData(data)
+  );
 };
 
 const useSatelliteManifests = (): QueryObserverResult<ManifestEntry[], unknown> => {
@@ -67,5 +60,6 @@ export {
   getOnlyManifestsV6AndHigher,
   getOnlySatelliteManifests,
   getSatelliteManifests,
+  SatelliteManifestAPIData,
   useSatelliteManifests as default
 };

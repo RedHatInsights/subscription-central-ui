@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 jest.mock('../../utilities/platformServices', () => ({
-  ...jest.requireActual('../../utilities/platformServices'),
+  ...(jest.requireActual('../../utilities/platformServices') as Record<string, unknown>),
   authenticateUser: jest.fn()
 }));
 

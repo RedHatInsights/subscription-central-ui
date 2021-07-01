@@ -13,11 +13,7 @@ const fetchSatelliteVersions = (): Promise<any> => {
   return fetch(`${rhsmAPIBase}/management/v1/allocations/versions`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
     mode: 'cors'
-  })
-    .then((response) => response.json())
-    .catch((e) => {
-      console.error('Error fetching Satellite Versions', e);
-    });
+  }).then((response) => response.json());
 };
 
 const useSatelliteVersions = () => {

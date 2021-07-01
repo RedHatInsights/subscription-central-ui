@@ -37,9 +37,25 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/stories/*"
+      "!src/**/stories/*",
+      "!src/App.js",
+      "!src/AppEntry.js",
+      "!src/bootstrap-dev.js",
+      "!src/bootstrap.js",
+      "!src/entry-dev.js",
+      "!src/entry.js",
+      "!src/Routes.tsx",
+      "!src/store/index.js"
     ],
     "coverageDirectory": "./coverage/",
+    "coverageThreshold": {
+      "global": {
+        "branches": 85,
+        "functions": 85,
+        "lines": 85,
+        "statements": 85
+      }
+    },
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
     },
@@ -90,6 +106,7 @@
     "@babel/preset-typescript": "^7.12.7",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.0.0",
     "@redhat-cloud-services/frontend-components-config": "^4.0.19",
+    "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.3",
     "@testing-library/react-hooks": "^5.1.1",
     "@types/jest": "^26.0.20",
