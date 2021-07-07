@@ -23,7 +23,7 @@ interface SatelliteManifestAPIData {
 
 const fetchSatelliteManifestData = async (
   offset = 0,
-  previousData: ManifestEntry[] = []
+  previousManifests: ManifestEntry[] = []
 ): Promise<ManifestEntry[]> => {
   const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
@@ -39,14 +39,15 @@ const fetchSatelliteManifestData = async (
 
   const manifestResponseData: SatelliteManifestAPIData = await response.json();
 
+  const combinedManifests = [...previousManifests, ...manifestResponseData.body];
+
   if (manifestResponseData.pagination.count === limit) {
     // Fetch the next page's data
     const newOffset = offset + limit;
-    return previousData.concat(
-      await fetchSatelliteManifestData(newOffset, manifestResponseData.body)
-    );
+
+    return await fetchSatelliteManifestData(newOffset, combinedManifests);
   } else {
-    return previousData.concat(manifestResponseData.body);
+    return combinedManifests;
   }
 };
 
