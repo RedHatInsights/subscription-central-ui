@@ -55,12 +55,8 @@ const getOnlyManifestsV6AndHigher = (data: ManifestEntry[]): ManifestEntry[] => 
 };
 
 const getSatelliteManifests = async (): Promise<ManifestEntry[]> => {
-  try {
-    const manifestData = await fetchSatelliteManifestData();
-    return getOnlyManifestsV6AndHigher(manifestData);
-  } catch (e) {
-    throw new Error(`Error fetching Satellite Manifest data: ${e.message}`);
-  }
+  const manifestData = await fetchSatelliteManifestData();
+  return getOnlyManifestsV6AndHigher(manifestData);
 };
 
 const useSatelliteManifests = (): QueryObserverResult<ManifestEntry[], unknown> => {
