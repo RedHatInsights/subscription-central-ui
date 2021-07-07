@@ -1,11 +1,11 @@
+import faker from 'faker';
+import { renderHook } from '@testing-library/react-hooks';
+import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import useSatelliteManifests, {
   SatelliteManifestAPIData,
-  getOnlySatelliteManifests,
   getOnlyManifestsV6AndHigher,
   ManifestEntry
 } from '../useSatelliteManifests';
-import { renderHook } from '@testing-library/react-hooks';
-import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import { createQueryWrapper } from '../../utilities/testHelpers';
 
 enableFetchMocks();
@@ -13,6 +13,24 @@ enableFetchMocks();
 beforeEach(() => {
   fetch.resetMocks();
 });
+
+const createMockManifests = (numManifests: number): ManifestEntry[] => {
+  const mockManifests: ManifestEntry[] = [];
+
+  for (let i = 0; i < numManifests; i++) {
+    const newManifest: ManifestEntry = {
+      entitlementQuantity: faker.datatype.number(100),
+      name: faker.lorem.word(10),
+      type: 'Satellite',
+      url: faker.internet.url(),
+      uuid: faker.datatype.uuid(),
+      version: '6.9',
+      simpleContentAccess: 'enabled'
+    };
+    mockManifests.push(newManifest);
+  }
+  return mockManifests;
+};
 
 describe('useSatelliteManifests hook', () => {
   it('passes manifests back when fetching from API', async () => {
@@ -48,6 +66,52 @@ describe('useSatelliteManifests hook', () => {
     expect(result.current.data).toEqual(manifestData);
   });
 
+  it('passes back data from multiple paginated calls', async () => {
+    const manifestData1 = createMockManifests(100);
+    const manifestData2 = createMockManifests(100);
+    const manifestData3 = createMockManifests(25);
+
+    const mockResponse1: SatelliteManifestAPIData = {
+      body: [...manifestData1],
+      pagination: {
+        count: manifestData1.length,
+        limit: 100,
+        offset: 0
+      }
+    };
+
+    const mockResponse2: SatelliteManifestAPIData = {
+      body: [...manifestData2],
+      pagination: {
+        count: manifestData2.length,
+        limit: 100,
+        offset: 100
+      }
+    };
+
+    const mockResponse3: SatelliteManifestAPIData = {
+      body: [...manifestData3],
+      pagination: {
+        count: manifestData3.length,
+        limit: 100,
+        offset: 200
+      }
+    };
+
+    fetch.mockResponseOnce(JSON.stringify(mockResponse1));
+    fetch.mockResponseOnce(JSON.stringify(mockResponse2));
+    fetch.mockResponseOnce(JSON.stringify(mockResponse3));
+
+    const { result, waitFor } = renderHook(() => useSatelliteManifests(), {
+      wrapper: createQueryWrapper()
+    });
+
+    await waitFor(() => result.current.isSuccess);
+
+    expect(result.current.data).toEqual([...manifestData1, ...manifestData2, ...manifestData3]);
+    expect(result.current.data.length).toEqual(225);
+  });
+
   it('enters isError state within react-query when API fetch fails', async () => {
     const originalError = console.error;
     console.error = jest.fn();
@@ -64,32 +128,6 @@ describe('useSatelliteManifests hook', () => {
 
     expect(result.current.data).toEqual(undefined);
     console.error = originalError;
-  });
-});
-
-describe('getOnlySatelliteManifests method', () => {
-  it('filters out non-satellite manifests', () => {
-    const manifest1: ManifestEntry = {
-      entitlementQuantity: 1,
-      name: 'manifest1',
-      type: 'Satellite',
-      url: 'foo.com',
-      uuid: 'abc123',
-      version: '6.2',
-      simpleContentAccess: 'enabled'
-    };
-    const manifest2: ManifestEntry = {
-      entitlementQuantity: 1,
-      name: 'manifest2',
-      type: 'SAM',
-      url: 'foo.com',
-      uuid: 'abc123',
-      version: '6.2',
-      simpleContentAccess: 'enabled'
-    };
-    const manifestData: ManifestEntry[] = [manifest1, manifest2];
-
-    expect(getOnlySatelliteManifests(manifestData)).toEqual([manifest1]);
   });
 });
 

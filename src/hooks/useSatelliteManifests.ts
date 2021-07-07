@@ -2,7 +2,7 @@ import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
 import { getConfig } from '../utilities/platformServices';
 
-interface ManifestEntry {
+type ManifestEntry = {
   entitlementQuantity: number;
   name: string;
   type: string;
@@ -10,7 +10,7 @@ interface ManifestEntry {
   uuid: string;
   version: string;
   simpleContentAccess: string;
-}
+};
 
 interface SatelliteManifestAPIData {
   body: ManifestEntry[];
@@ -21,32 +21,46 @@ interface SatelliteManifestAPIData {
   };
 }
 
-const fetchSatelliteManifestData = (): Promise<any> => {
+const fetchSatelliteManifestData = async (
+  offset = 0,
+  previousData: ManifestEntry[] = []
+): Promise<ManifestEntry[]> => {
   const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations`, {
-    headers: { Authorization: `Bearer ${jwtToken}` },
-    mode: 'cors'
-  }).then((response) => response.json());
-};
+  const limit = 100;
 
-const getOnlySatelliteManifests = (data: ManifestEntry[]): ManifestEntry[] => {
-  return data.filter((manifest: ManifestEntry) => manifest.type === 'Satellite');
+  const response = await fetch(
+    `${rhsmAPIBase}/management/v1/allocations?type=Satellite&offset=${offset}&limit=${limit}`,
+    {
+      headers: { Authorization: `Bearer ${jwtToken}` },
+      mode: 'cors'
+    }
+  );
+
+  const manifestResponseData: SatelliteManifestAPIData = await response.json();
+
+  if (manifestResponseData.pagination.count === limit) {
+    // Fetch the next page's data
+    const newOffset = offset + limit;
+    return previousData.concat(
+      await fetchSatelliteManifestData(newOffset, manifestResponseData.body)
+    );
+  } else {
+    return previousData.concat(manifestResponseData.body);
+  }
 };
 
 const getOnlyManifestsV6AndHigher = (data: ManifestEntry[]): ManifestEntry[] => {
   return data.filter((manifest) => parseInt(manifest.version) >= 6);
 };
 
-const filterSatelliteData = (data: SatelliteManifestAPIData): ManifestEntry[] => {
-  const manifestsV6AndHigher = getOnlyManifestsV6AndHigher(data.body);
-  return manifestsV6AndHigher;
-};
-
-const getSatelliteManifests = (): Promise<ManifestEntry[]> => {
-  return fetchSatelliteManifestData().then((data: SatelliteManifestAPIData) =>
-    filterSatelliteData(data)
-  );
+const getSatelliteManifests = async (): Promise<ManifestEntry[]> => {
+  try {
+    const manifestData = await fetchSatelliteManifestData();
+    return getOnlyManifestsV6AndHigher(manifestData);
+  } catch (e) {
+    throw new Error(`Error fetching Satellite Manifest data: ${e.message}`);
+  }
 };
 
 const useSatelliteManifests = (): QueryObserverResult<ManifestEntry[], unknown> => {
@@ -56,9 +70,7 @@ const useSatelliteManifests = (): QueryObserverResult<ManifestEntry[], unknown> 
 export {
   ManifestEntry,
   fetchSatelliteManifestData,
-  filterSatelliteData,
   getOnlyManifestsV6AndHigher,
-  getOnlySatelliteManifests,
   getSatelliteManifests,
   SatelliteManifestAPIData,
   useSatelliteManifests as default
