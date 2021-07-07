@@ -1,4 +1,3 @@
-import faker from 'faker';
 import { renderHook } from '@testing-library/react-hooks';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import useSatelliteManifests, {
@@ -6,31 +5,13 @@ import useSatelliteManifests, {
   getOnlyManifestsV6AndHigher,
   ManifestEntry
 } from '../useSatelliteManifests';
-import { createQueryWrapper } from '../../utilities/testHelpers';
+import { createQueryWrapper, createMockManifests } from '../../utilities/testHelpers';
 
 enableFetchMocks();
 
 beforeEach(() => {
   fetch.resetMocks();
 });
-
-const createMockManifests = (numManifests: number): ManifestEntry[] => {
-  const mockManifests: ManifestEntry[] = [];
-
-  for (let i = 0; i < numManifests; i++) {
-    const newManifest: ManifestEntry = {
-      entitlementQuantity: faker.datatype.number(100),
-      name: faker.lorem.word(10),
-      type: 'Satellite',
-      url: faker.internet.url(),
-      uuid: faker.datatype.uuid(),
-      version: '6.9',
-      simpleContentAccess: 'enabled'
-    };
-    mockManifests.push(newManifest);
-  }
-  return mockManifests;
-};
 
 describe('useSatelliteManifests hook', () => {
   it('passes manifests back when fetching from API', async () => {
