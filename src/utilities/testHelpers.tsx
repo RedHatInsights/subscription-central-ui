@@ -8,15 +8,6 @@ interface wrapperProps {
   children: ReactNode;
 }
 
-export const createQueryWrapper = (): WrapperComponent<unknown> => {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const wrapper = ({ children }: wrapperProps) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
-
-  return wrapper;
-};
-
 export const createMockManifests = (numManifests: number): ManifestEntry[] => {
   const mockManifests: ManifestEntry[] = [];
 
@@ -33,4 +24,13 @@ export const createMockManifests = (numManifests: number): ManifestEntry[] => {
     mockManifests.push(newManifest);
   }
   return mockManifests;
+};
+
+export const createQueryWrapper = (): WrapperComponent<unknown> => {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const wrapper = ({ children }: wrapperProps) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+
+  return wrapper;
 };
