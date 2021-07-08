@@ -21,10 +21,7 @@ interface SatelliteManifestAPIData {
   };
 }
 
-const fetchSatelliteManifestData = async (
-  offset = 0,
-  previousManifests: ManifestEntry[] = []
-): Promise<ManifestEntry[]> => {
+const fetchSatelliteManifestData = async (offset = 0): Promise<ManifestEntry[]> => {
   const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
 
@@ -40,16 +37,18 @@ const fetchSatelliteManifestData = async (
 
   const { count, limit } = manifestResponseData.pagination;
 
-  const combinedManifests = [...previousManifests, ...manifestResponseData.body];
+  const manifests: ManifestEntry[] = manifestResponseData.body;
 
   if (count === limit) {
     // Fetch the next page's data
     const newOffset = offset + limit;
 
-    return await fetchSatelliteManifestData(newOffset, combinedManifests);
-  } else {
-    return combinedManifests;
+    const additionalManifests = await fetchSatelliteManifestData(newOffset);
+
+    manifests.push(...additionalManifests);
   }
+
+  return manifests;
 };
 
 const getOnlyManifestsV6AndHigher = (data: ManifestEntry[]): ManifestEntry[] => {
