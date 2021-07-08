@@ -5,7 +5,8 @@ import useSatelliteManifests, {
   getOnlyManifestsV6AndHigher,
   ManifestEntry
 } from '../useSatelliteManifests';
-import { createQueryWrapper, createMockManifests } from '../../utilities/testHelpers';
+import { createQueryWrapper } from '../../utilities/testHelpers';
+import factories from '../../utilities/factories';
 
 enableFetchMocks();
 
@@ -48,15 +49,15 @@ describe('useSatelliteManifests hook', () => {
   });
 
   it('passes back data from multiple paginated calls', async () => {
-    const manifestData1 = createMockManifests(100);
-    const manifestData2 = createMockManifests(100);
-    const manifestData3 = createMockManifests(25);
+    const manifestData1 = factories.manifestEntry.buildList(2);
+    const manifestData2 = factories.manifestEntry.buildList(2);
+    const manifestData3 = factories.manifestEntry.buildList(1);
 
     const mockResponse1: SatelliteManifestAPIData = {
       body: [...manifestData1],
       pagination: {
         count: manifestData1.length,
-        limit: 100,
+        limit: 2,
         offset: 0
       }
     };
@@ -65,8 +66,8 @@ describe('useSatelliteManifests hook', () => {
       body: [...manifestData2],
       pagination: {
         count: manifestData2.length,
-        limit: 100,
-        offset: 100
+        limit: 2,
+        offset: 2
       }
     };
 
@@ -74,8 +75,8 @@ describe('useSatelliteManifests hook', () => {
       body: [...manifestData3],
       pagination: {
         count: manifestData3.length,
-        limit: 100,
-        offset: 200
+        limit: 2,
+        offset: 4
       }
     };
 
@@ -90,7 +91,7 @@ describe('useSatelliteManifests hook', () => {
     await waitFor(() => result.current.isSuccess);
 
     expect(result.current.data).toEqual([...manifestData1, ...manifestData2, ...manifestData3]);
-    expect(result.current.data.length).toEqual(225);
+    expect(result.current.data.length).toEqual(5);
   });
 
   it('enters isError state within react-query when API fetch fails', async () => {

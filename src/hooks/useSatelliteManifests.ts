@@ -27,10 +27,9 @@ const fetchSatelliteManifestData = async (
 ): Promise<ManifestEntry[]> => {
   const jwtToken = Cookies.get('cs_jwt');
   const { rhsmAPIBase } = getConfig();
-  const limit = 100;
 
   const response = await fetch(
-    `${rhsmAPIBase}/management/v1/allocations?type=Satellite&offset=${offset}&limit=${limit}`,
+    `${rhsmAPIBase}/management/v1/allocations?type=Satellite&offset=${offset}`,
     {
       headers: { Authorization: `Bearer ${jwtToken}` },
       mode: 'cors'
@@ -39,9 +38,11 @@ const fetchSatelliteManifestData = async (
 
   const manifestResponseData: SatelliteManifestAPIData = await response.json();
 
+  const { count, limit } = manifestResponseData.pagination;
+
   const combinedManifests = [...previousManifests, ...manifestResponseData.body];
 
-  if (manifestResponseData.pagination.count === limit) {
+  if (count === limit) {
     // Fetch the next page's data
     const newOffset = offset + limit;
 
