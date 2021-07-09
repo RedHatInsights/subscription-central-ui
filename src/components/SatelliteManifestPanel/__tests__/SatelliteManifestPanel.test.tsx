@@ -1,6 +1,7 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
 import { ManifestEntry } from '../../../hooks/useSatelliteManifests';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
@@ -172,5 +173,42 @@ describe('Satellite Manifest Panel', () => {
 
     fireEvent.click(getByTestId('expand-details-button-0'));
     expect(container).toMatchSnapshot();
+  });
+
+  it('opens the delete popup from clicking the kebab menu', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const data: ManifestEntry[] = [
+      {
+        name: 'Sputnik',
+        type: 'Satellite',
+        url: 'www.example.com',
+        uuid: '00000000-0000-0000-0000-000000000000',
+        version: '1.2.3',
+        entitlementQuantity: 5,
+        simpleContentAccess: 'enabled'
+      }
+    ];
+
+    const props = {
+      data,
+      isFetching: false,
+      user: { isOrgAdmin: true, isSCACapable: true }
+    };
+
+    const { getByLabelText, getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...props} />
+      </QueryClientProvider>
+    );
+
+    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByText('Delete'));
+
+    expect(
+      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
+    ).toBeInTheDocument();
   });
 });
