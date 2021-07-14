@@ -24,7 +24,8 @@ import {
 } from './satelliteManifestPanelUtils';
 import { User } from '../../hooks/useUser';
 import { CreateManifestPanel } from '../../components/emptyState';
-import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
+import useNotifications from '../../hooks/useNotifications';
+import useExportSatelliteManifest from '../../hooks/useExportSatelliteManifest';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
@@ -59,12 +60,27 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
   const [shouldTriggerManifestExport, setShouldTriggerManifestExport] = useState(false);
   const [currentDeletionName, setCurrentDeletionName] = useState('');
+  const [shouldAddExportSuccessNotification, setShouldAddExportSuccessNotification] = useState(
+    false
+  );
+  const [exportedManifestName, setExportedManifestName] = useState('');
+  const [loadingManifestNotificationKey, setLoadingManifestNotificationKey] = useState('');
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
   const entitlementsRowRefs = new Array(10)
     .fill(null)
     .map(() => useRef<HTMLSpanElement | HTMLParagraphElement>(null));
+
+  const { addInfoNotification, addSuccessNotification, removeNotification } = useNotifications();
+
+  const {
+    data: exportedManifestData,
+    mutate: triggerManifestExport,
+    isLoading: isLoadingManifestExport,
+    isSuccess: successExportingManifest,
+    isError: errorExportingManifest
+  } = useExportSatelliteManifest();
 
   const scrollToPageTop = () => {
     if (titleRef?.current) {
@@ -170,6 +186,50 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus({});
   };
 
+  const exportManifest = (uuid: string, manifestName: string): void => {
+    setExportedManifestName(manifestName);
+    setShouldAddExportSuccessNotification(true);
+
+    triggerManifestExport({ uuid });
+
+    const infoNotificationKey = addInfoNotification(
+      `Manifest ${manifestName} exporting. This may take some time. Please wait.`,
+      { hasTimeout: false }
+    );
+
+    setLoadingManifestNotificationKey(infoNotificationKey);
+  };
+
+  if (successExportingManifest && shouldAddExportSuccessNotification) {
+    const downloadURL = window.URL.createObjectURL(exportedManifestData);
+
+    addSuccessNotification(`Manifest ${exportedManifestName} Exported`, {
+      hasTimeout: false,
+      alertLinkHref: downloadURL,
+      alertLinkText: 'Download Manifest'
+    });
+    setShouldAddExportSuccessNotification(false);
+  }
+
+  const actions = () => {
+    return [
+      {
+        title: 'Export',
+        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+          const manifestName = rowData.cells[0].props.children.props.children;
+          const uuid = rowData.uuid.title;
+          exportManifest(uuid, manifestName);
+        }
+      },
+      {
+        title: 'Delete',
+        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+          openDeleteConfirmationModal(rowData.uuid.title);
+        }
+      }
+    ];
+  };
+
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
@@ -196,24 +256,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       shouldTriggerManifestExport={shouldTriggerManifestExport}
     />
   );
-
-  const actions = () => {
-    return [
-      {
-        title: 'Export',
-        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          openDetailsPanel(rowData.uuid.title, rowId / 2);
-          setShouldTriggerManifestExport(true);
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          openDeleteConfirmationModal(rowData.uuid.title);
-        }
-      }
-    ];
-  };
 
   return (
     <>
