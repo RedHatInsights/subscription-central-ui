@@ -20,7 +20,13 @@ const Notifications: FC = () => {
               data-testid={`notification-close-btn-${i}`}
               title={notification.message}
               variantLabel={`${notification.variant} alert`}
-              onClose={() => removeNotification(notification.key)}
+              onClose={() => {
+                removeNotification(notification.key);
+
+                if (notification?.downloadHref) {
+                  window.URL.revokeObjectURL(notification.downloadHref);
+                }
+              }}
             />
           }
         />

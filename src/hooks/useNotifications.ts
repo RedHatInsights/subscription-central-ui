@@ -11,6 +11,7 @@ interface Notification {
   key: string;
   timeout?: boolean;
   actionLinks?: React.ReactNode;
+  downloadHref?: string;
 }
 
 interface Notifications {

@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 import { AlertActionLink } from '@patternfly/react-core';
 import { v4 as uuid } from 'uuid';
-import { Alert } from '@patternfly/react-core';
 
 type NotificationVariantType = 'success' | 'danger' | 'info';
 
@@ -11,6 +10,7 @@ interface NotificationProps {
   key: string;
   timeout?: boolean;
   actionLinks?: React.ReactNode;
+  downloadHref?: string;
 }
 
 export type NotificationOptions = {
@@ -60,6 +60,11 @@ const NotificationProvider: FC = ({ children }) => {
       );
       notificationProps.actionLinks = alertLink;
     }
+
+    if (options?.alertLinkIsDownload && options?.alertLinkHref) {
+      notificationProps.downloadHref = options.alertLinkHref;
+    }
+
     return notificationProps;
   };
 

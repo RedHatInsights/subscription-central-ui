@@ -50,6 +50,20 @@ describe('useNotifications', () => {
       expect(result.current.notifications).toHaveLength(1);
       expect(result.current.notifications[0].message).toBe('We did it again!');
     });
+
+    it('sets the downloadHref properly when the link is set as a download link', async () => {
+      const { result } = renderHook(() => useNotifications(), { wrapper });
+
+      act(() => {
+        result.current.addSuccessNotification('Download link here', {
+          alertLinkText: 'Download',
+          alertLinkHref: 'foo.com',
+          alertLinkIsDownload: true
+        });
+      });
+      expect(result.current.notifications).toHaveLength(1);
+      expect(result.current.notifications[0].downloadHref).toBe('foo.com');
+    });
   });
 
   describe('addErrorNotification', () => {
