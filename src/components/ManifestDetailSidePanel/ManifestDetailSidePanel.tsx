@@ -17,27 +17,25 @@ import './ManifestDetailSidePanel.scss';
 
 interface ManifestDetailSidePanelProps {
   isExpanded: boolean;
-  shouldTriggerManifestExport: boolean;
   titleRef: React.MutableRefObject<HTMLSpanElement>;
   drawerRef: React.MutableRefObject<HTMLDivElement | HTMLHeadingElement>;
   uuid: string;
   onCloseClick: () => void;
+  exportManifest: (uuid: string, manifestName: string) => void;
   openCurrentEntitlementsListFromPanel: () => void;
   deleteManifest: (uuid: string) => void;
 }
 
 const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   isExpanded,
-  shouldTriggerManifestExport,
   titleRef,
   drawerRef,
   uuid,
   onCloseClick,
+  exportManifest,
   openCurrentEntitlementsListFromPanel,
   deleteManifest
 }) => {
-  const [exportDownloadURL, setExportDownloadURL] = useState('');
-
   const {
     data: entitlementData,
     isLoading: isLoadingEntitlementData,
@@ -69,6 +67,12 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   };
 
   const handleCloseClick = () => {
+    onCloseClick();
+  };
+
+  const handleExportManifestClick = () => {
+    const { uuid, name } = entitlementData.body;
+    exportManifest(uuid, name);
     onCloseClick();
   };
 
@@ -173,7 +177,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           </GridItem>
           <GridItem span={6}>{formatDate(lastModified)}</GridItem>
         </Grid>
-        <Button variant="tertiary">Export manifest</Button>
+        <Button variant="tertiary" onClick={handleExportManifestClick}>
+          Export manifest
+        </Button>
         <p className="manifest-details-delete-text">
           Deleting a subscription allocation is <strong>STRONGLY</strong> discouraged. This action
           should only be taken in extreme circumstances or for debugging purposes

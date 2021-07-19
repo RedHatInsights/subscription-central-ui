@@ -5,8 +5,6 @@ import useNotifications from '../../hooks/useNotifications';
 const Notifications: FC = () => {
   const { notifications, removeNotification } = useNotifications();
 
-  console.log('notifications array', notifications);
-
   return (
     <AlertGroup isToast>
       {notifications.map((notification, i) => (

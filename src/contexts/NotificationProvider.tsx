@@ -17,6 +17,7 @@ export type NotificationOptions = {
   hasTimeout?: boolean;
   alertLinkText?: string;
   alertLinkHref?: string;
+  keyOfAlertToReplace?: string;
 };
 
 const NotificationContext = React.createContext({
@@ -32,13 +33,13 @@ const NotificationContext = React.createContext({
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = (
+  const buildNotificationProps = (
     variant: NotificationVariantType,
     message: string,
     options?: NotificationOptions
-  ): string => {
+  ): NotificationProps => {
     const notificationKey: string = uuid();
-    const newNotificationProps: NotificationProps = {
+    const notificationProps: NotificationProps = {
       variant: variant,
       message: message,
       key: notificationKey,
@@ -55,15 +56,33 @@ const NotificationProvider: FC = ({ children }) => {
           </AlertActionLink>
         </>
       );
-      newNotificationProps.actionLinks = alertLink;
+      notificationProps.actionLinks = alertLink;
+    }
+    return notificationProps;
+  };
+
+  const addNotification = (
+    variant: NotificationVariantType,
+    message: string,
+    options?: NotificationOptions
+  ): string => {
+    const newNotificationProps = buildNotificationProps(variant, message, options);
+
+    const unfilteredNotifications = [...notifications, { ...newNotificationProps }];
+
+    let newNotifications = unfilteredNotifications;
+
+    if (options?.keyOfAlertToReplace) {
+      newNotifications = unfilteredNotifications.filter(
+        (notification) => notification.key !== options.keyOfAlertToReplace
+      );
     }
 
-    setNotifications([...notifications, { ...newNotificationProps }]);
-    return notificationKey;
+    setNotifications(newNotifications);
+    return newNotificationProps.key;
   };
 
   const removeNotification = (key: string) => {
-    console.log('hit remove notification', key);
     setNotifications(notifications.filter((notification) => notification.key !== key));
   };
 
