@@ -85,12 +85,8 @@ const useExportSatelliteManifest = (): UseMutationResult<
   ExportManifestParams,
   unknown
 > => {
-  return useMutation(
-    (exportManifestParams: ExportManifestParams) => exportManifest(exportManifestParams.uuid),
-    {
-      // retries off because export can potentially take 10+ minutes.
-      retry: false
-    }
+  return useMutation((exportManifestParams: ExportManifestParams) =>
+    exportManifest(exportManifestParams.uuid)
   );
 };
 
