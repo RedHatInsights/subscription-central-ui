@@ -198,6 +198,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       hasTimeout: false,
       alertLinkHref: downloadURL,
       alertLinkText: 'Download Manifest',
+      alertLinkIsDownload: true,
       keyOfAlertToReplace: loadingManifestNotificationKey
     });
     setLoadingManifestNotificationKey('');

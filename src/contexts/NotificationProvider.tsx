@@ -17,6 +17,7 @@ export type NotificationOptions = {
   hasTimeout?: boolean;
   alertLinkText?: string;
   alertLinkHref?: string;
+  alertLinkIsDownload?: boolean;
   keyOfAlertToReplace?: string;
 };
 
@@ -47,10 +48,11 @@ const NotificationProvider: FC = ({ children }) => {
     };
 
     if (options?.alertLinkText && options?.alertLinkHref) {
+      const linkAttributes = options?.alertLinkIsDownload ? { download: '' } : {};
       const alertLink = (
         <>
           <AlertActionLink>
-            <a download href={options.alertLinkHref}>
+            <a href={options.alertLinkHref} {...linkAttributes}>
               {options.alertLinkText}
             </a>
           </AlertActionLink>
