@@ -6,6 +6,7 @@ import './App.scss';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import NotificationProvider from './contexts/NotificationProvider';
 import Notifications from './components/Notifications';
+import { useHistory } from 'react-router-dom';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,21 +20,25 @@ const queryClient = new QueryClient({
   }
 });
 
-const App = (props) => {
+const App = () => {
+  const history = useHistory();
   useEffect(() => {
     insights.chrome.init();
 
     insights.chrome.identifyApp('manifests');
-    return insights.chrome.on('APP_NAVIGATION', (event) =>
-      this.props.history.push(`/${event.navId}`)
+    const unregister = insights.chrome.on('APP_NAVIGATION', (event) =>
+      history.push(`/${event.navId}`)
     );
+    return () => {
+      unregister();
+    };
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <NotificationProvider>
         <Notifications />
-        <Routes childProps={props} />
+        <Routes />
       </NotificationProvider>
     </QueryClientProvider>
   );
