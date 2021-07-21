@@ -1,4 +1,6 @@
-import { renderHook } from '@testing-library/react-hooks';
+import React from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import useExportSatelliteManifest, {
   downloadExportedManifest,
@@ -7,7 +9,6 @@ import useExportSatelliteManifest, {
   triggerManifestExport,
   TriggerManifestExportResponse
 } from '../useExportSatelliteManifest';
-import { createQueryWrapper } from '../../utilities/testHelpers';
 
 enableFetchMocks();
 
@@ -109,12 +110,27 @@ describe('useExportSatelliteManifests hook', () => {
 
     fetch.mockResponseOnce(JSON.stringify(downloadResponse));
 
-    const { result, waitFor } = renderHook(() => useExportSatelliteManifest('abc123', true), {
-      wrapper: createQueryWrapper()
-    });
+    const Page = () => {
+      const { mutate: exportManifest, isSuccess } = useExportSatelliteManifest();
+      return (
+        <div>
+          <h1 data-testid="title">{isSuccess && 'Success'}</h1>
+          <button onClick={() => exportManifest({ uuid: 'foo' })}>mutate</button>
+        </div>
+      );
+    };
 
-    await waitFor(() => result.current.isSuccess);
+    const queryClient = new QueryClient();
 
-    expect(result.current.data.constructor.name).toEqual('Blob');
+    const { getByTestId, getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <Page />
+      </QueryClientProvider>
+    );
+
+    expect(getByTestId('title').textContent).toBe('');
+    fireEvent.click(getByText('mutate'));
+    await waitFor(() => getByTestId('title'));
+    expect(getByTestId('title').textContent).toBe('Success');
   });
 });

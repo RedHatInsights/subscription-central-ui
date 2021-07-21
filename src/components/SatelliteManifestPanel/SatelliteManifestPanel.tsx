@@ -24,7 +24,8 @@ import {
 } from './satelliteManifestPanelUtils';
 import { User } from '../../hooks/useUser';
 import { CreateManifestPanel } from '../../components/emptyState';
-import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
+import useNotifications from '../../hooks/useNotifications';
+import useExportSatelliteManifest from '../../hooks/useExportSatelliteManifest';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
@@ -57,14 +58,28 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setIsDeleteManifestConfirmationModalOpen
   ] = useState(false);
   const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
-  const [shouldTriggerManifestExport, setShouldTriggerManifestExport] = useState(false);
   const [currentDeletionName, setCurrentDeletionName] = useState('');
+  const [shouldAddExportSuccessNotification, setShouldAddExportSuccessNotification] = useState(
+    false
+  );
+  const [exportedManifestName, setExportedManifestName] = useState('');
+  const [loadingManifestNotificationKey, setLoadingManifestNotificationKey] = useState('');
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
   const entitlementsRowRefs = new Array(10)
     .fill(null)
     .map(() => useRef<HTMLSpanElement | HTMLParagraphElement>(null));
+
+  const { addInfoNotification, addSuccessNotification, addErrorNotification } = useNotifications();
+
+  const {
+    data: exportedManifestData,
+    mutate: triggerManifestExport,
+    isLoading: isLoadingManifestExport,
+    isSuccess: successExportingManifest,
+    isError: errorExportingManifest
+  } = useExportSatelliteManifest();
 
   const scrollToPageTop = () => {
     if (titleRef?.current) {
@@ -88,14 +103,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   const closeDetailsPanel = () => {
     setDetailsDrawerIsExpanded(false);
-    setTimeout(() => {
-      /** Delay to avoid content flicker on animated close
-      /* Intentionally longer than child delay in Side Panel, because
-      /* otherwise the UUID is lost and query isn't reset.
-      */
-      setShouldTriggerManifestExport(false);
-      setCurrentDetailUUID('');
-    }, 300);
+    setCurrentDetailUUID('');
   };
 
   const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
@@ -137,7 +145,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   };
 
   const handleRowManifestClick = (uuid: string, rowIndex: number): void => {
-    setShouldTriggerManifestExport(false);
     openDetailsPanel(uuid, rowIndex);
   };
 
@@ -170,6 +177,62 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus({});
   };
 
+  const exportManifest = (uuid: string, manifestName: string): void => {
+    setExportedManifestName(manifestName);
+    setShouldAddExportSuccessNotification(true);
+
+    triggerManifestExport({ uuid });
+
+    const infoNotificationKey = addInfoNotification(
+      `Manifest ${manifestName} exporting. This may take some time. Please wait.`,
+      { hasTimeout: false }
+    );
+
+    setLoadingManifestNotificationKey(infoNotificationKey);
+  };
+
+  if (successExportingManifest && shouldAddExportSuccessNotification) {
+    const downloadURL = window.URL.createObjectURL(exportedManifestData);
+
+    addSuccessNotification(`Manifest ${exportedManifestName} Exported`, {
+      hasTimeout: false,
+      alertLinkHref: downloadURL,
+      alertLinkText: 'Download Manifest',
+      alertLinkIsDownload: true,
+      keyOfAlertToReplace: loadingManifestNotificationKey
+    });
+    setLoadingManifestNotificationKey('');
+    setShouldAddExportSuccessNotification(false);
+  }
+
+  if (errorExportingManifest && shouldAddExportSuccessNotification) {
+    addErrorNotification('Something went wrong. Please refresh the page and try again.', {
+      hasTimeout: false,
+      keyOfAlertToReplace: loadingManifestNotificationKey
+    });
+    setLoadingManifestNotificationKey('');
+    setShouldAddExportSuccessNotification(false);
+  }
+
+  const actions = () => {
+    return [
+      {
+        title: 'Export',
+        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+          const manifestName = rowData.cells[0].props.children.props.children;
+          const uuid = rowData.uuid.title;
+          exportManifest(uuid, manifestName);
+        }
+      },
+      {
+        title: 'Delete',
+        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
+          openDeleteConfirmationModal(rowData.uuid.title);
+        }
+      }
+    ];
+  };
+
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
@@ -187,33 +250,16 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const panelContent = (
     <ManifestDetailSidePanel
       uuid={currentDetailUUID}
+      exportManifest={exportManifest}
+      exportManifestButtonIsDisabled={isLoadingManifestExport}
       onCloseClick={closeDetailsPanel}
       isExpanded={detailsDrawerIsExpanded}
       titleRef={titleRef}
       drawerRef={drawerRef}
       openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
       deleteManifest={openDeleteConfirmationModal}
-      shouldTriggerManifestExport={shouldTriggerManifestExport}
     />
   );
-
-  const actions = () => {
-    return [
-      {
-        title: 'Export',
-        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          openDetailsPanel(rowData.uuid.title, rowId / 2);
-          setShouldTriggerManifestExport(true);
-        }
-      },
-      {
-        title: 'Delete',
-        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          openDeleteConfirmationModal(rowData.uuid.title);
-        }
-      }
-    ];
-  };
 
   return (
     <>
@@ -274,6 +320,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   sortBy={sortBy}
                   onSort={handleSort}
                   actions={actions()}
+                  areActionsDisabled={() => isLoadingManifestExport}
                 >
                   <TableHeader />
                   <TableBody />

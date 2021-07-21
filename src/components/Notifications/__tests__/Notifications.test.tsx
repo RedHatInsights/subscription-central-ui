@@ -28,4 +28,24 @@ describe('Notifications', () => {
     fireEvent.click(getByTestId('notification-close-btn-0'));
     expect(mockRemoveNotification).toHaveBeenCalledTimes(1);
   });
+
+  it('revokes object URL if downloadHref is passed across and user clicks X', () => {
+    const mockRemoveNotification = jest.fn();
+    window.URL.revokeObjectURL = jest.fn();
+
+    (useNotifications as jest.Mock).mockReturnValue({
+      notifications: [
+        {
+          message: 'Some stuff went well!',
+          variant: 'success',
+          key: '123',
+          downloadHref: 'foo.com'
+        }
+      ],
+      removeNotification: mockRemoveNotification
+    });
+    const { getByTestId } = render(<Notifications />);
+    fireEvent.click(getByTestId('notification-close-btn-0'));
+    expect(window.URL.revokeObjectURL).toHaveBeenCalledTimes(1);
+  });
 });

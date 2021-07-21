@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useQueryClient } from 'react-query';
 import {
   Button,
@@ -6,45 +6,38 @@ import {
   DrawerHead,
   DrawerActions,
   DrawerCloseButton,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateVariant,
   Grid,
-  GridItem,
-  Title
+  GridItem
 } from '@patternfly/react-core';
-import ArrowLeftIcon from '@patternfly/react-icons/dist/js/icons/arrow-left-icon';
 import { ErrorMessage, Processing } from '../emptyState';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
 import { User } from '../../hooks/useUser';
-import useExportSatelliteManifest from '../../hooks/useExportSatelliteManifest';
 import './ManifestDetailSidePanel.scss';
 
 interface ManifestDetailSidePanelProps {
   isExpanded: boolean;
-  shouldTriggerManifestExport: boolean;
   titleRef: React.MutableRefObject<HTMLSpanElement>;
   drawerRef: React.MutableRefObject<HTMLDivElement | HTMLHeadingElement>;
   uuid: string;
   onCloseClick: () => void;
+  exportManifest: (uuid: string, manifestName: string) => void;
+  exportManifestButtonIsDisabled: boolean;
   openCurrentEntitlementsListFromPanel: () => void;
   deleteManifest: (uuid: string) => void;
 }
 
 const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   isExpanded,
-  shouldTriggerManifestExport,
   titleRef,
   drawerRef,
   uuid,
   onCloseClick,
+  exportManifest,
+  exportManifestButtonIsDisabled,
   openCurrentEntitlementsListFromPanel,
   deleteManifest
 }) => {
-  const [exportDownloadURL, setExportDownloadURL] = useState('');
-  const [hasReturnedToDetails, setHasReturnedToDetails] = useState(false);
-
   const {
     data: entitlementData,
     isLoading: isLoadingEntitlementData,
@@ -52,16 +45,6 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     isSuccess: successFetchingEntitlementData,
     isError: errorFetchingEntitlementData
   } = useManifestEntitlements(uuid);
-
-  const shouldExportManifestOnRender = shouldTriggerManifestExport && !hasReturnedToDetails;
-  const {
-    data: exportedManifestData,
-    isFetching: isFetchingManifestExport,
-    refetch: exportManifest,
-    isError: errorExportingManifest,
-    isSuccess: successExportingManifest,
-    remove: resetExportManifestDataQuery
-  } = useExportSatelliteManifest(uuid, shouldExportManifestOnRender);
 
   const queryClient = useQueryClient();
   const user: User = queryClient.getQueryData('user');
@@ -71,13 +54,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
       scrollToPageTop();
       focusOnSidePanel();
     }
-  }, [
-    isExpanded,
-    successFetchingEntitlementData,
-    isLoadingEntitlementData,
-    isFetchingManifestExport,
-    successExportingManifest
-  ]);
+  }, [isExpanded, successFetchingEntitlementData, isLoadingEntitlementData]);
 
   const scrollToPageTop = () => {
     if (titleRef?.current) {
@@ -85,38 +62,20 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     }
   };
 
-  const returnToDetails = () => {
-    resetExportManifestDataQuery();
-    setHasReturnedToDetails(true);
-  };
-
-  if (successExportingManifest === true && hasReturnedToDetails === true) {
-    setHasReturnedToDetails(false);
-  }
-
   const focusOnSidePanel = () => {
     if (drawerRef?.current) {
       drawerRef.current.focus({ preventScroll: true });
     }
   };
 
-  if (successExportingManifest === true && exportDownloadURL?.length === 0) {
-    setExportDownloadURL(window.URL.createObjectURL(exportedManifestData));
-  }
-
   const handleCloseClick = () => {
     onCloseClick();
-    setHasReturnedToDetails(false);
+  };
 
-    if (exportDownloadURL.length) {
-      window.URL.revokeObjectURL(exportDownloadURL);
-      setExportDownloadURL('');
-    }
-
-    setTimeout(() => {
-      // Delay to avoid content flicker on animated close
-      resetExportManifestDataQuery();
-    }, 200);
+  const handleExportManifestClick = () => {
+    const { uuid, name } = entitlementData.body;
+    exportManifest(uuid, name);
+    onCloseClick();
   };
 
   const LoadingDetailsContent = () => (
@@ -220,7 +179,11 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           </GridItem>
           <GridItem span={6}>{formatDate(lastModified)}</GridItem>
         </Grid>
-        <Button variant="tertiary" onClick={exportManifest}>
+        <Button
+          variant="tertiary"
+          onClick={handleExportManifestClick}
+          isDisabled={exportManifestButtonIsDisabled}
+        >
           Export manifest
         </Button>
         <p className="manifest-details-delete-text">
@@ -239,43 +202,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     );
   };
 
-  const LoadingExportingManifestMessage = () => (
-    <EmptyState variant={EmptyStateVariant.small}>
-      <Title headingLevel="h3" ref={drawerRef} tabIndex={isFetchingManifestExport ? 0 : -1}>
-        Exporting manifest. Please wait
-      </Title>
-      <EmptyStateBody>
-        <Processing />
-      </EmptyStateBody>
-    </EmptyState>
-  );
-
-  const SuccessExportingManifestMessage = () => (
-    <EmptyState variant={EmptyStateVariant.small}>
-      <Title headingLevel="h3" ref={drawerRef} tabIndex={successExportingManifest ? 0 : -1}>
-        Manifest exported successfully.
-      </Title>
-      <EmptyStateBody>
-        <div className="manifest-details-download-manifest">
-          <a href={exportDownloadURL} download>
-            <Button variant="primary">Download Manifest</Button>
-          </a>
-          <Button style={{ marginTop: '10px' }} variant="link" onClick={returnToDetails}>
-            <ArrowLeftIcon style={{ marginRight: '7px' }} />
-            Back to details
-          </Button>
-        </div>
-      </EmptyStateBody>
-    </EmptyState>
-  );
-
   const ManifestDetailsInnerContent = () => {
-    if (errorFetchingEntitlementData === true || errorExportingManifest === true) {
+    if (errorFetchingEntitlementData === true) {
       return <ErrorMessage />;
-    } else if (isFetchingManifestExport === true) {
-      return <LoadingExportingManifestMessage />;
-    } else if (successExportingManifest === true) {
-      return <SuccessExportingManifestMessage />;
     } else if (isLoadingEntitlementData === true || isFetchingEntitlementData === true) {
       return <LoadingDetailsContent />;
     } else if (successFetchingEntitlementData === true) {

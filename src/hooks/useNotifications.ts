@@ -1,33 +1,40 @@
-import { useContext } from 'react';
-import { NotificationContext, NotificationVariantType } from '../contexts/NotificationProvider';
+import React, { useContext } from 'react';
+import {
+  NotificationContext,
+  NotificationVariantType,
+  NotificationOptions
+} from '../contexts/NotificationProvider';
 
 interface Notification {
   variant: NotificationVariantType;
   message: string;
   key: string;
+  timeout?: boolean;
+  actionLinks?: React.ReactNode;
+  downloadHref?: string;
 }
 
 interface Notifications {
   notifications: Notification[];
-  addSuccessNotification(message: string): void;
-  addErrorNotification(message: string): void;
-  addInfoNotification(message: string): void;
-  removeNotification(key: string): void;
+  addSuccessNotification(message: string, options?: NotificationOptions): string;
+  addErrorNotification(message: string, options?: NotificationOptions): string;
+  addInfoNotification(message: string, options?: NotificationOptions): string;
+  removeNotification(key: string, options?: NotificationOptions): void;
 }
 
 const useNotifications = (): Notifications => {
   const { notifications, addNotification, removeNotification } = useContext(NotificationContext);
 
-  const addSuccessNotification = (message: string) => {
-    addNotification('success', message);
+  const addSuccessNotification = (message: string, options?: NotificationOptions): string => {
+    return addNotification('success', message, options);
   };
 
-  const addErrorNotification = (message: string) => {
-    addNotification('danger', message);
+  const addErrorNotification = (message: string, options?: NotificationOptions): string => {
+    return addNotification('danger', message, options);
   };
 
-  const addInfoNotification = (message: string) => {
-    addNotification('info', message);
+  const addInfoNotification = (message: string, options?: NotificationOptions): string => {
+    return addNotification('info', message, options);
   };
 
   return {

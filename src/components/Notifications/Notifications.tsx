@@ -10,16 +10,23 @@ const Notifications: FC = () => {
       {notifications.map((notification, i) => (
         <Alert
           isLiveRegion
-          timeout={true}
+          timeout={notification.timeout}
           title={notification.message}
           variant={notification.variant}
           key={notification.key}
+          actionLinks={notification.actionLinks}
           actionClose={
             <AlertActionCloseButton
               data-testid={`notification-close-btn-${i}`}
               title={notification.message}
               variantLabel={`${notification.variant} alert`}
-              onClose={() => removeNotification(notification.key)}
+              onClose={() => {
+                removeNotification(notification.key);
+
+                if (notification?.downloadHref) {
+                  window.URL.revokeObjectURL(notification.downloadHref);
+                }
+              }}
             />
           }
         />

@@ -1,4 +1,4 @@
-import { useQuery, QueryObserverResult } from 'react-query';
+import { useMutation, UseMutationResult } from 'react-query';
 import Cookies from 'js-cookie';
 import { getConfig } from '../utilities/platformServices';
 
@@ -75,15 +75,19 @@ const exportManifest = async (uuid: string): Promise<Blob> => {
   return downloadResponse;
 };
 
-const useExportSatelliteManifest = (
-  uuid: string,
-  shouldLoadOnRender: boolean
-): QueryObserverResult<Blob, Error> => {
-  return useQuery<Blob, Error>(['exportedManifests', uuid], () => exportManifest(uuid), {
-    enabled: shouldLoadOnRender,
-    // retries off because export can potentially take 10+ minutes.
-    retry: false
-  });
+interface ExportManifestParams {
+  uuid: string;
+}
+
+const useExportSatelliteManifest = (): UseMutationResult<
+  Blob,
+  unknown,
+  ExportManifestParams,
+  unknown
+> => {
+  return useMutation((exportManifestParams: ExportManifestParams) =>
+    exportManifest(exportManifestParams.uuid)
+  );
 };
 
 export {

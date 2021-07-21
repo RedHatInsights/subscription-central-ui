@@ -14,11 +14,12 @@ queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: true });
 describe('Manifest Detail Side Panel', () => {
   const props = {
     isExpanded: true,
-    shouldTriggerManifestExport: false,
     uuid: 'abc123',
     titleRef: null as React.MutableRefObject<HTMLSpanElement>,
     drawerRef: null as React.MutableRefObject<HTMLDivElement>,
     onCloseClick: (): any => undefined,
+    exportManifest: (): any => undefined,
+    exportManifestButtonIsDisabled: false,
     openCurrentEntitlementsListFromPanel: (): any => undefined,
     deleteManifest: (): any => undefined
   };
@@ -113,41 +114,6 @@ describe('Manifest Detail Side Panel', () => {
     }));
 
     queryClient.setQueryData('user', { isSCACapable: false, isOrgAdmin: true });
-
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <ManifestDetailSidePanel {...props} />
-      </QueryClientProvider>
-    );
-    expect(container).toMatchSnapshot();
-  });
-
-  it('renders export loading message when triggering export', () => {
-    (useManifestEntitlements as jest.Mock).mockImplementation(() => ({}));
-    (useExportSatelliteManifest as jest.Mock).mockImplementation(() => ({
-      isFetching: true
-    }));
-
-    props.shouldTriggerManifestExport = true;
-
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <ManifestDetailSidePanel {...props} />
-      </QueryClientProvider>
-    );
-    expect(container).toMatchSnapshot();
-  });
-
-  it('renders export success message when triggering export', () => {
-    (useManifestEntitlements as jest.Mock).mockImplementation(() => ({}));
-    (useExportSatelliteManifest as jest.Mock).mockImplementation(() => ({
-      isFetching: false,
-      isSuccess: true,
-      data: new Blob(['foo'], { type: 'application/zip' })
-    }));
-    global.URL.createObjectURL = jest.fn();
-
-    props.shouldTriggerManifestExport = true;
 
     const { container } = render(
       <QueryClientProvider client={queryClient}>
