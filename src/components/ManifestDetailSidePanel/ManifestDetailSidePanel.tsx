@@ -22,6 +22,7 @@ interface ManifestDetailSidePanelProps {
   uuid: string;
   onCloseClick: () => void;
   exportManifest: (uuid: string, manifestName: string) => void;
+  exportManifestButtonIsDisabled: boolean;
   openCurrentEntitlementsListFromPanel: () => void;
   deleteManifest: (uuid: string) => void;
 }
@@ -33,6 +34,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   uuid,
   onCloseClick,
   exportManifest,
+  exportManifestButtonIsDisabled,
   openCurrentEntitlementsListFromPanel,
   deleteManifest
 }) => {
@@ -177,7 +179,11 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           </GridItem>
           <GridItem span={6}>{formatDate(lastModified)}</GridItem>
         </Grid>
-        <Button variant="tertiary" onClick={handleExportManifestClick}>
+        <Button
+          variant="tertiary"
+          onClick={handleExportManifestClick}
+          isDisabled={exportManifestButtonIsDisabled}
+        >
           Export manifest
         </Button>
         <p className="manifest-details-delete-text">

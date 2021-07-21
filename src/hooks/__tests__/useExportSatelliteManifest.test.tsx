@@ -111,11 +111,11 @@ describe('useExportSatelliteManifests hook', () => {
     fetch.mockResponseOnce(JSON.stringify(downloadResponse));
 
     const Page = () => {
-      const { mutate, isSuccess } = useExportSatelliteManifest();
+      const { mutate: exportManifest, isSuccess } = useExportSatelliteManifest();
       return (
         <div>
           <h1 data-testid="title">{isSuccess && 'Success'}</h1>
-          <button onClick={() => mutate({ uuid: 'foo' })}>mutate</button>
+          <button onClick={() => exportManifest({ uuid: 'foo' })}>mutate</button>
         </div>
       );
     };

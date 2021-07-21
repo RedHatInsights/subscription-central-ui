@@ -75,12 +75,10 @@ const NotificationProvider: FC = ({ children }) => {
   ): string => {
     const newNotificationProps = buildNotificationProps(variant, message, options);
 
-    const unfilteredNotifications = [...notifications, { ...newNotificationProps }];
-
-    let newNotifications = unfilteredNotifications;
+    let newNotifications = [...notifications, { ...newNotificationProps }];
 
     if (options?.keyOfAlertToReplace) {
-      newNotifications = unfilteredNotifications.filter(
+      newNotifications = newNotifications.filter(
         (notification) => notification.key !== options.keyOfAlertToReplace
       );
     }

@@ -19,6 +19,7 @@ describe('Manifest Detail Side Panel', () => {
     drawerRef: null as React.MutableRefObject<HTMLDivElement>,
     onCloseClick: (): any => undefined,
     exportManifest: (): any => undefined,
+    exportManifestButtonIsDisabled: false,
     openCurrentEntitlementsListFromPanel: (): any => undefined,
     deleteManifest: (): any => undefined
   };

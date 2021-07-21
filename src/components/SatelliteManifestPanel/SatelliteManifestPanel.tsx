@@ -251,6 +251,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     <ManifestDetailSidePanel
       uuid={currentDetailUUID}
       exportManifest={exportManifest}
+      exportManifestButtonIsDisabled={isLoadingManifestExport}
       onCloseClick={closeDetailsPanel}
       isExpanded={detailsDrawerIsExpanded}
       titleRef={titleRef}
