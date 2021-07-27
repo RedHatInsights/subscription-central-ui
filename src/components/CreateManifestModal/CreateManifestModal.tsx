@@ -22,6 +22,7 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
     mutate,
     isLoading: isCreatingManifest,
     isSuccess,
+    isError: errorCreatingManifest,
     reset: resetCreateSatelliteManifestQuery
   } = useCreateSatelliteManifest();
 
@@ -40,7 +41,6 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
    */
 
   const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
-  const errorCreatingManifest = isSuccess && !hasCreatedManifest;
 
   const formHasError = errorCreatingManifest || hasSatelliteVersionsError;
 
