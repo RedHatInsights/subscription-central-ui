@@ -15,12 +15,9 @@
     "lint:staged": "pretty-quick --staged && lint-staged",
     "nightly": "npm run deploy",
     "prod": "NODE_ENV=production webpack-dev-server --config config/dev.webpack.config.js",
-    "proxy": "SPANDX_CONFIG=profiles/local-frontend.js sh ../insights-proxy/scripts/run.sh",
     "server:ctr": "node src/server/generateServerKey.js",
     "start": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
     "start:beta": "BETA=true NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
-    "start:proxy": "run-p proxy start",
-    "start-beta:proxy": "run-p proxy start:beta",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "verify": "npm-run-all build lint test"
