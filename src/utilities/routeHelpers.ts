@@ -13,7 +13,7 @@ const getBaseName = (pathname: string): string => {
 };
 
 const getPartialRouteFromPath = (path: string): string => {
-  return path.replace('/insights/subscriptions/manifests', '/').replace('//', '/');
+  return path.replace(/^\/insights\/subscriptions\/manifests\/?/, '/');
 };
 
 export { getPartialRouteFromPath, getBaseName };
