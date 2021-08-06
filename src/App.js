@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import NotificationProvider from './contexts/NotificationProvider';
 import Notifications from './components/Notifications';
 import { useHistory } from 'react-router-dom';
+import { getPartialRouteFromPath } from './utilities/routeHelpers';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,9 +27,10 @@ const App = () => {
     insights.chrome.init();
 
     insights.chrome.identifyApp('manifests');
-    const unregister = insights.chrome.on('APP_NAVIGATION', (event) =>
-      history.push(`/${event.navId}`)
-    );
+    const unregister = insights.chrome.on('APP_NAVIGATION', (event) => {
+      const partialURL = getPartialRouteFromPath(event.domEvent.href);
+      history.push(partialURL);
+    });
     return () => {
       unregister();
     };

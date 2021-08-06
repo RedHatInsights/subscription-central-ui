@@ -6,29 +6,16 @@ An app to handle subscription management on cloud.redhat.com, built using the [S
 
 ## Getting Started
 
-In the same parent directory as where you place this code base, you should clone:
+1. The first time you clone the repo, run `npm install`
 
-- [Insights Proxy](https://github.com/RedHatInsights/insights-proxy)
-- Subscription Central (this repo)
+2. `npm run start` or `npm run start:beta`, depending on whether you want to run in stable or beta mode.
 
-1. Run [insights-proxy](https://github.com/RedHatInsights/insights-proxy) (requires [Docker](https://www.docker.com/) and modifying /etc/hosts). It's recommended to set a PROXY_PATH environment variable in your .bashrc to avoid having to write the full path to where you clone the repo.
-
-```shell
-SPANDX_CONFIG="./profiles/local-frontend.js" bash $PROXY_PATH/scripts/run.sh
-```
-
-2. `npm install`
-
-3. `npm run start`
-
-4. Open one of the following environments behind the Red Hat VPN and accept the certs:
+3. Open one of the following environments behind the Red Hat VPN and accept the certs:
 
 - https://ci.foo.redhat.com:1337/beta/insights/subscriptions/manifests
 - https://qa.foo.redhat.com:1337/beta/insights/subscriptions/manifests
 - https://stage.foo.redhat.com:1337/beta/insights/subscriptions/manifests
 - https://prod.foo.redhat.com:1337/beta/insights/subscriptions/manifests
-
-For convenience, the script to run the front-end and the proxy has been provided as `npm run start:proxy`, provided that the insights-proxy repo is located in the parent folder, and Docker is running.
 
 Should you need more help, there is a [comprehensive quick start guide in the Storybook Documentation.](https://github.com/RedHatInsights/insights-frontend-storybook/blob/master/src/docs/welcome/quickStart/DOC.md)
 

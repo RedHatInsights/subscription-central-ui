@@ -1,4 +1,4 @@
-import { getBaseName } from '..';
+import { getBaseName, getPartialRouteFromPath } from '..';
 
 describe('utilities/getBaseName', () => {
   it('should find the right base name on Stable', () => {
@@ -13,5 +13,19 @@ describe('utilities/getBaseName', () => {
 
   it('should find the right base name not on Beta with a shorter url', () => {
     expect(getBaseName('/insights')).toEqual('/insights/');
+  });
+});
+
+describe('getPartialRouteFromPath method', () => {
+  it('gets the root partial correctly', () => {
+    expect(getPartialRouteFromPath('/insights/subscriptions/manifests')).toEqual('/');
+  });
+
+  it('gets the root partial correctly with a trailing slash', () => {
+    expect(getPartialRouteFromPath('/insights/subscriptions/manifests/')).toEqual('/');
+  });
+
+  it('gets the oops route correctly', () => {
+    expect(getPartialRouteFromPath('/insights/subscriptions/manifests/oops')).toEqual('/oops');
   });
 });

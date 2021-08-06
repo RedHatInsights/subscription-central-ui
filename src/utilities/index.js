@@ -1,3 +1,3 @@
-import getBaseName from './getBaseName';
+import { getBaseName, getPartialRouteFromPath } from './routeHelpers';
 
-export { getBaseName };
+export { getBaseName, getPartialRouteFromPath };
