@@ -14,6 +14,7 @@
     "lint:sass": "stylelint 'src/**/*.scss' --config .stylelintrc.json",
     "lint:staged": "pretty-quick --staged && lint-staged",
     "nightly": "npm run deploy",
+    "preinstall": "npx npm-force-resolutions",
     "prod": "NODE_ENV=production webpack-dev-server --config config/dev.webpack.config.js",
     "server:ctr": "node src/server/generateServerKey.js",
     "start": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
@@ -21,6 +22,10 @@
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "verify": "npm-run-all build lint test"
+  },
+  "resolutions": {
+    "glob-parent": "^6.0.1",
+    "hosted-git-info": "^3.0.8"
   },
   "husky": {
     "hooks": {
