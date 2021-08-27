@@ -53,15 +53,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
   const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
-  const [
-    isDeleteManifestConfirmationModalOpen,
-    setIsDeleteManifestConfirmationModalOpen
-  ] = useState(false);
+  const [isDeleteManifestConfirmationModalOpen, setIsDeleteManifestConfirmationModalOpen] =
+    useState(false);
   const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
   const [currentDeletionName, setCurrentDeletionName] = useState('');
-  const [shouldAddExportSuccessNotification, setShouldAddExportSuccessNotification] = useState(
-    false
-  );
+  const [shouldAddExportSuccessNotification, setShouldAddExportSuccessNotification] =
+    useState(false);
   const [exportedManifestName, setExportedManifestName] = useState('');
   const [loadingManifestNotificationKey, setLoadingManifestNotificationKey] = useState('');
 
