@@ -28,6 +28,9 @@ exports[`No Permissions Page renders correctly 1`] = `
         </svg>
         <h5
           class="pf-c-title pf-m-lg"
+          data-ouia-component-id="OUIA-Generated-Title-1"
+          data-ouia-component-type="PF4/Title"
+          data-ouia-safe="true"
         >
           You do not have access to Manifests
         </h5>

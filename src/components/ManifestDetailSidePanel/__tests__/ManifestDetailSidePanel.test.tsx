@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { Drawer, DrawerContent, DrawerContentBody } from '@patternfly/react-core';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import useManifestEntitlements from '../../../hooks/useManifestEntitlements';
 import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifest';
@@ -30,11 +31,18 @@ describe('Manifest Detail Side Panel', () => {
     }));
     (useExportSatelliteManifest as jest.Mock).mockImplementation(() => ({}));
 
+    const panelContent = <ManifestDetailSidePanel {...props} />;
+
     const { container } = render(
       <QueryClientProvider client={queryClient}>
-        <ManifestDetailSidePanel {...props} />
+        <Drawer isExpanded={true}>
+          <DrawerContent panelContent={panelContent}>
+            <DrawerContentBody>foo</DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
       </QueryClientProvider>
     );
+
     expect(container).toMatchSnapshot();
   });
 
@@ -43,11 +51,18 @@ describe('Manifest Detail Side Panel', () => {
       isError: true
     }));
 
+    const panelContent = <ManifestDetailSidePanel {...props} />;
+
     const { container } = render(
       <QueryClientProvider client={queryClient}>
-        <ManifestDetailSidePanel {...props} />
+        <Drawer isExpanded={true}>
+          <DrawerContent panelContent={panelContent}>
+            <DrawerContentBody>foo</DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
       </QueryClientProvider>
     );
+
     expect(container).toMatchSnapshot();
   });
 
@@ -59,11 +74,18 @@ describe('Manifest Detail Side Panel', () => {
       data: {}
     }));
 
+    const panelContent = <ManifestDetailSidePanel {...props} />;
+
     const { container } = render(
       <QueryClientProvider client={queryClient}>
-        <ManifestDetailSidePanel {...props} />
+        <Drawer isExpanded={true}>
+          <DrawerContent panelContent={panelContent}>
+            <DrawerContentBody>foo</DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
       </QueryClientProvider>
     );
+
     expect(container).toMatchSnapshot();
   });
 
@@ -86,11 +108,18 @@ describe('Manifest Detail Side Panel', () => {
       }
     }));
 
+    const panelContent = <ManifestDetailSidePanel {...props} />;
+
     const { container } = render(
       <QueryClientProvider client={queryClient}>
-        <ManifestDetailSidePanel {...props} />
+        <Drawer isExpanded={true}>
+          <DrawerContent panelContent={panelContent}>
+            <DrawerContentBody>foo</DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
       </QueryClientProvider>
     );
+
     expect(container).toMatchSnapshot();
   });
 
@@ -115,11 +144,18 @@ describe('Manifest Detail Side Panel', () => {
 
     queryClient.setQueryData('user', { isSCACapable: false, isOrgAdmin: true });
 
+    const panelContent = <ManifestDetailSidePanel {...props} />;
+
     const { container } = render(
       <QueryClientProvider client={queryClient}>
-        <ManifestDetailSidePanel {...props} />
+        <Drawer isExpanded={true}>
+          <DrawerContent panelContent={panelContent}>
+            <DrawerContentBody>foo</DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
       </QueryClientProvider>
     );
+
     expect(container).toMatchSnapshot();
   });
 });
