@@ -106,7 +106,7 @@ You will need to create a separate PR in cloud-services-config for each branch c
 
 The manifest-specific lines above will need to be added in a new PR to each branch. It should be added to ci-stable (which should make changes visible automatically, to https://console.stage.redhat.com/), and then prod-stable, at which point the app's menu links will be live.
 
-When doing this for the first time, you will need to separately push the manifests repo through these branches (ci-stable and prod-stable) to do the same.
+When making the navigation changes live for the first time in each environment, you will need to separately push the manifests repo through these branches (ci-stable and prod-stable) to do the same. It is advised to push this app to the appropriate branch prior to making it live on the nav side.
 
 These requirements may change over time. If you start a PR in the cloud-services-config repo, the console dot team will be able to assist you to ensure that the app is loading properly in each environment.
 

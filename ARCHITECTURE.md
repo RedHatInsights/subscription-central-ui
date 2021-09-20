@@ -7,14 +7,13 @@ The React app bundled using [Webpack](https://webpack.js.org) includes:
 - [@patternfly/react-core](https://github.com/patternfly/patternfly-react) as the component library
 - A [react-router-dom BrowserRouter](https://reacttraining.com/react-router/web/api/BrowserRouter) for routing pages
   - Uses the HTML5 history API (pushState, replaceState and the popstate event) to keep UI in sync with the URL
-- [React-query](https://react-query.tanstack.com/), through custom data-fetching hooks in the src/hooks folder, for managing API state (usually for API calls)
-  - There is helper function used to create store with option to plug reducers on the fly called [getRegistry](https://github.com/RedHatInsights/frontend-components/blob/master/packages/utils/doc/redux.md#reducer-registry)
+- [React-query](https://react-query.tanstack.com/), through custom data-fetching hooks in the src/hooks folder, for managing API state
 - [React.lazy and React.Suspense](https://reactjs.org/docs/code-splitting.html#reactlazy) for asynchronously loading components
 - [React.useContext](https://reactjs.org/docs/hooks-reference.html#usecontext) for managing notification state (in src/contexts/NotificationProvider.tsx)
 
 ## Micro frontends
 
-These assets are loaded via [Insights chrome](https://github.com/RedHatInsights/insights-chrome) which provides user auth, top and side nav (aka chroming), and a `<main id="root">` to inject into. Diagram here:
+These assets are loaded via [Insights chrome](https://github.com/RedHatInsights/insights-chrome) which provides user auth, top and side nav (aka chroming), and a `<main id="root">` to inject into, using a [micro frontends approach](https://martinfowler.com/articles/micro-frontends.html). Diagram here:
 
 ![Console dot architecture diagram](https://github.com/RedHatInsights/insights-frontend-storybook/blob/master/src/docs/welcome/img/chrome.png?raw=true)
 
