@@ -63,7 +63,7 @@ Also in the [rhel-navigation file](https://github.com/RedHatInsights/cloud-servi
 
 You will need to create a separate PR in cloud-services-config for each branch corresponding to the environment you want to add this to.
 
-The manifest-specific lines above will need to be added in a new PR to each branch. It should be added to ci-stable (which should make changes visible automatically, to https://console.stage.redhat.com/), and then prod-stable, at which point the app's menu links will be live.
+The manifest-specific lines outlined in the "Making changes to nav configuration" section above will need to be added to their respective files in a new PR to each branch. It should be added to ci-stable (which should make changes visible automatically, to https://console.stage.redhat.com/), and then prod-stable, at which point the app's menu links will be live.
 
 When making the navigation changes live for the first time in each environment (i.e., in the cloud-services-config repo), you will need to separately push the manifests repo (i.e., this repo, subscription-central-ui) through the same branches (ci-stable and prod-stable) so that the app is pushed live at the same time as the menu updates. It is advised to push this (subscription-central-ui) app to the appropriate branch prior to making it live on the nav side.
 
