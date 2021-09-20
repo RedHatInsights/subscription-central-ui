@@ -37,6 +37,7 @@ To maintain code quality, the following tools are used:
     - In settings (command + comma or control + comma), search for "format on save" and make sure that is checked
     - Still in settings, search for Prettier and make sure that the "Require Config" is checked.
     - Then open a file and intentionally make spacing off and hit save, to confirm that prettier is auto-formatting properly.
+- [Husky](https://typicode.github.io/husky/#/) to verify changes before commits.
 - [Jest](https://jestjs.io/), for unit tests. Note that the repo is configured so that at least 85% code coverage is required for the entire app or the test suite will fail.
 - [@testing-library/react](https://testing-library.com/docs/) for additional testing functionality
 - [Sentry](https://docs.sentry.io/platforms/javascript/) for error tracking in production
