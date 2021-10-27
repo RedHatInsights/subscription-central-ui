@@ -1,8 +1,10 @@
 import { useQuery, UseQueryResult } from 'react-query';
 import Cookies from 'js-cookie';
-import { getConfig, authenticateUser } from '../utilities/platformServices';
+import { getConfig, authenticateUser, getUserRbacPermissions } from '../utilities/platformServices';
 
 interface User {
+  canReadManifests: boolean;
+  canWriteManifests: boolean;
   isOrgAdmin: boolean;
   isSCACapable: boolean;
 }
@@ -25,9 +27,16 @@ const fetchSCACapableStatus = (): Promise<SCACapableStatusResponse> => {
 };
 
 const getUser = (): Promise<User> => {
-  return Promise.all([authenticateUser(), fetchSCACapableStatus()]).then(
-    ([userStatus, scaStatusResponse]) => {
+  return Promise.all([authenticateUser(), fetchSCACapableStatus(), getUserRbacPermissions()]).then(
+    ([userStatus, scaStatusResponse, rawRbacPermissions]) => {
+      const rbacPermissions = rawRbacPermissions.map((rawPermission) => rawPermission.permission);
       const user: User = {
+        canReadManifests:
+          rbacPermissions.includes('subscriptions:manifests:read') ||
+          rbacPermissions.includes('subscriptions:*:*'),
+        canWriteManifests:
+          rbacPermissions.includes('subscriptions:manifests:write') ||
+          rbacPermissions.includes('subscriptions:*:*'),
         isOrgAdmin: userStatus.identity.user.is_org_admin === true,
         isSCACapable: scaStatusResponse.body.simpleContentAccessCapable === true
       };

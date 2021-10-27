@@ -5,14 +5,18 @@ import { Drawer, DrawerContent, DrawerContentBody } from '@patternfly/react-core
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import useManifestEntitlements from '../../../hooks/useManifestEntitlements';
 import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifest';
+import factories from '../../../utilities/factories';
+import { get, def } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useManifestEntitlements');
 jest.mock('../../../hooks/useExportSatelliteManifest');
 
 const queryClient = new QueryClient();
-queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: true });
 
 describe('Manifest Detail Side Panel', () => {
+  def('scaCapable', () => true);
+  def('user', () => factories.user.build({ isSCACapable: get('scaCapable') }));
+
   const props = {
     isExpanded: true,
     uuid: 'abc123',
@@ -24,6 +28,10 @@ describe('Manifest Detail Side Panel', () => {
     openCurrentEntitlementsListFromPanel: (): any => undefined,
     deleteManifest: (): any => undefined
   };
+
+  beforeEach(() => {
+    queryClient.setQueryData('user', get('user'));
+  });
 
   it('renders with a spinner when loading', () => {
     (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
@@ -123,39 +131,48 @@ describe('Manifest Detail Side Panel', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it("shows 'administratively disabled' for SCA status when user is not SCA capable", () => {
-    (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
-      isError: false,
-      isSuccess: true,
-      isLoading: false,
-      data: {
-        body: {
-          uuid: 'abc123',
-          name: 'John Doe',
-          version: '6.9',
-          createdDate: '2020-01-01T00:00:00.000Z',
-          createdBy: 'Jane Doe',
-          lastModified: '2021-01-01T00:00:00.000Z',
-          entitlementsAttachedQuantity: 10,
-          simpleContentAccess: 'enabled'
+  describe('when user is not SCA capable', () => {
+    def('scaCapable', () => false);
+
+    it("shows 'administratively disabled' for SCA status", () => {
+      (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
+        isError: false,
+        isSuccess: true,
+        isLoading: false,
+        data: {
+          body: {
+            uuid: 'abc123',
+            name: 'John Doe',
+            version: '6.9',
+            createdDate: '2020-01-01T00:00:00.000Z',
+            createdBy: 'Jane Doe',
+            lastModified: '2021-01-01T00:00:00.000Z',
+            entitlementsAttachedQuantity: 10,
+            simpleContentAccess: 'enabled'
+          }
         }
-      }
-    }));
+      }));
 
-    queryClient.setQueryData('user', { isSCACapable: false, isOrgAdmin: true });
+      queryClient.setQueryData('user', {
+        canReadManifests: true,
+        canWriteManifests: true,
+        isSCACapable: false,
+        isOrgAdmin: true
+      });
 
-    const panelContent = <ManifestDetailSidePanel {...props} />;
+      const panelContent = <ManifestDetailSidePanel {...props} />;
 
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <Drawer isExpanded={true}>
-          <DrawerContent panelContent={panelContent}>
-            <DrawerContentBody>foo</DrawerContentBody>
-          </DrawerContent>
-        </Drawer>
-      </QueryClientProvider>
-    );
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <Drawer isExpanded={true}>
+            <DrawerContent panelContent={panelContent}>
+              <DrawerContentBody>foo</DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
+        </QueryClientProvider>
+      );
 
-    expect(container).toMatchSnapshot();
+      expect(container).toMatchSnapshot();
+    });
   });
 });

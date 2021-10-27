@@ -3,143 +3,122 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
-import { ManifestEntry } from '../../../hooks/useSatelliteManifests';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
+import factories from '../../../utilities/factories';
+import { get, def } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useSatelliteVersions');
 
 const queryClient = new QueryClient();
 
 describe('Satellite Manifest Panel', () => {
+  def('scaCapable', () => true);
+  def('orgAdmin', () => true);
+  def('user', () => {
+    return factories.user.build({ isSCACapable: get('scaCapable'), isOrgAdmin: get('orgAdmin') });
+  });
+  def('data', () => {
+    return [
+      {
+        name: 'Sputnik',
+        type: 'Satellite',
+        url: 'www.example.com',
+        uuid: '00000000-0000-0000-0000-000000000000',
+        version: '1.2.3',
+        entitlementQuantity: 5,
+        simpleContentAccess: 'enabled'
+      }
+    ];
+  });
+  def('fetching', () => false);
+  def('props', () => {
+    return {
+      data: get('data'),
+      isFetching: get('fetching'),
+      user: get('user')
+    };
+  });
+
   it('renders correctly with SCA column when user is SCA Capable', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
       body: [] as SatelliteVersion[]
     });
 
-    const data: ManifestEntry[] = [
-      {
-        name: 'Sputnik',
-        type: 'Satellite',
-        url: 'www.example.com',
-        uuid: '00000000-0000-0000-0000-000000000000',
-        version: '1.2.3',
-        entitlementQuantity: 5,
-        simpleContentAccess: 'enabled'
-      }
-    ];
-
-    const props = {
-      data,
-      isFetching: false,
-      user: { isOrgAdmin: true, isSCACapable: true }
-    };
-
     const { container } = render(
       <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...props} />
+        <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
     expect(container).toMatchSnapshot();
   });
 
-  it('renders correctly without SCA column when user is not SCA Capable', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+  describe('when user is not SCA capable', () => {
+    def('scaCapable', () => false);
+
+    it('renders correctly without SCA column', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel {...get('props')} />
+        </QueryClientProvider>
+      );
+      expect(container).toMatchSnapshot();
     });
-
-    const data: ManifestEntry[] = [
-      {
-        name: 'Sputnik',
-        type: 'Satellite',
-        url: 'www.example.com',
-        uuid: '00000000-0000-0000-0000-000000000000',
-        version: '1.2.3',
-        entitlementQuantity: 5,
-        simpleContentAccess: 'enabled'
-      }
-    ];
-
-    const props = {
-      data,
-      isFetching: false,
-      user: { isOrgAdmin: true, isSCACapable: false }
-    };
-
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...props} />
-      </QueryClientProvider>
-    );
-    expect(container).toMatchSnapshot();
   });
 
-  it('renders no results when there are no results and user is not admin', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+  describe('when user is not admin and there are no results', () => {
+    def('orgAdmin', () => false);
+    def('data', () => []);
+
+    it('renders no results', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel {...get('props')} />
+        </QueryClientProvider>
+      );
+      expect(container).toMatchSnapshot();
     });
-
-    const props = {
-      data: [] as ManifestEntry[],
-      isFetching: false,
-      user: { isOrgAdmin: false, isSCACapable: true }
-    };
-
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...props} />
-      </QueryClientProvider>
-    );
-    expect(container).toMatchSnapshot();
   });
 
-  it('renders a blank state  when there are no results and user is admin', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+  describe('when user is admin and there are no results', () => {
+    def('data', () => []);
+
+    it('renders a blank state', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel {...get('props')} />
+        </QueryClientProvider>
+      );
+      expect(container).toMatchSnapshot();
     });
-
-    const props = {
-      data: [] as ManifestEntry[],
-      isFetching: false,
-      user: { isOrgAdmin: true, isSCACapable: true }
-    };
-
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...props} />
-      </QueryClientProvider>
-    );
-    expect(container).toMatchSnapshot();
   });
 
-  it('renders loading when refetching data', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+  describe('when refetching data', () => {
+    def('fetching', () => true);
+
+    it('renders loading', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel {...get('props')} />
+        </QueryClientProvider>
+      );
+      expect(container).toMatchSnapshot();
     });
-
-    const data: ManifestEntry[] = [
-      {
-        name: 'Sputnik',
-        type: 'Satellite',
-        url: 'www.example.com',
-        uuid: '00000000-0000-0000-0000-000000000000',
-        version: '1.2.3',
-        entitlementQuantity: 5,
-        simpleContentAccess: 'enabled'
-      }
-    ];
-
-    const props = {
-      data,
-      isFetching: true,
-      user: { isOrgAdmin: true, isSCACapable: true }
-    };
-
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...props} />
-      </QueryClientProvider>
-    );
-    expect(container).toMatchSnapshot();
   });
 
   it('opens the side panel when the row name is clicked', () => {
@@ -147,27 +126,9 @@ describe('Satellite Manifest Panel', () => {
       body: [] as SatelliteVersion[]
     });
 
-    const data: ManifestEntry[] = [
-      {
-        name: 'Sputnik',
-        type: 'Satellite',
-        url: 'www.example.com',
-        uuid: '00000000-0000-0000-0000-000000000000',
-        version: '1.2.3',
-        entitlementQuantity: 5,
-        simpleContentAccess: 'enabled'
-      }
-    ];
-
-    const props = {
-      data,
-      isFetching: false,
-      user: { isOrgAdmin: true, isSCACapable: true }
-    };
-
     const { container, getByTestId } = render(
       <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...props} />
+        <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
 
@@ -180,27 +141,9 @@ describe('Satellite Manifest Panel', () => {
       body: [] as SatelliteVersion[]
     });
 
-    const data: ManifestEntry[] = [
-      {
-        name: 'Sputnik',
-        type: 'Satellite',
-        url: 'www.example.com',
-        uuid: '00000000-0000-0000-0000-000000000000',
-        version: '1.2.3',
-        entitlementQuantity: 5,
-        simpleContentAccess: 'enabled'
-      }
-    ];
-
-    const props = {
-      data,
-      isFetching: false,
-      user: { isOrgAdmin: true, isSCACapable: true }
-    };
-
     const { getByLabelText, getByText } = render(
       <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...props} />
+        <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
 

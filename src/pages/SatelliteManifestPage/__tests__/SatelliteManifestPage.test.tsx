@@ -8,6 +8,7 @@ import { init } from '../../../store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
 import useUser from '../../../hooks/useUser';
+import factories from '../../../utilities/factories';
 
 jest.mock('../../../hooks/useSatelliteManifests');
 jest.mock('../../../hooks/useUser');
@@ -45,7 +46,13 @@ const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean, isErr
   });
 
   if (isError === false) {
-    queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: orgAdminStatus });
+    queryClient.setQueryData(
+      'user',
+      factories.user.build({
+        isSCACapable: true,
+        isOrgAdmin: orgAdminStatus
+      })
+    );
   }
 };
 

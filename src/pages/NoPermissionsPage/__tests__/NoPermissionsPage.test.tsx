@@ -42,7 +42,12 @@ const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean) => {
     }
   });
 
-  queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: orgAdminStatus });
+  queryClient.setQueryData('user', {
+    canReadManifests: true,
+    canWriteManifests: true,
+    isSCACapable: true,
+    isOrgAdmin: orgAdminStatus
+  });
 };
 
 describe('No Permissions Page', () => {
