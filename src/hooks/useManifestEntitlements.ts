@@ -1,6 +1,5 @@
 import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
-import { getConfig } from '../utilities/platformServices';
 
 interface ManifestEntitlement {
   id: string;
@@ -35,10 +34,8 @@ interface EntitlementsAttachedData {
 
 const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlementsData> => {
   const jwtToken = Cookies.get('cs_jwt');
-  const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}?include=entitlements`, {
-    headers: { Authorization: `Bearer ${jwtToken}` },
-    mode: 'cors'
+  return fetch(`/api/rhsm/v2/manifests/${uuid}?include=entitlements`, {
+    headers: { Authorization: `Bearer ${jwtToken}` }
   }).then((response) => response.json());
 };
 

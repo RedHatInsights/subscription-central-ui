@@ -1,4 +1,4 @@
-import { authenticateUser, getConfig } from '../platformServices';
+import { authenticateUser } from '../platformServices';
 
 beforeEach(() => {
   window.insights = {

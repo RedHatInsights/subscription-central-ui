@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie';
 import { useMutation, useQueryClient } from 'react-query';
-import { getConfig } from '../utilities/platformServices';
 
 interface CreateManifestParams {
   name: string;
@@ -10,8 +9,7 @@ interface CreateManifestParams {
 const createSatelliteManifest = (data: CreateManifestParams) => {
   const { name, version } = data;
   const jwtToken = Cookies.get('cs_jwt');
-  const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations?name=${name}&version=${version}`, {
+  return fetch(`/api/rhsm/v2/manifests?name=${name}&version=${version}`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${jwtToken}` }
   }).then((response) => {

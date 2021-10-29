@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query';
 import Cookies from 'js-cookie';
-import { getConfig } from '../utilities/platformServices';
 
 interface SatelliteVersion {
   description: string;
@@ -9,10 +8,8 @@ interface SatelliteVersion {
 
 const fetchSatelliteVersions = (): Promise<any> => {
   const jwtToken = Cookies.get('cs_jwt');
-  const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations/versions`, {
-    headers: { Authorization: `Bearer ${jwtToken}` },
-    mode: 'cors'
+  return fetch('/api/rhsm/v2/manifests/versions', {
+    headers: { Authorization: `Bearer ${jwtToken}` }
   }).then((response) => response.json());
 };
 
