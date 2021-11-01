@@ -153,13 +153,6 @@ describe('Manifest Detail Side Panel', () => {
         }
       }));
 
-      queryClient.setQueryData('user', {
-        canReadManifests: true,
-        canWriteManifests: true,
-        isSCACapable: false,
-        isOrgAdmin: true
-      });
-
       const panelContent = <ManifestDetailSidePanel {...props} />;
 
       const { container } = render(

@@ -260,8 +260,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   return (
     <>
-      {data?.length === 0 && user.isOrgAdmin && <CreateManifestPanel />}
-      {(data?.length > 0 || !user.isOrgAdmin) && (
+      {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel />}
+      {(data?.length > 0 || !user.canWriteManifests) && (
         <PageSection variant="light">
           <Drawer isExpanded={detailsDrawerIsExpanded}>
             <DrawerContent panelContent={panelContent}>
@@ -286,7 +286,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                           />
                         </SplitItem>
                       )}
-                      {user.isOrgAdmin === true && (
+                      {user.canWriteManifests === true && (
                         <SplitItem>
                           <CreateManifestButtonWithModal />
                         </SplitItem>

@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
 import useUser from '../../../hooks/useUser';
 import factories from '../../../utilities/factories';
+import { get, def } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useSatelliteManifests');
 jest.mock('../../../hooks/useUser');
@@ -33,36 +34,30 @@ const SatellitePage = () => (
   </QueryClientProvider>
 );
 
-const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean, isError: boolean) => {
-  (useUser as jest.Mock).mockReturnValue({
-    isLoading: isLoading,
-    isFetching: false,
-    isSuccess: true,
-    isError: isError,
-    data: {
-      isOrgAdmin: orgAdminStatus,
-      isSCACapable: true
+describe('Satellite Manifests Page', () => {
+  def('loading', () => false);
+  def('error', () => false);
+  def('canWriteManifests', () => true);
+  def('user', () => {
+    return factories.user.build({ canWriteManifests: get('canWriteManifests') });
+  });
+
+  beforeEach(() => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoading: get('loading'),
+      isFetching: false,
+      isSuccess: true,
+      isError: get('error'),
+      data: get('user')
+    });
+
+    if (get('error') === false) {
+      queryClient.setQueryData('user', get('user'));
     }
   });
 
-  if (isError === false) {
-    queryClient.setQueryData(
-      'user',
-      factories.user.build({
-        isSCACapable: true,
-        isOrgAdmin: orgAdminStatus
-      })
-    );
-  }
-};
-
-describe('Satellite Manifests Page', () => {
   it('renders correctly with satellite data', async () => {
     window.insights = {};
-    const isLoading = false;
-    const isOrgAdmin = true;
-    const isError = false;
-    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -83,32 +78,28 @@ describe('Satellite Manifests Page', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders loading when the user status call is still loading', async () => {
-    window.insights = {};
-    const isLoading = true;
-    const isOrgAdmin = true;
-    const isError = false;
-    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
+  describe('when the user status call is still loading', () => {
+    def('loading', () => true);
 
-    (useSatelliteManifests as jest.Mock).mockReturnValue({
-      isLoading: true,
-      data: [],
-      error: false,
-      isError: false
+    it('renders loading', async () => {
+      window.insights = {};
+
+      (useSatelliteManifests as jest.Mock).mockReturnValue({
+        isLoading: true,
+        data: [],
+        error: false,
+        isError: false
+      });
+
+      const { container } = render(<SatellitePage />);
+
+      expect(container).toMatchSnapshot();
+      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
     });
-
-    const { container } = render(<SatellitePage />);
-
-    expect(container).toMatchSnapshot();
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
   });
 
   it('renders loading when it has not received a response back', async () => {
     window.insights = {};
-    const isLoading = false;
-    const isOrgAdmin = true;
-    const isError = false;
-    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: true,
@@ -123,13 +114,7 @@ describe('Satellite Manifests Page', () => {
     await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
   });
 
-  it('renders the empty state with Create Manifest button when no results are returned and user is org admin', async () => {
-    window.insights = {};
-    const isLoading = false;
-    const isOrgAdmin = true;
-    const isError = false;
-    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
-
+  it('renders the empty state when no results are returned', async () => {
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
       data: []
@@ -142,23 +127,23 @@ describe('Satellite Manifests Page', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders the empty table with no manifests found message, when no manifests returned via API, and user is not org_admin', async () => {
-    window.insights = {};
-    const isLoading = false;
-    const isOrgAdmin = false;
-    const isError = false;
-    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
+  describe('when the user does not have write permissions', () => {
+    def('canWriteManifests', () => false);
 
-    (useSatelliteManifests as jest.Mock).mockReturnValue({
-      isLoading: false,
-      data: []
+    it('renders an empty table when the API renturns no manifests', async () => {
+      window.insights = {};
+
+      (useSatelliteManifests as jest.Mock).mockReturnValue({
+        isLoading: false,
+        data: []
+      });
+
+      const { container } = render(<SatellitePage />);
+
+      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
+
+      expect(container).toMatchSnapshot();
     });
-
-    const { container } = render(<SatellitePage />);
-
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-
-    expect(container).toMatchSnapshot();
   });
 
   it('renders with an error message when an API fails', async () => {
@@ -169,31 +154,25 @@ describe('Satellite Manifests Page', () => {
       data: undefined
     });
 
-    const isLoading = false;
-    const isOrgAdmin = false;
-    const isError = false;
-    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
-
     const { container } = render(<SatellitePage />);
     await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
     expect(container).toMatchSnapshot();
   });
 
-  it('renders an error message when user call fails', async () => {
-    window.insights = {};
-    (useSatelliteManifests as jest.Mock).mockReturnValue({
-      isLoading: false,
-      error: true,
-      data: undefined
+  describe('when the user call fails', () => {
+    def('error', () => true);
+
+    it('renders an error message', async () => {
+      window.insights = {};
+      (useSatelliteManifests as jest.Mock).mockReturnValue({
+        isLoading: false,
+        error: true,
+        data: undefined
+      });
+
+      const { container } = render(<SatellitePage />);
+      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
+      expect(container).toMatchSnapshot();
     });
-
-    const isLoading = false;
-    const isOrgAdmin = false;
-    const isError = true;
-    mockAuthenticateUser(isLoading, isOrgAdmin, isError);
-
-    const { container } = render(<SatellitePage />);
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-    expect(container).toMatchSnapshot();
   });
 });

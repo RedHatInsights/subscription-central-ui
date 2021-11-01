@@ -13,9 +13,12 @@ const queryClient = new QueryClient();
 
 describe('Satellite Manifest Panel', () => {
   def('scaCapable', () => true);
-  def('orgAdmin', () => true);
+  def('canWriteManifests', () => true);
   def('user', () => {
-    return factories.user.build({ isSCACapable: get('scaCapable'), isOrgAdmin: get('orgAdmin') });
+    return factories.user.build({
+      isSCACapable: get('scaCapable'),
+      canWriteManifests: get('canWriteManifests')
+    });
   });
   def('data', () => {
     return [
@@ -69,8 +72,8 @@ describe('Satellite Manifest Panel', () => {
     });
   });
 
-  describe('when user is not admin and there are no results', () => {
-    def('orgAdmin', () => false);
+  describe('when user does not have write permission and there are no results', () => {
+    def('canWriteManifests', () => false);
     def('data', () => []);
 
     it('renders no results', () => {
@@ -87,7 +90,7 @@ describe('Satellite Manifest Panel', () => {
     });
   });
 
-  describe('when user is admin and there are no results', () => {
+  describe('when there are no results', () => {
     def('data', () => []);
 
     it('renders a blank state', () => {
