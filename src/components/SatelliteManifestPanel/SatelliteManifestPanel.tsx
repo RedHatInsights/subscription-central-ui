@@ -212,7 +212,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   }
 
   const actions = () => {
-    return [
+    const results = [
       {
         title: 'Export',
         onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
@@ -220,14 +220,17 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
           const uuid = rowData.uuid.title;
           exportManifest(uuid, manifestName);
         }
-      },
-      {
+      }
+    ];
+    if (user.canWriteManifests) {
+      results.push({
         title: 'Delete',
         onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
           openDeleteConfirmationModal(rowData.uuid.title);
         }
-      }
-    ];
+      });
+    }
+    return results;
   };
 
   const pagination = (variant = PaginationVariant.top) => {

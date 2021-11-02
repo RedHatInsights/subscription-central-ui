@@ -15,7 +15,13 @@ const queryClient = new QueryClient();
 
 describe('Manifest Detail Side Panel', () => {
   def('scaCapable', () => true);
-  def('user', () => factories.user.build({ isSCACapable: get('scaCapable') }));
+  def('canWriteManifests', () => true);
+  def('user', () =>
+    factories.user.build({
+      canWriteManifests: get('canWriteManifests'),
+      isSCACapable: get('scaCapable')
+    })
+  );
 
   const props = {
     isExpanded: true,
@@ -135,6 +141,44 @@ describe('Manifest Detail Side Panel', () => {
     def('scaCapable', () => false);
 
     it("shows 'administratively disabled' for SCA status", () => {
+      (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
+        isError: false,
+        isSuccess: true,
+        isLoading: false,
+        data: {
+          body: {
+            uuid: 'abc123',
+            name: 'John Doe',
+            version: '6.9',
+            createdDate: '2020-01-01T00:00:00.000Z',
+            createdBy: 'Jane Doe',
+            lastModified: '2021-01-01T00:00:00.000Z',
+            entitlementsAttachedQuantity: 10,
+            simpleContentAccess: 'enabled'
+          }
+        }
+      }));
+
+      const panelContent = <ManifestDetailSidePanel {...props} />;
+
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <Drawer isExpanded={true}>
+            <DrawerContent panelContent={panelContent}>
+              <DrawerContentBody>foo</DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
+        </QueryClientProvider>
+      );
+
+      expect(container).toMatchSnapshot();
+    });
+  });
+
+  describe('when user does not have write permission', () => {
+    def('canWriteManifests', () => false);
+
+    it('does not render the delete button', () => {
       (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
         isError: false,
         isSuccess: true,

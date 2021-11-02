@@ -89,6 +89,25 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     </div>
   );
 
+  const DeleteManifest = () => {
+    return (
+      <>
+        <p className="manifest-details-delete-text">
+          Deleting a subscription allocation is <strong>STRONGLY</strong> discouraged. This action
+          should only be taken in extreme circumstances or for debugging purposes
+        </p>
+        <Button
+          variant="tertiary"
+          onClick={() => {
+            deleteManifest(uuid);
+          }}
+        >
+          Delete manifest
+        </Button>
+      </>
+    );
+  };
+
   const DetailsContent = () => {
     // This handles the scenario when the API "succeeds" but not with a 200 status
     if (!entitlementData?.body) return <ErrorMessage />;
@@ -186,18 +205,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
         >
           Export manifest
         </Button>
-        <p className="manifest-details-delete-text">
-          Deleting a subscription allocation is <strong>STRONGLY</strong> discouraged. This action
-          should only be taken in extreme circumstances or for debugging purposes
-        </p>
-        <Button
-          variant="tertiary"
-          onClick={() => {
-            deleteManifest(uuid);
-          }}
-        >
-          Delete manifest
-        </Button>
+        {user.canWriteManifests && <DeleteManifest />}
       </div>
     );
   };
