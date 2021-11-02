@@ -27,7 +27,7 @@ describe('Manifest Entitlements List', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('fires methods in kebab menu when clicked', () => {
+  it.skip('fires methods in kebab menu when clicked', () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
     const props = {
