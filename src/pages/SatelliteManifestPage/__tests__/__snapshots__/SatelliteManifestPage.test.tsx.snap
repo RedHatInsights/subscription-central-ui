@@ -904,10 +904,7 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
               </div>
             </div>
           </div>
-          <div
-            class="pf-c-drawer__panel"
-            hidden=""
-          />
+          
         </div>
       </div>
     </section>
@@ -1898,10 +1895,7 @@ exports[`Satellite Manifests Page when the user does not have write permissions 
               </div>
             </div>
           </div>
-          <div
-            class="pf-c-drawer__panel"
-            hidden=""
-          />
+          
         </div>
       </div>
     </section>
