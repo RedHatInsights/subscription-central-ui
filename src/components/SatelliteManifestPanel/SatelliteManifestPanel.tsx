@@ -247,19 +247,25 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     );
   };
 
-  const panelContent = (
-    <ManifestDetailSidePanel
-      uuid={currentDetailUUID}
-      exportManifest={exportManifest}
-      exportManifestButtonIsDisabled={isLoadingManifestExport}
-      onCloseClick={closeDetailsPanel}
-      isExpanded={detailsDrawerIsExpanded}
-      titleRef={titleRef}
-      drawerRef={drawerRef}
-      openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
-      deleteManifest={openDeleteConfirmationModal}
-    />
-  );
+  const panelContent = () => {
+    if (currentDetailUUID) {
+      return (
+        <ManifestDetailSidePanel
+          uuid={currentDetailUUID}
+          exportManifest={exportManifest}
+          exportManifestButtonIsDisabled={isLoadingManifestExport}
+          onCloseClick={closeDetailsPanel}
+          isExpanded={detailsDrawerIsExpanded}
+          titleRef={titleRef}
+          drawerRef={drawerRef}
+          openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
+          deleteManifest={openDeleteConfirmationModal}
+        />
+      );
+    } else {
+      return '';
+    }
+  };
 
   return (
     <>
@@ -267,7 +273,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       {(data?.length > 0 || !user.canWriteManifests) && (
         <PageSection variant="light">
           <Drawer isExpanded={detailsDrawerIsExpanded}>
-            <DrawerContent panelContent={panelContent}>
+            <DrawerContent panelContent={panelContent()}>
               <DrawerContentBody>
                 <Title headingLevel="h2">
                   <span ref={titleRef}>Manifests</span>
