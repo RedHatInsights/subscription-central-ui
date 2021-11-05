@@ -38,7 +38,27 @@ const manifest3: ManifestEntry = {
   simpleContentAccess: 'enabled'
 };
 
-const mockData: ManifestEntry[] = [manifest1, manifest2, manifest3];
+const manifest4: ManifestEntry = {
+  name: 'manifest-6.10',
+  entitlementQuantity: 1,
+  type: 'Satellite',
+  url: 'foo.com',
+  uuid: 'abcd-1234',
+  version: '6.10',
+  simpleContentAccess: 'disabled'
+};
+
+const manifest5: ManifestEntry = {
+  name: 'manifest-6.2',
+  entitlementQuantity: 1,
+  type: 'Satellite',
+  url: 'foo.com',
+  uuid: 'wxyz-5678',
+  version: '6.2',
+  simpleContentAccess: 'enabled'
+};
+
+const mockData: ManifestEntry[] = [manifest1, manifest2, manifest3, manifest4, manifest5];
 
 describe('sortFilteredRows method', () => {
   const filteredRows = [
@@ -123,7 +143,9 @@ describe('getFilteredRows method', () => {
     const expectedRows: string[][] = [
       ['first-manifest', '6.1', 'disallowed', '111111'],
       ['second-manifest', '6.3', 'enabled', '222222'],
-      ['third-manifest', '6.5', 'enabled', '333333']
+      ['third-manifest', '6.5', 'enabled', '333333'],
+      ['manifest-6.10', '6.10', 'disabled', 'abcd-1234'],
+      ['manifest-6.2', '6.2', 'disallowed', 'wxyz-5678']
     ];
     expect(getFilteredRows(mockData, '')).toEqual(expectedRows);
   });
