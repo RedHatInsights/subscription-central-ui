@@ -8,7 +8,8 @@ const { config: webpackConfig, plugins } = config({
   useFileHash: false,
   modules: ['manifests'],
   useProxy: true,
-  useCloud: true,
+  appUrl: process.env.BETA ? '/beta/insights/subscriptions' : '/insights/subscriptions',
+  env: process.env.BETA ? 'stage-beta' : 'stage-stable',
   ...(process.env.BETA && { deployment: 'beta/apps' })
 });
 

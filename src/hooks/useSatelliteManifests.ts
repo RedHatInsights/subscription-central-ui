@@ -1,6 +1,5 @@
 import { useQuery, QueryObserverResult } from 'react-query';
 import Cookies from 'js-cookie';
-import { getConfig } from '../utilities/platformServices';
 
 type ManifestEntry = {
   entitlementQuantity: number;
@@ -23,15 +22,10 @@ interface SatelliteManifestAPIData {
 
 const fetchSatelliteManifestData = async (offset = 0): Promise<ManifestEntry[]> => {
   const jwtToken = Cookies.get('cs_jwt');
-  const { rhsmAPIBase } = getConfig();
 
-  const response = await fetch(
-    `${rhsmAPIBase}/management/v1/allocations?type=Satellite&offset=${offset}`,
-    {
-      headers: { Authorization: `Bearer ${jwtToken}` },
-      mode: 'cors'
-    }
-  );
+  const response = await fetch(`/api/rhsm/v2/manifests?type=Satellite&offset=${offset}`, {
+    headers: { Authorization: `Bearer ${jwtToken}` }
+  });
 
   const manifestResponseData: SatelliteManifestAPIData = await response.json();
 

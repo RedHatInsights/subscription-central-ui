@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-export interface AuthenticateUserResponse {
+interface AuthenticateUserResponse {
   entitlements: {
     [key: string]: any;
   };
@@ -30,7 +30,7 @@ export interface AuthenticateUserResponse {
   };
 }
 
-export const authenticateUser = (): Promise<AuthenticateUserResponse> => {
+const authenticateUser = (): Promise<AuthenticateUserResponse> => {
   try {
     return window.insights.chrome.auth.getUser();
   } catch (e) {
@@ -38,13 +38,34 @@ export const authenticateUser = (): Promise<AuthenticateUserResponse> => {
   }
 };
 
+interface RbacPermission {
+  permission: string;
+  resourceDefinitions: Record<string, any>[];
+}
+const getUserRbacPermissions = (): Promise<RbacPermission[]> => {
+  try {
+    return window.insights.chrome.getUserPermissions('subscriptions');
+  } catch (e) {
+    throw new Error(`Error getting user permissions: ${e.message}`);
+  }
+};
+
 type AppEnvironment = 'ci' | 'qa' | 'stage' | 'prod';
 
-export const getEnvironment = (): AppEnvironment => {
+const getEnvironment = (): AppEnvironment => {
   return window?.insights?.chrome?.getEnvironment() || 'ci';
 };
 
-export const getConfig = (): EnvironmentConfig => {
+const getConfig = (): EnvironmentConfig => {
   const env = getEnvironment();
   return config[env];
+};
+
+export {
+  AuthenticateUserResponse,
+  RbacPermission,
+  authenticateUser,
+  getConfig,
+  getEnvironment,
+  getUserRbacPermissions
 };

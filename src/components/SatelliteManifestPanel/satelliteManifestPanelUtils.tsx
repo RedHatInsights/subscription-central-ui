@@ -13,6 +13,7 @@ import SCAStatusSwitch from '../SCAStatusSwitch';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { User } from '../../hooks/useUser';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
+import semver from 'semver';
 
 export interface TableHeader {
   title: string | React.ReactNode;
@@ -115,7 +116,9 @@ export const countManifests = (data: ManifestEntry[], searchValue: string): numb
 export const getFilteredRows = (data: ManifestEntry[], searchValue: string): string[][] => {
   return filterDataBySearchTerm(data, searchValue).map((entry: ManifestEntry) => {
     let scaStatus = entry.simpleContentAccess || 'disabled';
-    if (parseFloat(entry.version) <= 6.2) {
+    const manifestVersion = semver.coerce(entry.version);
+    const allowedSCAVersion = semver.coerce('6.3');
+    if (semver.lt(manifestVersion, allowedSCAVersion)) {
       scaStatus = 'disallowed';
     }
 

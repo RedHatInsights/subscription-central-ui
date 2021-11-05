@@ -1,6 +1,5 @@
 import { useMutation, UseMutationResult } from 'react-query';
 import Cookies from 'js-cookie';
-import { getConfig } from '../utilities/platformServices';
 
 interface TriggerManifestExportResponse {
   body: {
@@ -18,10 +17,8 @@ interface ExportManifestStatusResponse {
 
 const triggerManifestExport = (uuid: string): Promise<TriggerManifestExportResponse> => {
   const jwtToken = Cookies.get('cs_jwt');
-  const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}/export`, {
-    headers: { Authorization: `Bearer ${jwtToken}` },
-    mode: 'cors'
+  return fetch(`/api/rhsm/v2/manifests/${uuid}/export`, {
+    headers: { Authorization: `Bearer ${jwtToken}` }
   }).then((response) => {
     return response.json();
   });
@@ -36,14 +33,9 @@ const getManifestExportStatus = async (
   exportJobID: string
 ): Promise<ExportManifestStatusResponse> => {
   const jwtToken = Cookies.get('cs_jwt');
-  const { rhsmAPIBase } = getConfig();
-  const response = await fetch(
-    `${rhsmAPIBase}/management/v1/allocations/${uuid}/exportJob/${exportJobID}`,
-    {
-      headers: { Authorization: `Bearer ${jwtToken}` },
-      mode: 'cors'
-    }
-  );
+  const response = await fetch(`/api/rhsm/v2/manifests/${uuid}/exportJob/${exportJobID}`, {
+    headers: { Authorization: `Bearer ${jwtToken}` }
+  });
 
   if (response.status === 200) {
     return response.json();
@@ -58,10 +50,8 @@ const getManifestExportStatus = async (
 
 const downloadExportedManifest = (uuid: string, exportID: string): Promise<Blob> => {
   const jwtToken = Cookies.get('cs_jwt');
-  const { rhsmAPIBase } = getConfig();
-  return fetch(`${rhsmAPIBase}/management/v1/allocations/${uuid}/export/${exportID}`, {
-    headers: { Authorization: `Bearer ${jwtToken}`, 'Content-type': 'application/zip' },
-    mode: 'cors'
+  return fetch(`/api/rhsm/v2/manifests/${uuid}/export/${exportID}`, {
+    headers: { Authorization: `Bearer ${jwtToken}`, 'Content-Type': 'application/zip' }
   }).then((response) => response.blob());
 };
 

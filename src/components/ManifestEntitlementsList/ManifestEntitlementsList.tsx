@@ -127,7 +127,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
             cells={columns}
             rows={rows}
             borders={false}
-            actions={actions}
+            // actions={actions}
             className="manifests_entitlement-list-table"
           >
             <TableHeader />

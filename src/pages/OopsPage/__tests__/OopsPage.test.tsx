@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import { init } from '../../../store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import useUser from '../../../hooks/useUser';
+import factories from '../../../utilities/factories';
+import { get, def } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('react-router-dom', () => ({
@@ -30,27 +32,23 @@ const Page = () => (
   </QueryClientProvider>
 );
 
-const mockAuthenticateUser = (isLoading: boolean, orgAdminStatus: boolean) => {
-  (useUser as jest.Mock).mockReturnValue({
-    isLoading: isLoading,
-    isFetching: false,
-    isSuccess: true,
-    isError: false,
-    data: {
-      isOrgAdmin: orgAdminStatus,
-      isSCACapable: true
-    }
+describe('Oops Page', () => {
+  def('user', () => factories.user.build());
+
+  beforeEach(() => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoading: false,
+      isFetching: false,
+      isSuccess: true,
+      isError: false,
+      data: get('user')
+    });
+
+    queryClient.setQueryData('user', get('user'));
   });
 
-  queryClient.setQueryData('user', { isSCACapable: true, isOrgAdmin: orgAdminStatus });
-};
-
-describe('Oops Page', () => {
   it('renders correctly', async () => {
     window.insights = {};
-    const isLoading = false;
-    const isOrgAdmin = true;
-    mockAuthenticateUser(isLoading, isOrgAdmin);
 
     const { container } = render(<Page />);
 

@@ -212,7 +212,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   }
 
   const actions = () => {
-    return [
+    const results = [
       {
         title: 'Export',
         onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
@@ -220,14 +220,17 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
           const uuid = rowData.uuid.title;
           exportManifest(uuid, manifestName);
         }
-      },
-      {
+      }
+    ];
+    if (user.canWriteManifests) {
+      results.push({
         title: 'Delete',
         onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
           openDeleteConfirmationModal(rowData.uuid.title);
         }
-      }
-    ];
+      });
+    }
+    return results;
   };
 
   const pagination = (variant = PaginationVariant.top) => {
@@ -244,27 +247,33 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     );
   };
 
-  const panelContent = (
-    <ManifestDetailSidePanel
-      uuid={currentDetailUUID}
-      exportManifest={exportManifest}
-      exportManifestButtonIsDisabled={isLoadingManifestExport}
-      onCloseClick={closeDetailsPanel}
-      isExpanded={detailsDrawerIsExpanded}
-      titleRef={titleRef}
-      drawerRef={drawerRef}
-      openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
-      deleteManifest={openDeleteConfirmationModal}
-    />
-  );
+  const panelContent = () => {
+    if (currentDetailUUID) {
+      return (
+        <ManifestDetailSidePanel
+          uuid={currentDetailUUID}
+          exportManifest={exportManifest}
+          exportManifestButtonIsDisabled={isLoadingManifestExport}
+          onCloseClick={closeDetailsPanel}
+          isExpanded={detailsDrawerIsExpanded}
+          titleRef={titleRef}
+          drawerRef={drawerRef}
+          openCurrentEntitlementsListFromPanel={openCurrentEntitlementsListFromPanel}
+          deleteManifest={openDeleteConfirmationModal}
+        />
+      );
+    } else {
+      return '';
+    }
+  };
 
   return (
     <>
-      {data?.length === 0 && user.isOrgAdmin && <CreateManifestPanel />}
-      {(data?.length > 0 || !user.isOrgAdmin) && (
+      {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel />}
+      {(data?.length > 0 || !user.canWriteManifests) && (
         <PageSection variant="light">
           <Drawer isExpanded={detailsDrawerIsExpanded}>
-            <DrawerContent panelContent={panelContent}>
+            <DrawerContent panelContent={panelContent()}>
               <DrawerContentBody>
                 <Title headingLevel="h2">
                   <span ref={titleRef}>Manifests</span>
@@ -286,7 +295,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                           />
                         </SplitItem>
                       )}
-                      {user.isOrgAdmin === true && (
+                      {user.canWriteManifests === true && (
                         <SplitItem>
                           <CreateManifestButtonWithModal />
                         </SplitItem>
