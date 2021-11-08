@@ -61,6 +61,18 @@ export const getTableHeaders = (user: User): TableHeader[] => {
   return tableHeaders;
 };
 
+const formattedScaStatus = (user: User, scaStatus: string, uuid: string) => {
+  if (user.canWriteManifests) {
+    return (
+      <React.Fragment key={`scastatusswitch-${uuid}`}>
+        <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
+      </React.Fragment>
+    );
+  } else {
+    return scaStatus;
+  }
+};
+
 export const formatRow = (
   row: string[],
   rowIndex: number,
@@ -83,9 +95,7 @@ export const formatRow = (
       </Button>
     </React.Fragment>,
     version,
-    <React.Fragment key={`scastatusswitch-${uuid}`}>
-      <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
-    </React.Fragment>,
+    formattedScaStatus(user, scaStatus, uuid),
     uuid
   ];
   if (user.isSCACapable === false) {

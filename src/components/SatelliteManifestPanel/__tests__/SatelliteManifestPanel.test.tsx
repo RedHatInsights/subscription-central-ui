@@ -27,7 +27,7 @@ describe('Satellite Manifest Panel', () => {
         type: 'Satellite',
         url: 'www.example.com',
         uuid: '00000000-0000-0000-0000-000000000000',
-        version: '1.2.3',
+        version: '6.3',
         entitlementQuantity: 5,
         simpleContentAccess: 'enabled'
       }
@@ -59,6 +59,52 @@ describe('Satellite Manifest Panel', () => {
     def('scaCapable', () => false);
 
     it('renders correctly without SCA column', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel {...get('props')} />
+        </QueryClientProvider>
+      );
+      expect(container).toMatchSnapshot();
+    });
+  });
+
+  describe('when version <= 6.2', () => {
+    def('data', () => {
+      return [
+        {
+          name: 'Sputnik',
+          type: 'Satellite',
+          url: 'www.example.com',
+          uuid: '00000000-0000-0000-0000-000000000000',
+          version: '6.2',
+          entitlementQuantity: 5,
+          simpleContentAccess: 'enabled'
+        }
+      ];
+    });
+
+    it('renders disallowed for the SCA Status', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel {...get('props')} />
+        </QueryClientProvider>
+      );
+      expect(container).toMatchSnapshot();
+    });
+  });
+
+  describe('when user does not have write permission', () => {
+    def('canWriteManifests', () => false);
+
+    it('renders plain text for the SCA Status', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
         body: [] as SatelliteVersion[]
       });
