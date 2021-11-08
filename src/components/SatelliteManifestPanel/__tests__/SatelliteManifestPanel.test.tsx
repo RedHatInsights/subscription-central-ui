@@ -87,7 +87,7 @@ describe('Satellite Manifest Panel', () => {
       ];
     });
 
-    it('renders disallowed for the SCA Status', () => {
+    it('renders N/A for the SCA Status', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
         body: [] as SatelliteVersion[]
       });

@@ -5134,7 +5134,7 @@ exports[`Satellite Manifest Panel when user is not SCA capable renders correctly
 </div>
 `;
 
-exports[`Satellite Manifest Panel when version <= 6.2 renders disallowed for the SCA Status 1`] = `
+exports[`Satellite Manifest Panel when version <= 6.2 renders N/A for the SCA Status 1`] = `
 <div>
   <section
     class="pf-c-page__main-section pf-m-light"
