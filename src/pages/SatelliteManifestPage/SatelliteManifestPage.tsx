@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { withRouter } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
 import { PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
@@ -46,4 +45,4 @@ const SatelliteManifestPage: FC = () => {
   );
 };
 
-export default withRouter(SatelliteManifestPage);
+export default SatelliteManifestPage;

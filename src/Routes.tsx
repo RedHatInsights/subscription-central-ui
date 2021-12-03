@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Navigate, Route, Routes as Switch } from 'react-router-dom';
 import React, { Suspense, lazy, ReactNode } from 'react';
 import { Processing } from './components/emptyState';
 import Authentication from './components/Authentication';
@@ -12,13 +12,11 @@ export const Routes: ReactNode = () => (
     <Suspense fallback={<Processing />}>
       <Authentication>
         <Switch>
-          <Route exact path="/" component={SatelliteManifestPage} />
-          <Route path="/oops" component={OopsPage} />
-          <Route path="/no-permissions" component={NoPermissionsPage} />
+          <Route path="/" element={<SatelliteManifestPage />} />
+          <Route path="/oops" element={<OopsPage />} />
+          <Route path="/no-permissions" element={<NoPermissionsPage />} />
           {/* Finally, catch all unmatched routes */}
-          <Route>
-            <Redirect to="/oops" />
-          </Route>
+          <Route path="*" element={<Navigate to="/oops" replace />} />
         </Switch>
       </Authentication>
     </Suspense>
