@@ -1424,7 +1424,6 @@ exports[`Satellite Manifests Page when the user does not have write permissions 
                           data-ouia-component-id="OUIA-Generated-DropdownToggle-3"
                           data-ouia-component-type="PF4/DropdownToggle"
                           data-ouia-safe="true"
-                          disabled=""
                           id="pagination-options-menu-toggle-2"
                           type="button"
                         >
@@ -1872,7 +1871,6 @@ exports[`Satellite Manifests Page when the user does not have write permissions 
                       data-ouia-component-id="OUIA-Generated-DropdownToggle-4"
                       data-ouia-component-type="PF4/DropdownToggle"
                       data-ouia-safe="true"
-                      disabled=""
                       id="pagination-options-menu-toggle-3"
                       type="button"
                     >

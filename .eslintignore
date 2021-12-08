@@ -2,3 +2,4 @@ node_modules/*
 static/*
 dist/*
 *.scss
+prepare.js
