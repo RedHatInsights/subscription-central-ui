@@ -272,7 +272,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel />}
       {(data?.length > 0 || !user.canWriteManifests) && (
         <PageSection variant="light">
-          <Drawer isExpanded={detailsDrawerIsExpanded}>
+          <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
             <DrawerContent panelContent={panelContent()}>
               <DrawerContentBody>
                 <Title headingLevel="h2">

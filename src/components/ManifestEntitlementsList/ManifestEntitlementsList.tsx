@@ -109,12 +109,12 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
   return (
     <>
       {isLoading && !isError && (
-        <div className="entitlement-list-loading-container">
+        <div className="sub-entitlement-list-loading-container">
           <Processing />
         </div>
       )}
       {isSuccess && !entitlementsData.valid && (
-        <div className="no-entitlements-reason">
+        <div className="sub-no-entitlements-reason">
           <p tabIndex={isSuccess ? 0 : -1} ref={entitlementsRowRef}>
             {entitlementsData.reason}
           </p>
@@ -128,7 +128,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
             rows={rows}
             borders={false}
             // actions={actions}
-            className="manifests_entitlement-list-table"
+            className="sub-c-table-manifests-entitlement-list"
           >
             <TableHeader />
             <TableBody />

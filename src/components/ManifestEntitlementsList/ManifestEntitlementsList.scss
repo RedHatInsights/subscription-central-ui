@@ -1,4 +1,4 @@
-.manifests_entitlement-list-table {
+.sub-c-table-manifests-entitlement-list {
   margin-top: 10px;
   margin-bottom: 20px;
 
@@ -6,15 +6,14 @@
     tr {
       border: none;
     }
-
     th {
       padding-left: 30px;
     }
   }
 }
 
-.entitlement-list-loading-container,
-.no-entitlements-reason {
+.sub-entitlement-list-loading-container,
+.sub-no-entitlements-reason {
   padding: 30px;
 }
 

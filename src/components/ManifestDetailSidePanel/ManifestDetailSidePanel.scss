@@ -1,4 +1,4 @@
-.manifest-detail-drawer-loading {
+.sub-manifest-detail-drawer-loading {
   margin-right: -50px;
   min-height: calc(100vh - 247px);
   display: flex;
@@ -6,30 +6,30 @@
   justify-content: center;
 }
 
-.manifest-details-content {
-  font-size: 14px;
+.sub-c-drawer__panel-manifest-details {
+  font-size: var(--pf-global--FontSize--sm);
 
   .pf-l-grid__item {
-    padding: 4px 0;
+    padding: var(--pf-global--spacer--xs) 0;
   }
 
   h3 {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: var(--pf-global--FontSize--2xl);
+    font-weight: var(--pf-global--FontWeight--bold);
   }
 
   h4 {
-    font-size: 18px;
+    font-size: var(--pf-global--FontSize--lg);
     margin: 10px 0;
     font-weight: 600;
   }
 
-  .manifest-details-open-entitlements-button {
+  .sub-c-button-manifest-details-open-entitlements {
     padding: 0;
-    margin: 4px 0;
+    margin: var(--pf-global--spacer--xs) 0;
   }
 
-  .manifest-details-delete-text {
+  .sub-manifest-details-delete-text {
     margin-top: 30px;
   }
 

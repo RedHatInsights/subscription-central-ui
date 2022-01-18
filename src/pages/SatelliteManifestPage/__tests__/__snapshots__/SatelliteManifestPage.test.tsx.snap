@@ -58,7 +58,7 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
       class="pf-c-page__main-section pf-m-light"
     >
       <div
-        class="pf-c-drawer"
+        class="pf-c-drawer sub-c-drawer-satellite-manifest"
       >
         <div
           class="pf-c-drawer__main"
@@ -1328,7 +1328,7 @@ exports[`Satellite Manifests Page when the user does not have write permissions 
       class="pf-c-page__main-section pf-m-light"
     >
       <div
-        class="pf-c-drawer"
+        class="pf-c-drawer sub-c-drawer-satellite-manifest"
       >
         <div
           class="pf-c-drawer__main"
