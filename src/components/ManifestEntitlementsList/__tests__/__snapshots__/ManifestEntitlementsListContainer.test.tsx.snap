@@ -5,7 +5,7 @@ exports[`Manifest Entitlements List Container renders correctly once entitlement
   <div>
     <table
       aria-label="Allocations table"
-      class="manifests_entitlement-list-table pf-c-table pf-m-grid-md pf-m-no-border-rows"
+      class="sub-c-table-manifests-entitlement-list pf-c-table pf-m-grid-md pf-m-no-border-rows"
       data-ouia-component-id="OUIA-Generated-Table-2"
       data-ouia-component-type="PF4/Table"
       data-ouia-safe="true"

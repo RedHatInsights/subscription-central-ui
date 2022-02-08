@@ -5,7 +5,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
   <div>
     <table
       aria-label="Allocations table"
-      class="manifests_entitlement-list-table pf-c-table pf-m-grid-md pf-m-no-border-rows"
+      class="sub-c-table-manifests-entitlement-list pf-c-table pf-m-grid-md pf-m-no-border-rows"
       data-ouia-component-id="OUIA-Generated-Table-2"
       data-ouia-component-type="PF4/Table"
       data-ouia-safe="true"
@@ -130,7 +130,7 @@ exports[`Manifest Entitlements List renders correctly 1`] = `
 exports[`Manifest Entitlements List renders correctly when no entitlements are attached to the manifest 1`] = `
 <div>
   <div
-    class="no-entitlements-reason"
+    class="sub-no-entitlements-reason"
   >
     <p
       tabindex="0"
@@ -144,7 +144,7 @@ exports[`Manifest Entitlements List renders correctly when no entitlements are a
 exports[`Manifest Entitlements List renders loading when loading 1`] = `
 <div>
   <div
-    class="entitlement-list-loading-container"
+    class="sub-entitlement-list-loading-container"
   >
     <div
       class="pf-l-bullseye"
@@ -172,7 +172,7 @@ exports[`Manifest Entitlements List renders loading when loading 1`] = `
 exports[`Manifest Entitlements List renders with an error message when the API call fails 1`] = `
 <div>
   <div
-    class="no-entitlements-reason"
+    class="sub-no-entitlements-reason"
   >
     <p
       tabindex="0"

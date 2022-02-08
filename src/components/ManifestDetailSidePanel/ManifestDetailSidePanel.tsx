@@ -80,7 +80,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
 
   const LoadingDetailsContent = () => (
     <div
-      className="manifest-detail-drawer-loading"
+      className="sub-manifest-detail-drawer-loading"
       aria-label="Loading Manifest Details"
       tabIndex={isLoadingEntitlementData ? 0 : -1}
       ref={drawerRef}
@@ -92,7 +92,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   const DeleteManifest = () => {
     return (
       <>
-        <p className="manifest-details-delete-text">
+        <p className="sub-manifest-details-delete-text">
           Deleting a subscription allocation is <strong>STRONGLY</strong> discouraged. This action
           should only be taken in extreme circumstances or for debugging purposes
         </p>
@@ -133,7 +133,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     };
 
     return (
-      <div className="manifest-details-content">
+      <div>
         <h3 tabIndex={successFetchingEntitlementData ? 0 : -1} ref={drawerRef}>
           {name}
         </h3>
@@ -174,7 +174,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
             <Button
               variant="link"
               onClick={openCurrentEntitlementsListFromPanel}
-              className="manifest-details-open-entitlements-button"
+              className="sub-c-button-manifest-details-open-entitlements"
             >
               {entitlementsAttachedQuantity}
             </Button>
@@ -221,7 +221,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   };
 
   return (
-    <DrawerPanelContent>
+    <DrawerPanelContent className="sub-c-drawer__panel-manifest-details">
       <DrawerHead>
         <ManifestDetailsInnerContent />
         <DrawerActions>
