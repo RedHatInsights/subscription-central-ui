@@ -17,8 +17,6 @@ import semver from 'semver';
 
 export interface TableHeader {
   title: string | React.ReactNode;
-  transforms: ITransform[];
-  cellFormatters?: IFormatter[];
 }
 
 export interface Row {
@@ -38,20 +36,15 @@ export interface BooleanDictionary {
   [key: string]: boolean;
 }
 
-export const getTableHeaders = (user: User): TableHeader[] => {
+export const getTableHeaders = (user: User): (string | React.ReactNode)[] => {
   const tableHeaders = [
-    { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
-    { title: 'Version', transforms: [sortable] },
-    {
-      title: (
-        <>
-          Simple Content Access
-          <SCAInfoIconWithPopover />
-        </>
-      ),
-      transforms: [sortable, cellWidth(20)]
-    },
-    { title: 'UUID', transforms: [sortable] }
+    'Name',
+    'Version',
+    <React.Fragment key="0">
+      Simple Content Access
+      <SCAInfoIconWithPopover />
+    </React.Fragment>,
+    'UUID'
   ];
 
   if (user.isSCACapable === false) {
@@ -149,7 +142,7 @@ export const sortFilteredRows = (filteredRows: string[][], sortBy: SortBy): stri
    * the sorting without the adjustment.
    */
 
-  const adjustedIndex = index - 1;
+  const adjustedIndex = index;
   const directionFactor = direction === SortByDirection.desc ? -1 : 1;
   const sortedRows = filteredRows.sort(
     (a: [string, string, string], b: [string, string, string]) => {
@@ -227,12 +220,14 @@ export const getRowsWithAllocationDetails = (
     rowsWithAllocationDetails.push({ isOpen, cells: [...formattedRow] });
 
     // Add details row
+    /*
     rowsWithAllocationDetails.push({
       parent: parentIndex,
       fullWidth: true,
       noPadding: true,
       cells: [{ title: expandedContent }]
     });
+    */
   });
 
   return rowsWithAllocationDetails;

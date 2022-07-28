@@ -12,7 +12,16 @@ import {
   Split,
   SplitItem
 } from '@patternfly/react-core';
-import { Table, TableHeader, TableBody, SortByDirection } from '@patternfly/react-table';
+import {
+  TableComposable,
+  Tbody,
+  Td,
+  Th,
+  ThProps,
+  Thead,
+  Tr,
+  SortByDirection
+} from '@patternfly/react-table';
 import {
   BooleanDictionary,
   countManifests,
@@ -265,6 +274,36 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     }
   };
 
+  const getSortParams = (columnIndex: number): ThProps['sort'] => ({
+    sortBy: {
+      index: sortBy.index,
+      direction: sortBy.direction,
+      defaultDirection: SortByDirection.asc
+    },
+    onSort: (_event: React.SyntheticEvent, index: number, direction: SortByDirection) => {
+      setSortBy({ index, direction });
+    },
+    columnIndex
+  });
+
+  const getRows = () => {
+    if (isFetching) {
+      return [];
+    } else {
+      return getRowsWithAllocationDetails(
+        data,
+        user,
+        searchValue,
+        page,
+        perPage,
+        rowExpandedStatus,
+        handleRowManifestClick,
+        entitlementsRowRefs,
+        sortBy
+      );
+    }
+  };
+
   return (
     <>
       {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel />}
@@ -298,33 +337,32 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   </FlexItem>
                   <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
                 </Flex>
-                <Table
-                  aria-label="Satellite Manifest Table"
-                  cells={getTableHeaders(user)}
-                  rows={
-                    isFetching
-                      ? []
-                      : getRowsWithAllocationDetails(
-                          data,
-                          user,
-                          searchValue,
-                          page,
-                          perPage,
-                          rowExpandedStatus,
-                          handleRowManifestClick,
-                          entitlementsRowRefs,
-                          sortBy
-                        )
-                  }
-                  onCollapse={toggleAllocationDetails}
-                  sortBy={sortBy}
-                  onSort={handleSort}
-                  actions={actions()}
-                  areActionsDisabled={() => isLoadingManifestExport}
-                >
-                  <TableHeader />
-                  <TableBody />
-                </Table>
+                {/* @ts-ignore */}
+                <TableComposable aria-label="Satellite Manifest Table" variant="compact">
+                  <Thead>
+                    {/* @ts-ignore */}
+                    <Tr>
+                      {getTableHeaders(user).map((header, index) => (
+                        <Th key={index} sort={getSortParams(index)}>
+                          {header}
+                        </Th>
+                      ))}
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {getRows().map((row, index) => (
+                      <React.Fragment key={index}>
+                        {/* @ts-ignore */}
+                        <Tr>
+                          <Td>{row.cells[0]}</Td>
+                          <Td>{row.cells[1]}</Td>
+                          {user.isSCACapable && <Td>{row.cells[2]}</Td>}
+                          <Td>{row.cells[3]}</Td>
+                        </Tr>
+                      </React.Fragment>
+                    ))}
+                  </Tbody>
+                </TableComposable>
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />
                 )}
