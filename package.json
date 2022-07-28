@@ -28,7 +28,8 @@
     "glob-parent": "^6.0.1",
     "hosted-git-info": "^3.0.8",
     "url-parse": "^1.5.3",
-    "axios": "^0.21.4"
+    "axios": "^0.21.4",
+    "moment": "2.29.4"
   },
   "lint-staged": {
     "*.{js,scss,ts,tsx,html}": "eslint --cache --fix"
@@ -84,6 +85,7 @@
     "classnames": "2.3.1",
     "jest-fetch-mock": "^3.0.3",
     "js-cookie": "^3.0.1",
+    "moment": "^2.29.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.13.0",
