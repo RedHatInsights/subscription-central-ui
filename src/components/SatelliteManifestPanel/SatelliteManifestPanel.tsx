@@ -276,7 +276,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
             <DrawerContent panelContent={panelContent()}>
               <DrawerContentBody>
                 <Title headingLevel="h2">
-                  <span ref={titleRef}>Manifests</span>
+                
                   {!isFetching && <Badge isRead>{countManifests(data, searchValue)}</Badge>}
                 </Title>
                 <Flex
