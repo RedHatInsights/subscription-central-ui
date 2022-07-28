@@ -28,7 +28,8 @@
     "glob-parent": "^6.0.1",
     "hosted-git-info": "^3.0.8",
     "url-parse": "^1.5.3",
-    "axios": "^0.21.4"
+    "axios": "^0.21.4",
+    "moment": "2.29.4"
   },
   "lint-staged": {
     "*.{js,scss,ts,tsx,html}": "eslint --cache --fix"
@@ -108,7 +109,7 @@
     "@babel/preset-react": "7.16.0",
     "@babel/preset-typescript": "^7.16.0",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.2.1",
-    "@redhat-cloud-services/frontend-components-config": "^4.5.6",
+    "@redhat-cloud-services/frontend-components-config": "^4.6.9",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
@@ -132,7 +133,7 @@
     "cross-fetch": "^3.1.4",
     "css-loader": "^5.2.6",
     "escape-string-regexp": "^5.0.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.9.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-loader": "4.0.2",
     "eslint-plugin-react": "^7.27.1",
@@ -156,9 +157,8 @@
     "stylelint": "14.1.0",
     "stylelint-config-recommended-scss": "5.0.2",
     "stylelint-scss": "4.0.0",
-    "webpack": "^5.51.1",
     "webpack-bundle-analyzer": "^4.4.0",
-    "webpack-cli": "^4.5.0"
+    "webpack-cli": "^4.9.0"
   },
   "insights": {
     "appname": "manifests"
