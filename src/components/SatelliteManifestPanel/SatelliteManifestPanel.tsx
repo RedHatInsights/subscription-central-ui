@@ -275,10 +275,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
           <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
             <DrawerContent panelContent={panelContent()}>
               <DrawerContentBody>
-                <Title headingLevel="h2">
-                
-                  {!isFetching && <Badge isRead>{countManifests(data, searchValue)}</Badge>}
-                </Title>
                 <Flex
                   direction={{ default: 'column', md: 'row' }}
                   justifyContent={{ default: 'justifyContentSpaceBetween' }}
