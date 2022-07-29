@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState, useRef } from 'react';
 import {
-  Badge,
   Drawer,
   DrawerContent,
   DrawerContentBody,
@@ -11,8 +10,7 @@ import {
   PaginationVariant,
   SearchInput,
   Split,
-  SplitItem,
-  Title
+  SplitItem
 } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, SortByDirection } from '@patternfly/react-table';
 import {
