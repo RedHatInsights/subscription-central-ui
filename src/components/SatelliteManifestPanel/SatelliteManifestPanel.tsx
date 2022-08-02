@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useState, useRef } from 'react';
 import {
+  Button,
   Drawer,
   DrawerContent,
   DrawerContentBody,
@@ -13,6 +14,7 @@ import {
   SplitItem
 } from '@patternfly/react-core';
 import {
+  ExpandableRowContent,
   TableComposable,
   Tbody,
   Td,
@@ -40,6 +42,7 @@ import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import './SatelliteManifestPanel.scss';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
+import SCAStatusSwitch from '../SCAStatusSwitch';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -55,7 +58,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
-  const [sortBy, setSortBy] = useState({ index: 1, direction: SortByDirection.asc });
+  const [sortBy, setSortBy] = useState({ index: 0, direction: SortByDirection.asc });
   const [rowExpandedStatus, setRowExpandedStatus] = useState<BooleanDictionary>({});
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
@@ -158,13 +161,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus(newRowExpandedStatus);
   };
 
-  const toggleAllocationDetails = (
-    event: React.MouseEvent,
-    rowKey: number,
-    isOpen: boolean,
-    rowData: any
-  ) => {
-    const uuid: string = rowData.uuid.title;
+  const toggleAllocationDetails = (uuid: string) => {
     toggleRowExpansion(uuid, !rowExpandedStatus[uuid]);
   };
 
@@ -342,6 +339,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   <Thead>
                     {/* @ts-ignore */}
                     <Tr>
+                      <Th />
                       {getTableHeaders(user).map((header, index) => (
                         <Th key={index} sort={getSortParams(index)}>
                           {header}
@@ -349,19 +347,46 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                       ))}
                     </Tr>
                   </Thead>
-                  <Tbody>
-                    {getRows().map((row, index) => (
-                      <React.Fragment key={index}>
+                  {getRows().map((row, index) => {
+                    let colSpan = 1 + row.cells.length;
+                    if (!user.isSCACapable) colSpan--;
+                    return (
+                      <Tbody key={index} isExpanded={row.isOpen}>
                         {/* @ts-ignore */}
                         <Tr>
-                          <Td>{row.cells[0]}</Td>
+                          <Td
+                            expand={{
+                              rowIndex: index,
+                              isExpanded: row.isOpen,
+                              onToggle: () => toggleAllocationDetails(row.cells[3])
+                            }}
+                          />
+                          <Td>
+                            <Button
+                              data-testid={`expand-details-button-${index}`}
+                              variant="link"
+                              onClick={() => handleRowManifestClick(row.cells[3], index)}
+                            >
+                              {row.cells[0]}
+                            </Button>
+                          </Td>
                           <Td>{row.cells[1]}</Td>
-                          {user.isSCACapable && <Td>{row.cells[2]}</Td>}
+                          {user.isSCACapable && (
+                            <Td>
+                              <SCAStatusSwitch scaStatus={row.cells[2]} uuid={row.cells[3]} />
+                            </Td>
+                          )}
                           <Td>{row.cells[3]}</Td>
                         </Tr>
-                      </React.Fragment>
-                    ))}
-                  </Tbody>
+                        {/* @ts-ignore */}
+                        <Tr isExpanded={row.isOpen}>
+                          <Td colSpan={colSpan}>
+                            <ExpandableRowContent>{row.details.content}</ExpandableRowContent>
+                          </Td>
+                        </Tr>
+                      </Tbody>
+                    );
+                  })}
                 </TableComposable>
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />

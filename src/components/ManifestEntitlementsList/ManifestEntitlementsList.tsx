@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { Table, TableHeader, TableBody, nowrap } from '@patternfly/react-table';
+import { TableComposable, Tbody, Td, Th, Thead, Tr, nowrap } from '@patternfly/react-table';
 import { Processing } from '../emptyState';
 import './ManifestEntitlementsList.scss';
 import { EntitlementsAttachedData, ManifestEntitlement } from '../../hooks/useManifestEntitlements';
@@ -25,33 +25,6 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
       entitlementsRowRef.current.focus({ preventScroll: true });
     }
   }, [isSuccess]);
-
-  const columns = [
-    {
-      title: 'Subscription name',
-      transforms: [nowrap]
-    },
-    {
-      title: 'SKU',
-      transforms: [nowrap]
-    },
-    {
-      title: 'Contract number',
-      transforms: [nowrap]
-    },
-    {
-      title: 'Quantity',
-      transforms: [nowrap]
-    },
-    {
-      title: 'Start date',
-      transforms: [nowrap]
-    },
-    {
-      title: 'End date',
-      transforms: [nowrap]
-    }
-  ];
 
   const getFormattedDate = (date: string) => {
     if (!date) return '';
@@ -121,19 +94,45 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
         </div>
       )}
       {isSuccess && entitlementsData.valid && (
-        <div ref={entitlementsRowRef}>
-          <Table
+        <React.Fragment>
+          {/* @ts-ignore */}
+          <TableComposable
+            ref={entitlementsRowRef}
             aria-label="Allocations table"
-            cells={columns}
-            rows={rows}
+            variant="compact"
             borders={false}
+            isNested={true}
             // actions={actions}
             className="sub-c-table-manifests-entitlement-list"
           >
-            <TableHeader />
-            <TableBody />
-          </Table>
-        </div>
+            <Thead>
+              {/* @ts-ignore */}
+              <Tr>
+                <Th>Subscription name</Th>
+                <Th>SKU</Th>
+                <Th>Contract number</Th>
+                <Th>Quantity</Th>
+                <Th>Start date</Th>
+                <Th>End date</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {rows.map((row, index) => (
+                <React.Fragment key={index}>
+                  {/* @ts-ignore */}
+                  <Tr>
+                    <Td>{row[0]}</Td>
+                    <Td>{row[1]}</Td>
+                    <Td>{row[2]}</Td>
+                    <Td>{row[3]}</Td>
+                    <Td>{row[4]}</Td>
+                    <Td>{row[5]}</Td>
+                  </Tr>
+                </React.Fragment>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </React.Fragment>
       )}
       {isError && 'Something went wrong.  Please refresh the page and try again.'}
     </>

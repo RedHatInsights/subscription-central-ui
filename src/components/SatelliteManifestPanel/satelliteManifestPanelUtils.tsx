@@ -1,13 +1,6 @@
 import React from 'react';
 import { Button } from '@patternfly/react-core';
-import {
-  sortable,
-  cellWidth,
-  expandable,
-  IFormatter,
-  ITransform,
-  SortByDirection
-} from '@patternfly/react-table';
+import { SortByDirection } from '@patternfly/react-table';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList/ManifestEntitlementsListContainer';
 import SCAStatusSwitch from '../SCAStatusSwitch';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
@@ -19,12 +12,18 @@ export interface TableHeader {
   title: string | React.ReactNode;
 }
 
+export interface RowDetails {
+  parent: number;
+  content: string | React.ReactNode;
+}
+
 export interface Row {
-  cells: (string | JSX.Element | { title: React.ReactNode })[];
+  cells: string[];
   fullWidth?: boolean;
   noPadding?: boolean;
   parent?: number;
   isOpen?: boolean;
+  details?: RowDetails;
 }
 
 export interface SortBy {
@@ -64,38 +63,6 @@ const formattedScaStatus = (user: User, scaStatus: string, uuid: string) => {
   } else {
     return scaStatus;
   }
-};
-
-export const formatRow = (
-  row: string[],
-  rowIndex: number,
-  handleRowManifestClick: (uuid: string, rowIndex: number) => void,
-  user: User
-): (string | JSX.Element)[] => {
-  const name = row[0];
-  const version = row[1];
-  const scaStatus = row[2];
-  const uuid = row[3];
-
-  const formattedRow = [
-    <React.Fragment key={`button-${uuid}`}>
-      <Button
-        data-testid={`expand-details-button-${rowIndex}`}
-        variant="link"
-        onClick={() => handleRowManifestClick(uuid, rowIndex)}
-      >
-        {name}
-      </Button>
-    </React.Fragment>,
-    version,
-    formattedScaStatus(user, scaStatus, uuid),
-    uuid
-  ];
-  if (user.isSCACapable === false) {
-    // remove SCA Status column
-    formattedRow.splice(2, 1);
-  }
-  return formattedRow;
 };
 
 export const filterDataBySearchTerm = (
@@ -214,20 +181,10 @@ export const getRowsWithAllocationDetails = (
       ''
     );
 
-    const formattedRow = formatRow(row, i, handleRowManifestClick, user);
+    const details = { parent: parentIndex, content: expandedContent };
 
-    // Add original row
-    rowsWithAllocationDetails.push({ isOpen, cells: [...formattedRow] });
-
-    // Add details row
-    /*
-    rowsWithAllocationDetails.push({
-      parent: parentIndex,
-      fullWidth: true,
-      noPadding: true,
-      cells: [{ title: expandedContent }]
-    });
-    */
+    // Add row with details
+    rowsWithAllocationDetails.push({ isOpen, cells: row, details: details });
   });
 
   return rowsWithAllocationDetails;
