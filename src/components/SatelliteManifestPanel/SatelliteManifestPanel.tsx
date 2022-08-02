@@ -240,6 +240,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
+        isCompact={variant == PaginationVariant.top}
         isDisabled={isFetching}
         itemCount={countManifests(data, searchValue)}
         perPage={perPage}
