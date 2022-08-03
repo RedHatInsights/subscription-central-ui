@@ -19,7 +19,9 @@ const Authentication: FC = ({ children }) => {
     queryClient.invalidateQueries('user');
   }, [location.pathname]);
 
-  isSuccess && window.insights?.chrome?.hideGlobalFilter();
+  useEffect(() => {
+    isSuccess && window.insights?.chrome?.hideGlobalFilter();
+  }, [isSuccess]);
 
   if (isError === true) {
     return <Unavailable />;

@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState, useRef } from 'react';
 import {
-  Badge,
   Drawer,
   DrawerContent,
   DrawerContentBody,
@@ -11,8 +10,7 @@ import {
   PaginationVariant,
   SearchInput,
   Split,
-  SplitItem,
-  Title
+  SplitItem
 } from '@patternfly/react-core';
 import { Table, TableHeader, TableBody, SortByDirection } from '@patternfly/react-table';
 import {
@@ -275,10 +273,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
           <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
             <DrawerContent panelContent={panelContent()}>
               <DrawerContentBody>
-                <Title headingLevel="h2">
-                  <span ref={titleRef}>Manifests</span>
-                  {!isFetching && <Badge isRead>{countManifests(data, searchValue)}</Badge>}
-                </Title>
                 <Flex
                   direction={{ default: 'column', md: 'row' }}
                   justifyContent={{ default: 'justifyContentSpaceBetween' }}
