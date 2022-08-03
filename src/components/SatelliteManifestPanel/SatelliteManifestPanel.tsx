@@ -7,6 +7,7 @@ import {
   Flex,
   FlexItem,
   PageSection,
+  PageSectionVariants,
   Pagination,
   PaginationVariant,
   SearchInput,
@@ -306,10 +307,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     <>
       {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel />}
       {(data?.length > 0 || !user.canWriteManifests) && (
-        <PageSection variant="light">
-          <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
-            <DrawerContent panelContent={panelContent()}>
-              <DrawerContentBody>
+        <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
+          <DrawerContent panelContent={panelContent()}>
+            <DrawerContentBody>
+              <PageSection variant={PageSectionVariants.light}>
                 <Flex
                   direction={{ default: 'column', md: 'row' }}
                   justifyContent={{ default: 'justifyContentSpaceBetween' }}
@@ -335,70 +336,72 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   </FlexItem>
                   <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
                 </Flex>
-                {/* @ts-ignore */}
-                <TableComposable aria-label="Satellite Manifest Table" variant="compact">
-                  <Thead>
-                    {/* @ts-ignore */}
-                    <Tr>
-                      <Th />
-                      {getTableHeaders(user).map((header, index) => (
-                        <Th key={index} sort={getSortParams(index)}>
-                          {header}
-                        </Th>
-                      ))}
-                    </Tr>
-                  </Thead>
-                  {getRows().map((row, index) => {
-                    let colSpan = 1 + row.cells.length;
-                    if (!user.isSCACapable) colSpan--;
-                    return (
-                      <Tbody key={index} isExpanded={row.isOpen}>
-                        {/* @ts-ignore */}
-                        <Tr>
-                          <Td
-                            expand={{
-                              rowIndex: index,
-                              isExpanded: row.isOpen,
-                              onToggle: () => toggleAllocationDetails(row.cells[3])
-                            }}
-                          />
+              </PageSection>
+              {/* @ts-ignore */}
+              <TableComposable aria-label="Satellite Manifest Table" variant="compact">
+                <Thead>
+                  {/* @ts-ignore */}
+                  <Tr>
+                    <Th />
+                    {getTableHeaders(user).map((header, index) => (
+                      <Th key={index} sort={getSortParams(index)}>
+                        {header}
+                      </Th>
+                    ))}
+                  </Tr>
+                </Thead>
+                {getRows().map((row, index) => {
+                  let colSpan = 1 + row.cells.length;
+                  if (!user.isSCACapable) colSpan--;
+                  return (
+                    <Tbody key={index} isExpanded={row.isOpen}>
+                      {/* @ts-ignore */}
+                      <Tr>
+                        <Td
+                          expand={{
+                            rowIndex: index,
+                            isExpanded: row.isOpen,
+                            onToggle: () => toggleAllocationDetails(row.cells[3])
+                          }}
+                        />
+                        <Td>
+                          <Button
+                            data-testid={`expand-details-button-${index}`}
+                            variant="link"
+                            onClick={() => handleRowManifestClick(row.cells[3], index)}
+                          >
+                            {row.cells[0]}
+                          </Button>
+                        </Td>
+                        <Td>{row.cells[1]}</Td>
+                        {user.isSCACapable && (
                           <Td>
-                            <Button
-                              data-testid={`expand-details-button-${index}`}
-                              variant="link"
-                              onClick={() => handleRowManifestClick(row.cells[3], index)}
-                            >
-                              {row.cells[0]}
-                            </Button>
+                            <SCAStatusSwitch scaStatus={row.cells[2]} uuid={row.cells[3]} />
                           </Td>
-                          <Td>{row.cells[1]}</Td>
-                          {user.isSCACapable && (
-                            <Td>
-                              <SCAStatusSwitch scaStatus={row.cells[2]} uuid={row.cells[3]} />
-                            </Td>
-                          )}
-                          <Td>{row.cells[3]}</Td>
-                        </Tr>
-                        {/* @ts-ignore */}
-                        <Tr isExpanded={row.isOpen}>
-                          <Td colSpan={colSpan}>
-                            <ExpandableRowContent>{row.details.content}</ExpandableRowContent>
-                          </Td>
-                        </Tr>
-                      </Tbody>
-                    );
-                  })}
-                </TableComposable>
+                        )}
+                        <Td>{row.cells[3]}</Td>
+                      </Tr>
+                      {/* @ts-ignore */}
+                      <Tr isExpanded={row.isOpen}>
+                        <Td colSpan={colSpan}>
+                          <ExpandableRowContent>{row.details.content}</ExpandableRowContent>
+                        </Td>
+                      </Tr>
+                    </Tbody>
+                  );
+                })}
+              </TableComposable>
+              <PageSection variant={PageSectionVariants.light}>
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />
                 )}
                 {!isFetching && data.length === 0 && <NoManifestsFound />}
                 {isFetching && <Processing />}
                 {pagination(PaginationVariant.bottom)}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
-        </PageSection>
+              </PageSection>
+            </DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
       )}
       <DeleteManifestConfirmationModal
         uuid={currentDeletionUUID}
