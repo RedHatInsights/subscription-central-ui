@@ -191,10 +191,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   if (successExportingManifest && shouldAddExportSuccessNotification) {
     const downloadURL = window.URL.createObjectURL(exportedManifestData);
 
-    addSuccessNotification(`Manifest ${exportedManifestName} Exported`, {
+    addSuccessNotification(`Manifest ${exportedManifestName} exported`, {
       hasTimeout: false,
       alertLinkHref: downloadURL,
-      alertLinkText: 'Download Manifest',
+      alertLinkText: 'Download manifest',
       alertLinkIsDownload: true,
       keyOfAlertToReplace: loadingManifestNotificationKey
     });
@@ -311,16 +311,16 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                     isFetching
                       ? []
                       : getRowsWithAllocationDetails(
-                          data,
-                          user,
-                          searchValue,
-                          page,
-                          perPage,
-                          rowExpandedStatus,
-                          handleRowManifestClick,
-                          entitlementsRowRefs,
-                          sortBy
-                        )
+                        data,
+                        user,
+                        searchValue,
+                        page,
+                        perPage,
+                        rowExpandedStatus,
+                        handleRowManifestClick,
+                        entitlementsRowRefs,
+                        sortBy
+                      )
                   }
                   onCollapse={toggleAllocationDetails}
                   sortBy={sortBy}
