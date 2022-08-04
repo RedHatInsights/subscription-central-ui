@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { TableComposable, Tbody, Td, Th, Thead, Tr, nowrap } from '@patternfly/react-table';
+import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Processing } from '../emptyState';
 import './ManifestEntitlementsList.scss';
 import { EntitlementsAttachedData, ManifestEntitlement } from '../../hooks/useManifestEntitlements';
@@ -10,6 +10,7 @@ interface ManifestEntitlementsListProps {
   isSuccess: boolean;
   isError: boolean;
   entitlementsRowRef: React.MutableRefObject<any>;
+  uuid: string;
 }
 
 const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
@@ -17,7 +18,8 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
   isLoading,
   isSuccess,
   isError,
-  entitlementsRowRef
+  entitlementsRowRef,
+  uuid
 }) => {
   useEffect(() => {
     if (entitlementsRowRef?.current) {
@@ -94,45 +96,40 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
         </div>
       )}
       {isSuccess && entitlementsData.valid && (
-        <React.Fragment>
-          {/* @ts-ignore */}
-          <TableComposable
-            ref={entitlementsRowRef}
-            aria-label="Allocations table"
-            variant="compact"
-            borders={false}
-            isNested={true}
-            // actions={actions}
-            className="sub-c-table-manifests-entitlement-list"
-          >
-            <Thead>
-              {/* @ts-ignore */}
-              <Tr>
-                <Th>Subscription name</Th>
-                <Th>SKU</Th>
-                <Th>Contract number</Th>
-                <Th>Quantity</Th>
-                <Th>Start date</Th>
-                <Th>End date</Th>
+        <TableComposable
+          ref={entitlementsRowRef}
+          aria-label="Allocations table"
+          variant="compact"
+          borders={false}
+          isNested={true}
+          // actions={actions}
+          className="sub-c-table-manifests-entitlement-list"
+          ouiaId={`entitlementTable/${uuid}`}
+          ouiaSafe={true}
+        >
+          <Thead>
+            <Tr ouiaId={`entitlementTable/${uuid}/head`} ouiaSafe={true}>
+              <Th>Subscription name</Th>
+              <Th>SKU</Th>
+              <Th>Contract number</Th>
+              <Th>Quantity</Th>
+              <Th>Start date</Th>
+              <Th>End date</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {rows.map((row, index) => (
+              <Tr key={index} ouiaId={`entitlementTable/${uuid}/row${index}`} ouiaSafe={true}>
+                <Td>{row[0]}</Td>
+                <Td>{row[1]}</Td>
+                <Td>{row[2]}</Td>
+                <Td>{row[3]}</Td>
+                <Td>{row[4]}</Td>
+                <Td>{row[5]}</Td>
               </Tr>
-            </Thead>
-            <Tbody>
-              {rows.map((row, index) => (
-                <React.Fragment key={index}>
-                  {/* @ts-ignore */}
-                  <Tr>
-                    <Td>{row[0]}</Td>
-                    <Td>{row[1]}</Td>
-                    <Td>{row[2]}</Td>
-                    <Td>{row[3]}</Td>
-                    <Td>{row[4]}</Td>
-                    <Td>{row[5]}</Td>
-                  </Tr>
-                </React.Fragment>
-              ))}
-            </Tbody>
-          </TableComposable>
-        </React.Fragment>
+            ))}
+          </Tbody>
+        </TableComposable>
       )}
       {isError && 'Something went wrong.  Please refresh the page and try again.'}
     </>

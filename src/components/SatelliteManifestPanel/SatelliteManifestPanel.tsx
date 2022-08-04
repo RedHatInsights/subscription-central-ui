@@ -337,11 +337,14 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
                 </Flex>
               </PageSection>
-              {/* @ts-ignore */}
-              <TableComposable aria-label="Satellite Manifest Table" variant="compact">
+              <TableComposable
+                aria-label="Satellite Manifest Table"
+                variant="compact"
+                ouiaId="manifestTable"
+                ouiaSafe={true}
+              >
                 <Thead>
-                  {/* @ts-ignore */}
-                  <Tr>
+                  <Tr ouiaId="manifestTable/head" ouiaSafe={true}>
                     <Th />
                     {getTableHeaders(user).map((header, index) => (
                       <Th key={index} sort={getSortParams(index)}>
@@ -355,8 +358,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   if (!user.isSCACapable) colSpan--;
                   return (
                     <Tbody key={index} isExpanded={row.isOpen}>
-                      {/* @ts-ignore */}
-                      <Tr>
+                      <Tr ouiaId={`manifestTable/row${index}`} ouiaSafe={true}>
                         <Td
                           expand={{
                             rowIndex: index,
@@ -381,8 +383,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                         )}
                         <Td>{row.cells[3]}</Td>
                       </Tr>
-                      {/* @ts-ignore */}
-                      <Tr isExpanded={row.isOpen}>
+                      <Tr
+                        isExpanded={row.isOpen}
+                        ouiaId={`manifestTable/details${index}`}
+                        ouiaSafe={true}
+                      >
                         <Td colSpan={colSpan}>
                           <ExpandableRowContent>{row.details.content}</ExpandableRowContent>
                         </Td>
