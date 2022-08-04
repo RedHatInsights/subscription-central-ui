@@ -53,18 +53,6 @@ export const getTableHeaders = (user: User): (string | React.ReactNode)[] => {
   return tableHeaders;
 };
 
-const formattedScaStatus = (user: User, scaStatus: string, uuid: string) => {
-  if (user.canWriteManifests) {
-    return (
-      <React.Fragment key={`scastatusswitch-${uuid}`}>
-        <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
-      </React.Fragment>
-    );
-  } else {
-    return scaStatus;
-  }
-};
-
 export const filterDataBySearchTerm = (
   data: ManifestEntry[],
   searchValue: string
@@ -102,19 +90,11 @@ export const getManifestName = (data: ManifestEntry[], uuid: string): string => 
 
 export const sortFilteredRows = (filteredRows: string[][], sortBy: SortBy): string[][] => {
   const { direction, index } = sortBy;
-  /**
-   * This adjustedIndex is necessary because Patternfly
-   * has a strange quirk where, when a table has an
-   * onCollapse attribute, its index starts at 1, which throws off
-   * the sorting without the adjustment.
-   */
-
-  const adjustedIndex = index;
   const directionFactor = direction === SortByDirection.desc ? -1 : 1;
   const sortedRows = filteredRows.sort(
-    (a: [string, string, string], b: [string, string, string]) => {
-      const term1 = a[adjustedIndex].toLowerCase();
-      const term2 = b[adjustedIndex].toLowerCase();
+    (a: [string, string, string, string], b: [string, string, string, string]) => {
+      const term1 = a[index].toLowerCase();
+      const term2 = b[index].toLowerCase();
       if (term1 < term2) {
         return -1 * directionFactor;
       } else if (term1 > term2) {

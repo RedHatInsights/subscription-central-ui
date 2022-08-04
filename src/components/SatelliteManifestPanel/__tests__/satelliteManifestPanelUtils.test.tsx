@@ -68,7 +68,7 @@ describe('sortFilteredRows method', () => {
   ];
 
   it('sorts the rows by title ascending', () => {
-    const sortBy: SortBy = { index: 1, direction: SortByDirection.asc };
+    const sortBy: SortBy = { index: 0, direction: SortByDirection.asc };
 
     const filteredRowsSortedByManifestName = [
       ['a-manifest', '6.9', 'enabled', '111111'],
@@ -80,7 +80,7 @@ describe('sortFilteredRows method', () => {
   });
 
   it('sorts the rows by version descending', () => {
-    const sortBy: SortBy = { index: 2, direction: SortByDirection.desc };
+    const sortBy: SortBy = { index: 1, direction: SortByDirection.desc };
 
     const filteredRowsSortedByManifestVersionDescending = [
       ['a-manifest', '6.9', 'enabled', '111111'],
@@ -94,7 +94,7 @@ describe('sortFilteredRows method', () => {
   });
 
   it('sorts the rows by sca status ascending', () => {
-    const sortBy: SortBy = { index: 3, direction: SortByDirection.asc };
+    const sortBy: SortBy = { index: 2, direction: SortByDirection.asc };
 
     const filteredRowsSortedByUUIDDescending = [
       ['c-manifest', '6.4', 'disabled', '333333'],
@@ -106,7 +106,7 @@ describe('sortFilteredRows method', () => {
   });
 
   it('sorts the rows by uuid descending', () => {
-    const sortBy: SortBy = { index: 4, direction: SortByDirection.desc };
+    const sortBy: SortBy = { index: 3, direction: SortByDirection.desc };
 
     const filteredRowsSortedByUUIDDescending = [
       ['z-manifest', '6.0', 'enabled', '555555'],

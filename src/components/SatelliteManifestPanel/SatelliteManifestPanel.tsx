@@ -15,6 +15,7 @@ import {
   SplitItem
 } from '@patternfly/react-core';
 import {
+  ActionsColumn,
   ExpandableRowContent,
   TableComposable,
   Tbody,
@@ -216,22 +217,20 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setShouldAddExportSuccessNotification(false);
   }
 
-  const actions = () => {
+  const actions = (uuid: string, name: string) => {
     const results = [
       {
         title: 'Export',
-        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          const manifestName = rowData.cells[0].props.children.props.children;
-          const uuid = rowData.uuid.title;
-          exportManifest(uuid, manifestName);
+        onClick: () => {
+          exportManifest(uuid, name);
         }
       }
     ];
     if (user.canWriteManifests) {
       results.push({
         title: 'Delete',
-        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          openDeleteConfirmationModal(rowData.uuid.title);
+        onClick: () => {
+          openDeleteConfirmationModal(name);
         }
       });
     }
@@ -351,9 +350,14 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                         {header}
                       </Th>
                     ))}
+                    <Td />
                   </Tr>
                 </Thead>
                 {getRows().map((row, index) => {
+                  const name = row.cells[0];
+                  const version = row.cells[1];
+                  const scaStatus = row.cells[2];
+                  const uuid = row.cells[3];
                   let colSpan = 1 + row.cells.length;
                   if (!user.isSCACapable) colSpan--;
                   return (
@@ -363,25 +367,28 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                           expand={{
                             rowIndex: index,
                             isExpanded: row.isOpen,
-                            onToggle: () => toggleAllocationDetails(row.cells[3])
+                            onToggle: () => toggleAllocationDetails(uuid)
                           }}
                         />
                         <Td>
                           <Button
                             data-testid={`expand-details-button-${index}`}
                             variant="link"
-                            onClick={() => handleRowManifestClick(row.cells[3], index)}
+                            onClick={() => handleRowManifestClick(uuid, index)}
                           >
-                            {row.cells[0]}
+                            {name}
                           </Button>
                         </Td>
-                        <Td>{row.cells[1]}</Td>
+                        <Td>{version}</Td>
                         {user.isSCACapable && (
                           <Td>
-                            <SCAStatusSwitch scaStatus={row.cells[2]} uuid={row.cells[3]} />
+                            <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
                           </Td>
                         )}
-                        <Td>{row.cells[3]}</Td>
+                        <Td>{uuid}</Td>
+                        <Td>
+                          <ActionsColumn items={actions(uuid, name)} />
+                        </Td>
                       </Tr>
                       <Tr
                         isExpanded={row.isOpen}
