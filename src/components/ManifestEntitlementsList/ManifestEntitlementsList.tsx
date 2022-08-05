@@ -13,6 +13,15 @@ interface ManifestEntitlementsListProps {
   uuid: string;
 }
 
+type ManifestEntitlementListRow = {
+  subscriptionName: string | React.ReactNode;
+  sku: string;
+  contractNumber: string;
+  entitlementQuantity: number;
+  startDate: string;
+  endDate: string;
+};
+
 const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
   entitlementsData,
   isLoading,
@@ -36,14 +45,6 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
     return `${year}-${month}-${day}`;
   };
 
-  type ManifestEntitlementListRow = [
-    string | React.ReactNode,
-    string,
-    string,
-    number,
-    string,
-    string
-  ];
   let rows = [] as ManifestEntitlementListRow[];
 
   if (entitlementsData?.value) {
@@ -52,14 +53,14 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
         const formattedStartDate = getFormattedDate(entitlement.startDate);
         const formattedEndDate = getFormattedDate(entitlement.endDate);
 
-        return [
-          entitlement.subscriptionName,
-          entitlement.sku,
-          entitlement.contractNumber,
-          entitlement.entitlementQuantity,
-          formattedStartDate,
-          formattedEndDate
-        ];
+        return {
+          subscriptionName: entitlement.subscriptionName,
+          sku: entitlement.sku,
+          contractNumber: entitlement.contractNumber,
+          entitlementQuantity: entitlement.entitlementQuantity,
+          startDate: formattedStartDate,
+          endDate: formattedEndDate
+        };
       }
     );
   }
@@ -120,12 +121,12 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
           <Tbody>
             {rows.map((row, index) => (
               <Tr key={index} ouiaId={`entitlementTable/${uuid}/row${index}`} ouiaSafe={true}>
-                <Td>{row[0]}</Td>
-                <Td>{row[1]}</Td>
-                <Td>{row[2]}</Td>
-                <Td>{row[3]}</Td>
-                <Td>{row[4]}</Td>
-                <Td>{row[5]}</Td>
+                <Td>{row.subscriptionName}</Td>
+                <Td>{row.sku}</Td>
+                <Td>{row.contractNumber}</Td>
+                <Td>{row.entitlementQuantity}</Td>
+                <Td>{row.startDate}</Td>
+                <Td>{row.endDate}</Td>
               </Tr>
             ))}
           </Tbody>
