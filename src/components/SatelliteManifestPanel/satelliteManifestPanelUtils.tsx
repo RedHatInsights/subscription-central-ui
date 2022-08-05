@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from '@patternfly/react-core';
 import { SortByDirection } from '@patternfly/react-table';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList/ManifestEntitlementsListContainer';
-import SCAStatusSwitch from '../SCAStatusSwitch';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { User } from '../../hooks/useUser';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
@@ -18,7 +17,7 @@ export interface RowDetails {
 }
 
 export interface Row {
-  cells: string[];
+  cells: ManifestRow;
   fullWidth?: boolean;
   noPadding?: boolean;
   parent?: number;
@@ -35,15 +34,27 @@ export interface BooleanDictionary {
   [key: string]: boolean;
 }
 
-export const getTableHeaders = (user: User): (string | React.ReactNode)[] => {
-  const tableHeaders = [
-    'Name',
-    'Version',
-    <React.Fragment key="0">
-      Simple Content Access
-      <SCAInfoIconWithPopover />
-    </React.Fragment>,
-    'UUID'
+export type SortKey = 'name' | 'version' | 'scaStatus' | 'uuid';
+
+type ManifestTableHeader = {
+  label: string | React.ReactNode;
+  sortKey: SortKey;
+};
+
+export const getTableHeaders = (user: User): ManifestTableHeader[] => {
+  const tableHeaders: ManifestTableHeader[] = [
+    { label: 'Name', sortKey: 'name' },
+    { label: 'Version', sortKey: 'version' },
+    {
+      label: (
+        <React.Fragment key="0">
+          Simple Content Access
+          <SCAInfoIconWithPopover />
+        </React.Fragment>
+      ),
+      sortKey: 'scaStatus'
+    },
+    { label: 'UUID', sortKey: 'uuid' }
   ];
 
   if (user.isSCACapable === false) {
@@ -71,7 +82,14 @@ export const countManifests = (data: ManifestEntry[], searchValue: string): numb
   return filteredData.length;
 };
 
-export const getFilteredRows = (data: ManifestEntry[], searchValue: string): string[][] => {
+export type ManifestRow = {
+  name: string;
+  version: string;
+  scaStatus: string;
+  uuid: string;
+};
+
+export const getFilteredRows = (data: ManifestEntry[], searchValue: string): ManifestRow[] => {
   return filterDataBySearchTerm(data, searchValue).map((entry: ManifestEntry) => {
     let scaStatus = entry.simpleContentAccess || 'disabled';
     const manifestVersion = semver.coerce(entry.version);
@@ -80,7 +98,7 @@ export const getFilteredRows = (data: ManifestEntry[], searchValue: string): str
       scaStatus = 'disallowed';
     }
 
-    return [entry.name, entry.version, scaStatus, entry.uuid];
+    return { name: entry.name, version: entry.version, scaStatus: scaStatus, uuid: entry.uuid };
   });
 };
 
@@ -88,22 +106,23 @@ export const getManifestName = (data: ManifestEntry[], uuid: string): string => 
   return data.find((entry) => entry.uuid == uuid)?.name;
 };
 
-export const sortFilteredRows = (filteredRows: string[][], sortBy: SortBy): string[][] => {
-  const { direction, index } = sortBy;
-  const directionFactor = direction === SortByDirection.desc ? -1 : 1;
-  const sortedRows = filteredRows.sort(
-    (a: [string, string, string, string], b: [string, string, string, string]) => {
-      const term1 = a[index].toLowerCase();
-      const term2 = b[index].toLowerCase();
-      if (term1 < term2) {
-        return -1 * directionFactor;
-      } else if (term1 > term2) {
-        return 1 * directionFactor;
-      } else {
-        return 0;
-      }
+export const sortFilteredRows = (
+  filteredRows: ManifestRow[],
+  sortKey: SortKey,
+  sortDirection: SortByDirection
+): ManifestRow[] => {
+  const directionFactor = sortDirection === SortByDirection.desc ? -1 : 1;
+  const sortedRows = filteredRows.sort((a: ManifestRow, b: ManifestRow) => {
+    const term1 = a[sortKey].toLowerCase();
+    const term2 = b[sortKey].toLowerCase();
+    if (term1 < term2) {
+      return -1 * directionFactor;
+    } else if (term1 > term2) {
+      return 1 * directionFactor;
+    } else {
+      return 0;
     }
-  );
+  });
 
   return sortedRows;
 };
@@ -111,10 +130,11 @@ export const sortFilteredRows = (filteredRows: string[][], sortBy: SortBy): stri
 export const getSortedRows = (
   data: ManifestEntry[],
   searchValue: string,
-  sortBy: SortBy
-): string[][] => {
+  sortKey: SortKey,
+  sortDirection: SortByDirection
+): ManifestRow[] => {
   const filteredRows = getFilteredRows(data, searchValue);
-  const sortedRows = sortFilteredRows(filteredRows, sortBy);
+  const sortedRows = sortFilteredRows(filteredRows, sortKey, sortDirection);
   return sortedRows;
 };
 
@@ -123,12 +143,13 @@ export const getPaginatedRows = (
   searchValue: string,
   page: number,
   perPage: number,
-  sortBy: SortBy
-): string[][] => {
+  sortKey: SortKey,
+  sortDirection: SortByDirection
+): ManifestRow[] => {
   const first = (page - 1) * perPage;
   const last = first + perPage;
 
-  return getSortedRows(data, searchValue, sortBy).slice(first, last);
+  return getSortedRows(data, searchValue, sortKey, sortDirection).slice(first, last);
 };
 
 export const getRowsWithAllocationDetails = (
@@ -140,23 +161,33 @@ export const getRowsWithAllocationDetails = (
   rowExpandedStatus: BooleanDictionary,
   handleRowManifestClick: (uuid: string, rowIndex: number) => void,
   entitlementsRowRefs: React.MutableRefObject<HTMLSpanElement | HTMLParagraphElement>[],
-  sortBy: SortBy
+  sortKey: SortKey,
+  sortDirection: SortByDirection
 ): Row[] => {
   /**
    * Go through each row and add a toggleable row
    * with details beneath it.
    */
 
-  const currentPageRows = getPaginatedRows(data, searchValue, page, perPage, sortBy);
+  const currentPageRows = getPaginatedRows(
+    data,
+    searchValue,
+    page,
+    perPage,
+    sortKey,
+    sortDirection
+  );
 
   const rowsWithAllocationDetails: Row[] = [];
 
   currentPageRows.forEach((row, i) => {
-    const uuid = row[3];
-    const isOpen = rowExpandedStatus[uuid] || false;
+    const isOpen = rowExpandedStatus[row.uuid] || false;
     const parentIndex = (i + 1) * 2 - 2;
     const expandedContent = isOpen ? (
-      <ManifestEntitlementsListContainer uuid={uuid} entitlementsRowRef={entitlementsRowRefs[i]} />
+      <ManifestEntitlementsListContainer
+        uuid={row.uuid}
+        entitlementsRowRef={entitlementsRowRefs[i]}
+      />
     ) : (
       ''
     );

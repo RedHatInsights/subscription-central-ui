@@ -595,7 +595,7 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
                 >
                   <td
                     class=""
-                    colspan="5"
+                    colspan="6"
                   >
                     <div
                       class="pf-c-table__expandable-row-content"

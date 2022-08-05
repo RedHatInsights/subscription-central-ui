@@ -28,6 +28,7 @@ import {
 } from '@patternfly/react-table';
 import {
   BooleanDictionary,
+  SortKey,
   countManifests,
   getTableHeaders,
   getManifestName,
@@ -89,6 +90,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     isSuccess: successExportingManifest,
     isError: errorExportingManifest
   } = useExportSatelliteManifest();
+
+  const sortKeys: SortKey[] = [];
 
   const scrollToPageTop = () => {
     if (titleRef?.current) {
@@ -278,9 +281,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       direction: sortBy.direction,
       defaultDirection: SortByDirection.asc
     },
-    onSort: (_event: React.SyntheticEvent, index: number, direction: SortByDirection) => {
-      setSortBy({ index, direction });
-    },
+    onSort: handleSort,
     columnIndex
   });
 
@@ -297,7 +298,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         rowExpandedStatus,
         handleRowManifestClick,
         entitlementsRowRefs,
-        sortBy
+        sortKeys[sortBy.index],
+        sortBy.direction
       );
     }
   };
@@ -345,21 +347,22 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 <Thead>
                   <Tr ouiaId="manifestTable/head" ouiaSafe={true}>
                     <Th />
-                    {getTableHeaders(user).map((header, index) => (
-                      <Th key={index} sort={getSortParams(index)}>
-                        {header}
-                      </Th>
-                    ))}
+                    {getTableHeaders(user).map((header, index) => {
+                      console.log(header);
+                      console.log(sortKeys);
+                      sortKeys.push(header.sortKey);
+                      return (
+                        <Th key={index} sort={getSortParams(index)}>
+                          {header.label}
+                        </Th>
+                      );
+                    })}
                     <Td />
                   </Tr>
                 </Thead>
                 {getRows().map((row, index) => {
-                  const name = row.cells[0];
-                  const version = row.cells[1];
-                  const scaStatus = row.cells[2];
-                  const uuid = row.cells[3];
-                  let colSpan = 1 + row.cells.length;
-                  if (!user.isSCACapable) colSpan--;
+                  const manifest = row.cells;
+                  const colSpan = sortKeys.length + 2;
                   return (
                     <Tbody key={index} isExpanded={row.isOpen}>
                       <Tr ouiaId={`manifestTable/row${index}`} ouiaSafe={true}>
@@ -367,27 +370,27 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                           expand={{
                             rowIndex: index,
                             isExpanded: row.isOpen,
-                            onToggle: () => toggleAllocationDetails(uuid)
+                            onToggle: () => toggleAllocationDetails(manifest.uuid)
                           }}
                         />
                         <Td>
                           <Button
                             data-testid={`expand-details-button-${index}`}
                             variant="link"
-                            onClick={() => handleRowManifestClick(uuid, index)}
+                            onClick={() => handleRowManifestClick(manifest.uuid, index)}
                           >
-                            {name}
+                            {manifest.name}
                           </Button>
                         </Td>
-                        <Td>{version}</Td>
+                        <Td>{manifest.version}</Td>
                         {user.isSCACapable && (
                           <Td>
-                            <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
+                            <SCAStatusSwitch scaStatus={manifest.scaStatus} uuid={manifest.uuid} />
                           </Td>
                         )}
-                        <Td>{uuid}</Td>
+                        <Td>{manifest.uuid}</Td>
                         <Td>
-                          <ActionsColumn items={actions(uuid, name)} />
+                          <ActionsColumn items={actions(manifest.uuid, manifest.name)} />
                         </Td>
                       </Tr>
                       <Tr

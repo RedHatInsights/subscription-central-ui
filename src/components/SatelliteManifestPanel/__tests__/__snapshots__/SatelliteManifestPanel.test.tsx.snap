@@ -571,7 +571,7 @@ exports[`Satellite Manifest Panel opens the side panel when the row name is clic
               >
                 <td
                   class=""
-                  colspan="5"
+                  colspan="6"
                 >
                   <div
                     class="pf-c-table__expandable-row-content"
@@ -1435,7 +1435,7 @@ exports[`Satellite Manifest Panel renders correctly with SCA column when user is
               >
                 <td
                   class=""
-                  colspan="5"
+                  colspan="6"
                 >
                   <div
                     class="pf-c-table__expandable-row-content"
@@ -3549,7 +3549,7 @@ exports[`Satellite Manifest Panel when user does not have write permission rende
               >
                 <td
                   class=""
-                  colspan="5"
+                  colspan="6"
                 >
                   <div
                     class="pf-c-table__expandable-row-content"
@@ -4259,7 +4259,7 @@ exports[`Satellite Manifest Panel when user is not SCA capable renders correctly
               >
                 <td
                   class=""
-                  colspan="4"
+                  colspan="5"
                 >
                   <div
                     class="pf-c-table__expandable-row-content"
@@ -5028,7 +5028,7 @@ exports[`Satellite Manifest Panel when version <= 6.2 renders N/A for the SCA St
               >
                 <td
                   class=""
-                  colspan="5"
+                  colspan="6"
                 >
                   <div
                     class="pf-c-table__expandable-row-content"
