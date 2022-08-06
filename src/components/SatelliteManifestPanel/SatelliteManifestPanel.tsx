@@ -348,8 +348,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   <Tr ouiaId="manifestTable/head" ouiaSafe={true}>
                     <Th />
                     {getTableHeaders(user).map((header, index) => {
-                      console.log(header);
-                      console.log(sortKeys);
                       sortKeys.push(header.sortKey);
                       return (
                         <Th key={index} sort={getSortParams(index)}>
@@ -362,7 +360,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 </Thead>
                 {getRows().map((row, index) => {
                   const manifest = row.cells;
-                  const colSpan = sortKeys.length + 2;
+                  const colSpan = sortKeys.length + 2; // +2 for expansion toggle and kabob menu
                   return (
                     <Tbody key={index} isExpanded={row.isOpen}>
                       <Tr ouiaId={`manifestTable/row${index}`} ouiaSafe={true}>
