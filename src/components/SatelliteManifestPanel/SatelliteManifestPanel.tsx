@@ -1,20 +1,34 @@
 import React, { FunctionComponent, useState, useRef } from 'react';
 import {
+  Button,
   Drawer,
   DrawerContent,
   DrawerContentBody,
   Flex,
   FlexItem,
   PageSection,
+  PageSectionVariants,
   Pagination,
   PaginationVariant,
   SearchInput,
   Split,
   SplitItem
 } from '@patternfly/react-core';
-import { Table, TableHeader, TableBody, SortByDirection } from '@patternfly/react-table';
+import {
+  ActionsColumn,
+  ExpandableRowContent,
+  TableComposable,
+  Tbody,
+  Td,
+  Th,
+  ThProps,
+  Thead,
+  Tr,
+  SortByDirection
+} from '@patternfly/react-table';
 import {
   BooleanDictionary,
+  SortKey,
   countManifests,
   getTableHeaders,
   getManifestName,
@@ -31,6 +45,7 @@ import { NoManifestsFound, Processing } from '../emptyState';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import './SatelliteManifestPanel.scss';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
+import SCAStatusSwitch from '../SCAStatusSwitch';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -46,7 +61,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
-  const [sortBy, setSortBy] = useState({ index: 1, direction: SortByDirection.asc });
+  const [sortBy, setSortBy] = useState({ index: 0, direction: SortByDirection.asc });
   const [rowExpandedStatus, setRowExpandedStatus] = useState<BooleanDictionary>({});
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
@@ -75,6 +90,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     isSuccess: successExportingManifest,
     isError: errorExportingManifest
   } = useExportSatelliteManifest();
+
+  const sortKeys: SortKey[] = [];
 
   const scrollToPageTop = () => {
     if (titleRef?.current) {
@@ -149,13 +166,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setRowExpandedStatus(newRowExpandedStatus);
   };
 
-  const toggleAllocationDetails = (
-    event: React.MouseEvent,
-    rowKey: number,
-    isOpen: boolean,
-    rowData: any
-  ) => {
-    const uuid: string = rowData.uuid.title;
+  const toggleAllocationDetails = (uuid: string) => {
     toggleRowExpansion(uuid, !rowExpandedStatus[uuid]);
   };
 
@@ -209,22 +220,20 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setShouldAddExportSuccessNotification(false);
   }
 
-  const actions = () => {
+  const actions = (uuid: string, name: string) => {
     const results = [
       {
         title: 'Export',
-        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          const manifestName = rowData.cells[0].props.children.props.children;
-          const uuid = rowData.uuid.title;
-          exportManifest(uuid, manifestName);
+        onClick: () => {
+          exportManifest(uuid, name);
         }
       }
     ];
     if (user.canWriteManifests) {
       results.push({
         title: 'Delete',
-        onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-          openDeleteConfirmationModal(rowData.uuid.title);
+        onClick: () => {
+          openDeleteConfirmationModal(name);
         }
       });
     }
@@ -234,6 +243,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
+        isCompact={variant == PaginationVariant.top}
         isDisabled={isFetching}
         itemCount={countManifests(data, searchValue)}
         perPage={perPage}
@@ -265,14 +275,43 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     }
   };
 
+  const getSortParams = (columnIndex: number): ThProps['sort'] => ({
+    sortBy: {
+      index: sortBy.index,
+      direction: sortBy.direction,
+      defaultDirection: SortByDirection.asc
+    },
+    onSort: handleSort,
+    columnIndex
+  });
+
+  const getRows = () => {
+    if (isFetching) {
+      return [];
+    } else {
+      return getRowsWithAllocationDetails(
+        data,
+        user,
+        searchValue,
+        page,
+        perPage,
+        rowExpandedStatus,
+        handleRowManifestClick,
+        entitlementsRowRefs,
+        sortKeys[sortBy.index],
+        sortBy.direction
+      );
+    }
+  };
+
   return (
     <>
       {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel />}
       {(data?.length > 0 || !user.canWriteManifests) && (
-        <PageSection variant="light">
-          <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
-            <DrawerContent panelContent={panelContent()}>
-              <DrawerContentBody>
+        <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
+          <DrawerContent panelContent={panelContent()}>
+            <DrawerContentBody>
+              <PageSection variant={PageSectionVariants.light}>
                 <Flex
                   direction={{ default: 'column', md: 'row' }}
                   justifyContent={{ default: 'justifyContentSpaceBetween' }}
@@ -298,43 +337,84 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   </FlexItem>
                   <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
                 </Flex>
-                <Table
-                  aria-label="Satellite Manifest Table"
-                  cells={getTableHeaders(user)}
-                  rows={
-                    isFetching
-                      ? []
-                      : getRowsWithAllocationDetails(
-                          data,
-                          user,
-                          searchValue,
-                          page,
-                          perPage,
-                          rowExpandedStatus,
-                          handleRowManifestClick,
-                          entitlementsRowRefs,
-                          sortBy
-                        )
-                  }
-                  onCollapse={toggleAllocationDetails}
-                  sortBy={sortBy}
-                  onSort={handleSort}
-                  actions={actions()}
-                  areActionsDisabled={() => isLoadingManifestExport}
-                >
-                  <TableHeader />
-                  <TableBody />
-                </Table>
+              </PageSection>
+              <TableComposable
+                aria-label="Satellite Manifest Table"
+                variant="compact"
+                ouiaId="manifestTable"
+                ouiaSafe={true}
+              >
+                <Thead>
+                  <Tr ouiaId="manifestTable/head" ouiaSafe={true}>
+                    <Th />
+                    {getTableHeaders(user).map((header, index) => {
+                      sortKeys.push(header.sortKey);
+                      return (
+                        <Th key={index} sort={getSortParams(index)}>
+                          {header.label}
+                        </Th>
+                      );
+                    })}
+                    <Td />
+                  </Tr>
+                </Thead>
+                {getRows().map((row, index) => {
+                  const manifest = row.cells;
+                  const colSpan = sortKeys.length + 2; // +2 for expansion toggle and kabob menu
+                  return (
+                    <Tbody key={index} isExpanded={row.isOpen}>
+                      <Tr ouiaId={`manifestTable/row${index}`} ouiaSafe={true}>
+                        <Td
+                          expand={{
+                            rowIndex: index,
+                            isExpanded: row.isOpen,
+                            onToggle: () => toggleAllocationDetails(manifest.uuid)
+                          }}
+                        />
+                        <Td>
+                          <Button
+                            data-testid={`expand-details-button-${index}`}
+                            variant="link"
+                            onClick={() => handleRowManifestClick(manifest.uuid, index)}
+                          >
+                            {manifest.name}
+                          </Button>
+                        </Td>
+                        <Td>{manifest.version}</Td>
+                        {user.isSCACapable && (
+                          <Td>
+                            <SCAStatusSwitch scaStatus={manifest.scaStatus} uuid={manifest.uuid} />
+                          </Td>
+                        )}
+                        <Td>{manifest.uuid}</Td>
+                        <Td>
+                          <ActionsColumn items={actions(manifest.uuid, manifest.name)} />
+                        </Td>
+                      </Tr>
+                      <Tr
+                        isExpanded={row.isOpen}
+                        ouiaId={`manifestTable/details${index}`}
+                        ouiaSafe={true}
+                      >
+                        <Td colSpan={colSpan}>
+                          <ExpandableRowContent>{row.details.content}</ExpandableRowContent>
+                        </Td>
+                      </Tr>
+                    </Tbody>
+                  );
+                })}
+              </TableComposable>
+              <PageSection variant={PageSectionVariants.light}>
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />
                 )}
                 {!isFetching && data.length === 0 && <NoManifestsFound />}
                 {isFetching && <Processing />}
                 {pagination(PaginationVariant.bottom)}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
-        </PageSection>
+              </PageSection>
+            </DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
       )}
       <DeleteManifestConfirmationModal
         uuid={currentDeletionUUID}

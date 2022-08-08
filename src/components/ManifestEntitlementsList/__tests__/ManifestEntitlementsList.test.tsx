@@ -21,7 +21,8 @@ describe('Manifest Entitlements List', () => {
           }
         ]
       },
-      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
+      uuid: 'abc123'
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();
@@ -47,7 +48,8 @@ describe('Manifest Entitlements List', () => {
           }
         ]
       },
-      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
+      uuid: 'abc123'
     };
     const { getByText } = render(<ManifestEntitlementsList {...props} />);
 
@@ -71,7 +73,8 @@ describe('Manifest Entitlements List', () => {
         valid: false,
         reason: 'No Entitlements are attached to the Allocation'
       },
-      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
+      uuid: 'abc123'
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();
@@ -86,7 +89,8 @@ describe('Manifest Entitlements List', () => {
         valid: false,
         reason: 'No Entitlements are attached to the Allocation'
       },
-      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
+      uuid: 'abc123'
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();
@@ -101,7 +105,8 @@ describe('Manifest Entitlements List', () => {
         valid: false,
         reason: 'No Allocations found'
       },
-      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
+      entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
+      uuid: 'abc123'
     };
     const { container } = render(<ManifestEntitlementsList {...props} />);
     expect(container).toMatchSnapshot();
