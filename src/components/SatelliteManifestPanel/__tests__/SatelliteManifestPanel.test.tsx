@@ -203,4 +203,33 @@ describe('Satellite Manifest Panel', () => {
       screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
     ).toBeInTheDocument();
   });
+  
+  it('Shows export message when successfully exported',  async () => {
+    const download = jest.fn();
+    jest.mock('../../../hooks/useExportSatelliteManifest', () => ({
+      data: null,
+      mutate: null,
+      isLoading: false,
+      isSuccess: true,
+      isError: false
+    }));
+   
+    const { getByLabelText, getByText, container } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...get('props')} />
+      </QueryClientProvider>
+    );
+
+  
+    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByText('Export'));
+
+    await new Promise((r) => setTimeout(r, 2000));
+
+    waitFor(() => expect(
+      screen.findByText('Download Manifest')
+    ).toBeInTheDocument());
+
+    expect(container).toMatchSnapshot();
+  });
 });
