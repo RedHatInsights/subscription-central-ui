@@ -20,18 +20,17 @@ const wrapper = ({ children }: wrapperProps) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('useManifestEntitlements hook', () => {
-  beforeEach(() => {
-    Object.defineProperty(window, 'insights', {
-      value: {
-        chrome: {
-          auth: {
-            getToken: jest.fn()
-          }
-        }
+Object.defineProperty(window, 'insights', {
+  value: {
+    chrome: {
+      auth: {
+        getToken: jest.fn()
       }
-    });
-  });
+    }
+  }
+});
+
+describe('useManifestEntitlements hook', () => {
   it('passes versions back when fetching from API', async () => {
     const mockResponse = {
       uuid: 'uuid-12345',
