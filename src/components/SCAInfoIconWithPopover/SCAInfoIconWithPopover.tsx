@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Popover } from '@patternfly/react-core';
-import QuestionCircleIcon from '@patternfly/react-icons/dist/js/icons/question-circle-icon';
+import { QuestionCircleIcon } from '@patternfly/react-icons/dist/js/icons/question-circle-icon';
 import ExternalLink from '../ExternalLink';
 import './SCAInfoIconWithPopover.scss';
 
