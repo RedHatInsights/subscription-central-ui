@@ -8,3 +8,4 @@ globals:
 rules:
   react/prop-types: 'off'
   react/jsx-key: [2, { checkFragmentShorthand: true }]
+  '@typescript-eslint/ban-ts-comment': 0
