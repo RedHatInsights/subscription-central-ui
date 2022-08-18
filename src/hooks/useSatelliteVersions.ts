@@ -1,13 +1,12 @@
 import { useQuery } from 'react-query';
-import Cookies from 'js-cookie';
 
 interface SatelliteVersion {
   description: string;
   value: string;
 }
 
-const fetchSatelliteVersions = (): Promise<any> => {
-  const jwtToken = Cookies.get('cs_jwt');
+const fetchSatelliteVersions = async (): Promise<any> => {
+  const jwtToken = await window.insights.chrome.auth.getToken();
   return fetch('/api/rhsm/v2/manifests/versions', {
     headers: { Authorization: `Bearer ${jwtToken}` }
   }).then((response) => response.json());
