@@ -21,6 +21,17 @@ const wrapper = ({ children }: wrapperProps) => (
 );
 
 describe('useManifestEntitlements hook', () => {
+  beforeEach(() => {
+    Object.defineProperty(window, 'insights', {
+      value: {
+        chrome: {
+          auth: {
+            getToken: jest.fn()
+          }
+        }
+      }
+    });
+  });
   it('passes versions back when fetching from API', async () => {
     const mockResponse = {
       uuid: 'uuid-12345',
