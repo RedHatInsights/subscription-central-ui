@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import { useMutation, useQueryClient, UseMutationResult, QueryClient } from 'react-query';
 import { ManifestEntry } from './useSatelliteManifests';
 import { ManifestEntitlementsData } from './useManifestEntitlements';
@@ -13,11 +12,11 @@ interface UpdateManifestSCAStatus {
   status: number;
 }
 
-const updateManifestSCAStatus = (
+const updateManifestSCAStatus = async (
   data: UpdateManifestSCAStatusParams
 ): Promise<void | UpdateManifestSCAStatus> => {
   const { uuid, newSCAStatus } = data;
-  const jwtToken = Cookies.get('cs_jwt');
+  const jwtToken = await window.insights.chrome.auth.getToken();
 
   const requestData = {
     simpleContentAccess: newSCAStatus

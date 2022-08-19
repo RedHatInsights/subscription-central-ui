@@ -11,6 +11,16 @@ const wrapper = ({ children }: any) => {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
 
+Object.defineProperty(window, 'insights', {
+  value: {
+    chrome: {
+      auth: {
+        getToken: jest.fn()
+      }
+    }
+  }
+});
+
 beforeEach(() => {
   fetch.resetMocks();
 

@@ -10,6 +10,16 @@ beforeEach(() => {
   fetch.resetMocks();
 });
 
+Object.defineProperty(window, 'insights', {
+  value: {
+    chrome: {
+      auth: {
+        getToken: jest.fn()
+      }
+    }
+  }
+});
+
 const queryClient = new QueryClient();
 
 interface wrapperProps {

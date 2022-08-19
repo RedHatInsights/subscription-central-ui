@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import { useMutation, useQueryClient } from 'react-query';
 
 interface CreateManifestParams {
@@ -6,9 +5,9 @@ interface CreateManifestParams {
   version: string;
 }
 
-const createSatelliteManifest = (data: CreateManifestParams) => {
+const createSatelliteManifest = async (data: CreateManifestParams) => {
   const { name, version } = data;
-  const jwtToken = Cookies.get('cs_jwt');
+  const jwtToken = await window.insights.chrome.auth.getToken();
   return fetch(`/api/rhsm/v2/manifests?name=${name}&version=${version}`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${jwtToken}` }
