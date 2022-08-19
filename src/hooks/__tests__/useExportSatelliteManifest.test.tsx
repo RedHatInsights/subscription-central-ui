@@ -12,6 +12,16 @@ import useExportSatelliteManifest, {
 
 enableFetchMocks();
 
+Object.defineProperty(window, 'insights', {
+  value: {
+    chrome: {
+      auth: {
+        getToken: jest.fn()
+      }
+    }
+  }
+});
+
 beforeEach(() => {
   fetch.resetMocks();
   jest.setTimeout(10000);
