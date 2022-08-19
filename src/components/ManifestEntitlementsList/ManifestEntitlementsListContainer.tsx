@@ -19,6 +19,7 @@ const ManifestEntitlementsListContainer: FC<ManifestEntitlementsListContainerPro
       isError={isError}
       entitlementsData={data?.body?.entitlementsAttached}
       entitlementsRowRef={entitlementsRowRef}
+      uuid={uuid}
     />
   );
 };
