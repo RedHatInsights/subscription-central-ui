@@ -20,6 +20,16 @@ const wrapper = ({ children }: wrapperProps) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
+Object.defineProperty(window, 'insights', {
+  value: {
+    chrome: {
+      auth: {
+        getToken: jest.fn()
+      }
+    }
+  }
+});
+
 describe('useManifestEntitlements hook', () => {
   it('passes versions back when fetching from API', async () => {
     const mockResponse = {

@@ -1,5 +1,4 @@
 import { useQuery, UseQueryResult } from 'react-query';
-import Cookies from 'js-cookie';
 import { authenticateUser, getUserRbacPermissions } from '../utilities/platformServices';
 
 interface User {
@@ -17,8 +16,8 @@ interface SCACapableStatusResponse {
   };
 }
 
-const fetchSCACapableStatus = (): Promise<SCACapableStatusResponse> => {
-  const jwtToken = Cookies.get('cs_jwt');
+const fetchSCACapableStatus = async (): Promise<SCACapableStatusResponse> => {
+  const jwtToken = await window.insights.chrome.auth.getToken();
   return fetch('/api/rhsm/v2/organization', {
     headers: { Authorization: `Bearer ${jwtToken}` }
   }).then((response) => response.json());

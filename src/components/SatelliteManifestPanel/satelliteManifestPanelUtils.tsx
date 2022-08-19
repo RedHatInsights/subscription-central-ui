@@ -1,15 +1,7 @@
 import React from 'react';
 import { Button } from '@patternfly/react-core';
-import {
-  sortable,
-  cellWidth,
-  expandable,
-  IFormatter,
-  ITransform,
-  SortByDirection
-} from '@patternfly/react-table';
+import { SortByDirection } from '@patternfly/react-table';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList/ManifestEntitlementsListContainer';
-import SCAStatusSwitch from '../SCAStatusSwitch';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { User } from '../../hooks/useUser';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
@@ -17,16 +9,20 @@ import semver from 'semver';
 
 export interface TableHeader {
   title: string | React.ReactNode;
-  transforms: ITransform[];
-  cellFormatters?: IFormatter[];
+}
+
+export interface RowDetails {
+  parent: number;
+  content: string | React.ReactNode;
 }
 
 export interface Row {
-  cells: (string | JSX.Element | { title: React.ReactNode })[];
+  cells: ManifestRow;
   fullWidth?: boolean;
   noPadding?: boolean;
   parent?: number;
   isOpen?: boolean;
+  details?: RowDetails;
 }
 
 export interface SortBy {
@@ -38,20 +34,27 @@ export interface BooleanDictionary {
   [key: string]: boolean;
 }
 
-export const getTableHeaders = (user: User): TableHeader[] => {
-  const tableHeaders = [
-    { title: 'Name', transforms: [sortable], cellFormatters: [expandable] },
-    { title: 'Version', transforms: [sortable] },
+export type SortKey = 'name' | 'version' | 'scaStatus' | 'uuid';
+
+type ManifestTableHeader = {
+  label: string | React.ReactNode;
+  sortKey: SortKey;
+};
+
+export const getTableHeaders = (user: User): ManifestTableHeader[] => {
+  const tableHeaders: ManifestTableHeader[] = [
+    { label: 'Name', sortKey: 'name' },
+    { label: 'Version', sortKey: 'version' },
     {
-      title: (
-        <>
+      label: (
+        <React.Fragment key="0">
           Simple Content Access
           <SCAInfoIconWithPopover />
-        </>
+        </React.Fragment>
       ),
-      transforms: [sortable, cellWidth(20)]
+      sortKey: 'scaStatus'
     },
-    { title: 'UUID', transforms: [sortable] }
+    { label: 'UUID', sortKey: 'uuid' }
   ];
 
   if (user.isSCACapable === false) {
@@ -59,50 +62,6 @@ export const getTableHeaders = (user: User): TableHeader[] => {
     tableHeaders.splice(2, 1);
   }
   return tableHeaders;
-};
-
-const formattedScaStatus = (user: User, scaStatus: string, uuid: string) => {
-  if (user.canWriteManifests) {
-    return (
-      <React.Fragment key={`scastatusswitch-${uuid}`}>
-        <SCAStatusSwitch scaStatus={scaStatus} uuid={uuid} />
-      </React.Fragment>
-    );
-  } else {
-    return scaStatus;
-  }
-};
-
-export const formatRow = (
-  row: string[],
-  rowIndex: number,
-  handleRowManifestClick: (uuid: string, rowIndex: number) => void,
-  user: User
-): (string | JSX.Element)[] => {
-  const name = row[0];
-  const version = row[1];
-  const scaStatus = row[2];
-  const uuid = row[3];
-
-  const formattedRow = [
-    <React.Fragment key={`button-${uuid}`}>
-      <Button
-        data-testid={`expand-details-button-${rowIndex}`}
-        variant="link"
-        onClick={() => handleRowManifestClick(uuid, rowIndex)}
-      >
-        {name}
-      </Button>
-    </React.Fragment>,
-    version,
-    formattedScaStatus(user, scaStatus, uuid),
-    uuid
-  ];
-  if (user.isSCACapable === false) {
-    // remove SCA Status column
-    formattedRow.splice(2, 1);
-  }
-  return formattedRow;
 };
 
 export const filterDataBySearchTerm = (
@@ -123,7 +82,14 @@ export const countManifests = (data: ManifestEntry[], searchValue: string): numb
   return filteredData.length;
 };
 
-export const getFilteredRows = (data: ManifestEntry[], searchValue: string): string[][] => {
+export type ManifestRow = {
+  name: string;
+  version: string;
+  scaStatus: string;
+  uuid: string;
+};
+
+export const getFilteredRows = (data: ManifestEntry[], searchValue: string): ManifestRow[] => {
   return filterDataBySearchTerm(data, searchValue).map((entry: ManifestEntry) => {
     let scaStatus = entry.simpleContentAccess || 'disabled';
     const manifestVersion = semver.coerce(entry.version);
@@ -132,7 +98,7 @@ export const getFilteredRows = (data: ManifestEntry[], searchValue: string): str
       scaStatus = 'disallowed';
     }
 
-    return [entry.name, entry.version, scaStatus, entry.uuid];
+    return { name: entry.name, version: entry.version, scaStatus: scaStatus, uuid: entry.uuid };
   });
 };
 
@@ -140,30 +106,23 @@ export const getManifestName = (data: ManifestEntry[], uuid: string): string => 
   return data.find((entry) => entry.uuid == uuid)?.name;
 };
 
-export const sortFilteredRows = (filteredRows: string[][], sortBy: SortBy): string[][] => {
-  const { direction, index } = sortBy;
-  /**
-   * This adjustedIndex is necessary because Patternfly
-   * has a strange quirk where, when a table has an
-   * onCollapse attribute, its index starts at 1, which throws off
-   * the sorting without the adjustment.
-   */
-
-  const adjustedIndex = index - 1;
-  const directionFactor = direction === SortByDirection.desc ? -1 : 1;
-  const sortedRows = filteredRows.sort(
-    (a: [string, string, string], b: [string, string, string]) => {
-      const term1 = a[adjustedIndex].toLowerCase();
-      const term2 = b[adjustedIndex].toLowerCase();
-      if (term1 < term2) {
-        return -1 * directionFactor;
-      } else if (term1 > term2) {
-        return 1 * directionFactor;
-      } else {
-        return 0;
-      }
+export const sortFilteredRows = (
+  filteredRows: ManifestRow[],
+  sortKey: SortKey,
+  sortDirection: SortByDirection
+): ManifestRow[] => {
+  const directionFactor = sortDirection === SortByDirection.desc ? -1 : 1;
+  const sortedRows = filteredRows.sort((a: ManifestRow, b: ManifestRow) => {
+    const term1 = a[sortKey].toLowerCase();
+    const term2 = b[sortKey].toLowerCase();
+    if (term1 < term2) {
+      return -1 * directionFactor;
+    } else if (term1 > term2) {
+      return 1 * directionFactor;
+    } else {
+      return 0;
     }
-  );
+  });
 
   return sortedRows;
 };
@@ -171,10 +130,11 @@ export const sortFilteredRows = (filteredRows: string[][], sortBy: SortBy): stri
 export const getSortedRows = (
   data: ManifestEntry[],
   searchValue: string,
-  sortBy: SortBy
-): string[][] => {
+  sortKey: SortKey,
+  sortDirection: SortByDirection
+): ManifestRow[] => {
   const filteredRows = getFilteredRows(data, searchValue);
-  const sortedRows = sortFilteredRows(filteredRows, sortBy);
+  const sortedRows = sortFilteredRows(filteredRows, sortKey, sortDirection);
   return sortedRows;
 };
 
@@ -183,12 +143,13 @@ export const getPaginatedRows = (
   searchValue: string,
   page: number,
   perPage: number,
-  sortBy: SortBy
-): string[][] => {
+  sortKey: SortKey,
+  sortDirection: SortByDirection
+): ManifestRow[] => {
   const first = (page - 1) * perPage;
   const last = first + perPage;
 
-  return getSortedRows(data, searchValue, sortBy).slice(first, last);
+  return getSortedRows(data, searchValue, sortKey, sortDirection).slice(first, last);
 };
 
 export const getRowsWithAllocationDetails = (
@@ -200,39 +161,41 @@ export const getRowsWithAllocationDetails = (
   rowExpandedStatus: BooleanDictionary,
   handleRowManifestClick: (uuid: string, rowIndex: number) => void,
   entitlementsRowRefs: React.MutableRefObject<HTMLSpanElement | HTMLParagraphElement>[],
-  sortBy: SortBy
+  sortKey: SortKey,
+  sortDirection: SortByDirection
 ): Row[] => {
   /**
    * Go through each row and add a toggleable row
    * with details beneath it.
    */
 
-  const currentPageRows = getPaginatedRows(data, searchValue, page, perPage, sortBy);
+  const currentPageRows = getPaginatedRows(
+    data,
+    searchValue,
+    page,
+    perPage,
+    sortKey,
+    sortDirection
+  );
 
   const rowsWithAllocationDetails: Row[] = [];
 
   currentPageRows.forEach((row, i) => {
-    const uuid = row[3];
-    const isOpen = rowExpandedStatus[uuid] || false;
+    const isOpen = rowExpandedStatus[row.uuid] || false;
     const parentIndex = (i + 1) * 2 - 2;
     const expandedContent = isOpen ? (
-      <ManifestEntitlementsListContainer uuid={uuid} entitlementsRowRef={entitlementsRowRefs[i]} />
+      <ManifestEntitlementsListContainer
+        uuid={row.uuid}
+        entitlementsRowRef={entitlementsRowRefs[i]}
+      />
     ) : (
       ''
     );
 
-    const formattedRow = formatRow(row, i, handleRowManifestClick, user);
+    const details = { parent: parentIndex, content: expandedContent };
 
-    // Add original row
-    rowsWithAllocationDetails.push({ isOpen, cells: [...formattedRow] });
-
-    // Add details row
-    rowsWithAllocationDetails.push({
-      parent: parentIndex,
-      fullWidth: true,
-      noPadding: true,
-      cells: [{ title: expandedContent }]
-    });
+    // Add row with details
+    rowsWithAllocationDetails.push({ isOpen, cells: row, details: details });
   });
 
   return rowsWithAllocationDetails;
