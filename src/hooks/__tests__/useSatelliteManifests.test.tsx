@@ -14,6 +14,16 @@ beforeEach(() => {
   fetch.resetMocks();
 });
 
+Object.defineProperty(window, 'insights', {
+  value: {
+    chrome: {
+      auth: {
+        getToken: jest.fn()
+      }
+    }
+  }
+});
+
 describe('useSatelliteManifests hook', () => {
   it('passes manifests back when fetching from API', async () => {
     const manifestData = [

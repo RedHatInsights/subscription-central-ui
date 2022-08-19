@@ -1,5 +1,4 @@
 import { useQuery, QueryObserverResult } from 'react-query';
-import Cookies from 'js-cookie';
 
 interface ManifestEntitlement {
   id: string;
@@ -32,8 +31,8 @@ interface EntitlementsAttachedData {
   value?: ManifestEntitlement[];
 }
 
-const getManifestEntitlements = (uuid: string): Promise<ManifestEntitlementsData> => {
-  const jwtToken = Cookies.get('cs_jwt');
+const getManifestEntitlements = async (uuid: string): Promise<ManifestEntitlementsData> => {
+  const jwtToken = await window.insights.chrome.auth.getToken();
   return fetch(`/api/rhsm/v2/manifests/${uuid}?include=entitlements`, {
     headers: { Authorization: `Bearer ${jwtToken}` }
   }).then((response) => response.json());
