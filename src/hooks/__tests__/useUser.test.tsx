@@ -10,6 +10,16 @@ beforeEach(() => {
   fetch.resetMocks();
 });
 
+Object.defineProperty(window, 'insights', {
+  value: {
+    chrome: {
+      auth: {
+        getToken: jest.fn()
+      }
+    }
+  }
+});
+
 jest.mock('../../utilities/platformServices', () => ({
   ...(jest.requireActual('../../utilities/platformServices') as Record<string, unknown>),
   authenticateUser: jest.fn(),

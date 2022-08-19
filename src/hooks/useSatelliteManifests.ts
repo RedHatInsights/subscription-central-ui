@@ -1,5 +1,4 @@
 import { useQuery, QueryObserverResult } from 'react-query';
-import Cookies from 'js-cookie';
 
 type ManifestEntry = {
   entitlementQuantity: number;
@@ -21,7 +20,7 @@ interface SatelliteManifestAPIData {
 }
 
 const fetchSatelliteManifestData = async (offset = 0): Promise<ManifestEntry[]> => {
-  const jwtToken = Cookies.get('cs_jwt');
+  const jwtToken = await window.insights.chrome.auth.getToken();
 
   const response = await fetch(`/api/rhsm/v2/manifests?type=Satellite&offset=${offset}`, {
     headers: { Authorization: `Bearer ${jwtToken}` }

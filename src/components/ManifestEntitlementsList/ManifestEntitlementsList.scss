@@ -1,22 +1,11 @@
 .sub-c-table-manifests-entitlement-list {
-  margin-top: 10px;
-  margin-bottom: 20px;
-
   thead {
     tr {
       border: none;
     }
-    th {
-      padding-left: 30px;
-    }
   }
 }
-
 .sub-entitlement-list-loading-container,
 .sub-no-entitlements-reason {
-  padding: 30px;
-}
-
-.pf-c-table__expandable-row tr > td {
   padding: 0 30px;
 }
