@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '@patternfly/react-core';
 import { SortByDirection } from '@patternfly/react-table';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList/ManifestEntitlementsListContainer';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
@@ -113,14 +112,34 @@ export const sortFilteredRows = (
 ): ManifestRow[] => {
   const directionFactor = sortDirection === SortByDirection.desc ? -1 : 1;
   const sortedRows = filteredRows.sort((a: ManifestRow, b: ManifestRow) => {
-    const term1 = a[sortKey].toLowerCase();
-    const term2 = b[sortKey].toLowerCase();
-    if (term1 < term2) {
-      return -1 * directionFactor;
-    } else if (term1 > term2) {
-      return 1 * directionFactor;
+    if (sortKey == 'version') {
+      let aVersion = a.version;
+      let bVersion = b.version;
+      aVersion = aVersion
+        .split('.')
+        .map((n) => +n + 100000)
+        .join('.');
+      bVersion = bVersion
+        .split('.')
+        .map((n) => +n + 100000)
+        .join('.');
+      if (aVersion < bVersion) {
+        return -1 * directionFactor;
+      } else if (aVersion > bVersion) {
+        return 1 * directionFactor;
+      } else {
+        return 0;
+      }
     } else {
-      return 0;
+      const term1 = a[sortKey].toLowerCase();
+      const term2 = b[sortKey].toLowerCase();
+      if (term1 < term2) {
+        return -1 * directionFactor;
+      } else if (term1 > term2) {
+        return 1 * directionFactor;
+      } else {
+        return 0;
+      }
     }
   });
 
