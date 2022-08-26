@@ -1,9 +1,14 @@
 .sca-more-info-icon {
-  color: #4c9aec;
+  font-size: var(--pf-global--icon--FontSize--md);
+  color: #6a6e73;
   margin-left: 5px;
   margin-top: 1px;
   margin-bottom: -1px;
   &:hover {
     cursor: pointer;
+    color: #151515;
+  }
+  &:active {
+    color: #151515;
   }
 }
