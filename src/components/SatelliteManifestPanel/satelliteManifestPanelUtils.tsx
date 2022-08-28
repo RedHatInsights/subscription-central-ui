@@ -112,38 +112,34 @@ export const sortFilteredRows = (
 ): ManifestRow[] => {
   const directionFactor = sortDirection === SortByDirection.desc ? -1 : 1;
   const sortedRows = filteredRows.sort((a: ManifestRow, b: ManifestRow) => {
+    let aValue;
+    let bValue;
     if (sortKey == 'version') {
-      let aVersion = a.version;
-      let bVersion = b.version;
-      aVersion = aVersion
-        .split('.')
-        .map((n) => +n + 100000)
-        .join('.');
-      bVersion = bVersion
-        .split('.')
-        .map((n) => +n + 100000)
-        .join('.');
-      if (aVersion < bVersion) {
-        return -1 * directionFactor;
-      } else if (aVersion > bVersion) {
-        return 1 * directionFactor;
-      } else {
-        return 0;
-      }
+      aValue = fixedVersionForComparison(a.version);
+      bValue = fixedVersionForComparison(b.version);
     } else {
-      const term1 = a[sortKey].toLowerCase();
-      const term2 = b[sortKey].toLowerCase();
-      if (term1 < term2) {
-        return -1 * directionFactor;
-      } else if (term1 > term2) {
-        return 1 * directionFactor;
-      } else {
-        return 0;
-      }
+      aValue = a[sortKey].toLowerCase();
+      bValue = b[sortKey].toLowerCase();
+    }
+    if (aValue < bValue) {
+      return -1 * directionFactor;
+    } else if (aValue > bValue) {
+      return 1 * directionFactor;
+    } else {
+      return 0;
     }
   });
 
   return sortedRows;
+};
+
+const fixedVersionForComparison = (version: string): string => {
+  version = version
+    .split('.')
+    .map((n) => +n + 100000)
+    .join('.');
+
+  return version;
 };
 
 export const getSortedRows = (
