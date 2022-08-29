@@ -112,15 +112,10 @@ export const sortFilteredRows = (
 ): ManifestRow[] => {
   const directionFactor = sortDirection === SortByDirection.desc ? -1 : 1;
   const sortedRows = filteredRows.sort((a: ManifestRow, b: ManifestRow) => {
-    let aValue;
-    let bValue;
-    if (sortKey == 'version') {
-      aValue = fixedVersionForComparison(a.version);
-      bValue = fixedVersionForComparison(b.version);
-    } else {
-      aValue = a[sortKey].toLowerCase();
-      bValue = b[sortKey].toLowerCase();
-    }
+    const aValue =
+      sortKey == 'version' ? fixedVersionForComparison(a.version) : a[sortKey].toLowerCase();
+    const bValue =
+      sortKey == 'version' ? fixedVersionForComparison(b.version) : b[sortKey].toLowerCase();
     if (aValue < bValue) {
       return -1 * directionFactor;
     } else if (aValue > bValue) {
