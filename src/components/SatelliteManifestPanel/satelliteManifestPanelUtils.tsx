@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '@patternfly/react-core';
 import { SortByDirection } from '@patternfly/react-table';
 import ManifestEntitlementsListContainer from '../ManifestEntitlementsList/ManifestEntitlementsListContainer';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
@@ -113,11 +112,13 @@ export const sortFilteredRows = (
 ): ManifestRow[] => {
   const directionFactor = sortDirection === SortByDirection.desc ? -1 : 1;
   const sortedRows = filteredRows.sort((a: ManifestRow, b: ManifestRow) => {
-    const term1 = a[sortKey].toLowerCase();
-    const term2 = b[sortKey].toLowerCase();
-    if (term1 < term2) {
+    const aValue =
+      sortKey == 'version' ? fixedVersionForComparison(a.version) : a[sortKey].toLowerCase();
+    const bValue =
+      sortKey == 'version' ? fixedVersionForComparison(b.version) : b[sortKey].toLowerCase();
+    if (aValue < bValue) {
       return -1 * directionFactor;
-    } else if (term1 > term2) {
+    } else if (aValue > bValue) {
       return 1 * directionFactor;
     } else {
       return 0;
@@ -125,6 +126,15 @@ export const sortFilteredRows = (
   });
 
   return sortedRows;
+};
+
+const fixedVersionForComparison = (version: string): string => {
+  version = version
+    .split('.')
+    .map((n) => +n + 100000)
+    .join('.');
+
+  return version;
 };
 
 export const getSortedRows = (
