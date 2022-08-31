@@ -16,7 +16,7 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
         data-ouia-safe="true"
         data-pf-content="true"
       >
-        Manifest
+        Manifests
       </h1>
       <p
         class=""
@@ -846,7 +846,7 @@ exports[`Satellite Manifests Page renders loading when it has not received a res
         data-ouia-safe="true"
         data-pf-content="true"
       >
-        Manifest
+        Manifests
       </h1>
       <p
         class=""
@@ -931,7 +931,7 @@ exports[`Satellite Manifests Page renders the empty state when no results are re
         data-ouia-safe="true"
         data-pf-content="true"
       >
-        Manifest
+        Manifests
       </h1>
       <p
         class=""
@@ -1042,7 +1042,7 @@ exports[`Satellite Manifests Page renders with an error message when an API fail
         data-ouia-safe="true"
         data-pf-content="true"
       >
-        Manifest
+        Manifests
       </h1>
       <p
         class=""
@@ -1199,7 +1199,7 @@ exports[`Satellite Manifests Page when the user does not have write permissions 
         data-ouia-safe="true"
         data-pf-content="true"
       >
-        Manifest
+        Manifests
       </h1>
       <p
         class=""
