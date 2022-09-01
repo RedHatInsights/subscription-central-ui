@@ -10,7 +10,7 @@ exports[`Satellite Manifests Page renders correctly with satellite data 1`] = `
       class="pf-c-content"
     >
       <h1
-        class=""
+        class="pf-c-title"
         data-ouia-component-id="OUIA-Generated-Text-1"
         data-ouia-component-type="PF4/Text"
         data-ouia-safe="true"
@@ -840,7 +840,7 @@ exports[`Satellite Manifests Page renders loading when it has not received a res
       class="pf-c-content"
     >
       <h1
-        class=""
+        class="pf-c-title"
         data-ouia-component-id="OUIA-Generated-Text-3"
         data-ouia-component-type="PF4/Text"
         data-ouia-safe="true"
@@ -925,7 +925,7 @@ exports[`Satellite Manifests Page renders the empty state when no results are re
       class="pf-c-content"
     >
       <h1
-        class=""
+        class="pf-c-title"
         data-ouia-component-id="OUIA-Generated-Text-5"
         data-ouia-component-type="PF4/Text"
         data-ouia-safe="true"
@@ -1036,7 +1036,7 @@ exports[`Satellite Manifests Page renders with an error message when an API fail
       class="pf-c-content"
     >
       <h1
-        class=""
+        class="pf-c-title"
         data-ouia-component-id="OUIA-Generated-Text-9"
         data-ouia-component-type="PF4/Text"
         data-ouia-safe="true"
@@ -1193,7 +1193,7 @@ exports[`Satellite Manifests Page when the user does not have write permissions 
       class="pf-c-content"
     >
       <h1
-        class=""
+        class="pf-c-title"
         data-ouia-component-id="OUIA-Generated-Text-7"
         data-ouia-component-type="PF4/Text"
         data-ouia-safe="true"
