@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
-import { PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
+import { Text, TextContent } from '@patternfly/react-core';
 import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
@@ -22,13 +22,17 @@ const SatelliteManifestPage: FC = () => {
   return (
     <>
       <PageHeader>
-        <PageHeaderTitle title="Manifests" />
-        <p>
-          Export subscriptions to your on-premise subscription management application.{' '}
-          <ExternalLink href={manifestsMoreInfoLink}>
-            Learn more about creating and managing manifests for a connected Satellite Server
-          </ExternalLink>
-        </p>
+        <TextContent>
+          <Text component="h1" className="pf-c-title">
+            Manifests
+          </Text>
+          <Text component="p">
+            Export subscriptions to your on-premise subscription management application.{' '}
+            <ExternalLink href={manifestsMoreInfoLink}>
+              Learn more about creating and managing manifests for a connected Satellite Server
+            </ExternalLink>
+          </Text>
+        </TextContent>
       </PageHeader>
       <Main>
         <>
