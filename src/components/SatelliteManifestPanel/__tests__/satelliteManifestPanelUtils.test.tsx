@@ -63,7 +63,7 @@ const mockData: ManifestEntry[] = [manifest1, manifest2, manifest3, manifest4, m
 describe('sortFilteredRows method', () => {
   const filteredRows = [
     { name: 'a-manifest', version: '6.9', scaStatus: 'enabled', uuid: '111111' },
-    { name: 'z-manifest', version: '6.0', scaStatus: 'enabled', uuid: '555555' },
+    { name: 'z-manifest', version: '6.10', scaStatus: 'enabled', uuid: '555555' },
     { name: 'c-manifest', version: '6.4', scaStatus: 'disabled', uuid: '333333' }
   ];
 
@@ -78,7 +78,7 @@ describe('sortFilteredRows method', () => {
     const sortedRows = sortFilteredRows(filteredRows, 'version', SortByDirection.desc).map(
       (row) => row.version
     );
-    expect(sortedRows).toEqual(['6.9', '6.4', '6.0']);
+    expect(sortedRows).toEqual(['6.10', '6.9', '6.4']);
   });
 
   it('sorts the rows by sca status ascending', () => {
