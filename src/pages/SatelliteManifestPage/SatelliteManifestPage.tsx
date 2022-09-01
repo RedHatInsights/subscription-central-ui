@@ -23,7 +23,9 @@ const SatelliteManifestPage: FC = () => {
     <>
       <PageHeader>
         <TextContent>
-          <Text component="h1">Manifests</Text>
+          <Text component="h1" className="pf-c-title">
+            Manifests
+          </Text>
           <Text component="p">
             Export subscriptions to your on-premise subscription management application.{' '}
             <ExternalLink href={manifestsMoreInfoLink}>
