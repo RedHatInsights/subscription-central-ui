@@ -16,7 +16,7 @@ const CreateManifestButtonWithModal: FC<CreateManifestButtonWithModalProps> = ({
 
   return (
     <>
-      <Button variant="primary" onClick={handleModalToggle} isDisabled={!user.canReadManifests}>
+      <Button variant="primary" onClick={handleModalToggle} isDisabled={!user.canWriteManifests}>
         Create new manifest
       </Button>
       <CreateManifestModal handleModalToggle={handleModalToggle} isModalOpen={isModalOpen} />
