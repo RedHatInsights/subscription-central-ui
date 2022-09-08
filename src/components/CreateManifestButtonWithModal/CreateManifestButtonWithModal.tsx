@@ -1,8 +1,13 @@
 import React, { FC, useState } from 'react';
 import { Button } from '@patternfly/react-core';
 import CreateManifestModal from '../CreateManifestModal';
+import { User } from '../../hooks/useUser';
 
-const CreateManifestButtonWithModal: FC = () => {
+interface CreateManifestButtonWithModalProps {
+  user: User;
+}
+
+const CreateManifestButtonWithModal: FC<CreateManifestButtonWithModalProps> = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleModalToggle = () => {
@@ -11,7 +16,7 @@ const CreateManifestButtonWithModal: FC = () => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleModalToggle}>
+      <Button variant="primary" onClick={handleModalToggle} isDisabled={!user.canReadManifests}>
         Create new manifest
       </Button>
       <CreateManifestModal handleModalToggle={handleModalToggle} isModalOpen={isModalOpen} />

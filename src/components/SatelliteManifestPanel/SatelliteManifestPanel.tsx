@@ -46,6 +46,7 @@ import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import './SatelliteManifestPanel.scss';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
 import SCAStatusSwitch from '../SCAStatusSwitch';
+import { updateExpressionWithTypeArguments } from 'typescript';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -304,9 +305,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     }
   };
 
+  data = [];
+
   return (
     <>
-      {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel />}
       {(data?.length > 0 || !user.canWriteManifests) && (
         <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
           <DrawerContent panelContent={panelContent()}>
@@ -330,7 +332,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                       )}
                       {user.canWriteManifests === true && (
                         <SplitItem>
-                          <CreateManifestButtonWithModal />
+                          <CreateManifestButtonWithModal user={user} />
                         </SplitItem>
                       )}
                     </Split>
@@ -408,7 +410,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />
                 )}
-                {!isFetching && data.length === 0 && <NoManifestsFound />}
+                {data?.length === 0 && user && <CreateManifestPanel user={user} />}
                 {isFetching && <Processing />}
                 {pagination(PaginationVariant.bottom)}
               </PageSection>
