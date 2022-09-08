@@ -233,7 +233,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       results.push({
         title: 'Delete',
         onClick: () => {
-          openDeleteConfirmationModal(name);
+          openDeleteConfirmationModal(uuid);
         }
       });
     }
