@@ -6,10 +6,6 @@ import { User } from '../../hooks/useUser';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import semver from 'semver';
 
-export interface CreateManifestButtonWithModalProps {
-  user: User;
-}
-
 export interface TableHeader {
   title: string | React.ReactNode;
 }
