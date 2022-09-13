@@ -1,39 +1,16 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import CreateManifestButtonWithModal from '..';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import factories from '../../../utilities/factories';
-import useUser from '../../../hooks/useUser';
-import { CreateManifestForm } from '../../CreateManifestForm';
 import { createQueryWrapper } from '../../../utilities/testHelpers';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { def } from 'bdd-lazy-var';
+import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
 
-const queryClient = new QueryClient();
-
 describe('Create Manifest Form', () => {
-  def('canReadManifests', () => true);
-  def('canWriteManifests', () => true);
-  def('user', () => {
-    return factories.user.build({ canWriteManifests: get('canWriteManifests') });
-  });
-
-  beforeEach(() => {
-    (useUser as jest.Mock).mockReturnValue({
-      isLoading: get('loading'),
-      isFetching: false,
-      isSuccess: true,
-      isError: get('error'),
-      data: get('user')
-    });
-
-    if (get('error') === false) {
-      queryClient.setQueryData('user', get('user'));
-    }
-  });
-
   describe('Create Manifest Button With Modal', () => {
     def('canWriteManifests', () => true);
 
@@ -44,9 +21,12 @@ describe('Create Manifest Form', () => {
         isLoading: false
       });
 
-      const { getByText } = render(<CreateManifestButtonWithModal {...get('props')} />, {
-        wrapper: createQueryWrapper()
-      });
+      const { getByText } = render(
+        <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: true })} />,
+        {
+          wrapper: createQueryWrapper()
+        }
+      );
 
       fireEvent.click(getByText('Create new manifest'));
       await screen.findAllByText(
@@ -72,13 +52,15 @@ describe('Create Manifest Form', () => {
         isLoading: false,
         data: []
       });
-      const { getByText, container } = render(<CreateManifestForm {...get('props')} />);
+      const { getByText } = render(
+        <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: false })} />,
+        {
+          wrapper: createQueryWrapper()
+        }
+      );
 
-      fireEvent.click(container, <CreateManifestForm {...get('props')} />);
-      fireEvent.click(getByText('Create new manifest'));
-
-      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-      expect(container).toMatchSnapshot();
+      expect(getByText('Create new manifest').closest('button')).toHaveAttribute('disabled');
+      expect(document.body).toMatchSnapshot();
     });
   });
 });

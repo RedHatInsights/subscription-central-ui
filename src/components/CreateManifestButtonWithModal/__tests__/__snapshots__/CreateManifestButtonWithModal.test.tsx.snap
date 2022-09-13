@@ -1,8 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[` 1`] = `[Function]`;
-
-exports[`Create Manifest Button With Modal renders the modal properly when the button is clicked 1`] = `
+exports[`Create Manifest Form Create Manifest Button With Modal renders the modal properly when the button is clicked 1`] = `
 <body
   class="pf-c-backdrop__open"
 >
@@ -253,5 +251,26 @@ exports[`Create Manifest Button With Modal renders the modal properly when the b
       </div>
     </div>
   </div>
+</body>
+`;
+
+exports[`Create Manifest Form when the user does not have Write permissions renders the Create manifest form with disabled button for user 1`] = `
+<body
+  class=""
+>
+  <div>
+    <button
+      aria-disabled="true"
+      class="pf-c-button pf-m-primary pf-m-disabled"
+      data-ouia-component-id="OUIA-Generated-Button-primary-3"
+      data-ouia-component-type="PF4/Button"
+      data-ouia-safe="true"
+      disabled=""
+      type="button"
+    >
+      Create new manifest
+    </button>
+  </div>
+  <div />
 </body>
 `;
