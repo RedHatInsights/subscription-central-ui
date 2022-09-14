@@ -1,16 +1,5 @@
 import React from 'react';
-import {
-  fireEvent,
-  getAllByAltText,
-  getByAltText,
-  getByLabelText,
-  getByRole,
-  getByTestId,
-  queryByTestId,
-  render,
-  screen,
-  waitFor
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';

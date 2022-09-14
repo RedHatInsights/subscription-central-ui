@@ -14,7 +14,6 @@ const CreateManifestButtonWithModal: FC<CreateManifestButtonWithModalProps> = ({
     setIsModalOpen(!isModalOpen);
   };
 
-  console.log(user);
   return (
     <>
       <Button variant="primary" onClick={handleModalToggle} isDisabled={!user.canWriteManifests}>

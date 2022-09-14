@@ -35,18 +35,17 @@ import {
   getRowsWithAllocationDetails
 } from './satelliteManifestPanelUtils';
 import { User } from '../../hooks/useUser';
-import { CreateManifestPanel } from '../../components/emptyState';
+import { CreateManifestPanel, NoManifestsFound } from '../../components/emptyState';
 import useNotifications from '../../hooks/useNotifications';
 import useExportSatelliteManifest from '../../hooks/useExportSatelliteManifest';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import { NoSearchResults } from '../emptyState';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
-import { NoManifestsFound, Processing } from '../emptyState';
+import { Processing } from '../emptyState';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import './SatelliteManifestPanel.scss';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
 import SCAStatusSwitch from '../SCAStatusSwitch';
-import { updateExpressionWithTypeArguments } from 'typescript';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -409,7 +408,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />
                 )}
-                {data?.length === 0 && user && <CreateManifestPanel user={user} />}
+                {!isFetching && data.length === 0 && <CreateManifestPanel user={user} />}
                 {isFetching && <Processing />}
                 {pagination(PaginationVariant.bottom)}
               </PageSection>
