@@ -305,10 +305,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     }
   };
 
-  data = [];
-
   return (
     <>
+      {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel user={user} />}
       {(data?.length > 0 || !user.canWriteManifests) && (
         <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
           <DrawerContent panelContent={panelContent()}>
