@@ -10,57 +10,47 @@ import '@testing-library/jest-dom/extend-expect';
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
 
-describe('Create Manifest Form', () => {
-  describe('Create Manifest Button With Modal', () => {
-    def('canWriteManifests', () => true);
-
-    it('renders the modal properly when the button is clicked', async () => {
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[],
-        isError: false,
-        isLoading: false
-      });
-
-      const { getByText } = render(
-        <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: true })} />,
-        {
-          wrapper: createQueryWrapper()
-        }
-      );
-
-      fireEvent.click(getByText('Create new manifest'));
-      await screen.findAllByText(
-        'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application.'
-      );
-      /**
-       * document.body needed because the modal
-       * does not render within the container
-       *
-       */
-      expect(document.body).toMatchSnapshot();
-    });
+it('renders the modal properly when the button is clicked', async () => {
+  (useSatelliteVersions as jest.Mock).mockReturnValue({
+    body: [] as SatelliteVersion[],
+    isError: false,
+    isLoading: false
   });
 
-  describe('when the user does not have Write permissions', () => {
-    def('canWriteManifests', () => false);
+  const { getByText } = render(
+    <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: true })} />,
+    {
+      wrapper: createQueryWrapper()
+    }
+  );
 
-    it('renders the Create manifest form with disabled button for user', async () => {
-      window.insights = {};
+  fireEvent.click(getByText('Create new manifest'));
+  await screen.findAllByText(
+    'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application.'
+  );
+  /**
+   * document.body needed because the modal
+   * does not render within the container
+   *
+   */
+  expect(document.body).toMatchSnapshot();
+});
 
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[],
-        isLoading: false,
-        data: []
-      });
-      const { getByText } = render(
-        <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: false })} />,
-        {
-          wrapper: createQueryWrapper()
-        }
-      );
+it('renders the Create manifest form with disabled button for user', async () => {
+  window.insights = {};
 
-      expect(getByText('Create new manifest').closest('button')).toHaveAttribute('disabled');
-      expect(document.body).toMatchSnapshot();
-    });
+  (useSatelliteVersions as jest.Mock).mockReturnValue({
+    body: [] as SatelliteVersion[],
+    isLoading: false,
+    data: []
   });
+  const { getByText } = render(
+    <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: false })} />,
+    {
+      wrapper: createQueryWrapper()
+    }
+  );
+
+  expect(getByText('Create new manifest').closest('button')).toHaveAttribute('disabled');
+  expect(document.body).toMatchSnapshot();
 });
