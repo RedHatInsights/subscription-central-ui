@@ -8,8 +8,13 @@ import {
 } from '@patternfly/react-core';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal/CreateManifestButtonWithModal';
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
+import { User } from '../../hooks/useUser';
 
-const CreateManifestPanel: FC = () => {
+interface CreateManifestButtonWithModalProps {
+  user: User;
+}
+
+const CreateManifestPanel: FC<CreateManifestButtonWithModalProps> = ({ user }) => {
   return (
     <EmptyState variant={EmptyStateVariant.large}>
       <EmptyStateIcon icon={PlusCircleIcon} />
@@ -20,7 +25,7 @@ const CreateManifestPanel: FC = () => {
         You currently have no manifests displayed. Create a new manifest to export subscriptions
         from the Red Hat Customer Portal to your on-premise subscription management application.
       </EmptyStateBody>
-      <CreateManifestButtonWithModal />
+      <CreateManifestButtonWithModal user={user} />
     </EmptyState>
   );
 };
