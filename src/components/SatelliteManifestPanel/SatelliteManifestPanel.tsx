@@ -343,11 +343,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                           />
                         </SplitItem>
                       )}
-                      {user.canWriteManifests === true && (
-                        <SplitItem>
-                          <CreateManifestButtonWithModal user={user} />
-                        </SplitItem>
-                      )}
+                      <SplitItem>
+                        <CreateManifestButtonWithModal user={user} />
+                      </SplitItem>
                     </Split>
                   </FlexItem>
                   <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>

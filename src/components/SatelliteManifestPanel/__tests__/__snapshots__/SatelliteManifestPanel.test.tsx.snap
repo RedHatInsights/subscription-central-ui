@@ -76,7 +76,7 @@ exports[`Satellite Manifest Panel opens the side panel when the row name is clic
                     <button
                       aria-disabled="false"
                       class="pf-c-button pf-m-primary"
-                      data-ouia-component-id="OUIA-Generated-Button-primary-7"
+                      data-ouia-component-id="OUIA-Generated-Button-primary-9"
                       data-ouia-component-type="PF4/Button"
                       data-ouia-safe="true"
                       type="button"
@@ -1737,7 +1737,7 @@ exports[`Satellite Manifest Panel when refetching data renders loading 1`] = `
                     <button
                       aria-disabled="false"
                       class="pf-c-button pf-m-primary"
-                      data-ouia-component-id="OUIA-Generated-Button-primary-6"
+                      data-ouia-component-id="OUIA-Generated-Button-primary-8"
                       data-ouia-component-type="PF4/Button"
                       data-ouia-safe="true"
                       type="button"
@@ -2395,6 +2395,21 @@ exports[`Satellite Manifest Panel when the user does not have write permissions 
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    class="pf-l-split__item"
+                  >
+                    <button
+                      aria-disabled="true"
+                      class="pf-c-button pf-m-primary pf-m-disabled"
+                      data-ouia-component-id="OUIA-Generated-Button-primary-11"
+                      data-ouia-component-type="PF4/Button"
+                      data-ouia-safe="true"
+                      disabled=""
+                      type="button"
+                    >
+                      Create new manifest
+                    </button>
                   </div>
                 </div>
               </div>
@@ -3147,7 +3162,7 @@ exports[`Satellite Manifest Panel when there are no results renders a blank stat
       <button
         aria-disabled="false"
         class="pf-c-button pf-m-primary"
-        data-ouia-component-id="OUIA-Generated-Button-primary-5"
+        data-ouia-component-id="OUIA-Generated-Button-primary-7"
         data-ouia-component-type="PF4/Button"
         data-ouia-safe="true"
         type="button"
@@ -3184,7 +3199,23 @@ exports[`Satellite Manifest Panel when user does not have write permission and t
               >
                 <div
                   class="pf-l-split pf-m-gutter"
-                />
+                >
+                  <div
+                    class="pf-l-split__item"
+                  >
+                    <button
+                      aria-disabled="true"
+                      class="pf-c-button pf-m-primary pf-m-disabled"
+                      data-ouia-component-id="OUIA-Generated-Button-primary-5"
+                      data-ouia-component-type="PF4/Button"
+                      data-ouia-safe="true"
+                      disabled=""
+                      type="button"
+                    >
+                      Create new manifest
+                    </button>
+                  </div>
+                </div>
               </div>
               <div
                 class="pf-m-align-right"
@@ -3564,7 +3595,7 @@ exports[`Satellite Manifest Panel when user does not have write permission and t
                 <button
                   aria-disabled="true"
                   class="pf-c-button pf-m-primary pf-m-disabled"
-                  data-ouia-component-id="OUIA-Generated-Button-primary-4"
+                  data-ouia-component-id="OUIA-Generated-Button-primary-6"
                   data-ouia-component-type="PF4/Button"
                   data-ouia-safe="true"
                   disabled=""
@@ -3857,6 +3888,21 @@ exports[`Satellite Manifest Panel when user does not have write permission rende
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    class="pf-l-split__item"
+                  >
+                    <button
+                      aria-disabled="true"
+                      class="pf-c-button pf-m-primary pf-m-disabled"
+                      data-ouia-component-id="OUIA-Generated-Button-primary-4"
+                      data-ouia-component-type="PF4/Button"
+                      data-ouia-safe="true"
+                      disabled=""
+                      type="button"
+                    >
+                      Create new manifest
+                    </button>
                   </div>
                 </div>
               </div>

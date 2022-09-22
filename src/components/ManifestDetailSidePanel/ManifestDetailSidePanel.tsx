@@ -14,7 +14,6 @@ import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
 import { User } from '../../hooks/useUser';
 import './ManifestDetailSidePanel.scss';
-import { useResolvedPath } from 'react-router';
 
 interface ManifestDetailSidePanelProps {
   isExpanded: boolean;
