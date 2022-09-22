@@ -35,7 +35,7 @@ import {
   getRowsWithAllocationDetails
 } from './satelliteManifestPanelUtils';
 import { User } from '../../hooks/useUser';
-import { CreateManifestPanel, NoManifestsFound } from '../../components/emptyState';
+import { CreateManifestPanel } from '../../components/emptyState';
 import useNotifications from '../../hooks/useNotifications';
 import useExportSatelliteManifest from '../../hooks/useExportSatelliteManifest';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
