@@ -74,6 +74,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     useState(false);
   const [exportedManifestName, setExportedManifestName] = useState('');
   const [loadingManifestNotificationKey, setLoadingManifestNotificationKey] = useState('');
+  const [isDisabled, setDisabled] = useState(false);
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -132,6 +133,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const handleSetPage = (_event: React.MouseEvent, page: number) => {
     setPage(page);
     collapseAllRows();
+  };
+
+  const handleOnClickforKebab = () => {
+    if (user.canReadManifests) setDisabled(!isDisabled);
   };
 
   const clearSearch = () => {
@@ -224,6 +229,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const results = [
       {
         title: 'Export',
+        disabled: false,
         onClick: () => {
           exportManifest(uuid, name);
         }
@@ -231,15 +237,24 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     ];
     if (user.canWriteManifests) {
       results.push({
+        disabled: false,
         title: 'Delete',
         onClick: () => {
           openDeleteConfirmationModal(uuid);
         }
       });
     }
+    if (user.canReadManifests) {
+      results.push({
+        disabled: true,
+        title: 'Delete',
+        onClick: () => {
+          handleOnClickforKebab();
+        }
+      });
+    }
     return results;
   };
-
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination

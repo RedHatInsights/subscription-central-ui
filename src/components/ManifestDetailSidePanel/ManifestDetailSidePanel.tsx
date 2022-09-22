@@ -14,6 +14,7 @@ import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
 import { User } from '../../hooks/useUser';
 import './ManifestDetailSidePanel.scss';
+import { useResolvedPath } from 'react-router';
 
 interface ManifestDetailSidePanelProps {
   isExpanded: boolean;
@@ -101,6 +102,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           onClick={() => {
             deleteManifest(uuid);
           }}
+          isDisabled={!user.canWriteManifests}
         >
           Delete manifest
         </Button>
@@ -205,7 +207,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
         >
           Export manifest
         </Button>
-        {user.canWriteManifests && <DeleteManifest />}
+        {user && <DeleteManifest />}
       </div>
     );
   };
