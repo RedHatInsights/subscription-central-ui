@@ -173,6 +173,32 @@ describe('Satellite Manifest Panel', () => {
     });
   });
 
+  it('Shows export message when successfully exported', async () => {
+    const download = jest.fn();
+    jest.mock('../../../hooks/useExportSatelliteManifest', () => ({
+      data: null,
+      mutate: null,
+      isLoading: false,
+      isSuccess: true,
+      isError: false
+    }));
+
+    const { getByLabelText, getByText, container } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...get('props')} />
+      </QueryClientProvider>
+    );
+
+    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByText('Export'));
+
+    await new Promise((r) => setTimeout(r, 2000));
+
+    waitFor(() => expect(screen.findByText('Download manifest')).toBeInTheDocument());
+
+    expect(container).toMatchSnapshot();
+  });
+
   it('opens the side panel when the row name is clicked', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
       body: [] as SatelliteVersion[]
@@ -186,6 +212,24 @@ describe('Satellite Manifest Panel', () => {
 
     fireEvent.click(getByTestId('expand-details-button-0'));
     expect(container).toMatchSnapshot();
+  });
+
+  it('opens the delete popup from clicking the kebab menu', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const { getByLabelText, getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...get('props')} />
+      </QueryClientProvider>
+    );
+    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByText('Delete'));
+
+    expect(
+      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
+    ).toBeInTheDocument();
   });
 
   describe('when the user does not have write permissions', () => {
@@ -203,36 +247,7 @@ describe('Satellite Manifest Panel', () => {
       );
       fireEvent.click(getByLabelText('Actions'));
       fireEvent.click(getByText('Delete'));
-
-      expect(
-        screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
-      ).toMatchSnapshot();
-    });
-
-    it('Shows export message when successfully exported', async () => {
-      const download = jest.fn();
-      jest.mock('../../../hooks/useExportSatelliteManifest', () => ({
-        data: null,
-        mutate: null,
-        isLoading: false,
-        isSuccess: true,
-        isError: false
-      }));
-
-      const { getByLabelText, getByText, container } = render(
-        <QueryClientProvider client={queryClient}>
-          <SatelliteManifestPanel {...get('props')} />
-        </QueryClientProvider>
-      );
-
-      fireEvent.click(getByLabelText('Actions'));
-      fireEvent.click(getByText('Export'));
-
-      await new Promise((r) => setTimeout(r, 2000));
-
-      waitFor(() => expect(screen.findByText('Download manifest')).toBeInTheDocument());
-
-      expect(container).toMatchSnapshot();
+      expect(document).toMatchSnapshot();
     });
   });
 });
