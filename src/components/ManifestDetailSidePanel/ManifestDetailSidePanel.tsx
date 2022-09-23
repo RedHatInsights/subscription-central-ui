@@ -206,7 +206,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
         >
           Export manifest
         </Button>
-        {user && <DeleteManifest />}
+        <DeleteManifest />
       </div>
     );
   };

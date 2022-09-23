@@ -233,26 +233,15 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         onClick: () => {
           exportManifest(uuid, name);
         }
-      }
-    ];
-    if (user.canWriteManifests) {
-      results.push({
-        disabled: false,
-        title: 'Delete',
-        onClick: () => {
-          openDeleteConfirmationModal(uuid);
-        }
-      });
-    }
-    if (user.canReadManifests) {
-      results.push({
+      },
+      {
         disabled: true,
         title: 'Delete',
         onClick: () => {
           handleOnClickforKebab();
         }
-      });
-    }
+      }
+    ];
     return results;
   };
   const pagination = (variant = PaginationVariant.top) => {
