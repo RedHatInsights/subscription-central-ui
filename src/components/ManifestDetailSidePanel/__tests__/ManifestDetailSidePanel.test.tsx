@@ -8,7 +8,6 @@ import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifes
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
 
-jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useManifestEntitlements');
 jest.mock('../../../hooks/useExportSatelliteManifest');
 

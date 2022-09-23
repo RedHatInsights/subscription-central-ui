@@ -797,7 +797,7 @@ exports[`Satellite Manifest Panel Shows export message when successfully exporte
 </div>
 `;
 
-exports[`Satellite Manifest Panel The delete button is rendered , button is disabled 1`] = `
+exports[`Satellite Manifest Panel does render the delete button, button is disabled 1`] = `
 <div>
   <div
     class="pf-c-drawer sub-c-drawer-satellite-manifest"

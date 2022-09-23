@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  fireEvent,
-  getByLabelText,
-  getByText,
-  render,
-  screen,
-  waitFor
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
@@ -49,8 +42,7 @@ describe('Satellite Manifest Panel', () => {
     return {
       data: get('data'),
       isFetching: get('fetching'),
-      user: get('user'),
-      disabled: user
+      user: get('user')
     };
   });
 
@@ -249,12 +241,10 @@ describe('Satellite Manifest Panel', () => {
     def('canWriteManifests', () => false);
   });
 
-  it('The delete button is rendered , button is disabled', () => {
-    (useSatelliteVersions as jest.Mock).mockImplementation(() => ({
-      body: [] as SatelliteVersion[],
-      isLoading: false,
-      data: []
-    }));
+  it('does render the delete button, button is disabled', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
 
     const { container } = render(
       <QueryClientProvider client={queryClient}>
