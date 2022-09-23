@@ -1,5 +1,12 @@
 import React from 'react';
-import { fireEvent, getByLabelText, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  getByLabelText,
+  getByText,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
@@ -7,8 +14,7 @@ import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatell
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
 import '@testing-library/jest-dom/extend-expect';
-import useUser from '../../../hooks/useUser';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+import user from '../../../utilities/factories/user';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
@@ -43,7 +49,8 @@ describe('Satellite Manifest Panel', () => {
     return {
       data: get('data'),
       isFetching: get('fetching'),
-      user: get('user')
+      user: get('user'),
+      disabled: user
     };
   });
 
@@ -217,7 +224,7 @@ describe('Satellite Manifest Panel', () => {
     );
 
     fireEvent.click(getByTestId('expand-details-button-0'));
-    expect(container).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
   });
 
   it('opens the delete popup from clicking the kebab menu', () => {
@@ -225,7 +232,7 @@ describe('Satellite Manifest Panel', () => {
       body: [] as SatelliteVersion[]
     });
 
-    const { container, getByLabelText, getByText } = render(
+    const { getByLabelText, getByText } = render(
       <QueryClientProvider client={queryClient}>
         <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
@@ -233,24 +240,25 @@ describe('Satellite Manifest Panel', () => {
     fireEvent.click(getByLabelText('Actions'));
     fireEvent.click(getByText('Delete'));
 
-    expect(container).toBeInTheDocument();
+    expect(
+      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
+    ).toBeInTheDocument();
   });
 
   describe('when the user does not have write permissions', () => {
     def('canWriteManifests', () => false);
   });
 
-  it('does render the delete button, button is disabled', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
-    });
+  it('The delete button is rendered , button is disabled', () => {
+    (useSatelliteVersions as jest.Mock).mockImplementation(() => ({
+      body: [] as SatelliteVersion[],
+      isLoading: false,
+      data: []
+    }));
 
     const { container } = render(
       <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel
-          {...get('props')}
-          user={factories.user.build({ canWriteManifests: false })}
-        />
+        <SatelliteManifestPanel {...get('props')} user={user} />
       </QueryClientProvider>
     );
     expect(container).toMatchSnapshot();

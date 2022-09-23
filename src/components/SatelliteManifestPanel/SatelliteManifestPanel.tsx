@@ -74,7 +74,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     useState(false);
   const [exportedManifestName, setExportedManifestName] = useState('');
   const [loadingManifestNotificationKey, setLoadingManifestNotificationKey] = useState('');
-  const [isDisabled, setDisabled] = useState(false);
 
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
@@ -133,10 +132,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const handleSetPage = (_event: React.MouseEvent, page: number) => {
     setPage(page);
     collapseAllRows();
-  };
-
-  const handleOnClickforKebab = () => {
-    if (user.canReadManifests) setDisabled(!isDisabled);
   };
 
   const clearSearch = () => {
@@ -235,10 +230,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         }
       },
       {
-        disabled: true,
+        disabled: !user.canReadManifests,
         title: 'Delete',
         onClick: () => {
-          handleOnClickforKebab();
+          openDeleteConfirmationModal(uuid);
         }
       }
     ];
