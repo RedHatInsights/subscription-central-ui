@@ -35,7 +35,7 @@ import {
   getRowsWithAllocationDetails
 } from './satelliteManifestPanelUtils';
 import { User } from '../../hooks/useUser';
-import { CreateManifestPanel, NoManifestsFound } from '../../components/emptyState';
+import { CreateManifestPanel } from '../../components/emptyState';
 import useNotifications from '../../hooks/useNotifications';
 import useExportSatelliteManifest from '../../hooks/useExportSatelliteManifest';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
@@ -224,22 +224,21 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const results = [
       {
         title: 'Export',
+        disabled: false,
         onClick: () => {
           exportManifest(uuid, name);
         }
-      }
-    ];
-    if (user.canWriteManifests) {
-      results.push({
+      },
+      {
+        disabled: !user.canReadManifests,
         title: 'Delete',
         onClick: () => {
           openDeleteConfirmationModal(uuid);
         }
-      });
-    }
+      }
+    ];
     return results;
   };
-
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
@@ -328,11 +327,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                           />
                         </SplitItem>
                       )}
-                      {user.canWriteManifests === true && (
-                        <SplitItem>
-                          <CreateManifestButtonWithModal user={user} />
-                        </SplitItem>
-                      )}
+                      <SplitItem>
+                        <CreateManifestButtonWithModal user={user} />
+                      </SplitItem>
                     </Split>
                   </FlexItem>
                   <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
