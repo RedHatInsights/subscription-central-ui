@@ -7,7 +7,6 @@ import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatell
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
 import '@testing-library/jest-dom/extend-expect';
-import _ from 'lodash';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
@@ -248,7 +247,7 @@ describe('Satellite Manifest Panel', () => {
 
     const { container } = render(
       <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...get('props')} user={factories.user.build()} />
+        <SatelliteManifestPanel {...get('props')} user={get('user')} />
       </QueryClientProvider>
     );
     expect(container).toMatchSnapshot();

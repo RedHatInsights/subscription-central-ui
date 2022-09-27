@@ -161,6 +161,7 @@ exports[`Satellite Manifest Panel SCAStatusSwitch when user does not have write 
       checked=""
       class="pf-c-switch__input"
       data-testid="sca-status-switch"
+      disabled=""
       id="sca-status-switch-abc123"
       type="checkbox"
     />

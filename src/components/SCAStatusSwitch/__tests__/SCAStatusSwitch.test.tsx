@@ -31,10 +31,6 @@ describe('Satellite Manifest Panel', () => {
       };
     });
 
-    beforeEach(() => {
-      queryClient.setQueryData('user', get('user'));
-    });
-
     const props = {
       scaStatus: 'enabled',
       uuid: 'abc123'
@@ -48,7 +44,7 @@ describe('Satellite Manifest Panel', () => {
         isLoading: true
       }));
 
-      const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
+      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
       expect(container).toMatchSnapshot();
     });
 
@@ -57,9 +53,7 @@ describe('Satellite Manifest Panel', () => {
         isError: true
       }));
 
-      const { container } = render(
-        <SCAStatusSwitch user={factories.user.build({ canWriteManifests: false })} {...props} />
-      );
+      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
       expect(container).toMatchSnapshot();
     });
 
@@ -71,7 +65,7 @@ describe('Satellite Manifest Panel', () => {
         data: null
       }));
 
-      const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
+      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
       expect(container).toMatchSnapshot();
     });
 
@@ -83,7 +77,7 @@ describe('Satellite Manifest Panel', () => {
         data: { success: true, status: 204 }
       }));
 
-      const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
+      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
       expect(container).toMatchSnapshot();
     });
 
@@ -99,7 +93,7 @@ describe('Satellite Manifest Panel', () => {
         uuid: 'abc123'
       };
 
-      const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
+      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
       expect(container).toMatchSnapshot();
     });
 
@@ -114,7 +108,7 @@ describe('Satellite Manifest Panel', () => {
         uuid: 'abc123'
       };
 
-      const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
+      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
       expect(container).toMatchSnapshot();
     });
 
@@ -126,7 +120,7 @@ describe('Satellite Manifest Panel', () => {
         mutate: (): unknown => null
       }));
 
-      const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
+      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
       fireEvent.click(getByTestId(container, 'sca-status-switch'));
       await waitFor(() => expect(useUpdateManifestSCAStatus).toHaveBeenCalledTimes(1));
     });
@@ -141,7 +135,7 @@ describe('Satellite Manifest Panel', () => {
           isLoading: false
         }));
 
-        const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
+        const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
 
         expect(container).toMatchSnapshot();
       });

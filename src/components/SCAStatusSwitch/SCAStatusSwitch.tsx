@@ -8,7 +8,7 @@ import { User } from '../../hooks/useUser';
 interface SCAStatusSwitchProps {
   scaStatus: string;
   uuid: string;
-  user?: User;
+  user: User;
 }
 
 const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid, user }) => {
