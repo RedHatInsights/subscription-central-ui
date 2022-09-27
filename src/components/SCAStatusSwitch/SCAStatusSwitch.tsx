@@ -3,13 +3,15 @@ import { Spinner, Switch } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import useUpdateManifestSCAStatus from '../../hooks/useUpdateManifestSCAStatus';
 import './SCAStatusSwitch.scss';
+import { User } from '../../hooks/useUser';
 
 interface SCAStatusSwitchProps {
   scaStatus: string;
   uuid: string;
+  user?: User;
 }
 
-const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
+const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid, user }) => {
   const isChecked = scaStatus.toLowerCase() === 'enabled';
 
   const { data, mutate, isLoading, isError, isSuccess } = useUpdateManifestSCAStatus();
@@ -50,6 +52,8 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid }) => {
       onChange={handleChange}
       label="Enabled"
       labelOff="Disabled"
+      isDisabled={!user.canWriteManifests}
+      user={user}
     />
   );
 

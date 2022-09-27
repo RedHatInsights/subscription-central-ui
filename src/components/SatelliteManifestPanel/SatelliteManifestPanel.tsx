@@ -74,7 +74,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     useState(false);
   const [exportedManifestName, setExportedManifestName] = useState('');
   const [loadingManifestNotificationKey, setLoadingManifestNotificationKey] = useState('');
-
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
   const entitlementsRowRefs = new Array(10)
@@ -139,7 +138,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setPage(1);
     collapseAllRows();
   };
-
   const handleSort = (_event: React.MouseEvent, index: number, direction: SortByDirection) => {
     setSortBy({ index, direction });
     setPage(1);
@@ -230,11 +228,13 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         }
       },
       {
-        disabled: !user.canReadManifests,
         title: 'Delete',
-        onClick: () => {
-          openDeleteConfirmationModal(uuid);
-        }
+        disabled: !user.canWriteManifests,
+        onClick: user.canWriteManifests
+          ? () => {
+              openDeleteConfirmationModal(uuid);
+            }
+          : null
       }
     ];
     return results;
@@ -380,7 +380,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                         <Td>{manifest.version}</Td>
                         {user.isSCACapable && (
                           <Td>
-                            <SCAStatusSwitch scaStatus={manifest.scaStatus} uuid={manifest.uuid} />
+                            <SCAStatusSwitch
+                              scaStatus={manifest.scaStatus}
+                              uuid={manifest.uuid}
+                              user={user}
+                            />
                           </Td>
                         )}
                         <Td>{manifest.uuid}</Td>
@@ -423,5 +427,4 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     </>
   );
 };
-
 export default SatelliteManifestPanel;

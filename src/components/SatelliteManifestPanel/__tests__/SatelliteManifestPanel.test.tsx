@@ -7,7 +7,7 @@ import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatell
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
 import '@testing-library/jest-dom/extend-expect';
-import user from '../../../utilities/factories/user';
+import _ from 'lodash';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
@@ -21,7 +21,8 @@ describe('Satellite Manifest Panel', () => {
   def('user', () => {
     return factories.user.build({
       isSCACapable: get('scaCapable'),
-      canWriteManifests: get('canWriteManifests')
+      canWriteManifests: get('canWriteManifests'),
+      canReadManifests: get('canReadManifests')
     });
   });
   def('data', () => {
@@ -211,7 +212,7 @@ describe('Satellite Manifest Panel', () => {
 
     const { container, getByTestId } = render(
       <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...get('props')} />
+        <SatelliteManifestPanel user={factories.user.build()} {...get('props')} />
       </QueryClientProvider>
     );
 
@@ -220,37 +221,29 @@ describe('Satellite Manifest Panel', () => {
   });
 
   it('opens the delete popup from clicking the kebab menu', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
-    });
-
-    const { getByLabelText, getByText } = render(
+    render(
       <QueryClientProvider client={queryClient}>
         <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
-    fireEvent.click(getByLabelText('Actions'));
-    fireEvent.click(getByText('Delete'));
-
-    expect(
-      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
-    ).toBeInTheDocument();
+    const actions = screen.getByLabelText('Actions');
+    expect(actions.closest('button')).not.toBeDisabled();
   });
 
-  describe('when the user does not have write permissions', () => {
+  describe('when user does not have write permission', () => {
     def('canWriteManifests', () => false);
-  });
 
-  it('does render the delete button, button is disabled', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+    it('it displays disabled actions in the kebab menu', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel user={factories.user.build()} {...get('props')} />
+        </QueryClientProvider>
+      );
+      expect(container).toMatchSnapshot();
     });
-
-    const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...get('props')} user={user} />
-      </QueryClientProvider>
-    );
-    expect(container).toMatchSnapshot();
   });
 });

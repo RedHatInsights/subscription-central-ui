@@ -4,7 +4,6 @@ import CreateManifestButtonWithModal from '..';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import factories from '../../../utilities/factories';
 import { createQueryWrapper } from '../../../utilities/testHelpers';
-import { def } from 'bdd-lazy-var';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('../../../hooks/useUser');

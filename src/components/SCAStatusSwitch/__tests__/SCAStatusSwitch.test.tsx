@@ -2,7 +2,9 @@ import React from 'react';
 import { render, fireEvent, getByTestId, waitFor } from '@testing-library/react';
 import SCAStatusSwitch from '../SCAStatusSwitch';
 import useUpdateManifestSCAStatus from '../../../hooks/useUpdateManifestSCAStatus';
+import factories from '../../../utilities/factories';
 
+jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useUpdateManifestSCAStatus');
 
 describe('SCAStatusSwitch', () => {
@@ -16,7 +18,7 @@ describe('SCAStatusSwitch', () => {
       isLoading: true
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
+    const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
     expect(container).toMatchSnapshot();
   });
 
@@ -25,7 +27,9 @@ describe('SCAStatusSwitch', () => {
       isError: true
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
+    const { container } = render(
+      <SCAStatusSwitch user={factories.user.build({ canWriteManifests: false })} {...props} />
+    );
     expect(container).toMatchSnapshot();
   });
 
@@ -37,7 +41,7 @@ describe('SCAStatusSwitch', () => {
       data: null
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
+    const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
     expect(container).toMatchSnapshot();
   });
 
@@ -49,7 +53,7 @@ describe('SCAStatusSwitch', () => {
       data: { success: true, status: 204 }
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
+    const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
     expect(container).toMatchSnapshot();
   });
 
@@ -65,7 +69,7 @@ describe('SCAStatusSwitch', () => {
       uuid: 'abc123'
     };
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
+    const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
     expect(container).toMatchSnapshot();
   });
 
@@ -80,7 +84,7 @@ describe('SCAStatusSwitch', () => {
       uuid: 'abc123'
     };
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
+    const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
     expect(container).toMatchSnapshot();
   });
 
@@ -92,7 +96,7 @@ describe('SCAStatusSwitch', () => {
       mutate: (): unknown => null
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
+    const { container } = render(<SCAStatusSwitch user={factories.user.build()} {...props} />);
     fireEvent.click(getByTestId(container, 'sca-status-switch'));
     await waitFor(() => expect(useUpdateManifestSCAStatus).toHaveBeenCalledTimes(1));
   });

@@ -23,6 +23,7 @@ exports[`SCAStatusSwitch renders successfully as disabled when success is return
       data-testid="sca-status-switch"
       id="sca-status-switch-abc123"
       type="checkbox"
+      user="[object Object]"
     />
     <span
       class="pf-c-switch__toggle"
@@ -59,6 +60,7 @@ exports[`SCAStatusSwitch renders successfully as enabled when success is returne
       data-testid="sca-status-switch"
       id="sca-status-switch-abc123"
       type="checkbox"
+      user="[object Object]"
     />
     <span
       class="pf-c-switch__toggle"
