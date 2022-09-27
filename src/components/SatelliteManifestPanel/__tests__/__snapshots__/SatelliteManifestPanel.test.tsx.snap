@@ -871,12 +871,11 @@ exports[`Satellite Manifest Panel does render the delete button, button is disab
                     class="pf-l-split__item"
                   >
                     <button
-                      aria-disabled="true"
-                      class="pf-c-button pf-m-primary pf-m-disabled"
+                      aria-disabled="false"
+                      class="pf-c-button pf-m-primary"
                       data-ouia-component-id="OUIA-Generated-Button-primary-12"
                       data-ouia-component-type="PF4/Button"
                       data-ouia-safe="true"
-                      disabled=""
                       type="button"
                     >
                       Create new manifest
@@ -1285,6 +1284,41 @@ exports[`Satellite Manifest Panel does render the delete button, button is disab
                   class=""
                 >
                   6.3
+                </td>
+                <td
+                  class=""
+                >
+                  <label
+                    class="pf-c-switch"
+                    data-ouia-component-id="OUIA-Generated-Switch-11"
+                    data-ouia-component-type="PF4/Switch"
+                    data-ouia-safe="true"
+                    for="sca-status-switch-00000000-0000-0000-0000-000000000000"
+                  >
+                    <input
+                      aria-label="SCA Status for this Manifest is enabled"
+                      checked=""
+                      class="pf-c-switch__input"
+                      data-testid="sca-status-switch"
+                      id="sca-status-switch-00000000-0000-0000-0000-000000000000"
+                      type="checkbox"
+                    />
+                    <span
+                      class="pf-c-switch__toggle"
+                    />
+                    <span
+                      aria-hidden="true"
+                      class="pf-c-switch__label pf-m-on"
+                    >
+                      Enabled
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="pf-c-switch__label pf-m-off"
+                    >
+                      Disabled
+                    </span>
+                  </label>
                 </td>
                 <td
                   class=""
@@ -5083,6 +5117,7 @@ exports[`Satellite Manifest Panel when user does not have write permission rende
                       checked=""
                       class="pf-c-switch__input"
                       data-testid="sca-status-switch"
+                      disabled=""
                       id="sca-status-switch-00000000-0000-0000-0000-000000000000"
                       type="checkbox"
                     />

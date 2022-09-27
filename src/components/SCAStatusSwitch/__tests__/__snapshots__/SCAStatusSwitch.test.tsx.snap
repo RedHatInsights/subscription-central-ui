@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SCAStatusSwitch renders as disallowed when disallowed is passed as scaStatus 1`] = `
+exports[`Satellite Manifest Panel SCAStatusSwitch renders as disallowed when disallowed is passed as scaStatus 1`] = `
 <div>
   <p>
     N/A
@@ -8,7 +8,7 @@ exports[`SCAStatusSwitch renders as disallowed when disallowed is passed as scaS
 </div>
 `;
 
-exports[`SCAStatusSwitch renders successfully as disabled when success is returned across 1`] = `
+exports[`Satellite Manifest Panel SCAStatusSwitch renders successfully as disabled when success is returned across 1`] = `
 <div>
   <label
     class="pf-c-switch"
@@ -43,7 +43,7 @@ exports[`SCAStatusSwitch renders successfully as disabled when success is return
 </div>
 `;
 
-exports[`SCAStatusSwitch renders successfully as enabled when success is returned across 1`] = `
+exports[`Satellite Manifest Panel SCAStatusSwitch renders successfully as enabled when success is returned across 1`] = `
 <div>
   <label
     class="pf-c-switch"
@@ -79,7 +79,7 @@ exports[`SCAStatusSwitch renders successfully as enabled when success is returne
 </div>
 `;
 
-exports[`SCAStatusSwitch renders with a spinner when loading 1`] = `
+exports[`Satellite Manifest Panel SCAStatusSwitch renders with a spinner when loading 1`] = `
 <div>
   <span
     aria-valuetext="Loading..."
@@ -99,7 +99,7 @@ exports[`SCAStatusSwitch renders with a spinner when loading 1`] = `
 </div>
 `;
 
-exports[`SCAStatusSwitch renders with an error message when an error occurs 1`] = `
+exports[`Satellite Manifest Panel SCAStatusSwitch renders with an error message when an error occurs 1`] = `
 <div>
   <svg
     aria-hidden="true"
@@ -123,7 +123,7 @@ exports[`SCAStatusSwitch renders with an error message when an error occurs 1`] 
 </div>
 `;
 
-exports[`SCAStatusSwitch renders with an error message when the API response does not have 204 status and no data is returned 1`] = `
+exports[`Satellite Manifest Panel SCAStatusSwitch renders with an error message when the API response does not have 204 status and no data is returned 1`] = `
 <div>
   <svg
     aria-hidden="true"
@@ -144,5 +144,42 @@ exports[`SCAStatusSwitch renders with an error message when the API response doe
   >
     Something went wrong. Please refresh the page and try again.
   </span>
+</div>
+`;
+
+exports[`Satellite Manifest Panel SCAStatusSwitch when user does not have write permission displays disabled state of the SCA toggle  1`] = `
+<div>
+  <label
+    class="pf-c-switch"
+    data-ouia-component-id="OUIA-Generated-Switch-4"
+    data-ouia-component-type="PF4/Switch"
+    data-ouia-safe="true"
+    for="sca-status-switch-abc123"
+  >
+    <input
+      aria-label="SCA Status for this Manifest is enabled"
+      checked=""
+      class="pf-c-switch__input"
+      data-testid="sca-status-switch"
+      disabled=""
+      id="sca-status-switch-abc123"
+      type="checkbox"
+    />
+    <span
+      class="pf-c-switch__toggle"
+    />
+    <span
+      aria-hidden="true"
+      class="pf-c-switch__label pf-m-on"
+    >
+      Enabled
+    </span>
+    <span
+      aria-hidden="true"
+      class="pf-c-switch__label pf-m-off"
+    >
+      Disabled
+    </span>
+  </label>
 </div>
 `;
