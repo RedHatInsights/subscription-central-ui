@@ -505,7 +505,6 @@ exports[`Satellite Manifest Panel Shows export message when successfully exporte
                       data-testid="sca-status-switch"
                       id="sca-status-switch-00000000-0000-0000-0000-000000000000"
                       type="checkbox"
-                      user="[object Object]"
                     />
                     <span
                       class="pf-c-switch__toggle"
@@ -1303,7 +1302,6 @@ exports[`Satellite Manifest Panel opens the side panel when the row name is clic
                       data-testid="sca-status-switch"
                       id="sca-status-switch-00000000-0000-0000-0000-000000000000"
                       type="checkbox"
-                      user="[object Object]"
                     />
                     <span
                       class="pf-c-switch__toggle"
@@ -2168,7 +2166,6 @@ exports[`Satellite Manifest Panel renders correctly with SCA column when user is
                       data-testid="sca-status-switch"
                       id="sca-status-switch-00000000-0000-0000-0000-000000000000"
                       type="checkbox"
-                      user="[object Object]"
                     />
                     <span
                       class="pf-c-switch__toggle"
@@ -4326,7 +4323,6 @@ exports[`Satellite Manifest Panel when user does not have write permission it di
                       disabled=""
                       id="sca-status-switch-00000000-0000-0000-0000-000000000000"
                       type="checkbox"
-                      user="[object Object]"
                     />
                     <span
                       class="pf-c-switch__toggle"
@@ -5126,7 +5122,6 @@ exports[`Satellite Manifest Panel when user does not have write permission rende
                       disabled=""
                       id="sca-status-switch-00000000-0000-0000-0000-000000000000"
                       type="checkbox"
-                      user="[object Object]"
                     />
                     <span
                       class="pf-c-switch__toggle"

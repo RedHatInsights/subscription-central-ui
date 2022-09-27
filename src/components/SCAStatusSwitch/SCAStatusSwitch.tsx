@@ -53,7 +53,6 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid, user }) =>
       label="Enabled"
       labelOff="Disabled"
       isDisabled={!user.canWriteManifests}
-      user={user}
     />
   );
 

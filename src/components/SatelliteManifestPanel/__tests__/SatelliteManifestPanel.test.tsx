@@ -221,6 +221,9 @@ describe('Satellite Manifest Panel', () => {
   });
 
   it('opens the delete popup from clicking the kebab menu', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
     render(
       <QueryClientProvider client={queryClient}>
         <SatelliteManifestPanel {...get('props')} />
