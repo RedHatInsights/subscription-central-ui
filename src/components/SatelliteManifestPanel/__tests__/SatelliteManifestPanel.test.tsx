@@ -21,8 +21,7 @@ describe('Satellite Manifest Panel', () => {
   def('user', () => {
     return factories.user.build({
       isSCACapable: get('scaCapable'),
-      canWriteManifests: get('canWriteManifests'),
-      canReadManifests: get('canReadManifests')
+      canWriteManifests: get('canWriteManifests')
     });
   });
   def('data', () => {
@@ -212,7 +211,7 @@ describe('Satellite Manifest Panel', () => {
 
     const { container, getByTestId } = render(
       <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel user={factories.user.build()} {...get('props')} />
+        <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
 
@@ -224,29 +223,34 @@ describe('Satellite Manifest Panel', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
       body: [] as SatelliteVersion[]
     });
-    render(
+
+    const { getByLabelText, getByText } = render(
       <QueryClientProvider client={queryClient}>
         <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
-    const actions = screen.getByLabelText('Actions');
-    expect(actions.closest('button')).not.toBeDisabled();
+    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByText('Delete'));
+
+    expect(
+      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
+    ).toBeInTheDocument();
   });
 
-  describe('when user does not have write permission', () => {
+  describe('when the user does not have write permissions', () => {
     def('canWriteManifests', () => false);
+  });
 
-    it('it displays disabled actions in the kebab menu', () => {
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[]
-      });
-
-      const { container } = render(
-        <QueryClientProvider client={queryClient}>
-          <SatelliteManifestPanel user={factories.user.build()} {...get('props')} />
-        </QueryClientProvider>
-      );
-      expect(container).toMatchSnapshot();
+  it('does render the delete button, button is disabled', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
     });
+
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...get('props')} user={factories.user.build()} />
+      </QueryClientProvider>
+    );
+    expect(container).toMatchSnapshot();
   });
 });
