@@ -4,7 +4,6 @@ import CreateManifestButtonWithModal from '..';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import factories from '../../../utilities/factories';
 import { createQueryWrapper } from '../../../utilities/testHelpers';
-import { def } from 'bdd-lazy-var';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('../../../hooks/useUser');
@@ -25,15 +24,11 @@ it('renders the modal properly when the button is clicked', async () => {
   );
 
   fireEvent.click(getByText('Create new manifest'));
-  await screen.findAllByText(
-    'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application.'
-  );
-  /**
-   * document.body needed because the modal
-   * does not render within the container
-   *
-   */
-  expect(document.body).toMatchSnapshot();
+  expect(
+    getByText(
+      'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application.'
+    )
+  ).toBeInTheDocument();
 });
 
 it('renders the Create manifest form with disabled button for user', async () => {
@@ -52,5 +47,4 @@ it('renders the Create manifest form with disabled button for user', async () =>
   );
 
   expect(getByText('Create new manifest').closest('button')).toHaveAttribute('disabled');
-  expect(document.body).toMatchSnapshot();
 });
