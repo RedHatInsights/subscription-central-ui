@@ -4,7 +4,7 @@ import CreateManifestFormLoading from '../CreateManifestFormLoading';
 
 describe('Create Manifest Form Loading Message', () => {
   it('renders correctly', () => {
-    const { getByRole } = render(<CreateManifestFormLoading title="Loading..." />);
-    expect(getByRole('progressbar')).toBeInTheDocument();
+    const container = render(<CreateManifestFormLoading title="Loading..." />);
+    expect(container).toHaveLoader();
   });
 });

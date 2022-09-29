@@ -32,12 +32,12 @@ describe('Create Manifest Form', () => {
 
   it('renders loading when data is being posted', () => {
     const props = { ...createManifestFormProps, isLoading: true };
-    const { getByRole } = render(
+    const container = render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestForm {...props} />
       </QueryClientProvider>
     );
-    expect(getByRole('progressbar')).toBeInTheDocument();
+    expect(container).toHaveLoader();
   });
 
   it('displays errors correctly', async () => {
