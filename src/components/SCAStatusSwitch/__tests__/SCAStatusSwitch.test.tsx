@@ -16,8 +16,8 @@ describe('SCAStatusSwitch', () => {
       isLoading: true
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
-    expect(container).toMatchSnapshot();
+    const container = render(<SCAStatusSwitch {...props} />);
+    expect(container).toHaveLoader();
   });
 
   it('renders with an error message when an error occurs', () => {
@@ -25,8 +25,11 @@ describe('SCAStatusSwitch', () => {
       isError: true
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
-    expect(container).toMatchSnapshot();
+    const { getByText } = render(<SCAStatusSwitch {...props} />);
+
+    expect(
+      getByText('Something went wrong. Please refresh the page and try again.')
+    ).toBeInTheDocument();
   });
 
   it('renders with an error message when the API response does not have 204 status and no data is returned', () => {
@@ -37,8 +40,11 @@ describe('SCAStatusSwitch', () => {
       data: null
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
-    expect(container).toMatchSnapshot();
+    const { getByText } = render(<SCAStatusSwitch {...props} />);
+
+    expect(
+      getByText('Something went wrong. Please refresh the page and try again.')
+    ).toBeInTheDocument();
   });
 
   it('renders successfully as enabled when success is returned across', () => {
@@ -49,8 +55,8 @@ describe('SCAStatusSwitch', () => {
       data: { success: true, status: 204 }
     }));
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
-    expect(container).toMatchSnapshot();
+    const { getByLabelText } = render(<SCAStatusSwitch {...props} />);
+    expect(getByLabelText('SCA Status for this Manifest is enabled')).toBeChecked();
   });
 
   it('renders successfully as disabled when success is returned across', () => {
@@ -65,8 +71,8 @@ describe('SCAStatusSwitch', () => {
       uuid: 'abc123'
     };
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
-    expect(container).toMatchSnapshot();
+    const { getByLabelText } = render(<SCAStatusSwitch {...props} />);
+    expect(getByLabelText('SCA Status for this Manifest is disabled')).not.toBeChecked();
   });
 
   it('renders as disallowed when disallowed is passed as scaStatus', () => {
@@ -80,8 +86,8 @@ describe('SCAStatusSwitch', () => {
       uuid: 'abc123'
     };
 
-    const { container } = render(<SCAStatusSwitch {...props} />);
-    expect(container).toMatchSnapshot();
+    const { getByText } = render(<SCAStatusSwitch {...props} />);
+    expect(getByText('N/A')).toBeInTheDocument();
   });
 
   it('fires the handleChange when clicked', async () => {
