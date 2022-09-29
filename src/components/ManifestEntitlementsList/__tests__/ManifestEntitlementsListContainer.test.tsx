@@ -10,6 +10,7 @@ const queryClient = new QueryClient();
 
 describe('Manifest Entitlements List Container', () => {
   it('renders correctly once entitlements have been loaded', async () => {
+    const sku = 'sku123';
     (useManifestEntitlements as jest.Mock).mockReturnValue({
       isLoading: false,
       isSuccess: true,
@@ -23,7 +24,7 @@ describe('Manifest Entitlements List Container', () => {
                 contractNumber: '12345',
                 entitlementQuantity: 10,
                 id: 'id123',
-                sku: 'sku123',
+                sku,
                 startDate: '2021-01-01T00:00:00.000Z',
                 endDate: '2022-01-01T00:00:00.000Z'
               }
@@ -36,7 +37,7 @@ describe('Manifest Entitlements List Container', () => {
       uuid: 'abc123',
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>
     };
-    const { container } = render(
+    const { getByLabelText } = render(
       <QueryClientProvider client={queryClient}>
         <ManifestEntitlementsListContainer {...props} />
       </QueryClientProvider>
@@ -44,6 +45,8 @@ describe('Manifest Entitlements List Container', () => {
 
     await waitFor(() => expect(useManifestEntitlements).toHaveBeenCalledTimes(1));
 
-    expect(container).toMatchSnapshot();
+    expect(
+      getByLabelText('Allocations table').children[1].firstChild.childNodes[1].textContent
+    ).toEqual(sku);
   });
 });

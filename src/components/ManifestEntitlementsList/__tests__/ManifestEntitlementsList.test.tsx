@@ -24,8 +24,11 @@ describe('Manifest Entitlements List', () => {
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
     };
-    const { container } = render(<ManifestEntitlementsList {...props} />);
-    expect(container).toMatchSnapshot();
+    const { getByLabelText } = render(<ManifestEntitlementsList {...props} />);
+
+    expect(
+      getByLabelText('Allocations table').children[1].firstChild.childNodes[1].textContent
+    ).toEqual(props.entitlementsData.value[0].sku);
   });
 
   it.skip('fires methods in kebab menu when clicked', () => {
@@ -76,8 +79,9 @@ describe('Manifest Entitlements List', () => {
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
     };
-    const { container } = render(<ManifestEntitlementsList {...props} />);
-    expect(container).toMatchSnapshot();
+    const { queryByLabelText } = render(<ManifestEntitlementsList {...props} />);
+
+    expect(queryByLabelText('Allocations table')).toBeNull();
   });
 
   it('renders with an error message when the API call fails', () => {
@@ -92,8 +96,10 @@ describe('Manifest Entitlements List', () => {
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
     };
-    const { container } = render(<ManifestEntitlementsList {...props} />);
-    expect(container).toMatchSnapshot();
+    render(<ManifestEntitlementsList {...props} />);
+    expect(document.querySelector('.sub-no-entitlements-reason').firstChild.textContent).toEqual(
+      props.entitlementsData.reason
+    );
   });
 
   it('renders loading when loading', () => {
@@ -108,7 +114,7 @@ describe('Manifest Entitlements List', () => {
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
     };
-    const { container } = render(<ManifestEntitlementsList {...props} />);
-    expect(container).toMatchSnapshot();
+    const container = render(<ManifestEntitlementsList {...props} />);
+    expect(container).toHaveLoader();
   });
 });
