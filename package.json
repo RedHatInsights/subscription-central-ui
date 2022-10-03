@@ -20,7 +20,7 @@
     "server:ctr": "node src/server/generateServerKey.js",
     "start": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
     "start:beta": "BETA=true NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
-    "test": "jest --verbose",
+    "test": "TZ=UTC jest --verbose --no-cache",
     "test:watch": "jest --watch",
     "verify": "npm-run-all build lint test"
   },
