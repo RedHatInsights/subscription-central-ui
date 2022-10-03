@@ -15,6 +15,7 @@ const queryClient = new QueryClient();
 
 describe('Manifest Detail Side Panel', () => {
   def('scaCapable', () => true);
+  def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
   def('user', () =>
     factories.user.build({
@@ -178,7 +179,7 @@ describe('Manifest Detail Side Panel', () => {
   describe('when user does not have write permission', () => {
     def('canWriteManifests', () => false);
 
-    it('does not render the delete button', () => {
+    it('does render delete button, button is disabled', () => {
       (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
         isError: false,
         isSuccess: true,
@@ -198,7 +199,6 @@ describe('Manifest Detail Side Panel', () => {
       }));
 
       const panelContent = <ManifestDetailSidePanel {...props} />;
-
       const { container } = render(
         <QueryClientProvider client={queryClient}>
           <Drawer isExpanded={true}>
@@ -208,7 +208,6 @@ describe('Manifest Detail Side Panel', () => {
           </Drawer>
         </QueryClientProvider>
       );
-
       expect(container).toMatchSnapshot();
     });
   });

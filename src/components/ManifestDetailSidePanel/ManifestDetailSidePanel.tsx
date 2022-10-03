@@ -101,6 +101,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           onClick={() => {
             deleteManifest(uuid);
           }}
+          isDisabled={!user.canWriteManifests}
         >
           Delete manifest
         </Button>
@@ -205,7 +206,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
         >
           Export manifest
         </Button>
-        {user.canWriteManifests && <DeleteManifest />}
+        <DeleteManifest />
       </div>
     );
   };
