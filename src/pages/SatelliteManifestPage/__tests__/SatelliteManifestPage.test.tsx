@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { render, waitFor, getByLabelText, getByText } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import SatelliteManifestPage from '../SatelliteManifestPage';
 import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
