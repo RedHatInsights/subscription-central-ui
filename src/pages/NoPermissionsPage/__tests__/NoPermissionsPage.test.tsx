@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import useUser from '../../../hooks/useUser';
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
+import '@testing-library/jest-dom';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('react-router-dom', () => ({
@@ -47,12 +48,10 @@ describe('No Permissions Page', () => {
     queryClient.setQueryData('user', get('user'));
   });
 
-  it('renders correctly', async () => {
+  it('renders correctly', () => {
     window.insights = {};
 
-    const { container } = render(<Page />);
-
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-    expect(container).toMatchSnapshot();
+    const { getByText } = render(<Page />);
+    expect(getByText('You do not have access to Manifests')).toBeInTheDocument();
   });
 });

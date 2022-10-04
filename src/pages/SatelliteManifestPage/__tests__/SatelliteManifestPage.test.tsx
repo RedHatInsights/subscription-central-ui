@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, getByLabelText, getByText } from '@testing-library/react';
 import SatelliteManifestPage from '../SatelliteManifestPage';
 import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -55,7 +56,6 @@ describe('Satellite Manifests Page', () => {
       queryClient.setQueryData('user', get('user'));
     }
   });
-
   it('renders correctly with satellite data', async () => {
     window.insights = {};
 
@@ -71,11 +71,6 @@ describe('Satellite Manifests Page', () => {
         }
       ]
     });
-
-    const { container } = render(<SatellitePage />);
-
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-    expect(container).toMatchSnapshot();
   });
 
   describe('when the user status call is still loading', () => {
@@ -91,10 +86,8 @@ describe('Satellite Manifests Page', () => {
         isError: false
       });
 
-      const { container } = render(<SatellitePage />);
-
-      expect(container).toMatchSnapshot();
-      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
+      const container = render(<SatellitePage />);
+      expect(container).toHaveLoader();
     });
   });
 
@@ -107,11 +100,8 @@ describe('Satellite Manifests Page', () => {
       error: false,
       isError: false
     });
-
-    const { container } = render(<SatellitePage />);
-
-    expect(container).toMatchSnapshot();
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
+    const container = render(<SatellitePage />);
+    expect(container).toHaveLoader();
   });
 
   it('renders the empty state when no results are returned', async () => {
@@ -120,17 +110,14 @@ describe('Satellite Manifests Page', () => {
       data: []
     });
 
-    const { container } = render(<SatellitePage />);
-
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-
-    expect(container).toMatchSnapshot();
+    const { getByText } = render(<SatellitePage />);
+    expect(getByText('Manifests')).toBeInTheDocument();
   });
 
   describe('when the user does not have write permissions', () => {
     def('canWriteManifests', () => false);
 
-    it('renders an empty table when the API renturns no manifests', async () => {
+    it('renders an empty table when the API returns no manifests', async () => {
       window.insights = {};
 
       (useSatelliteManifests as jest.Mock).mockReturnValue({
@@ -138,11 +125,9 @@ describe('Satellite Manifests Page', () => {
         data: []
       });
 
-      const { container } = render(<SatellitePage />);
+      const { getByLabelText } = render(<SatellitePage />);
 
-      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-
-      expect(container).toMatchSnapshot();
+      expect(getByLabelText('Satellite Manifest Table').children.length).toEqual(1);
     });
   });
 
@@ -154,9 +139,9 @@ describe('Satellite Manifests Page', () => {
       data: undefined
     });
 
-    const { container } = render(<SatellitePage />);
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-    expect(container).toMatchSnapshot();
+    render(<SatellitePage />);
+
+    expect(document.querySelector('.pf-c-empty-state__content').firstChild.textContent);
   });
 
   describe('when the user call fails', () => {
@@ -170,9 +155,8 @@ describe('Satellite Manifests Page', () => {
         data: undefined
       });
 
-      const { container } = render(<SatellitePage />);
-      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-      expect(container).toMatchSnapshot();
+      const { getByText } = render(<SatellitePage />);
+      expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();
     });
   });
 });
