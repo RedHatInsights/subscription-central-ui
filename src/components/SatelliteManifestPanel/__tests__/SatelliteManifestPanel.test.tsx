@@ -8,12 +8,14 @@ import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
 import '@testing-library/jest-dom/extend-expect';
 
+jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
 
 const queryClient = new QueryClient();
 
 describe('Satellite Manifest Panel', () => {
   def('scaCapable', () => true);
+  def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
   def('user', () => {
     return factories.user.build({
@@ -41,6 +43,10 @@ describe('Satellite Manifest Panel', () => {
       isFetching: get('fetching'),
       user: get('user')
     };
+  });
+
+  beforeEach(() => {
+    queryClient.setQueryData('user', get('user'));
   });
 
   it('renders correctly with SCA column when user is SCA Capable', () => {
@@ -211,5 +217,57 @@ describe('Satellite Manifest Panel', () => {
     await new Promise((r) => setTimeout(r, 2000));
 
     waitFor(() => expect(screen.findByText('Download manifest')).toBeInTheDocument());
+  });
+
+  it('opens the side panel when the row name is clicked', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const { getByText, getByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...get('props')} />
+      </QueryClientProvider>
+    );
+
+    fireEvent.click(getByTestId('expand-details-button-0'));
+    expect(getByText('UUID')).toBeInTheDocument();
+  });
+
+  it('opens the delete popup from clicking the kebab menu', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const { getByLabelText, getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...get('props')} />
+      </QueryClientProvider>
+    );
+    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByText('Delete'));
+
+    expect(
+      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
+    ).toBeInTheDocument();
+  });
+
+  describe('when the user does not have write permissions', () => {
+    def('canWriteManifests', () => false);
+
+    it('does render the delete button, button is disabled', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { queryByText, container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel {...get('props')} user={get('user')} />
+        </QueryClientProvider>
+      );
+
+      fireEvent.click(container.querySelector('.pf-c-dropdown__toggle'));
+      expect(queryByText('Delete').closest('button')).toBeDisabled();
+    });
   });
 });
