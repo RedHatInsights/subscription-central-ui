@@ -44,8 +44,8 @@ describe('Satellite Manifest Panel', () => {
         isLoading: true
       }));
 
-      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
-      expect(container).toMatchSnapshot();
+      const container = render(<SCAStatusSwitch user={get('user')} {...props} />);
+      expect(container).toHaveLoader();
     });
 
     it('renders with an error message when an error occurs', () => {
@@ -53,8 +53,11 @@ describe('Satellite Manifest Panel', () => {
         isError: true
       }));
 
-      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
-      expect(container).toMatchSnapshot();
+      const { getByText } = render(<SCAStatusSwitch user={get('user')} {...props} />);
+
+      expect(
+        getByText('Something went wrong. Please refresh the page and try again.')
+      ).toBeInTheDocument();
     });
 
     it('renders with an error message when the API response does not have 204 status and no data is returned', () => {
@@ -65,8 +68,11 @@ describe('Satellite Manifest Panel', () => {
         data: null
       }));
 
-      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
-      expect(container).toMatchSnapshot();
+      const { getByText } = render(<SCAStatusSwitch user={get('user')} {...props} />);
+
+      expect(
+        getByText('Something went wrong. Please refresh the page and try again.')
+      ).toBeInTheDocument();
     });
 
     it('renders successfully as enabled when success is returned across', () => {
@@ -77,8 +83,8 @@ describe('Satellite Manifest Panel', () => {
         data: { success: true, status: 204 }
       }));
 
-      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
-      expect(container).toMatchSnapshot();
+      const { getByLabelText } = render(<SCAStatusSwitch user={get('user')} {...props} />);
+      expect(getByLabelText('SCA Status for this Manifest is enabled')).toBeChecked();
     });
 
     it('renders successfully as disabled when success is returned across', () => {
@@ -93,8 +99,8 @@ describe('Satellite Manifest Panel', () => {
         uuid: 'abc123'
       };
 
-      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
-      expect(container).toMatchSnapshot();
+      const { getByLabelText } = render(<SCAStatusSwitch user={get('user')} {...props} />);
+      expect(getByLabelText('SCA Status for this Manifest is disabled')).not.toBeChecked();
     });
 
     it('renders as disallowed when disallowed is passed as scaStatus', () => {
@@ -108,8 +114,8 @@ describe('Satellite Manifest Panel', () => {
         uuid: 'abc123'
       };
 
-      const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
-      expect(container).toMatchSnapshot();
+      const { getByText } = render(<SCAStatusSwitch user={get('user')} {...props} />);
+      expect(getByText('N/A')).toBeInTheDocument();
     });
 
     it('fires the handleChange when clicked', async () => {
@@ -137,7 +143,7 @@ describe('Satellite Manifest Panel', () => {
 
         const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
 
-        expect(container).toMatchSnapshot();
+        expect(container.querySelector('.pf-c-switch__input')).toBeDisabled();
       });
     });
   });
