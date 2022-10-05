@@ -7,15 +7,20 @@ jest.mock('../../../hooks/useNotifications');
 
 describe('Notifications', () => {
   it('renders correctly', () => {
+    const notifications = [
+      { message: 'Some stuff went well!', variant: 'success', key: '123' },
+      { message: 'Some other stuff did not.', variant: 'danger', key: '456' },
+      { message: 'And this happened.', variant: 'info', key: '789' }
+    ];
+
     (useNotifications as jest.Mock).mockReturnValue({
-      notifications: [
-        { message: 'Some stuff went well!', variant: 'success', key: '123' },
-        { message: 'Some other stuff did not.', variant: 'danger', key: '456' },
-        { message: 'And this happened.', variant: 'info', key: '789' }
-      ]
+      notifications
     });
-    render(<Notifications />);
-    expect(document.body).toMatchSnapshot();
+    const { getByText } = render(<Notifications />);
+
+    notifications.forEach((n) => {
+      expect(getByText(n.message).parentNode).toHaveClass(`pf-m-${n.variant}`);
+    });
   });
 
   it('calls the remove notifications method on click of the X', () => {

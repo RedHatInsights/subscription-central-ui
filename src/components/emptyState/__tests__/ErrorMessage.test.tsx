@@ -4,7 +4,7 @@ import ErrorMessage from '../ErrorMessage';
 
 describe('Generic Error Message', () => {
   it('renders correctly', () => {
-    const { container } = render(<ErrorMessage />);
-    expect(container).toMatchSnapshot();
+    const { getByText } = render(<ErrorMessage />);
+    expect(getByText('Something went wrong')).toBeInTheDocument();
   });
 });

@@ -16,17 +16,12 @@ describe('Create Manifest Modal', () => {
       isLoading: false
     });
     const props = { handleModalToggle: (): any => null, isModalOpen: true };
-    const { container } = render(
+    const { getByLabelText } = render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestModal {...props} />
       </QueryClientProvider>
     );
 
-    /**
-     * document.body needed because the modal
-     * does not render within the container
-     *
-     */
-    expect(document.body).toMatchSnapshot();
+    expect(getByLabelText('Create satellite manifest')).toBeInTheDocument();
   });
 });

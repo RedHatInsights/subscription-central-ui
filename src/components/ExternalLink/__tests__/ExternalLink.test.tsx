@@ -9,7 +9,11 @@ describe('External Link', () => {
       children: 'This is text for an external link'
     };
 
-    const { container } = render(<ExternalLink {...props} />);
-    expect(container).toMatchSnapshot();
+    const container = render(<ExternalLink {...props} />);
+
+    expect(container.queryByText('This is text for an external link')).toHaveAttribute(
+      'href',
+      'foo.com'
+    );
   });
 });

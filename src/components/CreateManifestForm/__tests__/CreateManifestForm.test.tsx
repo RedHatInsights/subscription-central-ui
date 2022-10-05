@@ -22,22 +22,22 @@ const createManifestFormProps = {
 describe('Create Manifest Form', () => {
   it('renders correctly when data is loaded', () => {
     const props = { ...createManifestFormProps };
-    const { container } = render(
+    const { getByText } = render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestForm {...props} />
       </QueryClientProvider>
     );
-    expect(container).toMatchSnapshot();
+    expect(getByText('Create new manifest')).toBeInTheDocument();
   });
 
   it('renders loading when data is being posted', () => {
     const props = { ...createManifestFormProps, isLoading: true };
-    const { container } = render(
+    const container = render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestForm {...props} />
       </QueryClientProvider>
     );
-    expect(container).toMatchSnapshot();
+    expect(container).toHaveLoader();
   });
 
   it('displays errors correctly', async () => {
@@ -84,7 +84,5 @@ describe('Create Manifest Form', () => {
         'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application.'
       )
     ).toBeNull();
-
-    expect(handleModalToggle).toHaveBeenCalledTimes(1);
   });
 });
