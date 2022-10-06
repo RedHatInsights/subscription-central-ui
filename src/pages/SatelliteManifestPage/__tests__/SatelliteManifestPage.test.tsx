@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import SatelliteManifestPage from '../SatelliteManifestPage';
 import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -10,6 +11,8 @@ import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
 import useUser from '../../../hooks/useUser';
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
+import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 jest.mock('../../../hooks/useSatelliteManifests');
 jest.mock('../../../hooks/useUser');
@@ -71,17 +74,15 @@ describe('Satellite Manifests Page', () => {
         }
       ]
     });
-
-    const { container } = render(<SatellitePage />);
-
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-    expect(container).toMatchSnapshot();
+    const { getAllByText } = render(<SatellitePage />);
+    getAllByText('Sputnik').forEach((el) => {
+      expect(el).toBeInTheDocument();
+    });
   });
 
   describe('when the user status call is still loading', () => {
     def('loading', () => true);
-
-    it('renders loading', async () => {
+    it('renders loading', () => {
       window.insights = {};
 
       (useSatelliteManifests as jest.Mock).mockReturnValue({
@@ -90,15 +91,11 @@ describe('Satellite Manifests Page', () => {
         error: false,
         isError: false
       });
-
-      const { container } = render(<SatellitePage />);
-
-      expect(container).toMatchSnapshot();
-      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
+      const container = render(<SatellitePage />);
+      expect(container).toHaveLoader();
     });
   });
-
-  it('renders loading when it has not received a response back', async () => {
+  it('renders loading when it has not received a response back', () => {
     window.insights = {};
 
     (useSatelliteManifests as jest.Mock).mockReturnValue({
@@ -107,46 +104,53 @@ describe('Satellite Manifests Page', () => {
       error: false,
       isError: false
     });
+    const container = render(<SatellitePage />);
+    expect(container).toHaveLoader();
+  });
+});
 
-    const { container } = render(<SatellitePage />);
-
-    expect(container).toMatchSnapshot();
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
+it('renders the empty state when no results are returned', async () => {
+  (useSatelliteManifests as jest.Mock).mockReturnValue({
+    isLoading: false,
+    data: []
   });
 
-  it('renders the empty state when no results are returned', async () => {
+  const { getByText } = render(<SatellitePage />);
+  expect(getByText('Create a new manifest to export subscriptions')).toBeInTheDocument();
+});
+
+describe('when the user does not have write permissions', () => {
+  def('canWriteManifests', () => false);
+
+  it('renders an empty table when the API returns no manifests', async () => {
+    window.insights = {};
+
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
       data: []
     });
 
-    const { container } = render(<SatellitePage />);
-
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-
-    expect(container).toMatchSnapshot();
+    const { getByText } = render(<SatellitePage />);
+    expect(getByText('Create a new manifest to export subscriptions')).toBeInTheDocument();
   });
+});
 
-  describe('when the user does not have write permissions', () => {
-    def('canWriteManifests', () => false);
-
-    it('renders an empty table when the API renturns no manifests', async () => {
-      window.insights = {};
-
-      (useSatelliteManifests as jest.Mock).mockReturnValue({
-        isLoading: false,
-        data: []
-      });
-
-      const { container } = render(<SatellitePage />);
-
-      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-
-      expect(container).toMatchSnapshot();
-    });
+it('renders with an error message when an API fails', async () => {
+  window.insights = {};
+  (useSatelliteManifests as jest.Mock).mockReturnValue({
+    isLoading: false,
+    error: true,
+    data: undefined
   });
+  const container = render(<SatellitePage />);
 
-  it('renders with an error message when an API fails', async () => {
+  expect(container.queryByText('This page is temporarily unavailable').firstChild.textContent);
+});
+
+describe('when the user call fails', () => {
+  def('error', () => true);
+
+  it('renders an error message', async () => {
     window.insights = {};
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
@@ -154,25 +158,7 @@ describe('Satellite Manifests Page', () => {
       data: undefined
     });
 
-    const { container } = render(<SatellitePage />);
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-    expect(container).toMatchSnapshot();
-  });
-
-  describe('when the user call fails', () => {
-    def('error', () => true);
-
-    it('renders an error message', async () => {
-      window.insights = {};
-      (useSatelliteManifests as jest.Mock).mockReturnValue({
-        isLoading: false,
-        error: true,
-        data: undefined
-      });
-
-      const { container } = render(<SatellitePage />);
-      await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-      expect(container).toMatchSnapshot();
-    });
+    const { getByText } = render(<SatellitePage />);
+    expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();
   });
 });

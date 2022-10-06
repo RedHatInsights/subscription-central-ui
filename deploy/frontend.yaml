@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: manifests
+objects:
+  - apiVersion: cloud.redhat.com/v1alpha1
+    kind: Frontend
+    metadata:
+      name: manifests
+    spec:
+      envName: ${ENV_NAME}
+      title: Manifests
+      deploymentRepo: https://github.com/RedHatInsights/subscription-central-ui
+      API:
+        versions:
+          - v1
+      frontend:
+        paths:
+          - /apps/manifests
+      image: ${IMAGE}:${IMAGE_TAG}
+      navItems:
+        - appId: 'manifests'
+          title: 'Manifests'
+          href: '/insights/subscriptions/manifests'
+          product: 'Subscription Watch'
+      module:
+        manifestLocation: '/apps/manifests/fed-mods.json'
+        modules:
+          - id: 'manifests'
+            module: './RootApp'
+            routes:
+              - pathname: /insights/subscriptions/manifests
+
+parameters:
+  - name: ENV_NAME
+    required: true
+  - name: IMAGE_TAG
+    required: true
+  - name: IMAGE
+    value: quay.io/cloudservices/subscription-central-ui
