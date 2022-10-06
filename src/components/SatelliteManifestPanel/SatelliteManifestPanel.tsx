@@ -225,7 +225,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         disabled: false,
         onClick: () => {
           exportManifest(uuid, name);
-        }
+        },
+        variant: 'default'
       },
       {
         title: 'Delete',
@@ -234,7 +235,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
           ? () => {
               openDeleteConfirmationModal(uuid);
             }
-          : null
+          : null,
+        variant: 'default'
       }
     ];
     return results;

@@ -5,7 +5,7 @@ import './App.scss';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import NotificationProvider from './contexts/NotificationProvider';
 import Notifications from './components/Notifications';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { getPartialRouteFromPath } from './utilities/routeHelpers';
 
 const queryClient = new QueryClient({
@@ -21,14 +21,14 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
   useEffect(() => {
     insights.chrome.init();
 
     insights.chrome.identifyApp('manifests');
     const unregister = insights.chrome.on('APP_NAVIGATION', (event) => {
       const partialURL = getPartialRouteFromPath(event.domEvent.href);
-      navigate(partialURL);
+      history.push(partialURL);
     });
     return () => {
       unregister();

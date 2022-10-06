@@ -9,7 +9,7 @@ export COMPONENT="rhsm-api-proxy"
 export IMAGE="quay.io/cloudservices/subscription-central-ui"
 export WORKSPACE=${WORKSPACE:-$APP_ROOT} # if running in jenkins, use the build's workspace
 export APP_ROOT=$(pwd)
-export NODE_BUILD_VERSION=14
+export NODE_BUILD_VERSION=16
 COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master
 
 # --------------------------------------------
