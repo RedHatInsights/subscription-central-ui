@@ -15,6 +15,7 @@ const queryClient = new QueryClient();
 
 describe('Manifest Detail Side Panel', () => {
   def('scaCapable', () => true);
+  def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
   def('user', () =>
     factories.user.build({
@@ -47,7 +48,7 @@ describe('Manifest Detail Side Panel', () => {
 
     const panelContent = <ManifestDetailSidePanel {...props} />;
 
-    const { container } = render(
+    const container = render(
       <QueryClientProvider client={queryClient}>
         <Drawer isExpanded={true}>
           <DrawerContent panelContent={panelContent}>
@@ -57,7 +58,7 @@ describe('Manifest Detail Side Panel', () => {
       </QueryClientProvider>
     );
 
-    expect(container).toMatchSnapshot();
+    expect(container).toHaveLoader();
   });
 
   it('renders with an error message when an error occurs', () => {
@@ -67,7 +68,7 @@ describe('Manifest Detail Side Panel', () => {
 
     const panelContent = <ManifestDetailSidePanel {...props} />;
 
-    const { container } = render(
+    const { getByText } = render(
       <QueryClientProvider client={queryClient}>
         <Drawer isExpanded={true}>
           <DrawerContent panelContent={panelContent}>
@@ -77,7 +78,7 @@ describe('Manifest Detail Side Panel', () => {
       </QueryClientProvider>
     );
 
-    expect(container).toMatchSnapshot();
+    expect(getByText('Something went wrong')).toBeInTheDocument();
   });
 
   it('renders with an error message when the API response does not have 200 status and no data is returned', () => {
@@ -90,7 +91,7 @@ describe('Manifest Detail Side Panel', () => {
 
     const panelContent = <ManifestDetailSidePanel {...props} />;
 
-    const { container } = render(
+    const { getByText } = render(
       <QueryClientProvider client={queryClient}>
         <Drawer isExpanded={true}>
           <DrawerContent panelContent={panelContent}>
@@ -100,7 +101,7 @@ describe('Manifest Detail Side Panel', () => {
       </QueryClientProvider>
     );
 
-    expect(container).toMatchSnapshot();
+    expect(getByText('Something went wrong')).toBeInTheDocument();
   });
 
   it('renders successfully with data when data is passed across', () => {
@@ -124,7 +125,7 @@ describe('Manifest Detail Side Panel', () => {
 
     const panelContent = <ManifestDetailSidePanel {...props} />;
 
-    const { container } = render(
+    const { getAllByText } = render(
       <QueryClientProvider client={queryClient}>
         <Drawer isExpanded={true}>
           <DrawerContent panelContent={panelContent}>
@@ -134,7 +135,9 @@ describe('Manifest Detail Side Panel', () => {
       </QueryClientProvider>
     );
 
-    expect(container).toMatchSnapshot();
+    getAllByText('John Doe').forEach((el) => {
+      expect(el).toBeInTheDocument();
+    });
   });
 
   describe('when user is not SCA capable', () => {
@@ -161,7 +164,7 @@ describe('Manifest Detail Side Panel', () => {
 
       const panelContent = <ManifestDetailSidePanel {...props} />;
 
-      const { container } = render(
+      const { getByText } = render(
         <QueryClientProvider client={queryClient}>
           <Drawer isExpanded={true}>
             <DrawerContent panelContent={panelContent}>
@@ -171,14 +174,14 @@ describe('Manifest Detail Side Panel', () => {
         </QueryClientProvider>
       );
 
-      expect(container).toMatchSnapshot();
+      expect(getByText('administratively disabled')).toBeInTheDocument();
     });
   });
 
   describe('when user does not have write permission', () => {
     def('canWriteManifests', () => false);
 
-    it('does not render the delete button', () => {
+    it('does render delete button, button is disabled', () => {
       (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
         isError: false,
         isSuccess: true,
@@ -199,7 +202,7 @@ describe('Manifest Detail Side Panel', () => {
 
       const panelContent = <ManifestDetailSidePanel {...props} />;
 
-      const { container } = render(
+      const { queryByText } = render(
         <QueryClientProvider client={queryClient}>
           <Drawer isExpanded={true}>
             <DrawerContent panelContent={panelContent}>
@@ -209,7 +212,7 @@ describe('Manifest Detail Side Panel', () => {
         </QueryClientProvider>
       );
 
-      expect(container).toMatchSnapshot();
+      expect(queryByText('Delete manifest')).toBeDisabled();
     });
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, getByLabelText, render, screen, waitFor } from '@testing-library/react';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
@@ -8,12 +8,14 @@ import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
 import '@testing-library/jest-dom/extend-expect';
 
+jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
 
 const queryClient = new QueryClient();
 
 describe('Satellite Manifest Panel', () => {
   def('scaCapable', () => true);
+  def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
   def('user', () => {
     return factories.user.build({
@@ -43,17 +45,21 @@ describe('Satellite Manifest Panel', () => {
     };
   });
 
+  beforeEach(() => {
+    queryClient.setQueryData('user', get('user'));
+  });
+
   it('renders correctly with SCA column when user is SCA Capable', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
       body: [] as SatelliteVersion[]
     });
 
-    const { container } = render(
+    const { getByLabelText } = render(
       <QueryClientProvider client={queryClient}>
         <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
-    expect(container).toMatchSnapshot();
+    expect(getByLabelText('SCA Status for this Manifest is enabled')).toBeInTheDocument();
   });
 
   describe('when user is not SCA capable', () => {
@@ -64,12 +70,12 @@ describe('Satellite Manifest Panel', () => {
         body: [] as SatelliteVersion[]
       });
 
-      const { container } = render(
+      const { queryByLabelText } = render(
         <QueryClientProvider client={queryClient}>
           <SatelliteManifestPanel {...get('props')} />
         </QueryClientProvider>
       );
-      expect(container).toMatchSnapshot();
+      expect(queryByLabelText('SCA Status for this Manifest is enabled')).toBeNull();
     });
   });
 
@@ -93,29 +99,12 @@ describe('Satellite Manifest Panel', () => {
         body: [] as SatelliteVersion[]
       });
 
-      const { container } = render(
+      const { getByText } = render(
         <QueryClientProvider client={queryClient}>
           <SatelliteManifestPanel {...get('props')} />
         </QueryClientProvider>
       );
-      expect(container).toMatchSnapshot();
-    });
-  });
-
-  describe('when user does not have write permission', () => {
-    def('canWriteManifests', () => false);
-
-    it('renders plain text for the SCA Status', () => {
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[]
-      });
-
-      const { container } = render(
-        <QueryClientProvider client={queryClient}>
-          <SatelliteManifestPanel {...get('props')} />
-        </QueryClientProvider>
-      );
-      expect(container).toMatchSnapshot();
+      expect(getByText('N/A')).toBeInTheDocument();
     });
   });
 
@@ -128,12 +117,13 @@ describe('Satellite Manifest Panel', () => {
         body: [] as SatelliteVersion[]
       });
 
-      const { container } = render(
+      const { getByLabelText } = render(
         <QueryClientProvider client={queryClient}>
           <SatelliteManifestPanel {...get('props')} />
         </QueryClientProvider>
       );
-      expect(container).toMatchSnapshot();
+
+      expect(getByLabelText('Satellite Manifest Table').children.length).toEqual(1);
     });
   });
 
@@ -145,12 +135,12 @@ describe('Satellite Manifest Panel', () => {
         body: [] as SatelliteVersion[]
       });
 
-      const { container } = render(
+      const { getByText } = render(
         <QueryClientProvider client={queryClient}>
           <SatelliteManifestPanel {...get('props')} />
         </QueryClientProvider>
       );
-      expect(container).toMatchSnapshot();
+      expect(getByText('Create a new manifest to export subscriptions')).toBeInTheDocument();
     });
   });
 
@@ -162,12 +152,12 @@ describe('Satellite Manifest Panel', () => {
         body: [] as SatelliteVersion[]
       });
 
-      const { container } = render(
+      const container = render(
         <QueryClientProvider client={queryClient}>
           <SatelliteManifestPanel {...get('props')} />
         </QueryClientProvider>
       );
-      expect(container).toMatchSnapshot();
+      expect(container).toHaveLoader();
     });
   });
 
@@ -183,7 +173,7 @@ describe('Satellite Manifest Panel', () => {
     );
 
     fireEvent.click(getByTestId('expand-details-button-0'));
-    expect(container).toMatchSnapshot();
+    expect(container.querySelector('.sub-c-drawer__panel-manifest-details')).toBeInTheDocument();
   });
 
   it('opens the delete popup from clicking the kebab menu', () => {
@@ -227,7 +217,57 @@ describe('Satellite Manifest Panel', () => {
     await new Promise((r) => setTimeout(r, 2000));
 
     waitFor(() => expect(screen.findByText('Download manifest')).toBeInTheDocument());
+  });
 
-    expect(container).toMatchSnapshot();
+  it('opens the side panel when the row name is clicked', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const { getByText, getByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...get('props')} />
+      </QueryClientProvider>
+    );
+
+    fireEvent.click(getByTestId('expand-details-button-0'));
+    expect(getByText('UUID')).toBeInTheDocument();
+  });
+
+  it('opens the delete popup from clicking the kebab menu', () => {
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[]
+    });
+
+    const { getByLabelText, getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <SatelliteManifestPanel {...get('props')} />
+      </QueryClientProvider>
+    );
+    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByText('Delete'));
+
+    expect(
+      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
+    ).toBeInTheDocument();
+  });
+
+  describe('when the user does not have write permissions', () => {
+    def('canWriteManifests', () => false);
+
+    it('does render the delete button, button is disabled', () => {
+      (useSatelliteVersions as jest.Mock).mockReturnValue({
+        body: [] as SatelliteVersion[]
+      });
+
+      const { queryByText, container } = render(
+        <QueryClientProvider client={queryClient}>
+          <SatelliteManifestPanel {...get('props')} user={get('user')} />
+        </QueryClientProvider>
+      );
+
+      fireEvent.click(container.querySelector('.pf-c-dropdown__toggle'));
+      expect(queryByText('Delete').closest('button')).toBeDisabled();
+    });
   });
 });

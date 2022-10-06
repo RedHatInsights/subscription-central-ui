@@ -35,7 +35,7 @@ import {
   getRowsWithAllocationDetails
 } from './satelliteManifestPanelUtils';
 import { User } from '../../hooks/useUser';
-import { CreateManifestPanel, NoManifestsFound } from '../../components/emptyState';
+import { CreateManifestPanel } from '../../components/emptyState';
 import useNotifications from '../../hooks/useNotifications';
 import useExportSatelliteManifest from '../../hooks/useExportSatelliteManifest';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
@@ -74,7 +74,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     useState(false);
   const [exportedManifestName, setExportedManifestName] = useState('');
   const [loadingManifestNotificationKey, setLoadingManifestNotificationKey] = useState('');
-
   const titleRef = useRef<HTMLSpanElement>(null);
   const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
   const entitlementsRowRefs = new Array(10)
@@ -139,7 +138,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setPage(1);
     collapseAllRows();
   };
-
   const handleSort = (_event: React.MouseEvent, index: number, direction: SortByDirection) => {
     setSortBy({ index, direction });
     setPage(1);
@@ -224,22 +222,23 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const results = [
       {
         title: 'Export',
+        disabled: false,
         onClick: () => {
           exportManifest(uuid, name);
         }
+      },
+      {
+        title: 'Delete',
+        disabled: !user.canWriteManifests,
+        onClick: user.canWriteManifests
+          ? () => {
+              openDeleteConfirmationModal(uuid);
+            }
+          : null
       }
     ];
-    if (user.canWriteManifests) {
-      results.push({
-        title: 'Delete',
-        onClick: () => {
-          openDeleteConfirmationModal(uuid);
-        }
-      });
-    }
     return results;
   };
-
   const pagination = (variant = PaginationVariant.top) => {
     return (
       <Pagination
@@ -328,11 +327,9 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                           />
                         </SplitItem>
                       )}
-                      {user.canWriteManifests === true && (
-                        <SplitItem>
-                          <CreateManifestButtonWithModal user={user} />
-                        </SplitItem>
-                      )}
+                      <SplitItem>
+                        <CreateManifestButtonWithModal user={user} />
+                      </SplitItem>
                     </Split>
                   </FlexItem>
                   <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
@@ -383,7 +380,11 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                         <Td>{manifest.version}</Td>
                         {user.isSCACapable && (
                           <Td>
-                            <SCAStatusSwitch scaStatus={manifest.scaStatus} uuid={manifest.uuid} />
+                            <SCAStatusSwitch
+                              scaStatus={manifest.scaStatus}
+                              uuid={manifest.uuid}
+                              user={user}
+                            />
                           </Td>
                         )}
                         <Td>{manifest.uuid}</Td>
@@ -426,5 +427,4 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     </>
   );
 };
-
 export default SatelliteManifestPanel;

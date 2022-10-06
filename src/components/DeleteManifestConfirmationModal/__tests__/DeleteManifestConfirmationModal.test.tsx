@@ -25,12 +25,13 @@ describe('DeleteConfirmationModal', () => {
   });
 
   it('renders correctly', () => {
-    render(
+    const { getByLabelText } = render(
       <div>
         <DeleteManifestConfirmationModal {...props} />
       </div>
     );
-    expect(document.body).toMatchSnapshot();
+
+    expect(getByLabelText('Are you sure you want to delete this manifest?')).toBeInTheDocument();
   });
 
   describe('when performing a delete', () => {
@@ -39,8 +40,8 @@ describe('DeleteConfirmationModal', () => {
     });
 
     it('renders a spinner', () => {
-      render(<DeleteManifestConfirmationModal {...props} />);
-      expect(document.body).toMatchSnapshot();
+      const component = render(<DeleteManifestConfirmationModal {...props} />);
+      expect(component).toHaveLoader();
     });
   });
 });
