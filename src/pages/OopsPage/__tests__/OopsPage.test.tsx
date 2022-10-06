@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import OopsPage from '../OopsPage';
 import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -47,12 +47,11 @@ describe('Oops Page', () => {
     queryClient.setQueryData('user', get('user'));
   });
 
-  it('renders correctly', async () => {
+  it('renders correctly', () => {
     window.insights = {};
 
-    const { container } = render(<Page />);
+    const { getByText } = render(<Page />);
 
-    await waitFor(() => expect(useUser).toHaveBeenCalledTimes(1));
-    expect(container).toMatchSnapshot();
+    expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();
   });
 });
