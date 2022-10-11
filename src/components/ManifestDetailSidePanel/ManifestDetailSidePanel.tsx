@@ -9,7 +9,8 @@ import {
   Grid,
   GridItem
 } from '@patternfly/react-core';
-import { ErrorMessage, Processing } from '../emptyState';
+import { Processing } from '../emptyState';
+import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
 import { User } from '../../hooks/useUser';
@@ -111,7 +112,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
 
   const DetailsContent = () => {
     // This handles the scenario when the API "succeeds" but not with a 200 status
-    if (!entitlementData?.body) return <ErrorMessage />;
+    if (!entitlementData?.body) return <Unavailable />;
 
     const {
       uuid,
@@ -213,7 +214,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
 
   const ManifestDetailsInnerContent = () => {
     if (errorFetchingEntitlementData === true) {
-      return <ErrorMessage />;
+      return <Unavailable />;
     } else if (isLoadingEntitlementData === true || isFetchingEntitlementData === true) {
       return <LoadingDetailsContent />;
     } else if (successFetchingEntitlementData === true) {
