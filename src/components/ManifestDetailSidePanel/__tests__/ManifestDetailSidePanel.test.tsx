@@ -61,7 +61,7 @@ describe('Manifest Detail Side Panel', () => {
     expect(container).toHaveLoader();
   });
 
-  it('renders with an error message when an error occurs', () => {
+  it('renders with an unavailable message when an error occurs', () => {
     (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
       isError: true
     }));
@@ -78,10 +78,10 @@ describe('Manifest Detail Side Panel', () => {
       </QueryClientProvider>
     );
 
-    expect(getByText('Something went wrong')).toBeInTheDocument();
+    expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();
   });
 
-  it('renders with an error message when the API response does not have 200 status and no data is returned', () => {
+  it('renders with an unavailable message when the API response does not have 200 status and no data is returned', () => {
     (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
       isError: false,
       isLoading: false,
@@ -101,7 +101,7 @@ describe('Manifest Detail Side Panel', () => {
       </QueryClientProvider>
     );
 
-    expect(getByText('Something went wrong')).toBeInTheDocument();
+    expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();
   });
 
   it('renders successfully with data when data is passed across', () => {
