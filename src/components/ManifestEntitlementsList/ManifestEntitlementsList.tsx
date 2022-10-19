@@ -133,3 +133,4 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
 };
 
 export default ManifestEntitlementsList;
+export { ManifestEntitlementsListProps };
