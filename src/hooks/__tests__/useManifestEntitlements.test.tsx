@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import useManifestEntitlements from '../useManifestEntitlements';
+import useManifestEntitlements, { getManifestEntitlements } from '../useManifestEntitlements';
 import { renderHook } from '@testing-library/react-hooks';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 
@@ -64,5 +64,15 @@ describe('useManifestEntitlements hook', () => {
     await waitFor(() => result.current.isSuccess);
 
     expect(result.current.data).toEqual(mockResponse);
+  });
+
+  it('throws an error when not 200', async () => {
+    fetch.mockResponse(JSON.stringify({}), { status: 400 });
+
+    try {
+      await getManifestEntitlements('anything');
+    } catch (e) {
+      expect(e.message).toContain('Failed to fetch manifest entitlements:');
+    }
   });
 });

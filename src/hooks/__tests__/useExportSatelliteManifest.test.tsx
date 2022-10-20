@@ -41,6 +41,16 @@ describe('triggerManifestExport method', () => {
     const result = await triggerManifestExport('abd123');
     expect(result).toEqual(triggerManifestExportResponse);
   });
+
+  it('throws an error when not 200', async () => {
+    fetch.mockResponse(JSON.stringify({}), { status: 400 });
+
+    try {
+      await triggerManifestExport('abd123');
+    } catch (e) {
+      expect(e.message).toContain('Failed to trigger export:');
+    }
+  });
 });
 
 describe('getManifestExportStatus method', () => {
@@ -93,6 +103,15 @@ describe('downloadExportedManifest', () => {
 
     const result = await downloadExportedManifest('123456', 'abc123');
     expect(result.constructor.name).toEqual('Blob');
+  });
+
+  it('throws an error if not 200', async () => {
+    fetch.mockResponse(JSON.stringify({}), { status: 400 });
+    try {
+      await downloadExportedManifest('123456', 'abc123');
+    } catch (e) {
+      expect(e.message).toContain('Could not download manifest');
+    }
   });
 });
 

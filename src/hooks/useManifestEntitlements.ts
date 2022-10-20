@@ -53,5 +53,6 @@ export {
   EntitlementsAttachedData,
   ManifestEntitlementsData,
   ManifestEntitlement,
-  useManifestEntitlements as default
+  useManifestEntitlements as default,
+  getManifestEntitlements
 };
