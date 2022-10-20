@@ -9,7 +9,12 @@ const fetchSatelliteVersions = async (): Promise<any> => {
   const jwtToken = await window.insights.chrome.auth.getToken();
   return fetch('/api/rhsm/v2/manifests/versions', {
     headers: { Authorization: `Bearer ${jwtToken}` }
-  }).then((response) => response.json());
+  }).then((response) => {
+    if (response.status != 200) {
+      throw new Error(`Failed to fetch satellite versions: ${response.statusText}`);
+    }
+    return response.json();
+  });
 };
 
 const useSatelliteVersions = () => {

@@ -35,7 +35,12 @@ const getManifestEntitlements = async (uuid: string): Promise<ManifestEntitlemen
   const jwtToken = await window.insights.chrome.auth.getToken();
   return fetch(`/api/rhsm/v2/manifests/${uuid}?include=entitlements`, {
     headers: { Authorization: `Bearer ${jwtToken}` }
-  }).then((response) => response.json());
+  }).then((response) => {
+    if (response.status != 200) {
+      throw new Error(`Failed to fetch manifest entitlements: ${response.statusText}`);
+    }
+    return response.json();
+  });
 };
 
 const useManifestEntitlements = (
