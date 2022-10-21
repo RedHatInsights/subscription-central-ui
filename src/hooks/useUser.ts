@@ -23,7 +23,7 @@ const fetchSCACapableStatus = async (): Promise<SCACapableStatusResponse> => {
   }).then((response) => response.json());
 };
 
-const getUser = (): Promise<User> => {
+const getUser = async (): Promise<User> => {
   return Promise.all([authenticateUser(), fetchSCACapableStatus(), getUserRbacPermissions()]).then(
     ([userStatus, scaStatusResponse, rawRbacPermissions]) => {
       const rbacPermissions = rawRbacPermissions.map((rawPermission) => rawPermission.permission);

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import useSatelliteVersions from '../useSatelliteVersions';
+import useSatelliteVersions, { fetchSatelliteVersions } from '../useSatelliteVersions';
 import { renderHook } from '@testing-library/react-hooks';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 
@@ -40,5 +40,15 @@ describe('useSatelliteVersions hook', () => {
     await waitFor(() => result.current.isSuccess);
 
     expect(result.current.data).toEqual(mockResponse);
+  });
+
+  it('throws an error when not 200', async () => {
+    fetch.mockResponse(JSON.stringify({}), { status: 400 });
+
+    try {
+      await fetchSatelliteVersions();
+    } catch (e) {
+      expect(e.message).toContain('Failed to fetch satellite versions:');
+    }
   });
 });

@@ -76,7 +76,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     }
   };
 
-  const content = () => {
+  const Content = () => {
     if (isDeletingManifest) {
       return (
         <EmptyState>
@@ -129,7 +129,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
       titleIconVariant="warning"
       actions={actions()}
     >
-      {content()}
+      <Content />
     </Modal>
   );
 };

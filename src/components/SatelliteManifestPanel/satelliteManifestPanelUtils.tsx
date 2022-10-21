@@ -1,6 +1,6 @@
 import React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
-import ManifestEntitlementsListContainer from '../ManifestEntitlementsList/ManifestEntitlementsListContainer';
+import ManifestEntitlementsList from '../ManifestEntitlementsList';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { User } from '../../hooks/useUser';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
@@ -194,10 +194,7 @@ export const getRowsWithAllocationDetails = (
     const isOpen = rowExpandedStatus[row.uuid] || false;
     const parentIndex = (i + 1) * 2 - 2;
     const expandedContent = isOpen ? (
-      <ManifestEntitlementsListContainer
-        uuid={row.uuid}
-        entitlementsRowRef={entitlementsRowRefs[i]}
-      />
+      <ManifestEntitlementsList uuid={row.uuid} entitlementsRowRef={entitlementsRowRefs[i]} />
     ) : (
       ''
     );

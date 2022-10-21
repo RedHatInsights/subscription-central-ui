@@ -56,7 +56,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     handleModalToggle();
   }
 
-  const renderForm = () => {
+  const RenderForm = () => {
     return (
       <>
         <Title headingLevel="h3" size="2xl">
@@ -205,7 +205,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
 
   return (
     <>
-      {shouldShowForm && renderForm()}
+      {shouldShowForm && <RenderForm />}
       {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
     </>
   );

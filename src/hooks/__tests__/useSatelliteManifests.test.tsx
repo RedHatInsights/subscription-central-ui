@@ -3,7 +3,8 @@ import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import useSatelliteManifests, {
   SatelliteManifestAPIData,
   getOnlyManifestsV6AndHigher,
-  ManifestEntry
+  ManifestEntry,
+  fetchSatelliteManifestData
 } from '../useSatelliteManifests';
 import { createQueryWrapper } from '../../utilities/testHelpers';
 import factories from '../../utilities/factories';
@@ -120,6 +121,16 @@ describe('useSatelliteManifests hook', () => {
 
     expect(result.current.data).toEqual(undefined);
     console.error = originalError;
+  });
+
+  it('throws an error when not 200', async () => {
+    fetch.mockResponse(JSON.stringify({}), { status: 404 });
+
+    try {
+      await fetchSatelliteManifestData();
+    } catch (e) {
+      expect(e.message).toContain('Error fetching manifest data:');
+    }
   });
 });
 

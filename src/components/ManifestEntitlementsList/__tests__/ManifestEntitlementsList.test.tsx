@@ -1,26 +1,50 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import ManifestEntitlementsList from '../ManifestEntitlementsList';
+import Component, { ManifestEntitlementsListProps } from '../ManifestEntitlementsList';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import useManifestEntitlements, {
+  EntitlementsAttachedData
+} from '../../../hooks/useManifestEntitlements';
+
+const queryClient = new QueryClient();
+jest.mock('../../../hooks/useManifestEntitlements');
+
+const ManifestEntitlementsList = (props: ManifestEntitlementsListProps) => (
+  <QueryClientProvider client={queryClient}>
+    <Component {...props} />
+  </QueryClientProvider>
+);
+
+const mockResponse = (entitlementsAttached: EntitlementsAttachedData, isLoading = false) => {
+  (useManifestEntitlements as jest.Mock).mockReturnValue({
+    isLoading,
+    isSuccess: true,
+    isError: false,
+    data: {
+      body: {
+        entitlementsAttached
+      }
+    }
+  });
+};
 
 describe('Manifest Entitlements List', () => {
   it('renders correctly', () => {
+    const entitlementsData = {
+      valid: true,
+      value: [
+        {
+          contractNumber: '12345',
+          entitlementQuantity: 10,
+          id: 'id123',
+          sku: 'sku123',
+          startDate: '2021-01-01T00:00:00.000Z',
+          endDate: '2022-01-01T00:00:00.000Z'
+        }
+      ]
+    };
+    mockResponse(entitlementsData);
     const props = {
-      isLoading: false,
-      isSuccess: true,
-      isError: false,
-      entitlementsData: {
-        valid: true,
-        value: [
-          {
-            contractNumber: '12345',
-            entitlementQuantity: 10,
-            id: 'id123',
-            sku: 'sku123',
-            startDate: '2021-01-01T00:00:00.000Z',
-            endDate: '2022-01-01T00:00:00.000Z'
-          }
-        ]
-      },
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
     };
@@ -28,29 +52,27 @@ describe('Manifest Entitlements List', () => {
 
     expect(
       getByLabelText('Allocations table').children[1].firstChild.childNodes[1].textContent
-    ).toEqual(props.entitlementsData.value[0].sku);
+    ).toEqual(entitlementsData.value[0].sku);
   });
 
   it.skip('fires methods in kebab menu when clicked', () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
+    const entitlementsData = {
+      valid: true,
+      value: [
+        {
+          contractNumber: '12345',
+          entitlementQuantity: 10,
+          id: 'id123',
+          sku: 'sku123',
+          startDate: '2021-01-01T00:00:00.000Z',
+          endDate: '2022-01-01T00:00:00.000Z'
+        }
+      ]
+    };
+    mockResponse(entitlementsData);
     const props = {
-      isLoading: false,
-      isSuccess: true,
-      isError: false,
-      entitlementsData: {
-        valid: true,
-        value: [
-          {
-            contractNumber: '12345',
-            entitlementQuantity: 10,
-            id: 'id123',
-            sku: 'sku123',
-            startDate: '2021-01-01T00:00:00.000Z',
-            endDate: '2022-01-01T00:00:00.000Z'
-          }
-        ]
-      },
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
     };
@@ -68,14 +90,11 @@ describe('Manifest Entitlements List', () => {
   });
 
   it('renders correctly when no entitlements are attached to the manifest', () => {
+    mockResponse({
+      valid: false,
+      reason: 'No Entitlements are attached to the Allocation'
+    });
     const props = {
-      isLoading: false,
-      isSuccess: true,
-      isError: false,
-      entitlementsData: {
-        valid: false,
-        reason: 'No Entitlements are attached to the Allocation'
-      },
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
     };
@@ -103,14 +122,14 @@ describe('Manifest Entitlements List', () => {
   });
 
   it('renders loading when loading', () => {
-    const props = {
-      isLoading: true,
-      isSuccess: false,
-      isError: false,
-      entitlementsData: {
+    mockResponse(
+      {
         valid: false,
         reason: 'No Allocations found'
       },
+      true
+    );
+    const props = {
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
     };

@@ -2,13 +2,9 @@ import React, { FC, useEffect } from 'react';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Processing } from '../emptyState';
 import './ManifestEntitlementsList.scss';
-import { EntitlementsAttachedData, ManifestEntitlement } from '../../hooks/useManifestEntitlements';
+import useManifestEntitlements, { ManifestEntitlement } from '../../hooks/useManifestEntitlements';
 
 interface ManifestEntitlementsListProps {
-  entitlementsData: EntitlementsAttachedData;
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
   entitlementsRowRef: React.MutableRefObject<any>;
   uuid: string;
 }
@@ -23,13 +19,12 @@ type ManifestEntitlementListRow = {
 };
 
 const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
-  entitlementsData,
-  isLoading,
-  isSuccess,
-  isError,
   entitlementsRowRef,
   uuid
 }) => {
+  const { isError, isSuccess, isLoading, data } = useManifestEntitlements(uuid);
+  const entitlementsData = data?.body?.entitlementsAttached;
+
   useEffect(() => {
     if (entitlementsRowRef?.current) {
       entitlementsRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -138,3 +133,4 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
 };
 
 export default ManifestEntitlementsList;
+export { ManifestEntitlementsListProps };
