@@ -18,7 +18,7 @@ const deleteSatelliteManifest = async (uuid: string) => {
 const useDeleteSatelliteManifest = () => {
   const queryClient = useQueryClient();
   return useMutation((uuid: string) => deleteSatelliteManifest(uuid), {
-    onSuccess: (data, uuid) => {
+    onSuccess: (_, uuid) => {
       queryClient.setQueryData('manifests', (oldData: ManifestEntry[]) =>
         oldData.filter((entry) => entry.uuid != uuid)
       );
