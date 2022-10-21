@@ -56,11 +56,11 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid, user }) =>
     />
   );
 
-  if (failedUpdatingSCAStatus === true) {
+  if (failedUpdatingSCAStatus) {
     return <ErrorState />;
-  } else if (isLoading === true) {
+  } else if (isLoading) {
     return <LoadingState />;
-  } else if (scaStatus === 'disallowed') {
+  } else if (scaStatus == 'disallowed') {
     return <DisallowedState />;
   } else {
     return <SCASwitch />;
