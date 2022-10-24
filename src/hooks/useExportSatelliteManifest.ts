@@ -19,6 +19,9 @@ const triggerManifestExport = async (uuid: string): Promise<TriggerManifestExpor
   return fetch(`/api/rhsm/v2/manifests/${uuid}/export`, {
     headers: { Authorization: `Bearer ${jwtToken}` }
   }).then((response) => {
+    if (response.status != 200) {
+      throw new Error(`Failed to trigger export: ${response.statusText}`);
+    }
     return response.json();
   });
 };
@@ -51,7 +54,12 @@ const downloadExportedManifest = async (uuid: string, exportID: string): Promise
   const jwtToken = await window.insights.chrome.auth.getToken();
   return fetch(`/api/rhsm/v2/manifests/${uuid}/export/${exportID}`, {
     headers: { Authorization: `Bearer ${jwtToken}`, 'Content-Type': 'application/zip' }
-  }).then((response) => response.blob());
+  }).then((response) => {
+    if (response.status != 200) {
+      throw new Error(`Could not download manifest: ${response.statusText}`);
+    }
+    return response.blob();
+  });
 };
 
 const exportManifest = async (uuid: string): Promise<Blob> => {

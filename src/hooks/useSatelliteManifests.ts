@@ -26,6 +26,10 @@ const fetchSatelliteManifestData = async (offset = 0): Promise<ManifestEntry[]> 
     headers: { Authorization: `Bearer ${jwtToken}` }
   });
 
+  if (response.status != 200) {
+    throw new Error(`Error fetching manifest data: ${response.statusText}`);
+  }
+
   const manifestResponseData: SatelliteManifestAPIData = await response.json();
 
   const { count, limit } = manifestResponseData.pagination;

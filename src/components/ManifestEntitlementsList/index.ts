@@ -1,3 +1,3 @@
-import ManifestEntitlementsListContainer from './ManifestEntitlementsListContainer';
+import ManifestEntitlementsList from './ManifestEntitlementsList';
 
-export default ManifestEntitlementsListContainer;
+export default ManifestEntitlementsList;
