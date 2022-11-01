@@ -10,7 +10,8 @@ const { config: webpackConfig, plugins } = config({
   useProxy: true,
   appUrl: process.env.BETA ? '/beta/insights/subscriptions' : '/insights/subscriptions',
   env: process.env.BETA ? 'stage-beta' : 'stage-stable',
-  ...(process.env.BETA && { deployment: 'beta/apps' })
+  ...(process.env.BETA && { deployment: 'beta/apps' }),
+  useCache: true
 });
 
 plugins.push(
