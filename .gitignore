@@ -19,3 +19,5 @@ yarn-error.log*
 .DS_Store
 coverage
 .eslintcache
+
+.cache

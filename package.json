@@ -14,6 +14,7 @@
     "lint:sass": "stylelint 'src/**/*.scss' --config .stylelintrc.json",
     "lint:staged": "pretty-quick --staged && lint-staged",
     "nightly": "npm run deploy",
+    "postisntall": "rm -rf .cache",
     "prepare": "node ./prepare.js",
     "prod": "NODE_ENV=production webpack-dev-server --config config/dev.webpack.config.js",
     "server:ctr": "node src/server/generateServerKey.js",
