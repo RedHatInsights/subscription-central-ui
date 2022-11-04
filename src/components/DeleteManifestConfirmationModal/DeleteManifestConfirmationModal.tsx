@@ -61,16 +61,16 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
       return [];
     } else {
       return [
-        <Button key="cancel" variant="link" onClick={closeModal}>
-          NO, CANCEL
-        </Button>,
         <Button
           key="confirm"
           variant="danger"
           isDisabled={!checked}
           onClick={() => deleteManifest(uuid)}
         >
-          YES, DELETE
+          Delete
+        </Button>,
+        <Button key="cancel" variant="link" onClick={closeModal}>
+          Cancel
         </Button>
       ];
     }
@@ -87,22 +87,12 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
       return (
         <TextContent>
           <Text component={TextVariants.p}>
-            Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:
-          </Text>
-          <List>
-            <ListItem>Delete all subscriptions that are attached to running hosts.</ListItem>
-            <ListItem>Delete all subscriptions attached to activation keys.</ListItem>
-            <ListItem>Disable Red Hat Insights.</ListItem>
-            <ListItem>
-              Require you to upload the manifest and re-attach subscriptions to hosts and activation
-              keys.
-            </ListItem>
-          </List>
-          <Text component={TextVariants.p}>
-            <strong>Caution: this operation is permanent and cannot be undone.</strong>
+            <b>{name}</b> will be permanently deleted, and the connection to Red Hat Insights will
+            be broken. To enable again, you must create, export, download, and import a new manifest
+            into your connected Satellite Server.
           </Text>
           <Checkbox
-            label="Are you sure you want to delete this manifest?"
+            label="I acknowledge that this action cannot be undone"
             isChecked={checked}
             id="confirmation_checkbox"
             onChange={handleCheckbox}
@@ -124,7 +114,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     <Modal
       isOpen={isOpen}
       onClose={closeModal}
-      title={isDeletingManifest ? `Deleting ${name}...` : `Delete ${name}`}
+      title={isDeletingManifest ? `Deleting manifest...` : `Delete manifest?`}
       variant={ModalVariant.small}
       titleIconVariant="warning"
       actions={actions()}

@@ -31,7 +31,7 @@ describe('DeleteConfirmationModal', () => {
       </div>
     );
 
-    expect(getByLabelText('Are you sure you want to delete this manifest?')).toBeInTheDocument();
+    expect(getByLabelText('I acknowledge that this action cannot be undone')).toBeInTheDocument();
   });
 
   describe('when performing a delete', () => {
