@@ -191,7 +191,7 @@ describe('Satellite Manifest Panel', () => {
     fireEvent.click(getByText('Delete'));
 
     expect(
-      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
+      screen.queryByText('I acknowledge that this action cannot be undone')
     ).toBeInTheDocument();
   });
 
@@ -248,7 +248,7 @@ describe('Satellite Manifest Panel', () => {
     fireEvent.click(getByText('Delete'));
 
     expect(
-      screen.queryByText('Deleting a manifest is STRONGLY discouraged. Deleting a manifest will:')
+      screen.queryByText('I acknowledge that this action cannot be undone')
     ).toBeInTheDocument();
   });
 
