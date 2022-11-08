@@ -7,6 +7,7 @@ import {
   FormGroup,
   TextInput,
   Title,
+  FormHelperText,
   FormSelect,
   FormSelectOption,
   Tooltip
@@ -27,6 +28,9 @@ interface CreateManifestFormProps {
 }
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
+  // The success can probably be removed and have it stay as default
+  // as it's not in the sketch wireframe, but that could be a design discussion
+  type validate = 'success' | 'error' | 'default';
   const { satelliteVersions, handleModalToggle, submitForm, isLoading, isError, isSuccess } = props;
   const {
     control,
@@ -35,6 +39,11 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   } = useForm({ mode: 'onBlur' });
   const [manifestName, setManifestName] = useState('');
   const { addSuccessNotification, addErrorNotification } = useNotifications();
+  // const [name, setName] = React.useState('')
+  const [validated, setValidated] = React.useState<validate>('default');
+  const [helperText, setHelperText] = React.useState(
+    'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
+  );
 
   interface FormData {
     satelliteManifestName: string;
@@ -56,159 +65,124 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     handleModalToggle();
   }
 
-  const RenderForm = () => {
-    return (
-      <>
-        <Title headingLevel="h3" size="2xl">
-          Create new manifest
-        </Title>
-        <p style={{ margin: '30px 0' }}>
-          Creating a new manifest allows you to export subscriptions to your on-premise subscription
-          management application.
-        </p>
-        <Form isWidthLimited>
-          <FormGroup
-            label="Name"
-            helperTextInvalid={errors.satelliteManifestName?.message}
-            helperTextInvalidIcon={<ExclamationCircleIcon />}
-            validated={errors.satelliteManifestName ? 'error' : 'default'}
-            labelIcon={
-              <Tooltip
-                position="top"
-                content={
-                  <div>
-                    Provide a name that will help you associate this manifest with a specific
-                    organization or on-premise subscription management application.
-                  </div>
-                }
-              >
-                <span
-                  tabIndex={0}
-                  aria-label="Provide a name that will help you associate this manifest with a specific
-                organization or on-premise subscription management application."
-                >
-                  <HelpIcon />
-                </span>
-              </Tooltip>
-            }
-            isRequired
-            fieldId="create-satellite-manifest-form-name"
-          >
-            <Controller
-              name="satelliteManifestName"
-              control={control}
-              defaultValue=""
-              rules={{
-                required: 'Please provide a name for your new manifest',
-                maxLength: {
-                  value: 99,
-                  message: 'Your manifest name must be less than 100 characters'
-                },
-                pattern: {
-                  value: /^[0-9A-Za-z_.-]*$/,
-                  message: `Your manifest name may contain
-                  only numbers, letters, underscores, hyphens, and periods.`
-                }
-              }}
-              render={({ field }: any) => (
-                <TextInput
-                  isRequired
-                  type="text"
-                  id="create-satellite-manifest-form-name"
-                  placeholder="Name"
-                  {...field}
-                />
-              )}
-            />
-          </FormGroup>
-          <FormGroup
-            label="Type"
-            helperTextInvalid={errors.satelliteManifestType?.message}
-            helperTextInvalidIcon={<ExclamationCircleIcon />}
-            validated={errors.satelliteManifestType ? 'error' : 'default'}
-            labelIcon={
-              <Tooltip
-                position="top"
-                content={
-                  <div>
-                    Due to variation in supported features, it is important to match the type and
-                    version of the subscription management application you are using.
-                  </div>
-                }
-              >
-                <span
-                  tabIndex={0}
-                  aria-label="Due to variation in supported features, it is important to match the type and
-              version of the subscription management application you are using."
-                >
-                  <HelpIcon />
-                </span>
-              </Tooltip>
-            }
-            isRequired
-            fieldId="create-satellite-manifest-form-type"
-          >
-            <Controller
-              name="satelliteManifestType"
-              control={control}
-              rules={{ required: 'Please select a version for your new manifest' }}
-              defaultValue=""
-              render={({ field }) => (
-                <FormSelect
-                  aria-label="FormSelect Input"
-                  id="create-satellite-manifest-form-type"
-                  {...field}
-                >
-                  <FormSelectOption
-                    isDisabled={true}
-                    key="Select type"
-                    value=""
-                    label="Select type"
-                  />
-                  {satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
-                    return (
-                      <FormSelectOption
-                        isDisabled={false}
-                        key={satelliteVersion.value}
-                        value={satelliteVersion.value}
-                        label={satelliteVersion.description}
-                      />
-                    );
-                  })}
-                </FormSelect>
-              )}
-            />
-          </FormGroup>
-          <ActionGroup>
-            <Button
-              key="confirm"
-              id="save-manifest-button"
-              variant="primary"
-              onClick={handleSubmit(onSubmit)}
-            >
-              Save
-            </Button>
-
-            <Button
-              key="cancel"
-              id="cancel-create-manifest-button"
-              variant="link"
-              onClick={handleModalToggle}
-            >
-              Cancel
-            </Button>
-          </ActionGroup>
-        </Form>
-      </>
-    );
+  const handleNameInput = (manifestName: string, event: React.FormEvent<HTMLInputElement>) => {
+    setManifestName(manifestName);
+    setValidated('default');
   };
+
+  // useEffect is used to simulate a server call to validate the age 500ms after the user has entered a value, preventing calling the server on every keystroke
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (
+        /^[0-9A-Za-z_.-]*$/.test(manifestName) &&
+        manifestName.length > 0 &&
+        manifestName.length < 99
+      ) {
+        setValidated('success');
+      } else {
+        setValidated('error');
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [manifestName]);
 
   return (
     <>
-      {shouldShowForm && <RenderForm />}
-      {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
+      <Title headingLevel="h3" size="2xl">
+        Create new manifest
+      </Title>
+      <p style={{ margin: '30px 0' }}>
+        Creating a manifest allows you to export subscriptions to your on-premise subscription
+        management application. Match the type and version of the subscription management
+        application you are using. All fields are required.
+      </p>
+      <Form isWidthLimited>
+        <FormGroup
+          label="Name"
+          type="string"
+          helperText={helperText}
+          helperTextInvalid={helperText}
+          helperTextInvalidIcon={<ExclamationCircleIcon />}
+          fieldId="create-satellite-manifest-form-name"
+          validated={validated}
+        >
+          <TextInput
+            validated={validated}
+            value={manifestName}
+            onChange={handleNameInput}
+            isRequired
+          />
+        </FormGroup>
+        <FormGroup
+          label="Type"
+          helperTextInvalid={errors.satelliteManifestType?.message}
+          helperTextInvalidIcon={<ExclamationCircleIcon />}
+          validated={errors.satelliteManifestType ? 'error' : 'default'}
+          isRequired
+          fieldId="create-satellite-manifest-form-type"
+        >
+          {/* This controller will need to be removed and follow a similar structure for above */}
+          <Controller
+            name="satelliteManifestType"
+            control={control}
+            rules={{ required: 'Please select a version for your new manifest' }}
+            defaultValue=""
+            render={({ field }) => (
+              <FormSelect
+                aria-label="FormSelect Input"
+                id="create-satellite-manifest-form-type"
+                {...field}
+              >
+                <FormSelectOption
+                  isDisabled={true}
+                  key="Select type"
+                  value=""
+                  label="Select type"
+                />
+                {satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
+                  return (
+                    <FormSelectOption
+                      isDisabled={false}
+                      key={satelliteVersion.value}
+                      value={satelliteVersion.value}
+                      label={satelliteVersion.description}
+                    />
+                  );
+                })}
+              </FormSelect>
+            )}
+          />
+        </FormGroup>
+        <ActionGroup>
+          <Button
+            key="confirm"
+            id="save-manifest-button"
+            variant="primary"
+            onClick={handleSubmit(onSubmit)}
+          >
+            Create
+          </Button>
+
+          <Button
+            key="cancel"
+            id="cancel-create-manifest-button"
+            variant="link"
+            onClick={handleModalToggle}
+          >
+            Cancel
+          </Button>
+        </ActionGroup>
+      </Form>
     </>
   );
 };
+
+// return (
+//   <>
+//     {/* {shouldShowForm && <RenderForm />} */}
+//     {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
+//   </>
+// );
 
 export default CreateManifestForm;
