@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import {
   Button,
   ActionGroup,
@@ -7,16 +7,11 @@ import {
   FormGroup,
   TextInput,
   Title,
-  FormHelperText,
   FormSelect,
-  FormSelectOption,
-  Tooltip
+  FormSelectOption
 } from '@patternfly/react-core';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
-import HelpIcon from '@patternfly/react-icons/dist/js/icons/help-icon';
-import CreateManifestFormLoading from './CreateManifestFormLoading';
-import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import useNotifications from '../../hooks/useNotifications';
+import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -28,18 +23,14 @@ interface CreateManifestFormProps {
 }
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
-  // The success can probably be removed and have it stay as default
-  // as it's not in the sketch wireframe, but that could be a design discussion
-  type validate = 'success' | 'error' | 'default';
-  const { satelliteVersions, handleModalToggle, submitForm, isLoading, isError, isSuccess } = props;
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ mode: 'onBlur' });
+  type validate = 'default' | 'error' | 'success';
+  const { satelliteVersions, handleModalToggle, submitForm, isError, isSuccess } = props;
+  const { handleSubmit } = useForm({ mode: 'onBlur' });
   const [manifestName, setManifestName] = useState('');
+  const [manifestType, setManifestType] = useState('');
   const { addSuccessNotification, addErrorNotification } = useNotifications();
-  // const [name, setName] = React.useState('')
+  const [formValue, setFormValue] = React.useState('');
+  const [invalidText, setInvalidText] = React.useState('');
   const [validated, setValidated] = React.useState<validate>('default');
   const [helperText, setHelperText] = React.useState(
     'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
@@ -53,9 +44,11 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const onSubmit = ({ satelliteManifestName, satelliteManifestType }: FormData): void => {
     submitForm(satelliteManifestName, satelliteManifestType);
     setManifestName(satelliteManifestName);
+    setManifestType(satelliteManifestType);
+    setValidated('success');
   };
 
-  const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
+  // const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
   if (isSuccess) {
     addSuccessNotification(`Manifest ${manifestName} created`);
@@ -65,28 +58,47 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     handleModalToggle();
   }
 
-  const handleNameInput = (manifestName: string, event: React.FormEvent<HTMLInputElement>) => {
+  const options = satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
+    return (
+      <FormSelectOption
+        isDisabled={false}
+        key={satelliteVersion.value}
+        value={satelliteVersion.value}
+        label={satelliteVersion.description}
+      />
+    );
+  });
+
+  const handleNameChange = (manifestName: string) => {
+    setHelperText('');
     setManifestName(manifestName);
-    setValidated('default');
+    if (
+      /^[0-9A-Za-z_.-]*$/.test(manifestName) &&
+      manifestName.length > 0 &&
+      manifestName.length < 99
+    ) {
+      setValidated('success');
+    } else {
+      setValidated('error');
+      setInvalidText(
+        'Name requirements have not been met.Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
+      );
+    }
   };
 
+  const onChange = (value: string) => {
+    setManifestType(manifestType);
+    setFormValue(value);
+    if (value === 'Satellite') {
+      setValidated('success');
+    } else if (value !== '') {
+      setValidated('error');
+      setInvalidText('Selection Required');
+    } else {
+      setValidated('default');
+    }
+  };
   // useEffect is used to simulate a server call to validate the age 500ms after the user has entered a value, preventing calling the server on every keystroke
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (
-        /^[0-9A-Za-z_.-]*$/.test(manifestName) &&
-        manifestName.length > 0 &&
-        manifestName.length < 99
-      ) {
-        setValidated('success');
-      } else {
-        setValidated('error');
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [manifestName]);
-
   return (
     <>
       <Title headingLevel="h3" size="2xl">
@@ -95,64 +107,47 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
       <p style={{ margin: '30px 0' }}>
         Creating a manifest allows you to export subscriptions to your on-premise subscription
         management application. Match the type and version of the subscription management
-        application you are using. All fields are required.
+        application that you are using. All fields are required.
       </p>
       <Form isWidthLimited>
         <FormGroup
           label="Name"
           type="string"
           helperText={helperText}
-          helperTextInvalid={helperText}
-          helperTextInvalidIcon={<ExclamationCircleIcon />}
+          helperTextInvalid={invalidText}
+          validated={validated ? 'default' : 'success'}
           fieldId="create-satellite-manifest-form-name"
-          validated={validated}
         >
           <TextInput
-            validated={validated}
             value={manifestName}
-            onChange={handleNameInput}
-            isRequired
+            onChange={handleNameChange}
+            validated={validated ? 'default' : 'success'}
           />
         </FormGroup>
         <FormGroup
           label="Type"
-          helperTextInvalid={errors.satelliteManifestType?.message}
-          helperTextInvalidIcon={<ExclamationCircleIcon />}
-          validated={errors.satelliteManifestType ? 'error' : 'default'}
-          isRequired
+          helpertext={''}
+          helperTextInvalid={'Selection Required'}
           fieldId="create-satellite-manifest-form-type"
+          validated={validated ? 'default' : 'success'}
         >
-          {/* This controller will need to be removed and follow a similar structure for above */}
-          <Controller
+          <FormSelect
+            onChange={onChange}
+            id="create-satellite-manifest-form-type"
             name="satelliteManifestType"
-            control={control}
-            rules={{ required: 'Please select a version for your new manifest' }}
-            defaultValue=""
-            render={({ field }) => (
-              <FormSelect
-                aria-label="FormSelect Input"
-                id="create-satellite-manifest-form-type"
-                {...field}
-              >
-                <FormSelectOption
-                  isDisabled={true}
-                  key="Select type"
-                  value=""
-                  label="Select type"
-                />
-                {satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
-                  return (
-                    <FormSelectOption
-                      isDisabled={false}
-                      key={satelliteVersion.value}
-                      value={satelliteVersion.value}
-                      label={satelliteVersion.description}
-                    />
-                  );
-                })}
-              </FormSelect>
-            )}
-          />
+            aria-label="FormSelect Input"
+            value={formValue}
+            validated={validated ? 'default' : 'success'}
+          >
+            <FormSelectOption
+              value={manifestType}
+              isDisabled={true}
+              isPlaceholder={true}
+              key="Select type"
+              label="Select type"
+            />
+            {options.reverse()}
+          </FormSelect>
         </FormGroup>
         <ActionGroup>
           <Button
@@ -160,10 +155,10 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             id="save-manifest-button"
             variant="primary"
             onClick={handleSubmit(onSubmit)}
+            isDisabled={validated === 'default' && 'error'}
           >
             Create
           </Button>
-
           <Button
             key="cancel"
             id="cancel-create-manifest-button"
@@ -180,7 +175,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
 
 // return (
 //   <>
-//     {/* {shouldShowForm && <RenderForm />} */}
+//     {shouldShowForm && <RenderForm />}
 //     {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
 //   </>
 // );
