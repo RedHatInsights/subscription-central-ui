@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import {
   Button,
   ActionGroup,
@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-core';
 import useNotifications from '../../hooks/useNotifications';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
+import CreateManifestFormLoading from './CreateManifestFormLoading';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -25,7 +26,7 @@ interface CreateManifestFormProps {
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   type Validate = 'default' | 'error' | 'success';
   const { satelliteVersions, handleModalToggle, submitForm, isError, isSuccess, isLoading } = props;
-  const { handleSubmit } = useForm<FormData>({ mode: 'onBlur' });
+  const { handleSubmit } = useForm({ mode: 'onBlur' });
   const [manifestName, setManifestName] = useState('');
   const [manifestType, setManifestType] = useState('');
   const { addSuccessNotification, addErrorNotification } = useNotifications();
@@ -43,13 +44,21 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     satelliteManifestType: string;
   }
 
+  // const onSubmit: SubmitHandler<FormData> = ({
+  //   satelliteManifestName,
+  //   satelliteManifestType
+  // }: FormData) => {
+  //   submitForm(satelliteManifestName, satelliteManifestType);
+  //   setManifestName(satelliteManifestName);
+  //   setManifestType(satelliteManifestType);
+  // };
+
   const onSubmit = ({ satelliteManifestName, satelliteManifestType }: FormData): void => {
     submitForm(satelliteManifestName, satelliteManifestType);
     setManifestName(satelliteManifestName);
-    setManifestType(satelliteManifestType);
   };
 
-  // const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
+  const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
   if (isSuccess) {
     addSuccessNotification(`Manifest ${manifestName} created`);
@@ -66,12 +75,15 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
         key={satelliteVersion.value}
         value={satelliteVersion.value}
         label={satelliteVersion.description}
+        validated={typeValidated}
       />
     );
   });
 
-  const handleNameChange = (manifestName: string, event: React.FormEvent<HTMLInputElement>) => {
-    setNameFieldHelperText('');
+  const handleNameChange = (manifestName: string) => {
+    setNameFieldHelperText(
+      'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
+    );
     setManifestName(manifestName);
     setNameValidated('default');
   };
@@ -84,14 +96,16 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
         manifestName.length < 99
       ) {
         setNameValidated('success');
-        setNameFieldHelperText('');
+        setNameFieldHelperText(
+          'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
+        );
       } else {
         setNameValidated('error');
         setInvalidNameFieldText(
-          'Name requirements have not been met.Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
+          'Name requirements have not been met. Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
         );
       }
-    }, 2000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [manifestName]);
@@ -106,98 +120,101 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     const timer = setTimeout((value: string) => {
       if (value === '') {
         setTypeValidated('success');
-      } else {
+      } else if (value !== '') {
         setTypeValidated('error');
         setInvalidTypeText('Selection Required');
       }
-    }, 2000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [manifestType]);
 
   // useEffect is used to simulate a server call to validate the age 500ms after the user has entered a value, preventing calling the server on every keystroke
-  return (
-    <>
-      <Title headingLevel="h3" size="2xl">
-        Create manifest
-      </Title>
-      <p style={{ margin: '30px 0' }}>
-        Creating a manifest allows you to export subscriptions to your on-premise subscription
-        management application. Match the type and version of the subscription management
-        application that you are using. All fields are required.
-      </p>
-      <Form isWidthLimited>
-        <FormGroup
-          label="Name"
-          type="string"
-          helperText={nameFieldHelperText}
-          helperTextInvalid={invalidNameFieldText}
-          validated={nameValidated}
-          fieldId="create-satellite-manifest-form-name"
-        >
-          <TextInput
-            value={manifestName}
-            onChange={handleNameChange}
-            validated={nameValidated}
+  const RenderForm = () => {
+    return (
+      <>
+        <Title headingLevel="h3" size="2xl">
+          Create manifest
+        </Title>
+        <p style={{ margin: '30px 0' }}>
+          Creating a manifest allows you to export subscriptions to your on-premise subscription
+          management application. Match the type and version of the subscription management
+          application that you are using. All fields are required.
+        </p>
+        <Form isWidthLimited>
+          <FormGroup
+            label="Name"
+            type="string"
             helperText={nameFieldHelperText}
-          />
-        </FormGroup>
-        <FormGroup
-          label="Type"
-          helperText={''}
-          helperTextInvalid={invalidTypeText}
-          fieldId="create-satellite-manifest-form-type"
-          validated={typeValidated}
-        >
-          <FormSelect
-            onChange={typeSelectOnChange}
-            id="create-satellite-manifest-form-type"
-            name="satelliteManifestType"
-            aria-label="FormSelect Input"
-            value={formValue}
+            helperTextInvalid={invalidNameFieldText}
+            validated={nameValidated}
+            fieldId="create-satellite-manifest-form-name"
+          >
+            <TextInput
+              value={manifestName}
+              onChange={handleNameChange}
+              validated={nameValidated}
+              helperText={nameFieldHelperText}
+            />
+          </FormGroup>
+          <FormGroup
+            label="Type"
+            helperText={''}
+            helperTextInvalid={invalidTypeText}
+            fieldId="create-satellite-manifest-form-type"
             validated={typeValidated}
           >
-            <FormSelectOption
-              value={manifestType}
-              isDisabled={true}
-              isPlaceholder={true}
-              key="Select type"
-              label="Select type"
-            />
-            {satelliteTypeOptions}
-          </FormSelect>
-        </FormGroup>
-        <ActionGroup>
-          <Button
-            key="confirm"
-            id="create-manifest-button"
-            variant="primary"
-            onClick={handleSubmit(onSubmit)}
-            isDisabled={
-              (nameValidated && typeValidated == 'default') ||
-              (nameValidated && typeValidated == 'error')
-            }
-          >
-            Create
-          </Button>
-          <Button
-            key="cancel"
-            id="cancel-create-manifest-button"
-            variant="link"
-            onClick={handleModalToggle}
-          >
-            Cancel
-          </Button>
-        </ActionGroup>
-      </Form>
+            <FormSelect
+              onChange={typeSelectOnChange}
+              id="create-satellite-manifest-form-type"
+              name="satelliteManifestType"
+              aria-label="FormSelect Input"
+              value={formValue}
+              validated={typeValidated}
+            >
+              <FormSelectOption
+                value={manifestType}
+                isDisabled={true}
+                isPlaceholder={true}
+                key="Select type"
+                label="Select type"
+              />
+              {satelliteTypeOptions}
+            </FormSelect>
+          </FormGroup>
+          <ActionGroup>
+            <Button
+              key="confirm"
+              id="create-manifest-button"
+              variant="primary"
+              onClick={handleSubmit(onSubmit)}
+              isDisabled={
+                nameValidated == 'default' ||
+                typeValidated == 'error' ||
+                nameValidated == 'error' ||
+                typeValidated == 'default'
+              }
+            >
+              Create
+            </Button>
+            <Button
+              key="cancel"
+              id="cancel-create-manifest-button"
+              variant="link"
+              onClick={handleModalToggle}
+            >
+              Cancel
+            </Button>
+          </ActionGroup>
+        </Form>
+      </>
+    );
+  };
+  return (
+    <>
+      {shouldShowForm && <RenderForm />}
+      {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
     </>
   );
-
-  // return (
-  //   <>
-  //     {shouldShowForm && <RenderForm />}
-  //     {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
-  //   </>
-  // );
 };
 export default CreateManifestForm;
