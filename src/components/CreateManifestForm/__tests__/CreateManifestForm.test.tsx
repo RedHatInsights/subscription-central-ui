@@ -27,7 +27,7 @@ describe('Create Manifest Form', () => {
         <CreateManifestForm {...props} />
       </QueryClientProvider>
     );
-    expect(getByText('Create new manifest')).toBeInTheDocument();
+    expect(getByText('Create manifest')).toBeInTheDocument();
   });
 
   it('renders loading when data is being posted', () => {
@@ -49,10 +49,12 @@ describe('Create Manifest Form', () => {
       </QueryClientProvider>
     );
 
-    fireEvent.click(getByText('Save'));
-    const nameAlert = await screen.findAllByText('Please provide a name for your new manifest');
+    fireEvent.click(getByText('Create'));
+    const nameAlert = await screen.findAllByText(
+      'Name requirements have not been met. Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
+    );
     expect(nameAlert).toHaveLength(1);
-    const typeAlert = await screen.findAllByText('Please select a version for your new manifest');
+    const typeAlert = await screen.findAllByText('Selection Required');
     expect(typeAlert).toHaveLength(1);
   });
 
