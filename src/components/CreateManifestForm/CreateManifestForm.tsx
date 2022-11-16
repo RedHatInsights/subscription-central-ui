@@ -12,7 +12,6 @@ import {
 } from '@patternfly/react-core';
 import useNotifications from '../../hooks/useNotifications';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
-import manifestEntry from '../../utilities/factories/manifestEntry';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -26,7 +25,7 @@ interface CreateManifestFormProps {
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   type Validate = 'default' | 'error' | 'success';
   const { satelliteVersions, handleModalToggle, submitForm, isError, isSuccess, isLoading } = props;
-  const { handleSubmit } = useForm({ mode: 'onBlur' });
+  const { handleSubmit } = useForm<FormData>({ mode: 'onBlur' });
   const [manifestName, setManifestName] = useState('');
   const [manifestType, setManifestType] = useState('');
   const { addSuccessNotification, addErrorNotification } = useNotifications();
@@ -48,8 +47,8 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     submitForm(satelliteManifestName, satelliteManifestType);
     setManifestName(satelliteManifestName);
     setManifestType(satelliteManifestType);
-    // setValidated('default');
   };
+
   // const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
   if (isSuccess) {
@@ -92,7 +91,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           'Name requirements have not been met.Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
         );
       }
-    }, 1000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [manifestName]);
@@ -111,7 +110,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
         setTypeValidated('error');
         setInvalidTypeText('Selection Required');
       }
-    }, 1000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [manifestType]);
@@ -168,7 +167,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             {satelliteTypeOptions}
           </FormSelect>
         </FormGroup>
-
         <ActionGroup>
           <Button
             key="confirm"
