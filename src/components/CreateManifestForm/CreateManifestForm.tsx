@@ -1,5 +1,5 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, FC } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
 import {
   Button,
   ActionGroup,
@@ -25,8 +25,7 @@ interface CreateManifestFormProps {
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   type Validate = 'default' | 'error' | 'success';
-  const { satelliteVersions, handleModalToggle, submitForm, isError, isSuccess, isLoading } = props;
-  const { handleSubmit } = useForm({ mode: 'onBlur' });
+  const { satelliteVersions, handleModalToggle, isLoading, submitForm, isError, isSuccess } = props;
   const [manifestName, setManifestName] = useState('');
   const [manifestType, setManifestType] = useState('');
   const { addSuccessNotification, addErrorNotification } = useNotifications();
@@ -44,18 +43,9 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     satelliteManifestType: string;
   }
 
-  // const onSubmit: SubmitHandler<FormData> = ({
-  //   satelliteManifestName,
-  //   satelliteManifestType
-  // }: FormData) => {
-  //   submitForm(satelliteManifestName, satelliteManifestType);
-  //   setManifestName(satelliteManifestName);
-  //   setManifestType(satelliteManifestType);
-  // };
-
   const onSubmit = ({ satelliteManifestName, satelliteManifestType }: FormData): void => {
     submitForm(satelliteManifestName, satelliteManifestType);
-    setManifestName(satelliteManifestName);
+    setManifestName(manifestName);
   };
 
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
@@ -141,36 +131,37 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           management application. Match the type and version of the subscription management
           application that you are using. All fields are required.
         </p>
-        <Form isWidthLimited>
+        <Form submitForm={onSubmit} isWidthLimited>
           <FormGroup
             label="Name"
-            type="string"
             helperText={nameFieldHelperText}
             helperTextInvalid={invalidNameFieldText}
             validated={nameValidated}
             fieldId="create-satellite-manifest-form-name"
+            value={manifestName}
           >
             <TextInput
+              name="satelliteManifestName"
               value={manifestName}
               onChange={handleNameChange}
               validated={nameValidated}
-              helperText={nameFieldHelperText}
+              id="create-satellite-manifest-form-name"
             />
           </FormGroup>
           <FormGroup
             label="Type"
-            helperText={''}
             helperTextInvalid={invalidTypeText}
             fieldId="create-satellite-manifest-form-type"
             validated={typeValidated}
+            value={manifestName}
           >
             <FormSelect
               onChange={typeSelectOnChange}
-              id="create-satellite-manifest-form-type"
               name="satelliteManifestType"
               aria-label="FormSelect Input"
-              value={formValue}
+              id="create-satellite-manifest-form-type"
               validated={typeValidated}
+              value={formValue}
             >
               <FormSelectOption
                 value={manifestType}
@@ -184,10 +175,11 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           </FormGroup>
           <ActionGroup>
             <Button
+              type="submit"
               key="confirm"
               id="create-manifest-button"
               variant="primary"
-              onClick={handleSubmit(onSubmit)}
+              onClick={submitForm}
               isDisabled={
                 nameValidated == 'default' ||
                 typeValidated == 'error' ||
@@ -212,7 +204,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   };
   return (
     <>
-      {shouldShowForm && <RenderForm />}
+      {shouldShowForm && RenderForm()}
       {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
     </>
   );
