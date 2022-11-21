@@ -3,7 +3,6 @@ import React, { useState, FC, version } from 'react';
 import {
   Button,
   ActionGroup,
-  FormControl,
   Form,
   FormGroup,
   TextInput,
@@ -14,9 +13,6 @@ import {
 import useNotifications from '../../hooks/useNotifications';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
-import { values } from 'lodash';
-import { Value } from 'classnames';
-import { SubmitHandler } from 'react-hook-form';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -33,7 +29,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const [manifestName, setManifestName] = useState('');
   const [manifestType, setManifestType] = useState('');
   const { addSuccessNotification, addErrorNotification } = useNotifications();
-  const [formValue, setFormValue] = React.useState('');
   const [invalidNameFieldText, setInvalidNameFieldText] = React.useState('');
   const [invalidTypeText, setInvalidTypeText] = React.useState('');
   const [nameValidated, setNameValidated] = React.useState<Validate>('default');
@@ -42,25 +37,9 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
   );
 
-  interface FormData {
-    satelliteManifestName: string;
-    satelliteManifestType: string;
-  }
-
-  const onSubmit = ({ satelliteManifestName, satelliteManifestType }: FormData): void => {
-    submitForm(satelliteManifestName, satelliteManifestType);
-    setManifestName(satelliteManifestName);
-    setManifestType(satelliteManifestType);
+  const onSubmit = (): void => {
+    submitForm(manifestName, manifestType);
   };
-
-  //   const onSubmit: SubmitHandler<FormData> = ({
-  //   satelliteManifestName,
-  //   satelliteManifestType
-  // }: FormData) => {
-  //   submitForm(manifestName, manifestType);
-  //   setManifestName(satelliteManifestName);
-  //   setManifestType(satelliteManifestType);
-  // };
 
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
@@ -116,18 +95,23 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
 
   const typeSelectOnChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
     setTypeValidated('success');
-    setFormValue(value);
+    //setFormValue(value);
+    setManifestType(value);
   };
 
   React.useEffect(() => {
-    const timer = setTimeout((value: string) => {
-      if (value === '') {
-        setTypeValidated('success');
-      } else if (value !== '') {
-        setTypeValidated('error');
-        setInvalidTypeText('Selection Required');
-      }
-    }, 500);
+    const timer = setTimeout(
+      (manifestType: string) => {
+        if (manifestType != '') {
+          setTypeValidated('success');
+        } else if (manifestType == '') {
+          setTypeValidated('error');
+          setInvalidTypeText('Selection Required');
+        }
+      },
+      500,
+      manifestType
+    );
 
     return () => clearTimeout(timer);
   }, [manifestType]);
@@ -144,7 +128,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           management application. Match the type and version of the subscription management
           application that you are using. All fields are required.
         </p>
-        <Form submitForm={onSubmit} isWidthLimited>
+        <Form isWidthLimited>
           <FormGroup
             label="Name"
             helperText={nameFieldHelperText}
@@ -167,7 +151,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             validated={typeValidated}
           >
             <FormSelect
-              value={formValue}
+              value={manifestType}
               onChange={typeSelectOnChange}
               name="satelliteManifestType"
               aria-label="FormSelect Input"
@@ -176,7 +160,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             >
               <FormSelectOption
                 name="satelliteManifestType"
-                value={manifestType}
+                value=""
                 isDisabled={true}
                 isPlaceholder={true}
                 key="Select type"
@@ -191,7 +175,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               key="confirm"
               id="submit-manifest-button"
               variant="primary"
-              onClick={submitForm}
+              onClick={onSubmit}
               isDisabled={
                 nameValidated == 'default' ||
                 typeValidated == 'error' ||
