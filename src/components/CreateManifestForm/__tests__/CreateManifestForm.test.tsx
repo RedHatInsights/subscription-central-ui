@@ -69,7 +69,7 @@ describe('Create Manifest Form', () => {
 
     expect(
       screen.queryByText(
-        'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application.'
+        'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application. All fields are required.'
       )
     ).toBeInTheDocument();
 
@@ -83,7 +83,7 @@ describe('Create Manifest Form', () => {
 
     expect(
       screen.queryByText(
-        'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application.'
+        'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application. All fields are required. '
       )
     ).toBeNull();
   });

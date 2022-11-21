@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, FC } from 'react';
+import React, { useState, FC, version } from 'react';
 import {
   Button,
   ActionGroup,
+  FormControl,
   Form,
   FormGroup,
   TextInput,
@@ -13,6 +14,9 @@ import {
 import useNotifications from '../../hooks/useNotifications';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
+import { values } from 'lodash';
+import { Value } from 'classnames';
+import { SubmitHandler } from 'react-hook-form';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -45,8 +49,18 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
 
   const onSubmit = ({ satelliteManifestName, satelliteManifestType }: FormData): void => {
     submitForm(satelliteManifestName, satelliteManifestType);
-    setManifestName(manifestName);
+    setManifestName(satelliteManifestName);
+    setManifestType(satelliteManifestType);
   };
+
+  //   const onSubmit: SubmitHandler<FormData> = ({
+  //   satelliteManifestName,
+  //   satelliteManifestType
+  // }: FormData) => {
+  //   submitForm(manifestName, manifestType);
+  //   setManifestName(satelliteManifestName);
+  //   setManifestType(satelliteManifestType);
+  // };
 
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
@@ -100,8 +114,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     return () => clearTimeout(timer);
   }, [manifestName]);
 
-  const typeSelectOnChange = (value: string) => {
-    setManifestType(manifestType);
+  const typeSelectOnChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
     setTypeValidated('success');
     setFormValue(value);
   };
@@ -138,7 +151,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             helperTextInvalid={invalidNameFieldText}
             validated={nameValidated}
             fieldId="create-satellite-manifest-form-name"
-            value={manifestName}
           >
             <TextInput
               name="satelliteManifestName"
@@ -153,17 +165,17 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             helperTextInvalid={invalidTypeText}
             fieldId="create-satellite-manifest-form-type"
             validated={typeValidated}
-            value={manifestName}
           >
             <FormSelect
+              value={formValue}
               onChange={typeSelectOnChange}
               name="satelliteManifestType"
               aria-label="FormSelect Input"
               id="create-satellite-manifest-form-type"
               validated={typeValidated}
-              value={formValue}
             >
               <FormSelectOption
+                name="satelliteManifestType"
                 value={manifestType}
                 isDisabled={true}
                 isPlaceholder={true}
@@ -177,7 +189,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             <Button
               type="submit"
               key="confirm"
-              id="create-manifest-button"
+              id="submit-manifest-button"
               variant="primary"
               onClick={submitForm}
               isDisabled={
