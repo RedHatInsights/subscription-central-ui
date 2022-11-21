@@ -69,7 +69,7 @@ describe('Create Manifest Form', () => {
 
     expect(
       screen.queryByText(
-        'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application. All fields are required.'
+        'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
       )
     ).toBeInTheDocument();
 
@@ -83,8 +83,32 @@ describe('Create Manifest Form', () => {
 
     expect(
       screen.queryByText(
-        'Creating a new manifest allows you to export subscriptions to your on-premise subscription management application. All fields are required. '
+        'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
       )
     ).toBeNull();
+  });
+  describe('when the form fields contain errors', () => {
+    it('does render the delete button, button is disabled', () => {
+      const props = { ...createManifestFormProps, isSuccess: false };
+      const { queryByText, container } = render(
+        <QueryClientProvider client={queryClient}>
+          <CreateManifestForm {...props} />
+        </QueryClientProvider>
+      );
+      fireEvent.click(container.querySelector('.pf-c-button'));
+      expect(queryByText('Create').closest('button')).toBeDisabled();
+    });
+  });
+  describe('when the form fields are validated', () => {
+    it('does render the create button, and the button is not disabled', () => {
+      const props = { ...createManifestFormProps, isSuccess: false };
+      const { queryByText, container } = render(
+        <QueryClientProvider client={queryClient}>
+          <CreateManifestForm {...props} />
+        </QueryClientProvider>
+      );
+      fireEvent.click(container.querySelector('.pf-c-button'));
+      expect(queryByText('Create').closest('button'));
+    });
   });
 });

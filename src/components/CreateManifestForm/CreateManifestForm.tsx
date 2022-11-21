@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import React, { useState, FC, version } from 'react';
+import React, { useState, FC } from 'react';
 import {
   Button,
   ActionGroup,
@@ -116,7 +115,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     return () => clearTimeout(timer);
   }, [manifestType]);
 
-  // useEffect is used to simulate a server call to validate the age 500ms after the user has entered a value, preventing calling the server on every keystroke
   const RenderForm = () => {
     return (
       <>
