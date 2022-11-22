@@ -94,7 +94,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
 
   const typeSelectOnChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
     setTypeValidated('success');
-    //setFormValue(value);
     setManifestType(value);
   };
 

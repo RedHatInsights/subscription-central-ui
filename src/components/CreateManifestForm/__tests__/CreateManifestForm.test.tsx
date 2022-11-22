@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, getByText, render, screen, waitFor } from '@testing-library/react';
 import CreateManifestForm from '../CreateManifestForm';
 import { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import { QueryClientProvider, QueryClient } from 'react-query';
@@ -8,6 +8,7 @@ import '@testing-library/jest-dom';
 const queryClient = new QueryClient();
 
 const handleModalToggle = jest.fn();
+const submitForm = jest.fn();
 
 const createManifestFormProps = {
   satelliteVersions: [{ description: 'Satellite v6.2', value: 'sat-6.2' }] as SatelliteVersion[],
@@ -29,7 +30,6 @@ describe('Create Manifest Form', () => {
     );
     expect(getByText('Create manifest')).toBeInTheDocument();
   });
-
   it('renders loading when data is being posted', () => {
     const props = { ...createManifestFormProps, isLoading: true };
     const container = render(
@@ -39,8 +39,17 @@ describe('Create Manifest Form', () => {
     );
     expect(container).toHaveLoader();
   });
+  it('renders with a spinner when loading', () => {
+    const props = { ...createManifestFormProps, isLoading: true };
+    const container = render(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
+    expect(container).toHaveLoader();
+  });
 
-  it('displays errors correctly', async () => {
+  it('displays error messages in form fields correctly', async () => {
     const props = { ...createManifestFormProps };
 
     const { getByText } = render(
@@ -58,57 +67,82 @@ describe('Create Manifest Form', () => {
     expect(typeAlert).toHaveLength(1);
   });
 
-  it('closes the create manifest modal on success', async () => {
-    const props = { ...createManifestFormProps, isSuccess: false };
-
-    const { rerender } = render(
+  it('renders a success notification when manifest is successfully created', async () => {
+    const props = { ...createManifestFormProps, isSuccess: true };
+    render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestForm {...props} />
       </QueryClientProvider>
     );
 
-    expect(
-      screen.queryByText(
-        'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
-      )
-    ).toBeInTheDocument();
+    await new Promise((r) => setTimeout(r, 2000));
 
-    props.isSuccess = true;
+    waitFor(() => expect(screen.findByText('Manifest created')).toBeInTheDocument());
+  });
 
-    rerender(
+  it('renders a error message ', () => {
+    const props = { ...createManifestFormProps };
+    const { getByText } = render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestForm {...props} />
       </QueryClientProvider>
     );
+    fireEvent.click(getByText('Create'));
 
-    expect(
-      screen.queryByText(
-        'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
-      )
-    ).toBeNull();
+    waitFor(() =>
+      expect(screen.findByText('Something went wrong. Please try again')).toBeInTheDocument()
+    );
   });
-  describe('when the form fields contain errors', () => {
-    it('does render the delete button, button is disabled', () => {
-      const props = { ...createManifestFormProps, isSuccess: false };
-      const { queryByText, container } = render(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
-      fireEvent.click(container.querySelector('.pf-c-button'));
-      expect(queryByText('Create').closest('button')).toBeDisabled();
-    });
+
+  it('fires the submitForm when button is clicked ', async () => {
+    const props = { ...createManifestFormProps };
+    const { getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
+    fireEvent.click(getByText('Create'));
+    waitFor(() => expect(submitForm).toHaveBeenCalledTimes(1));
   });
-  describe('when the form fields are validated', () => {
-    it('does render the create button, and the button is not disabled', () => {
-      const props = { ...createManifestFormProps, isSuccess: false };
-      const { queryByText, container } = render(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
-      fireEvent.click(container.querySelector('.pf-c-button'));
-      expect(queryByText('Create').closest('button'));
-    });
-  });
+});
+
+it('closes the create manifest modal on success', async () => {
+  const props = { ...createManifestFormProps, isSuccess: false };
+
+  const { rerender } = render(
+    <QueryClientProvider client={queryClient}>
+      <CreateManifestForm {...props} />
+    </QueryClientProvider>
+  );
+
+  expect(
+    screen.queryByText(
+      'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
+    )
+  ).toBeInTheDocument();
+
+  props.isSuccess = true;
+
+  rerender(
+    <QueryClientProvider client={queryClient}>
+      <CreateManifestForm {...props} />
+    </QueryClientProvider>
+  );
+
+  expect(
+    screen.queryByText(
+      'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
+    )
+  ).toBeNull();
+});
+
+it('renders the create button on form with button is disabled', () => {
+  const props = { ...createManifestFormProps, isSuccess: false };
+
+  const { queryByText } = render(
+    <QueryClientProvider client={queryClient}>
+      <CreateManifestForm {...props} />
+    </QueryClientProvider>
+  );
+  expect(queryByText('Create')).toBeDisabled();
 });
