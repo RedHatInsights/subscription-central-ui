@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
 import useDeleteSatelliteManifest from '../../../hooks/useDeleteSatelliteManifest';
 
@@ -32,30 +32,6 @@ describe('DeleteConfirmationModal', () => {
     );
 
     expect(getByLabelText('Are you sure you want to delete this manifest?')).toBeInTheDocument();
-  });
-
-  it('renders a success notification when manifest is successfully deleted', async () => {
-    render(
-      <div>
-        <DeleteManifestConfirmationModal {...props} />
-      </div>
-    );
-
-    await new Promise((r) => setTimeout(r, 2000));
-
-    waitFor(() => expect(screen.findByText('Manifest deleted')).toBeInTheDocument());
-  });
-
-  it('renders a error message ', () => {
-    const { findByText } = render(
-      <div>
-        <DeleteManifestConfirmationModal {...props} />
-      </div>
-    );
-
-    waitFor(() =>
-      expect(screen.findByText('Something went wrong. Please try again')).toBeInTheDocument()
-    );
   });
 
   describe('when performing a delete', () => {
