@@ -72,7 +72,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
       />
     );
   });
-
   const isValidManifestName = (manifestName: string) => {
     if (
       /^[0-9A-Za-z_.-]*$/.test(manifestName) &&
