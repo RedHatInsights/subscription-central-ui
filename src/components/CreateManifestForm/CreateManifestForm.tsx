@@ -10,8 +10,9 @@ import {
   FormSelectOption
 } from '@patternfly/react-core';
 import useNotifications from '../../hooks/useNotifications';
-import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
+import useSatelliteVersions, { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
+import useCreateSatelliteManifest from '../../hooks/useCreateSatelliteManifest';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -23,17 +24,24 @@ interface CreateManifestFormProps {
 }
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
+  const { isError: hasSatelliteVersionsError } = useSatelliteVersions();
+  const { data: createManifestResponseData, isError: errorCreatingManifest } =
+    useCreateSatelliteManifest();
   type Validate = 'default' | 'error' | 'success';
   const { satelliteVersions, handleModalToggle, isLoading, submitForm, isError, isSuccess } = props;
+  const [inputFieldBlur, setinputFieldBlur] = React.useState(false);
+  const [dropdownFieldBlur, setDropdownFieldBlur] = React.useState(false);
   const [manifestName, setManifestName] = useState('');
   const [manifestType, setManifestType] = useState('');
   const { addSuccessNotification, addErrorNotification } = useNotifications();
-  const [invalidNameFieldText, setInvalidNameFieldText] = React.useState('');
   const [invalidTypeText, setInvalidTypeText] = React.useState('');
   const [nameValidated, setNameValidated] = React.useState<Validate>('default');
   const [typeValidated, setTypeValidated] = React.useState<Validate>('default');
   const [nameFieldHelperText, setNameFieldHelperText] = React.useState(
     'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
+  );
+  const [invalidNameFieldText, setInvalidNameFieldText] = React.useState(
+    'Name requirements have not been met.Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
   );
 
   const onSubmit = (): void => {
@@ -50,10 +58,13 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     handleModalToggle();
   }
 
+  const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
+
+  const formHasError = errorCreatingManifest || hasSatelliteVersionsError;
+
   const satelliteTypeOptions = satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
     return (
       <FormSelectOption
-        isDisabled={false}
         key={satelliteVersion.value}
         value={satelliteVersion.value}
         label={satelliteVersion.description}
@@ -62,57 +73,60 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     );
   });
 
-  const handleNameChange = (manifestName: string) => {
-    setNameFieldHelperText(
-      'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
-    );
-    setManifestName(manifestName);
-    setNameValidated('default');
+  const isValidManifestName = (manifestName: string) => {
+    if (
+      /^[0-9A-Za-z_.-]*$/.test(manifestName) &&
+      manifestName.length > 0 &&
+      manifestName.length < 99
+    ) {
+      setNameFieldHelperText(nameFieldHelperText);
+      setNameValidated('success');
+    } else if (manifestName != '') {
+      setNameValidated('error');
+      setInvalidNameFieldText(invalidNameFieldText);
+    } else if (manifestName == '' && inputFieldBlur) {
+      setNameValidated('error');
+      setInvalidNameFieldText(invalidNameFieldText);
+    } else {
+      setNameValidated('default');
+    }
   };
 
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (
-        /^[0-9A-Za-z_.-]*$/.test(manifestName) &&
-        manifestName.length > 0 &&
-        manifestName.length < 99
-      ) {
-        setNameValidated('success');
-        setNameFieldHelperText(
-          'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
-        );
-      } else {
-        setNameValidated('error');
-        setInvalidNameFieldText(
-          'Name requirements have not been met. Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
-        );
-      }
-    }, 500);
+  const isValidManifestType = (manifestType: string) => {
+    if (manifestType != '') {
+      setTypeValidated('success');
+    } else if (manifestType == '' && dropdownFieldBlur) {
+      setTypeValidated('error');
+      setInvalidTypeText('Selection Required');
+    } else if (manifestType == '' && inputFieldBlur) {
+      setTypeValidated('error');
+      setInvalidTypeText('Selection Required');
+    } else {
+      setTypeValidated('default');
+    }
+    return;
+  };
 
-    return () => clearTimeout(timer);
-  }, [manifestName]);
+  const onBlurHandler = (event: React.FocusEvent<HTMLInputElement>) => {
+    setinputFieldBlur(true);
+  };
 
-  const typeSelectOnChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
-    setTypeValidated('success');
+  const formSelectBlurHandler = (event: React.FocusEvent<HTMLInputElement>) => {
+    setDropdownFieldBlur(true);
+  };
+
+  const handleNameChange = (manifestName: string, e: React.FormEvent<HTMLInputElement>) => {
+    setManifestName(manifestName);
+  };
+
+  const handleTypeChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
     setManifestType(value);
   };
 
   React.useEffect(() => {
-    const timer = setTimeout(
-      (manifestType: string) => {
-        if (manifestType != '') {
-          setTypeValidated('success');
-        } else if (manifestType == '') {
-          setTypeValidated('error');
-          setInvalidTypeText('Selection Required');
-        }
-      },
-      500,
-      manifestType
-    );
-
-    return () => clearTimeout(timer);
-  }, [manifestType]);
+    isValidManifestName(manifestName);
+    isValidManifestType(manifestType);
+  });
 
   const RenderForm = () => {
     return (
@@ -125,7 +139,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           management application. Match the type and version of the subscription management
           application that you are using. All fields are required.
         </p>
-        <Form isWidthLimited>
+        <Form isError={formHasError} isSuccess={hasCreatedManifest} isWidthLimited>
           <FormGroup
             label="Name"
             helperText={nameFieldHelperText}
@@ -139,6 +153,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               onChange={handleNameChange}
               validated={nameValidated}
               id="create-satellite-manifest-form-name"
+              onBlur={onBlurHandler}
             />
           </FormGroup>
           <FormGroup
@@ -149,7 +164,8 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           >
             <FormSelect
               value={manifestType}
-              onChange={typeSelectOnChange}
+              onChange={handleTypeChange}
+              onBlur={formSelectBlurHandler}
               name="satelliteManifestType"
               aria-label="FormSelect Input"
               id="create-satellite-manifest-form-type"
@@ -158,7 +174,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               <FormSelectOption
                 name="satelliteManifestType"
                 value=""
-                isDisabled={true}
+                isDisabled
                 isPlaceholder={true}
                 key="Select type"
                 label="Select type"
@@ -173,12 +189,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               id="submit-manifest-button"
               variant="primary"
               onClick={onSubmit}
-              isDisabled={
-                nameValidated == 'default' ||
-                typeValidated == 'error' ||
-                nameValidated == 'error' ||
-                typeValidated == 'default'
-              }
+              isDisabled={nameValidated != 'success' || typeValidated != 'success'}
             >
               Create
             </Button>
