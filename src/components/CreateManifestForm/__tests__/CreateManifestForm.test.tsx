@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import CreateManifestForm from '../CreateManifestForm';
 import { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import { QueryClientProvider, QueryClient } from 'react-query';
@@ -45,7 +45,7 @@ describe('Create Manifest Form', () => {
     expect(container).toHaveLoader();
   });
 
-  it('renders a spinner', () => {
+  it('renders a spinner when loading', () => {
     const props = { ...createManifestFormProps, isLoading: true };
     const container = render(
       <QueryClientProvider client={queryClient}>
@@ -62,26 +62,25 @@ describe('Create Manifest Form', () => {
           <CreateManifestForm {...props} />
         </QueryClientProvider>
       );
-      await new Promise((r) => setTimeout(r, 2000));
-      waitFor(() => expect(screen.findByText(`Manifest created`)).toBeInTheDocument());
+      waitFor(() => expect(screen.findByText('Manifest created')).toBeInTheDocument());
     });
   });
 
   describe('when the form has been successfully validated', () => {
-    it('displays helper text in name field ', async () => {
+    it('displays helper text in name field ', () => {
       const props = { ...createManifestFormProps };
       render(
         <QueryClientProvider client={queryClient}>
           <CreateManifestForm {...props} />
         </QueryClientProvider>
       );
-      const nameAlert = await screen.findAllByText(
+      const nameAlert = screen.getAllByText(
         'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
       );
-      waitFor(() => expect(nameAlert).toHaveLength(1));
+      expect(nameAlert).toHaveLength(1);
     });
   });
-  it('fires the submitForm when button is clicked', async () => {
+  it('fires the submitForm when button is clicked', () => {
     const props = { ...createManifestFormProps };
 
     const { getByText } = render(
@@ -94,8 +93,8 @@ describe('Create Manifest Form', () => {
     waitFor(() => expect(submitForm).toHaveBeenCalledTimes(1));
   });
 
-  describe('when both user form fields are validated', () => {
-    it('the create button should NOT be disabled', () => {
+  describe('create button', () => {
+    it('should be enabled with valid input and disabled with invalid input', () => {
       const props = { ...createManifestFormProps };
 
       const { getByRole, getByText } = render(
@@ -122,172 +121,164 @@ describe('Create Manifest Form', () => {
       const props = { ...createManifestFormProps };
       const handleNameChange = jest.fn();
 
-      act(() => {
-        render(
-          <QueryClientProvider client={queryClient}>
-            <CreateManifestForm {...props} />
-          </QueryClientProvider>
-        );
-
-        const input = document.querySelector('textbox');
-        if (input) {
-          fireEvent.change(input, { target: { value: '' } });
-          expect(handleNameChange).toHaveBeenCalledTimes(1);
-        }
-      });
-    });
-    it('should change value once input changes', () => {
-      const props = { ...createManifestFormProps };
-      const handleNameChange = jest.fn();
       render(
         <QueryClientProvider client={queryClient}>
           <CreateManifestForm {...props} />
         </QueryClientProvider>
       );
-      fireEvent.change(screen.getByLabelText('Name'), {
-        target: { value: 'TEST' }
-      });
-      expect(screen.getByLabelText('Name')).toHaveValue('TEST');
-    });
 
-    it('validates the name field', async () => {
-      const props = { ...createManifestFormProps };
-      render(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
-      const input = await screen.findByRole('textbox');
-      fireEvent.change(input, 'TEST');
-
-      expect(screen.getByRole('textbox')).toHaveValue('');
-      waitFor(() =>
-        expect(
-          screen.getByText(
-            'Name requirements have not been met. Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
-          )
-        ).not.toBeInTheDocument()
-      );
-    });
-  });
-
-  describe('type field on form', () => {
-    it('should handle type selection event change', () => {
-      const props = { ...createManifestFormProps };
-      const handleTypeChange = jest.fn();
-
-      act(() => {
-        render(
-          <QueryClientProvider client={queryClient}>
-            <CreateManifestForm {...props} />
-          </QueryClientProvider>
-        );
-      });
-      const input = document.querySelector('dropdown');
+      const input = document.querySelector('textbox');
       if (input) {
-        fireEvent.change(input, { target: { value: '' } });
-        expect(handleTypeChange).toHaveBeenCalledTimes(1);
+        fireEvent.change(input, { target: { value: 'abc' } });
+        expect(handleNameChange).toBe('abc');
       }
     });
-
-    it('should change value once type selection changes', () => {
-      const props = { ...createManifestFormProps };
-      const handleTypeChange = jest.fn();
-      render(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
-      fireEvent.change(screen.getByLabelText('FormSelect Input'), {
-        target: { value: '' }
-      });
-      expect(screen.getByLabelText('FormSelect Input')).toHaveValue('');
+  });
+  it('should change value once input changes', () => {
+    const props = { ...createManifestFormProps };
+    render(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
+    fireEvent.change(screen.getByLabelText('Name'), {
+      target: { value: 'TEST' }
     });
-    it('validates the type form field', async () => {
-      const props = { ...createManifestFormProps };
-      render(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
-
-      const input = await screen.getByLabelText('FormSelect Input');
-      fireEvent.change(input, 'Select Type');
-
-      expect(screen.getByLabelText('FormSelect Input')).toHaveValue('');
-      waitFor(() => expect(screen.getByText('Selection Required')).not.toBeInTheDocument());
-    });
+    expect(screen.getByLabelText('Name')).toHaveValue('TEST');
   });
 
-  describe('when the form fields are not valid', () => {
-    it('it displays error messages to the user', async () => {
-      const props = { ...createManifestFormProps };
+  it('validates the name field', async () => {
+    const props = { ...createManifestFormProps };
+    render(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
+    const input = screen.findByRole('textbox');
+    fireEvent.change(await input, 'TEST');
 
-      render(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
-      const nameAlert = screen.findAllByText(
+    expect(screen.getByRole('textbox')).toHaveValue('');
+    expect(
+      screen.queryByText(
         'Name requirements have not been met. Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
-      );
-      waitFor(() => expect(nameAlert).toHaveLength(1));
-      const typeAlert = screen.findAllByText('Selection Required');
-      waitFor(() => expect(typeAlert).toHaveLength(1));
-    });
+      )
+    ).not.toBeInTheDocument();
   });
+});
 
-  it('renders the create button on form with button is disabled', () => {
+describe('type field on form', () => {
+  it('should handle type selection event change', () => {
+    const props = { ...createManifestFormProps };
+    const handleTypeChange = jest.fn();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
+  });
+  const input = document.querySelector('dropdown');
+  if (input) {
+    fireEvent.change(input, { target: { value: 'SatelliteVersion' } });
+    expect(handleTypeChange).toBe('SatelliteVersion');
+  }
+});
+
+it('should change value once type selection changes', () => {
+  const props = { ...createManifestFormProps };
+  render(
+    <QueryClientProvider client={queryClient}>
+      <CreateManifestForm {...props} />
+    </QueryClientProvider>
+  );
+  fireEvent.change(screen.getByLabelText('FormSelect Input'), {
+    target: { value: '' }
+  });
+  expect(screen.getByLabelText('FormSelect Input')).toHaveValue('');
+});
+it('validates the type form field', () => {
+  const props = { ...createManifestFormProps };
+  render(
+    <QueryClientProvider client={queryClient}>
+      <CreateManifestForm {...props} />
+    </QueryClientProvider>
+  );
+
+  const input = screen.getByLabelText('FormSelect Input');
+  fireEvent.change(input, 'Select Type');
+
+  expect(screen.getByLabelText('FormSelect Input')).toHaveValue('');
+  expect(screen.queryByText('Selection Required')).not.toBeInTheDocument();
+});
+
+describe('when the form fields are not valid', () => {
+  it('it displays error messages to the user', async () => {
     const props = { ...createManifestFormProps };
 
-    const { queryByText } = render(
+    render(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
+    const nameAlert = screen.findAllByText(
+      'Name requirements have not been met. Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
+    );
+    waitFor(() => expect(nameAlert).toHaveLength(1));
+    const typeAlert = screen.findAllByText('Selection Required');
+    waitFor(() => expect(typeAlert).toHaveLength(1));
+  });
+});
+
+it('renders the create button on form with button is disabled', () => {
+  const props = { ...createManifestFormProps };
+
+  const { queryByText } = render(
+    <QueryClientProvider client={queryClient}>
+      <CreateManifestForm {...props} />
+    </QueryClientProvider>
+  );
+
+  expect(queryByText('Create')).toBeDisabled();
+});
+describe('when the api call fails, and manifest has not been created', () => {
+  it('renders an error message', () => {
+    const props = { ...createManifestFormProps, isError: true };
+    render(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
+    waitFor(() =>
+      expect(screen.findByText('Something went wrong. Please try again')).toBeInTheDocument()
+    );
+  });
+  it('closes the create manifest modal on success', () => {
+    const props = { ...createManifestFormProps };
+
+    const { rerender } = render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestForm {...props} />
       </QueryClientProvider>
     );
 
-    expect(queryByText('Create')).toBeDisabled();
-  });
-  describe('when the api call fails, and manifest has not been created', () => {
-    it('renders a error message', () => {
-      const props = { ...createManifestFormProps, isError: true };
-      render(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
-      waitFor(() =>
-        expect(screen.findByText('Something went wrong. Please try again')).toBeInTheDocument()
-      );
-    });
-    it('closes the create manifest modal on success', async () => {
-      const props = { ...createManifestFormProps };
+    expect(
+      screen.queryByText(
+        'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
+      )
+    ).toBeInTheDocument();
 
-      const { rerender } = render(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
+    props.isSuccess = true;
 
-      expect(
-        screen.queryByText(
-          'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
-        )
-      ).toBeInTheDocument();
+    rerender(
+      <QueryClientProvider client={queryClient}>
+        <CreateManifestForm {...props} />
+      </QueryClientProvider>
+    );
 
-      props.isSuccess = true;
-
-      rerender(
-        <QueryClientProvider client={queryClient}>
-          <CreateManifestForm {...props} />
-        </QueryClientProvider>
-      );
-
-      expect(
-        screen.queryByText(
-          'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
-        )
-      ).toBeNull();
-    });
+    expect(
+      screen.queryByText(
+        'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
+      )
+    ).toBeNull();
   });
 });
