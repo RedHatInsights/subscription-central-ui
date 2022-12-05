@@ -37,12 +37,10 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const [invalidTypeText, setInvalidTypeText] = React.useState('');
   const [nameValidated, setNameValidated] = React.useState<Validate>('default');
   const [typeValidated, setTypeValidated] = React.useState<Validate>('default');
-  const [nameFieldHelperText, setNameFieldHelperText] = React.useState(
-    'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
-  );
-  const [invalidNameFieldText, setInvalidNameFieldText] = React.useState(
-    'Name requirements have not been met.Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.'
-  );
+
+  const nameFieldHelperText =
+    'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.';
+  const invalidNameFieldText = `Name requirements have not been met. ${nameFieldHelperText}`;
 
   const onSubmit = (): void => {
     submitForm(manifestName, manifestType);
@@ -72,39 +70,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
       />
     );
   });
-  const isValidManifestName = (manifestName: string) => {
-    if (
-      /^[0-9A-Za-z_.-]*$/.test(manifestName) &&
-      manifestName.length > 0 &&
-      manifestName.length < 99
-    ) {
-      setNameFieldHelperText(nameFieldHelperText);
-      setNameValidated('success');
-    } else if (manifestName != '') {
-      setNameValidated('error');
-      setInvalidNameFieldText(invalidNameFieldText);
-    } else if (manifestName == '' && inputFieldBlur) {
-      setNameValidated('error');
-      setInvalidNameFieldText(invalidNameFieldText);
-    } else {
-      setNameValidated('default');
-    }
-  };
-
-  const isValidManifestType = (manifestType: string) => {
-    if (manifestType != '') {
-      setTypeValidated('success');
-    } else if (manifestType == '' && dropdownFieldBlur) {
-      setTypeValidated('error');
-      setInvalidTypeText('Selection Required');
-    } else if (manifestType == '' && inputFieldBlur) {
-      setTypeValidated('error');
-      setInvalidTypeText('Selection Required');
-    } else {
-      setTypeValidated('default');
-    }
-    return;
-  };
 
   const onBlurHandler = (event: React.FocusEvent<HTMLInputElement>) => {
     setinputFieldBlur(true);
@@ -118,13 +83,38 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     setManifestName(manifestName);
   };
 
+  const isValidManifestName = (manifestName: string) =>
+    /^[0-9A-Za-z_.-]*$/.test(manifestName) && manifestName.length > 0 && manifestName.length < 99;
+
+  React.useEffect(() => {
+    if (isValidManifestName(manifestName)) {
+      setNameValidated('success');
+      nameFieldHelperText;
+    } else if (manifestName != '') {
+      setNameValidated('error');
+      invalidNameFieldText;
+    } else if (manifestName == '' && inputFieldBlur) {
+      setNameValidated('error');
+      invalidNameFieldText;
+    }
+  }, [manifestName]);
+
   const handleTypeChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
     setManifestType(value);
   };
 
   React.useEffect(() => {
-    isValidManifestName(manifestName);
-    isValidManifestType(manifestType);
+    if (manifestType != '') {
+      setTypeValidated('success');
+    } else if (manifestType == '' && dropdownFieldBlur) {
+      setTypeValidated('error');
+      setInvalidTypeText('Selection Required');
+    } else if (manifestType == '' && inputFieldBlur) {
+      setTypeValidated('error');
+      setInvalidTypeText('Selection Required');
+    } else {
+      setTypeValidated('default');
+    }
   });
 
   const RenderForm = () => {
@@ -153,6 +143,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               validated={nameValidated}
               id="create-satellite-manifest-form-name"
               onBlur={onBlurHandler}
+              autoFocus="autoFocus"
             />
           </FormGroup>
           <FormGroup
@@ -174,7 +165,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
                 name="satelliteManifestType"
                 value=""
                 isDisabled
-                isPlaceholder={true}
+                isPlaceholder
                 key="Select type"
                 label="Select type"
               />
@@ -207,7 +198,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   };
   return (
     <>
-      {shouldShowForm && RenderForm()}
+      {shouldShowForm && <RenderForm />}
       {isLoading && <CreateManifestFormLoading title="Creating manifest..." />}
     </>
   );

@@ -176,12 +176,12 @@ describe('type field on form', () => {
         <CreateManifestForm {...props} />
       </QueryClientProvider>
     );
+    const input = document.querySelector('dropdown');
+    if (input) {
+      fireEvent.change(input, { target: { value: 'SatelliteVersion' } });
+      expect(handleTypeChange).toBe('SatelliteVersion');
+    }
   });
-  const input = document.querySelector('dropdown');
-  if (input) {
-    fireEvent.change(input, { target: { value: 'SatelliteVersion' } });
-    expect(handleTypeChange).toBe('SatelliteVersion');
-  }
 });
 
 it('should change value once type selection changes', () => {
