@@ -10,9 +10,8 @@ import {
   FormSelectOption
 } from '@patternfly/react-core';
 import useNotifications from '../../hooks/useNotifications';
-import useSatelliteVersions, { SatelliteVersion } from '../../hooks/useSatelliteVersions';
+import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
-import useCreateSatelliteManifest from '../../hooks/useCreateSatelliteManifest';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -21,14 +20,24 @@ interface CreateManifestFormProps {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
+  errorCreatingManifest: boolean;
+  hasSatelliteVersionsError: boolean;
+  createManifestResponseData: boolean;
 }
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
-  const { isError: hasSatelliteVersionsError } = useSatelliteVersions();
-  const { data: createManifestResponseData, isError: errorCreatingManifest } =
-    useCreateSatelliteManifest();
   type Validate = 'default' | 'error' | 'success';
-  const { satelliteVersions, handleModalToggle, isLoading, submitForm, isError, isSuccess } = props;
+  const {
+    satelliteVersions,
+    handleModalToggle,
+    isLoading,
+    submitForm,
+    isError,
+    isSuccess,
+    errorCreatingManifest,
+    hasSatelliteVersionsError,
+    createManifestResponseData
+  } = props;
   const [inputFieldBlur, setinputFieldBlur] = React.useState(false);
   const [dropdownFieldBlur, setDropdownFieldBlur] = React.useState(false);
   const [manifestName, setManifestName] = useState('');
@@ -115,7 +124,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     } else {
       setTypeValidated('default');
     }
-  });
+  }, [manifestType]);
 
   const RenderForm = () => {
     return (

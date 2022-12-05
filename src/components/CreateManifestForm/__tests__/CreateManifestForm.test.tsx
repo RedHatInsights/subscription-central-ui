@@ -22,7 +22,10 @@ const createManifestFormProps = {
   submitForm: (): any => null,
   isLoading: false,
   isError: false,
-  isSuccess: false
+  isSuccess: false,
+  errorCreatingManifest: false,
+  hasSatelliteVersionsError: false,
+  createManifestResponseData: false
 };
 
 describe('Create Manifest Form', () => {
