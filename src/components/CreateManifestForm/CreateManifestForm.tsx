@@ -12,6 +12,7 @@ import {
 import useNotifications from '../../hooks/useNotifications';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
+import useCreateSatelliteManifest from '../../hooks/useCreateSatelliteManifest';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -20,9 +21,6 @@ interface CreateManifestFormProps {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
-  errorCreatingManifest: boolean;
-  hasSatelliteVersionsError: boolean;
-  createManifestResponseData: boolean;
 }
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
@@ -32,12 +30,12 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     handleModalToggle,
     isLoading,
     submitForm,
+    isError: errorCreatingManifest,
+    isError: hasSatelliteVersionsError,
     isError,
-    isSuccess,
-    errorCreatingManifest,
-    hasSatelliteVersionsError,
-    createManifestResponseData
+    isSuccess
   } = props;
+  const { data: createManifestResponseData } = useCreateSatelliteManifest();
   const [inputFieldBlur, setinputFieldBlur] = React.useState(false);
   const [dropdownFieldBlur, setDropdownFieldBlur] = React.useState(false);
   const [manifestName, setManifestName] = useState('');
