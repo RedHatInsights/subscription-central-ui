@@ -103,7 +103,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
       setNameValidated('error');
       invalidNameFieldText;
     }
-  }, [manifestName]);
+  }, [manifestName, inputFieldBlur]);
 
   const handleTypeChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
     setManifestType(value);
@@ -121,7 +121,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     } else {
       setTypeValidated('default');
     }
-  }, [manifestType]);
+  }, [manifestType, inputFieldBlur]);
 
   const RenderForm = () => {
     return (
@@ -146,9 +146,9 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               name="satelliteManifestName"
               value={manifestName}
               onChange={handleNameChange}
+              onBlur={onBlurHandler}
               validated={nameValidated}
               id="create-satellite-manifest-form-name"
-              onBlur={onBlurHandler}
               autoFocus="autoFocus"
             />
           </FormGroup>
