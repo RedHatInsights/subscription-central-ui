@@ -112,16 +112,13 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   React.useEffect(() => {
     if (manifestType != '') {
       setTypeValidated('success');
-    } else if (manifestType == '' && dropdownFieldBlur) {
-      setTypeValidated('error');
-      setInvalidTypeText('Selection Required');
-    } else if (manifestType == '' && inputFieldBlur) {
+    } else if (manifestType == '' && dropdownFieldBlur && inputFieldBlur) {
       setTypeValidated('error');
       setInvalidTypeText('Selection Required');
     } else {
       setTypeValidated('default');
     }
-  }, [manifestType, inputFieldBlur]);
+  }, [manifestType, dropdownFieldBlur, inputFieldBlur]);
 
   const RenderForm = () => {
     return (
