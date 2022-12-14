@@ -7,4 +7,8 @@ describe('Create Manifest Form Loading Message', () => {
     const container = render(<CreateManifestFormLoading title="Loading..." />);
     expect(container).toHaveLoader();
   });
+  it('renders with a spinner when loading', () => {
+    const container = render(<CreateManifestFormLoading title="Loading..." />);
+    expect(container).toHaveLoader();
+  });
 });
