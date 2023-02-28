@@ -12,9 +12,9 @@ export const ManifestRoutes: ReactNode = () => (
     <Suspense fallback={<Processing />}>
       <Authentication>
         <Routes>
-          <Route path="/" element={SatelliteManifestPage} />
-          <Route path="/oops" element={OopsPage} />
-          <Route path="/no-permissions" element={NoPermissionsPage} />
+          <Route path="/" element={<SatelliteManifestPage />} />
+          <Route path="/oops" element={<OopsPage />} />
+          <Route path="/no-permissions" element={<NoPermissionsPage />} />
           {/* Finally, catch all unmatched routes */}
           <Route path="*" element={<Navigate to="/oops" replace />} />
         </Routes>
