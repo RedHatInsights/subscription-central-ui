@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { InventoryRoutes } from './Routes';
+import { ManifestRoutes } from './Routes';
 import './App.scss';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import NotificationProvider from './contexts/NotificationProvider';
@@ -39,7 +39,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <NotificationProvider>
         <Notifications />
-        <InventoryRoutes />
+        <ManifestRoutes />
       </NotificationProvider>
     </QueryClientProvider>
   );
