@@ -16,7 +16,7 @@ const SatelliteManifestPage: FC = () => {
   const queryClient = useQueryClient();
   const user: User = queryClient.getQueryData('user');
   const manifestsMoreInfoLink =
-    'https://access.redhat.com/documentation/en-us/subscription_central/2021/html/' +
+    'https://access.redhat.com/documentation/en-us/subscription_central/2023/html/' +
     'creating_and_managing_manifests_for_a_connected_satellite_server/index';
 
   return (
