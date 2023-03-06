@@ -122,7 +122,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setPage(1);
   };
 
-  const handleSearch = (searchValue: string) => {
+  const handleSearch = (_: Event, searchValue: string) => {
     setSearchValue(searchValue);
     setPage(1);
     collapseAllRows();
