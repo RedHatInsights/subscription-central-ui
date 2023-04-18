@@ -4,9 +4,9 @@ const getBaseName = (pathname: string): string => {
 
   pathName.shift();
 
-  if (pathName[0] === 'beta') {
+  if (pathName[0] === 'preview') {
     pathName.shift();
-    release = `/beta/`;
+    release = `/preview/`;
   }
 
   return `${release}${pathName[0]}/${pathName[1] || ''}`;
