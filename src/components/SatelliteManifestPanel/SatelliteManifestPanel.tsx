@@ -24,7 +24,8 @@ import {
   ThProps,
   Thead,
   Tr,
-  SortByDirection
+  SortByDirection,
+  IAction
 } from '@patternfly/react-table';
 import {
   BooleanDictionary,
@@ -218,15 +219,15 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setShouldAddExportSuccessNotification(false);
   }
 
-  const actions = (uuid: string, name: string) => {
-    const results = [
+  const actions = (uuid: string, name: string): IAction[] => {
+    const results: IAction[] = [
       {
         title: 'Export',
         disabled: false,
         onClick: () => {
           exportManifest(uuid, name);
         },
-        variant: 'default'
+        variant: 'link'
       },
       {
         title: 'Delete',
@@ -236,7 +237,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
               openDeleteConfirmationModal(uuid);
             }
           : null,
-        variant: 'default'
+        variant: 'link'
       }
     ];
     return results;
