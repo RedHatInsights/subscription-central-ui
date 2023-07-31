@@ -83,6 +83,7 @@
     "@patternfly/react-core": "^4.276.8",
     "@patternfly/react-table": "^4.113.0",
     "@redhat-cloud-services/frontend-components": "^3.9.29",
+    "@redhat-cloud-services/frontend-components-notifications": "^3.2.14",
     "@redhat-cloud-services/frontend-components-utilities": "^3.7.4",
     "babel-plugin-transform-imports": "^2.0.0",
     "classnames": "2.3.2",
