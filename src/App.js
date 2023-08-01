@@ -5,8 +5,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import NotificationProvider from './contexts/NotificationProvider';
 import Notifications from './components/Notifications';
 import { useChrome } from '@redhat-cloud-services/frontend-components/useChrome';
-import { getRegistry } from '@redhat-cloud-services/frontend-components-utilities/Registry';
-import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,8 +22,6 @@ const App = () => {
   const { updateDocumentTitle } = useChrome();
 
   useEffect(() => {
-    const registry = getRegistry();
-    registry.register({ notifications: notificationsReducer });
     updateDocumentTitle('manifests');
   }, []);
 
