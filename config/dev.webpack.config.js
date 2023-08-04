@@ -9,8 +9,13 @@ const { config: webpackConfig, plugins } = config({
   modules: ['manifests'],
   useProxy: true,
   appUrl: process.env.BETA
-    ? ['/beta/insights/subscriptions', '/preview/insights/subscriptions']
-    : '/insights/subscriptions',
+    ? [
+        '/beta/insights/subscriptions',
+        '/preview/insights/subscriptions',
+        '/beta/subscriptions',
+        '/preview/subscriptions'
+      ]
+    : ['/insights/subscriptions', '/subscriptions'],
   env: process.env.BETA ? 'stage-beta' : 'stage-stable',
   ...(process.env.BETA && { deployment: 'beta/apps' }),
   useCache: true
