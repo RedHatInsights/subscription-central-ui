@@ -1,0 +1,34 @@
+#!/bin/bash -e
+
+echo "=================================================================================="
+echo "Warning, proceeding will stash all current changes, and switch branches. You can return to your working environment with \"git checkout <branch> && git stash pop\"" | fold -sw 80
+echo "=================================================================================="
+
+PROMPT=$'Select environment to release main to:\n\t1) stage stable\n\t2) prod beta\n\t3) prod stable\n\t0) abort\n:'
+
+read -p "$PROMPT" DECISION
+
+REMOTE_NAME=$(git remote -v | grep RedHatInsights --ignore-case | grep push | awk '{print $1}')
+
+case "$DECISION" in
+  1)
+    BRANCH=main-stable
+    ;;
+  2)
+    BRANCH=prod-beta
+    ;;
+  3)
+    BRANCH=prod-stable
+    ;;
+  *)
+    echo 'Aborting...'
+    exit 1
+esac
+
+echo "git push $REMOTE_NAME main:$BRANCH"
+
+git stash --include-untracked
+git fetch $REMOTE_NAME
+git checkout main
+git reset $REMOTE_NAME/main --hard
+git push $REMOTE_NAME main:$BRANCH
