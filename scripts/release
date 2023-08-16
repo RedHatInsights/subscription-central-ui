@@ -25,10 +25,8 @@ case "$DECISION" in
     exit 1
 esac
 
-echo "git push $REMOTE_NAME main:$BRANCH"
-
 git stash --include-untracked
 git fetch $REMOTE_NAME
 git checkout main
 git reset $REMOTE_NAME/main --hard
-git push $REMOTE_NAME main:$BRANCH
+git push $REMOTE_NAME main:$BRANCH --force
