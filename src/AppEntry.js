@@ -7,7 +7,9 @@ import { getBaseName } from '@redhat-cloud-services/frontend-components-utilitie
 
 const AppEntry = ({ logger }) => (
   <Provider store={(logger ? init(logger) : init()).getStore()}>
-    <Router basename={`${getBaseName(window.location.pathname, 3)}`}>
+    <Router
+      basename={`${getBaseName(window.location.pathname, 2 + location.href.includes('insights'))}`}
+    >
       <App />
     </Router>
   </Provider>
