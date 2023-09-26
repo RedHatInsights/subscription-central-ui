@@ -3,7 +3,6 @@ import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import { useAuthenticateUser, useUserRbacPermissions } from '../../utilities/platformServices';
 import useUser from '../useUser';
 import { createQueryWrapper } from '../../utilities/testHelpers';
-import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 enableFetchMocks();
 

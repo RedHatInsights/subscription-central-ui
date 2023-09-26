@@ -14,7 +14,7 @@ export const NoSatelliteSubs = () => {
     <EmptyState variant={EmptyStateVariant.large}>
       <EmptyStateIcon icon={WrenchIcon} />
       <Title headingLevel="h2" size="lg">
-        You account has no Satellite subscriptions
+        Your account has no Satellite subscriptions
       </Title>
       <EmptyStateBody>
         <TextContent className="pf-u-mb-xl">
