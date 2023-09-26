@@ -24,6 +24,9 @@ describe('useUser hook', () => {
         user: {
           is_org_admin: true
         }
+      },
+      entitlements: {
+        smart_management: { is_entitled: true }
       }
     });
 
@@ -51,6 +54,7 @@ describe('useUser hook', () => {
     expect(result.current.data).toEqual({
       canReadManifests: true,
       canWriteManifests: true,
+      isEntitled: true,
       isOrgAdmin: true,
       isSCACapable: true
     });
