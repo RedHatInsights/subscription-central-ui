@@ -33,8 +33,6 @@ it('renders the modal properly when the button is clicked', async () => {
 });
 
 it('renders the Create manifest form with disabled button for user', async () => {
-  window.insights = {};
-
   (useSatelliteVersions as jest.Mock).mockReturnValue({
     body: [] as SatelliteVersion[],
     isLoading: false,

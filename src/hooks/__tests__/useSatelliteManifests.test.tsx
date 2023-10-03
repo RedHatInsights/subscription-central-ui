@@ -15,16 +15,6 @@ beforeEach(() => {
   fetch.resetMocks();
 });
 
-Object.defineProperty(window, 'insights', {
-  value: {
-    chrome: {
-      auth: {
-        getToken: jest.fn()
-      }
-    }
-  }
-});
-
 describe('useSatelliteManifests hook', () => {
   it('passes manifests back when fetching from API', async () => {
     const manifestData = [
@@ -127,7 +117,7 @@ describe('useSatelliteManifests hook', () => {
     fetch.mockResponse(JSON.stringify({}), { status: 404 });
 
     try {
-      await fetchSatelliteManifestData();
+      await fetchSatelliteManifestData(new Promise((res) => res('')))();
     } catch (e) {
       expect(e.message).toContain('Error fetching manifest data:');
     }

@@ -1,4 +1,5 @@
 import { useQuery, QueryObserverResult } from 'react-query';
+import { useToken } from '../utilities/platformServices';
 
 interface ManifestEntitlement {
   id: string;
@@ -31,22 +32,26 @@ interface EntitlementsAttachedData {
   value?: ManifestEntitlement[];
 }
 
-const getManifestEntitlements = async (uuid: string): Promise<ManifestEntitlementsData> => {
-  const jwtToken = await window.insights.chrome.auth.getToken();
-  return fetch(`/api/rhsm/v2/manifests/${uuid}?include=entitlements`, {
-    headers: { Authorization: `Bearer ${jwtToken}` }
-  }).then((response) => {
-    if (response.status != 200) {
-      throw new Error(`Failed to fetch manifest entitlements: ${response.statusText}`);
-    }
-    return response.json();
-  });
-};
+const getManifestEntitlements =
+  (jwtToken: Promise<string>) =>
+  async (uuid: string): Promise<ManifestEntitlementsData> => {
+    return fetch(`/api/rhsm/v2/manifests/${uuid}?include=entitlements`, {
+      headers: { Authorization: `Bearer ${await jwtToken}` }
+    }).then((response) => {
+      if (response.status != 200) {
+        throw new Error(`Failed to fetch manifest entitlements: ${response.statusText}`);
+      }
+      return response.json();
+    });
+  };
 
 const useManifestEntitlements = (
   uuid: string
 ): QueryObserverResult<ManifestEntitlementsData, unknown> => {
-  return useQuery<any, Error>(['manifestEntitlements', uuid], () => getManifestEntitlements(uuid));
+  const jwtToken = useToken();
+  return useQuery<any, Error>(['manifestEntitlements', uuid], () =>
+    getManifestEntitlements(jwtToken)(uuid)
+  );
 };
 
 export {

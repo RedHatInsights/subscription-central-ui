@@ -49,8 +49,6 @@ describe('No Permissions Page', () => {
   });
 
   it('renders correctly', () => {
-    window.insights = {};
-
     const { getByText } = render(<Page />);
     expect(getByText('You do not have access to Manifests')).toBeInTheDocument();
   });

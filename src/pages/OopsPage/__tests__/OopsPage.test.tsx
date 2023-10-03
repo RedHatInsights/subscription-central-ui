@@ -48,8 +48,6 @@ describe('Oops Page', () => {
   });
 
   it('renders correctly', () => {
-    window.insights = {};
-
     const { getByText } = render(<Page />);
 
     expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();

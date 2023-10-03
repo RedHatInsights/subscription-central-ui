@@ -1,23 +1,18 @@
 import config, { EnvironmentConfig } from './config/config';
-
-declare global {
-  interface Window {
-    insights: any;
-  }
-}
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 interface AuthenticateUserResponse {
   entitlements: {
     [key: string]: any;
   };
   identity: {
-    account_number: string;
-    internal: {
+    account_number?: string;
+    internal?: {
       org_id: string;
       account_id: string;
     };
     type: string;
-    user: {
+    user?: {
       email: string;
       first_name: string;
       is_active: boolean;
@@ -30,9 +25,20 @@ interface AuthenticateUserResponse {
   };
 }
 
-const authenticateUser = (): Promise<AuthenticateUserResponse> => {
+const useAuthenticateUser = async (): Promise<AuthenticateUserResponse> => {
+  const chrome = useChrome();
+
   try {
-    return window.insights.chrome.auth.getUser();
+    const user = await chrome.auth.getUser();
+
+    if (!user) {
+      throw new Error('unable to authenticate');
+    }
+
+    return {
+      entitlements: user.entitlements,
+      identity: user.identity
+    };
   } catch (e) {
     throw new Error(`Error authenticating user: ${e.message}`);
   }
@@ -42,30 +48,34 @@ interface RbacPermission {
   permission: string;
   resourceDefinitions: Record<string, any>[];
 }
-const getUserRbacPermissions = (): Promise<RbacPermission[]> => {
-  try {
-    return window.insights.chrome.getUserPermissions('subscriptions');
-  } catch (e) {
-    throw new Error(`Error getting user permissions: ${e.message}`);
-  }
+const useUserRbacPermissions = (): Promise<RbacPermission[]> => {
+  const chrome = useChrome();
+  return chrome.getUserPermissions('subscriptions');
 };
 
 type AppEnvironment = 'ci' | 'qa' | 'stage' | 'prod';
 
-const getEnvironment = (): AppEnvironment => {
-  return window?.insights?.chrome?.getEnvironment() || 'ci';
+const useEnvironment = (): AppEnvironment => {
+  const chrome = useChrome();
+  return (chrome.getEnvironment() as AppEnvironment) || 'ci';
 };
 
-const getConfig = (): EnvironmentConfig => {
-  const env = getEnvironment();
+const useConfig = (): EnvironmentConfig => {
+  const env = useEnvironment();
   return config[env];
+};
+
+const useToken = () => {
+  const chrome = useChrome();
+  return chrome.auth.getToken();
 };
 
 export {
   AuthenticateUserResponse,
   RbacPermission,
-  authenticateUser,
-  getConfig,
-  getEnvironment,
-  getUserRbacPermissions
+  useAuthenticateUser,
+  useConfig,
+  useEnvironment,
+  useUserRbacPermissions,
+  useToken
 };

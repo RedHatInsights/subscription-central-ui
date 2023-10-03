@@ -4,10 +4,12 @@ import { useLocation } from 'react-router-dom';
 import { Processing } from '../emptyState';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import useUser from '../../hooks/useUser';
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 const Authentication: FC = ({ children }) => {
   const queryClient = useQueryClient();
   const location = useLocation();
+  const chrome = useChrome();
 
   const { isLoading, isFetching, isSuccess, isError } = useUser();
 
@@ -20,7 +22,7 @@ const Authentication: FC = ({ children }) => {
   }, [location.pathname]);
 
   useEffect(() => {
-    isSuccess && window.insights?.chrome?.hideGlobalFilter();
+    isSuccess && chrome.hideGlobalFilter(true);
   }, [isSuccess]);
 
   if (isError === true) {

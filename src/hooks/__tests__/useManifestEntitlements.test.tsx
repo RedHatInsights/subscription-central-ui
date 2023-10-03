@@ -20,16 +20,6 @@ const wrapper = ({ children }: wrapperProps) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-Object.defineProperty(window, 'insights', {
-  value: {
-    chrome: {
-      auth: {
-        getToken: jest.fn()
-      }
-    }
-  }
-});
-
 describe('useManifestEntitlements hook', () => {
   it('passes versions back when fetching from API', async () => {
     const mockResponse = {
@@ -70,7 +60,7 @@ describe('useManifestEntitlements hook', () => {
     fetch.mockResponse(JSON.stringify({}), { status: 400 });
 
     try {
-      await getManifestEntitlements('anything');
+      await getManifestEntitlements(new Promise((res) => res('')))('anything');
     } catch (e) {
       expect(e.message).toContain('Failed to fetch manifest entitlements:');
     }

@@ -10,16 +10,6 @@ beforeEach(() => {
   fetch.resetMocks();
 });
 
-Object.defineProperty(window, 'insights', {
-  value: {
-    chrome: {
-      auth: {
-        getToken: jest.fn()
-      }
-    }
-  }
-});
-
 const queryClient = new QueryClient();
 
 interface wrapperProps {
@@ -46,7 +36,7 @@ describe('useSatelliteVersions hook', () => {
     fetch.mockResponse(JSON.stringify({}), { status: 400 });
 
     try {
-      await fetchSatelliteVersions();
+      await fetchSatelliteVersions(new Promise((res) => res('')))();
     } catch (e) {
       expect(e.message).toContain('Failed to fetch satellite versions:');
     }

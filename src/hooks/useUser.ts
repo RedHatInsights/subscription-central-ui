@@ -1,5 +1,9 @@
-import { useQuery, UseQueryResult } from 'react-query';
-import { authenticateUser, getUserRbacPermissions } from '../utilities/platformServices';
+import { useQuery } from 'react-query';
+import {
+  useAuthenticateUser,
+  useToken,
+  useUserRbacPermissions
+} from '../utilities/platformServices';
 
 interface User {
   canReadManifests: boolean;
@@ -16,34 +20,34 @@ interface SCACapableStatusResponse {
   };
 }
 
-const fetchSCACapableStatus = async (): Promise<SCACapableStatusResponse> => {
-  const jwtToken = await window.insights.chrome.auth.getToken();
+const useSCACapableStatus = async (): Promise<SCACapableStatusResponse> => {
+  const jwtToken = useToken();
   return fetch('/api/rhsm/v2/organization', {
-    headers: { Authorization: `Bearer ${jwtToken}` }
+    headers: { Authorization: `Bearer ${await jwtToken}` }
   }).then((response) => response.json());
 };
 
-const getUser = async (): Promise<User> => {
-  return Promise.all([authenticateUser(), fetchSCACapableStatus(), getUserRbacPermissions()]).then(
-    ([userStatus, scaStatusResponse, rawRbacPermissions]) => {
-      const rbacPermissions = rawRbacPermissions.map((rawPermission) => rawPermission.permission);
-      const user: User = {
-        canReadManifests:
-          rbacPermissions.includes('subscriptions:manifests:read') ||
-          rbacPermissions.includes('subscriptions:*:*'),
-        canWriteManifests:
-          rbacPermissions.includes('subscriptions:manifests:write') ||
-          rbacPermissions.includes('subscriptions:*:*'),
-        isOrgAdmin: userStatus.identity.user.is_org_admin === true,
-        isSCACapable: scaStatusResponse.body.simpleContentAccessCapable === true
-      };
-      return user;
-    }
-  );
+const useUser = () => {
+  const authenticateUser = useAuthenticateUser();
+  const userRbacPermissions = useUserRbacPermissions();
+  const scaCapableStatus = useSCACapableStatus();
+  return useQuery('user', async () => {
+    const userStatus = await authenticateUser;
+    const rawRbacPermissions = await userRbacPermissions;
+    const scaStatusResponse = await scaCapableStatus;
+    const rbacPermissions = rawRbacPermissions.map((rawPermission) => rawPermission.permission);
+    const user: User = {
+      canReadManifests:
+        rbacPermissions.includes('subscriptions:manifests:read') ||
+        rbacPermissions.includes('subscriptions:*:*'),
+      canWriteManifests:
+        rbacPermissions.includes('subscriptions:manifests:write') ||
+        rbacPermissions.includes('subscriptions:*:*'),
+      isOrgAdmin: userStatus.identity.user.is_org_admin === true,
+      isSCACapable: scaStatusResponse.body.simpleContentAccessCapable === true
+    };
+    return user;
+  });
 };
 
-const useUser = (): UseQueryResult<User, unknown> => {
-  return useQuery('user', () => getUser());
-};
-
-export { fetchSCACapableStatus, getUser, SCACapableStatusResponse, useUser as default, User };
+export { SCACapableStatusResponse, useUser as default, User };
