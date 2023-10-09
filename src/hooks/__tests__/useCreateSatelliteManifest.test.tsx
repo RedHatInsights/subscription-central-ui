@@ -12,16 +12,6 @@ beforeEach(() => {
 
 const queryClient = new QueryClient();
 
-Object.defineProperty(window, 'insights', {
-  value: {
-    chrome: {
-      auth: {
-        getToken: jest.fn()
-      }
-    }
-  }
-});
-
 describe('useCreateSatelliteManifest hook', () => {
   it('returns success when given correct inputs', async () => {
     const mockResponse = { status: 200 };

@@ -1,4 +1,5 @@
 import { useMutation, UseMutationResult } from 'react-query';
+import { useToken } from '../utilities/platformServices';
 
 interface TriggerManifestExportResponse {
   body: {
@@ -14,63 +15,71 @@ interface ExportManifestStatusResponse {
   };
 }
 
-const triggerManifestExport = async (uuid: string): Promise<TriggerManifestExportResponse> => {
-  const jwtToken = await window.insights.chrome.auth.getToken();
-  return fetch(`/api/rhsm/v2/manifests/${uuid}/export`, {
-    headers: { Authorization: `Bearer ${jwtToken}` }
-  }).then((response) => {
-    if (response.status != 200) {
-      throw new Error(`Failed to trigger export: ${response.statusText}`);
-    }
-    return response.json();
-  });
-};
+const triggerManifestExport =
+  (jwtToken: Promise<string>) =>
+  async (uuid: string): Promise<TriggerManifestExportResponse> => {
+    return fetch(`/api/rhsm/v2/manifests/${uuid}/export`, {
+      headers: { Authorization: `Bearer ${await jwtToken}` }
+    }).then((response) => {
+      if (response.status != 200) {
+        throw new Error(`Failed to trigger export: ${response.statusText}`);
+      }
+      return response.json();
+    });
+  };
 
 const sleep = (milliseconds: number) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
 
-const getManifestExportStatus = async (
-  uuid: string,
-  exportJobID: string
-): Promise<ExportManifestStatusResponse> => {
-  const jwtToken = await window.insights.chrome.auth.getToken();
-  const response = await fetch(`/api/rhsm/v2/manifests/${uuid}/exportJob/${exportJobID}`, {
-    headers: { Authorization: `Bearer ${jwtToken}` }
-  });
+const getManifestExportStatus =
+  (jwtToken: Promise<string>) =>
+  async (uuid: string, exportJobID: string): Promise<ExportManifestStatusResponse> => {
+    const response = await fetch(`/api/rhsm/v2/manifests/${uuid}/exportJob/${exportJobID}`, {
+      headers: { Authorization: `Bearer ${await jwtToken}` }
+    });
 
-  if (response.status === 200) {
-    return response.json();
-  } else if (response.status === 202 || response.status === 404) {
-    // Export not ready, we need to pause and retry.
-    await sleep(5000);
-    return getManifestExportStatus(uuid, exportJobID);
-  } else {
-    throw new Error('Error fetching status of exported manifest');
-  }
-};
-
-const downloadExportedManifest = async (uuid: string, exportID: string): Promise<Blob> => {
-  const jwtToken = await window.insights.chrome.auth.getToken();
-  return fetch(`/api/rhsm/v2/manifests/${uuid}/export/${exportID}`, {
-    headers: { Authorization: `Bearer ${jwtToken}`, 'Content-Type': 'application/zip' }
-  }).then((response) => {
-    if (response.status != 200) {
-      throw new Error(`Could not download manifest: ${response.statusText}`);
+    if (response.status === 200) {
+      return response.json();
+    } else if (response.status === 202 || response.status === 404) {
+      // Export not ready, we need to pause and retry.
+      await sleep(5000);
+      return getManifestExportStatus(jwtToken)(uuid, exportJobID);
+    } else {
+      throw new Error('Error fetching status of exported manifest');
     }
-    return response.blob();
-  });
-};
+  };
 
-const exportManifest = async (uuid: string): Promise<Blob> => {
-  const triggerResponse = await triggerManifestExport(uuid);
+const downloadExportedManifest =
+  (jwtToken: Promise<string>) =>
+  async (uuid: string, exportID: string): Promise<Blob> => {
+    return fetch(`/api/rhsm/v2/manifests/${uuid}/export/${exportID}`, {
+      headers: { Authorization: `Bearer ${await jwtToken}`, 'Content-Type': 'application/zip' }
+    }).then((response) => {
+      if (response.status != 200) {
+        throw new Error(`Could not download manifest: ${response.statusText}`);
+      }
+      return response.blob();
+    });
+  };
 
-  const statusResponse = await getManifestExportStatus(uuid, triggerResponse.body.exportJobID);
+const exportManifest =
+  (jwtToken: Promise<string>) =>
+  async (uuid: string): Promise<Blob> => {
+    const triggerResponse = await triggerManifestExport(jwtToken)(uuid);
 
-  const downloadResponse = await downloadExportedManifest(uuid, statusResponse.body.exportID);
+    const statusResponse = await getManifestExportStatus(jwtToken)(
+      uuid,
+      triggerResponse.body.exportJobID
+    );
 
-  return downloadResponse;
-};
+    const downloadResponse = await downloadExportedManifest(jwtToken)(
+      uuid,
+      statusResponse.body.exportID
+    );
+
+    return downloadResponse;
+  };
 
 interface ExportManifestParams {
   uuid: string;
@@ -82,8 +91,9 @@ const useExportSatelliteManifest = (): UseMutationResult<
   ExportManifestParams,
   unknown
 > => {
+  const jwtToken = useToken();
   return useMutation((exportManifestParams: ExportManifestParams) =>
-    exportManifest(exportManifestParams.uuid)
+    exportManifest(jwtToken)(exportManifestParams.uuid)
   );
 };
 

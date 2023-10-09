@@ -60,8 +60,6 @@ describe('Satellite Manifests Page', () => {
   });
 
   it('renders correctly with satellite data', async () => {
-    window.insights = {};
-
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
       data: [
@@ -83,8 +81,6 @@ describe('Satellite Manifests Page', () => {
   describe('when the user status call is still loading', () => {
     def('loading', () => true);
     it('renders loading', () => {
-      window.insights = {};
-
       (useSatelliteManifests as jest.Mock).mockReturnValue({
         isLoading: true,
         data: [],
@@ -96,8 +92,6 @@ describe('Satellite Manifests Page', () => {
     });
   });
   it('renders loading when it has not received a response back', () => {
-    window.insights = {};
-
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: true,
       data: [],
@@ -123,8 +117,6 @@ describe('when the user does not have write permissions', () => {
   def('canWriteManifests', () => false);
 
   it('renders an empty table when the API returns no manifests', async () => {
-    window.insights = {};
-
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
       data: []
@@ -136,7 +128,6 @@ describe('when the user does not have write permissions', () => {
 });
 
 it('renders with an error message when an API fails', async () => {
-  window.insights = {};
   (useSatelliteManifests as jest.Mock).mockReturnValue({
     isLoading: false,
     error: true,
@@ -151,7 +142,6 @@ describe('when the user call fails', () => {
   def('error', () => true);
 
   it('renders an error message', async () => {
-    window.insights = {};
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
       error: true,

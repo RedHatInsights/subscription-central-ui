@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react-hooks';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
-import { authenticateUser, getUserRbacPermissions } from '../../utilities/platformServices';
+import { useAuthenticateUser, useUserRbacPermissions } from '../../utilities/platformServices';
 import useUser from '../useUser';
 import { createQueryWrapper } from '../../utilities/testHelpers';
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 enableFetchMocks();
 
@@ -10,25 +11,15 @@ beforeEach(() => {
   fetch.resetMocks();
 });
 
-Object.defineProperty(window, 'insights', {
-  value: {
-    chrome: {
-      auth: {
-        getToken: jest.fn()
-      }
-    }
-  }
-});
-
 jest.mock('../../utilities/platformServices', () => ({
   ...(jest.requireActual('../../utilities/platformServices') as Record<string, unknown>),
-  authenticateUser: jest.fn(),
-  getUserRbacPermissions: jest.fn()
+  useAuthenticateUser: jest.fn(),
+  useUserRbacPermissions: jest.fn()
 }));
 
 describe('useUser hook', () => {
   it('gets the user permissions back from two API calls', async () => {
-    (authenticateUser as jest.Mock).mockResolvedValue({
+    (useAuthenticateUser as jest.Mock).mockResolvedValue({
       identity: {
         user: {
           is_org_admin: true
@@ -44,18 +35,18 @@ describe('useUser hook', () => {
       }
     };
 
-    (getUserRbacPermissions as jest.Mock).mockResolvedValue([
+    (useUserRbacPermissions as jest.Mock).mockResolvedValue([
       { permission: 'subscriptions:manifests:read' },
       { permission: 'subscriptions:manifests:write' }
     ]);
 
-    fetch.mockResponseOnce(JSON.stringify(mockSCAStatusResponse));
+    fetch.mockResponse(JSON.stringify(mockSCAStatusResponse));
 
     const { result, waitFor } = renderHook(() => useUser(), {
       wrapper: createQueryWrapper()
     });
 
-    await waitFor(() => result.current.isSuccess);
+    await waitFor(() => result.current.isSuccess || result.current.isError);
 
     expect(result.current.data).toEqual({
       canReadManifests: true,
@@ -63,12 +54,24 @@ describe('useUser hook', () => {
       isOrgAdmin: true,
       isSCACapable: true
     });
+    expect(true).toBeTruthy();
   });
 
   it('does not return anything if the Authenticate User API call fails', async () => {
     const originalError = console.error;
+    const mockSCAStatusResponse = {
+      body: {
+        id: '123456',
+        simpleContentAccess: 'enabled',
+        simpleContentAccessCapable: true
+      }
+    };
 
-    (authenticateUser as jest.Mock).mockRejectedValue({ status: 'error' });
+    fetch.mockResponse(JSON.stringify(mockSCAStatusResponse));
+    (useAuthenticateUser as jest.Mock).mockImplementation(async () => {
+      await new Promise((res) => setTimeout(res, 5));
+      throw new Error('error');
+    });
 
     const { result, waitFor } = renderHook(() => useUser(), {
       wrapper: createQueryWrapper()

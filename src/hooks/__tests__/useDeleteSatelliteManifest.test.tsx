@@ -11,16 +11,6 @@ const wrapper = ({ children }: any) => {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
 
-Object.defineProperty(window, 'insights', {
-  value: {
-    chrome: {
-      auth: {
-        getToken: jest.fn()
-      }
-    }
-  }
-});
-
 describe('useDeleteSatelliteManifest hook', () => {
   const { result, waitFor } = renderHook(() => useDeleteSatelliteManifest(), { wrapper });
   let status: number;

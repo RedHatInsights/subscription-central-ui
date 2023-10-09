@@ -12,20 +12,12 @@ import useExportSatelliteManifest, {
 
 enableFetchMocks();
 
-Object.defineProperty(window, 'insights', {
-  value: {
-    chrome: {
-      auth: {
-        getToken: jest.fn()
-      }
-    }
-  }
-});
-
 beforeEach(() => {
   fetch.resetMocks();
   jest.setTimeout(10000);
 });
+
+const jwtMock = () => new Promise((res) => res('')) as Promise<string>;
 
 describe('triggerManifestExport method', () => {
   it('gets data back with a successful API response', async () => {
@@ -38,7 +30,7 @@ describe('triggerManifestExport method', () => {
 
     fetch.mockResponseOnce(JSON.stringify(triggerManifestExportResponse));
 
-    const result = await triggerManifestExport('abd123');
+    const result = await triggerManifestExport(jwtMock())('abd123');
     expect(result).toEqual(triggerManifestExportResponse);
   });
 
@@ -46,7 +38,7 @@ describe('triggerManifestExport method', () => {
     fetch.mockResponse(JSON.stringify({}), { status: 400 });
 
     try {
-      await triggerManifestExport('abd123');
+      await triggerManifestExport(jwtMock())('abd123');
     } catch (e) {
       expect(e.message).toContain('Failed to trigger export:');
     }
@@ -64,7 +56,7 @@ describe('getManifestExportStatus method', () => {
 
     fetch.mockResponseOnce(JSON.stringify(exportManifestStatusResponse));
 
-    const result = await getManifestExportStatus('123456', 'abc123');
+    const result = await getManifestExportStatus(jwtMock())('123456', 'abc123');
     expect(result).toEqual(exportManifestStatusResponse);
   });
 
@@ -80,7 +72,7 @@ describe('getManifestExportStatus method', () => {
 
     fetch.mockResponseOnce(JSON.stringify(exportManifestStatusResponse));
 
-    const result = await getManifestExportStatus('123456', 'abc123');
+    const result = await getManifestExportStatus(jwtMock())('123456', 'abc123');
     expect(result).toEqual(exportManifestStatusResponse);
   });
 
@@ -88,7 +80,7 @@ describe('getManifestExportStatus method', () => {
     fetch.mockResponseOnce(JSON.stringify({}), { status: 401 });
 
     try {
-      await getManifestExportStatus('123456', 'abc123');
+      await getManifestExportStatus(jwtMock())('123456', 'abc123');
     } catch (e) {
       expect(e.message).toEqual('Error fetching status of exported manifest');
     }
@@ -101,14 +93,14 @@ describe('downloadExportedManifest', () => {
 
     fetch.mockResponseOnce(JSON.stringify(downloadResponse));
 
-    const result = await downloadExportedManifest('123456', 'abc123');
+    const result = await downloadExportedManifest(jwtMock())('123456', 'abc123');
     expect(result.constructor.name).toEqual('Blob');
   });
 
   it('throws an error if not 200', async () => {
     fetch.mockResponse(JSON.stringify({}), { status: 400 });
     try {
-      await downloadExportedManifest('123456', 'abc123');
+      await downloadExportedManifest(jwtMock())('123456', 'abc123');
     } catch (e) {
       expect(e.message).toContain('Could not download manifest');
     }

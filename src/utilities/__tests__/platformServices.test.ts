@@ -1,42 +1,26 @@
-import { authenticateUser, getEnvironment, getUserRbacPermissions } from '../platformServices';
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
+import { useAuthenticateUser, useEnvironment, useUserRbacPermissions } from '../platformServices';
 
-beforeEach(() => {
-  window.insights = {
-    chrome: {
-      auth: {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        getUser: () => {}
-      }
-    }
-  };
-});
+jest.mock('@redhat-cloud-services/frontend-components/useChrome');
 
 describe('authenticateUser', () => {
-  it('should return a promise with user data', () => {
-    window.insights.chrome.auth.getUser = jest.fn().mockResolvedValue({
-      identity: {
-        user: {
-          email: 'john.doe@redhat.com'
-        }
-      }
-    });
-
-    expect(authenticateUser()).resolves.toEqual({
-      identity: {
-        user: {
-          email: 'john.doe@redhat.com'
-        }
-      }
-    });
+  it('should return a promise with user data', async () => {
+    const user = await useAuthenticateUser();
+    expect(user.identity.user.email).toEqual('john.doe@redhat.com');
   });
 
   it('should throw an error if rejected', () => {
-    window.insights.chrome.auth.getUser = jest.fn().mockImplementation(() => {
-      throw new Error('Error getting user');
-    });
+    jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
+      __esModule: true,
+      default: () => ({
+        getUser: () => {
+          throw new Error('Error getting user');
+        }
+      })
+    }));
 
     try {
-      authenticateUser();
+      useAuthenticateUser();
     } catch (e) {
       expect(e.message).toEqual('Error authenticating user: Error getting user');
     }
@@ -45,24 +29,22 @@ describe('authenticateUser', () => {
 
 describe('getUserRbacPermissions', () => {
   it('should return a promise with user RBAC permissions', () => {
-    window.insights.chrome.getUserPermissions = jest.fn().mockResolvedValue([
-      { resourceDefinitions: [], permission: 'subscriptions:manifests:read' },
-      { resourceDefinitions: [], permission: 'subscriptions:manifests:write' }
-    ]);
-
-    expect(getUserRbacPermissions()).resolves.toEqual([
+    expect(useUserRbacPermissions()).resolves.toEqual([
       { resourceDefinitions: [], permission: 'subscriptions:manifests:read' },
       { resourceDefinitions: [], permission: 'subscriptions:manifests:write' }
     ]);
   });
 
   it('should throw an error if rejected', () => {
-    window.insights.chrome.getUserPermissions = jest.fn().mockImplementation(() => {
-      throw new Error('Nope');
-    });
+    jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => ({
+      __esModule: true,
+      default: () => ({
+        getUserPermissions: () => 'Nope'
+      })
+    }));
 
     try {
-      authenticateUser();
+      useAuthenticateUser();
     } catch (e) {
       expect(e.message).toEqual('Error getting user permissions: Nope');
     }
@@ -71,14 +53,10 @@ describe('getUserRbacPermissions', () => {
 
 describe('getEnvironment', () => {
   it('returns the environment', () => {
-    window.insights.chrome.getEnvironment = jest.fn().mockReturnValue('qa');
-
-    expect(getEnvironment()).toEqual('qa');
+    expect(useEnvironment()).toEqual('qa');
   });
 
   it('defaults to returning "ci"', () => {
-    window.insights.chrome.getEnvironment = jest.fn().mockReturnValue(null);
-
-    expect(getEnvironment()).toEqual('ci');
+    expect(useEnvironment()).toEqual('ci');
   });
 });

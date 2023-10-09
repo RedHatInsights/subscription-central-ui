@@ -1,4 +1,5 @@
 import { useQuery, QueryObserverResult } from 'react-query';
+import { useToken } from '../utilities/platformServices';
 
 type ManifestEntry = {
   entitlementQuantity: number;
@@ -19,46 +20,47 @@ interface SatelliteManifestAPIData {
   };
 }
 
-const fetchSatelliteManifestData = async (offset = 0): Promise<ManifestEntry[]> => {
-  const jwtToken = await window.insights.chrome.auth.getToken();
+const fetchSatelliteManifestData =
+  (jwtToken: Promise<string>) =>
+  async (offset = 0): Promise<ManifestEntry[]> => {
+    const response = await fetch(`/api/rhsm/v2/manifests?type=Satellite&offset=${offset}`, {
+      headers: { Authorization: `Bearer ${await jwtToken}` }
+    });
 
-  const response = await fetch(`/api/rhsm/v2/manifests?type=Satellite&offset=${offset}`, {
-    headers: { Authorization: `Bearer ${jwtToken}` }
-  });
+    if (response.status != 200) {
+      throw new Error(`Error fetching manifest data: ${response.statusText}`);
+    }
 
-  if (response.status != 200) {
-    throw new Error(`Error fetching manifest data: ${response.statusText}`);
-  }
+    const manifestResponseData: SatelliteManifestAPIData = await response.json();
 
-  const manifestResponseData: SatelliteManifestAPIData = await response.json();
+    const { count, limit } = manifestResponseData.pagination;
 
-  const { count, limit } = manifestResponseData.pagination;
+    const manifests: ManifestEntry[] = manifestResponseData.body;
 
-  const manifests: ManifestEntry[] = manifestResponseData.body;
+    if (count === limit) {
+      // Fetch the next page's data
+      const newOffset = offset + limit;
 
-  if (count === limit) {
-    // Fetch the next page's data
-    const newOffset = offset + limit;
+      const additionalManifests = await fetchSatelliteManifestData(jwtToken)(newOffset);
 
-    const additionalManifests = await fetchSatelliteManifestData(newOffset);
+      manifests.push(...additionalManifests);
+    }
 
-    manifests.push(...additionalManifests);
-  }
-
-  return manifests;
-};
+    return manifests;
+  };
 
 const getOnlyManifestsV6AndHigher = (data: ManifestEntry[]): ManifestEntry[] => {
   return data.filter((manifest) => parseInt(manifest.version) >= 6);
 };
 
-const getSatelliteManifests = async (): Promise<ManifestEntry[]> => {
-  const manifestData = await fetchSatelliteManifestData();
+const getSatelliteManifests = (jwtToken: Promise<string>) => async (): Promise<ManifestEntry[]> => {
+  const manifestData = await fetchSatelliteManifestData(jwtToken)();
   return getOnlyManifestsV6AndHigher(manifestData);
 };
 
 const useSatelliteManifests = (): QueryObserverResult<ManifestEntry[], unknown> => {
-  return useQuery('manifests', () => getSatelliteManifests());
+  const jwtToken = useToken();
+  return useQuery('manifests', () => getSatelliteManifests(jwtToken)());
 };
 
 export {

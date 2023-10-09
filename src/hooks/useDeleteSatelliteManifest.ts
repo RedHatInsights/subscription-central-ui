@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from 'react-query';
+import { useToken } from '../utilities/platformServices';
 import { ManifestEntry } from './useSatelliteManifests';
 
-const deleteSatelliteManifest = async (uuid: string) => {
-  const jwtToken = await window.insights.chrome.auth.getToken();
+const deleteSatelliteManifest = (jwtToken: Promise<string>) => async (uuid: string) => {
   return fetch(`/api/rhsm/v2/manifests/${uuid}?force=true`, {
     method: 'DELETE',
-    headers: { Authorization: `Bearer ${jwtToken}` }
+    headers: { Authorization: `Bearer ${await jwtToken}` }
   }).then((response) => {
     if (response.status != 204) {
       throw new Error(
@@ -17,7 +17,8 @@ const deleteSatelliteManifest = async (uuid: string) => {
 
 const useDeleteSatelliteManifest = () => {
   const queryClient = useQueryClient();
-  return useMutation((uuid: string) => deleteSatelliteManifest(uuid), {
+  const jwtToken = useToken();
+  return useMutation((uuid: string) => deleteSatelliteManifest(jwtToken)(uuid), {
     onSuccess: (_, uuid) => {
       queryClient.setQueryData('manifests', (oldData: ManifestEntry[]) =>
         oldData.filter((entry) => entry.uuid != uuid)

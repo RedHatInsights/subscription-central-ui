@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient, UseMutationResult, QueryClient } from 'react-query';
 import { ManifestEntry } from './useSatelliteManifests';
 import { ManifestEntitlementsData } from './useManifestEntitlements';
+import { useToken } from '../utilities/platformServices';
 
 interface UpdateManifestSCAStatusParams {
   uuid: string;
@@ -12,33 +13,32 @@ interface UpdateManifestSCAStatus {
   status: number;
 }
 
-const updateManifestSCAStatus = async (
-  data: UpdateManifestSCAStatusParams
-): Promise<void | UpdateManifestSCAStatus> => {
-  const { uuid, newSCAStatus } = data;
-  const jwtToken = await window.insights.chrome.auth.getToken();
+const updateManifestSCAStatus =
+  (jwtToken: Promise<string>) =>
+  async (data: UpdateManifestSCAStatusParams): Promise<void | UpdateManifestSCAStatus> => {
+    const { uuid, newSCAStatus } = data;
 
-  const requestData = {
-    simpleContentAccess: newSCAStatus
-  };
+    const requestData = {
+      simpleContentAccess: newSCAStatus
+    };
 
-  return fetch(`/api/rhsm/v2/manifests/${uuid}`, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${jwtToken}` },
-    body: JSON.stringify(requestData)
-  })
-    .then((response) => {
-      if (response.status !== 204) {
-        throw new Error(
-          `Status Code ${response.status}.  Error updating SCA status: ${response.statusText}.  `
-        );
-      }
-      return { success: true, status: response.status };
+    return fetch(`/api/rhsm/v2/manifests/${uuid}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${await jwtToken}` },
+      body: JSON.stringify(requestData)
     })
-    .catch((e) => {
-      console.error(e);
-    });
-};
+      .then((response) => {
+        if (response.status !== 204) {
+          throw new Error(
+            `Status Code ${response.status}.  Error updating SCA status: ${response.statusText}.  `
+          );
+        }
+        return { success: true, status: response.status };
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
 
 const updateManifestSCAQueryData = (
   queryClient: QueryClient,
@@ -84,9 +84,10 @@ const useUpdateManifestSCAStatus = (): UseMutationResult<
   unknown
 > => {
   const queryClient = useQueryClient();
+  const jwtToken = useToken();
   return useMutation(
     (updateManifestSCAStatusParams: UpdateManifestSCAStatusParams) =>
-      updateManifestSCAStatus(updateManifestSCAStatusParams),
+      updateManifestSCAStatus(jwtToken)(updateManifestSCAStatusParams),
     {
       onSuccess: (data, updateManifestSCAStatusParams) => {
         if (!data) return;
