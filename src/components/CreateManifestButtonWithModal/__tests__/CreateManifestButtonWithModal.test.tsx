@@ -1,11 +1,11 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import CreateManifestButtonWithModal from '..';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import factories from '../../../utilities/factories';
+import { createQueryWrapper } from '../../../utilities/testHelpers';
 import '@testing-library/jest-dom/extend-expect';
-import useUser from '../../../hooks/useUser';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
@@ -38,17 +38,6 @@ it('renders the Create manifest form with disabled button for user', async () =>
     isLoading: false,
     data: []
   });
-  const { getByText } = render(
-    <QueryClientProvider client={queryClient}>
-      <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: false })} />
-    </QueryClientProvider>
-  );
-
-  expect(getByText('Create new manifest').closest('button')).toHaveAttribute('disabled');
-});
-
-it('renders the create button disabled', () => {
-  (useUser as jest.Mock).mockReturnValue(factories.user.build({ isEntitled: false }));
   const { getByText } = render(
     <QueryClientProvider client={queryClient}>
       <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: false })} />

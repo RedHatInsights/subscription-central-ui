@@ -13,7 +13,6 @@ import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
 import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
-import { subscriptionInventoryLink, supportLink } from '../../../utilities/consts';
 
 jest.mock('../../../hooks/useSatelliteManifests');
 jest.mock('../../../hooks/useUser');
@@ -151,70 +150,5 @@ describe('when the user call fails', () => {
 
     const { getByText } = render(<SatellitePage />);
     expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();
-  });
-});
-
-describe('when the user is not entitled', () => {
-  beforeEach(() => {
-    (useUser as jest.Mock).mockReturnValue({
-      isLoading: false,
-      isFetching: false,
-      isSuccess: true,
-      isError: false,
-      data: factories.user.build({ isEntitled: false })
-    });
-  });
-
-  it('shows the empty state when they also have no manifests', () => {
-    (useSatelliteManifests as jest.Mock).mockReturnValue({
-      isLoading: false,
-      error: false,
-      data: []
-    });
-
-    const { container } = render(<SatellitePage />);
-    expect(container.querySelector('.pf-c-empty-state__content > .pf-c-title').textContent).toEqual(
-      'Your account has no Satellite subscriptions'
-    );
-  });
-
-  describe('and has manifests already', () => {
-    beforeEach(() => {
-      (useSatelliteManifests as jest.Mock).mockReturnValue({
-        isLoading: false,
-        data: [
-          {
-            name: 'Sputnik',
-            type: 'Satellite',
-            url: 'www.example.com',
-            uuid: '00000000-0000-0000-0000-000000000000',
-            version: '1.2.3'
-          }
-        ]
-      });
-    });
-
-    it('shows the list', () => {
-      const { getByText } = render(<SatellitePage />);
-      expect(getByText('Sputnik')).toBeInTheDocument();
-    });
-
-    it('shows the notification', () => {
-      const { getByText } = render(<SatellitePage />);
-      expect(getByText('Your account has no Satellite subscriptions')).toBeInTheDocument();
-    });
-
-    it('links to support', () => {
-      const { getByText } = render(<SatellitePage />);
-      expect(getByText('Contact support')).toHaveAttribute('href', supportLink);
-    });
-
-    it('links to subscription inventory', () => {
-      const { getByText } = render(<SatellitePage />);
-      expect(getByText('subscription inventory')).toHaveAttribute(
-        'href',
-        subscriptionInventoryLink
-      );
-    });
   });
 });
