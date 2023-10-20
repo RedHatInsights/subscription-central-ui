@@ -5,5 +5,6 @@ export default Factory.define<User>(() => ({
   canReadManifests: true,
   canWriteManifests: true,
   isOrgAdmin: true,
-  isSCACapable: true
+  isSCACapable: true,
+  isEntitled: true
 }));

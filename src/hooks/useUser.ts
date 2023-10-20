@@ -8,6 +8,7 @@ import {
 interface User {
   canReadManifests: boolean;
   canWriteManifests: boolean;
+  isEntitled: boolean;
   isOrgAdmin: boolean;
   isSCACapable: boolean;
 }
@@ -43,6 +44,7 @@ const useUser = () => {
       canWriteManifests:
         rbacPermissions.includes('subscriptions:manifests:write') ||
         rbacPermissions.includes('subscriptions:*:*'),
+      isEntitled: userStatus.entitlements.smart_management?.is_entitled,
       isOrgAdmin: userStatus.identity.user.is_org_admin === true,
       isSCACapable: scaStatusResponse.body.simpleContentAccessCapable === true
     };

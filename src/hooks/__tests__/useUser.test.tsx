@@ -3,7 +3,6 @@ import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import { useAuthenticateUser, useUserRbacPermissions } from '../../utilities/platformServices';
 import useUser from '../useUser';
 import { createQueryWrapper } from '../../utilities/testHelpers';
-import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 enableFetchMocks();
 
@@ -24,6 +23,9 @@ describe('useUser hook', () => {
         user: {
           is_org_admin: true
         }
+      },
+      entitlements: {
+        smart_management: { is_entitled: true }
       }
     });
 
@@ -51,6 +53,7 @@ describe('useUser hook', () => {
     expect(result.current.data).toEqual({
       canReadManifests: true,
       canWriteManifests: true,
+      isEntitled: true,
       isOrgAdmin: true,
       isSCACapable: true
     });
