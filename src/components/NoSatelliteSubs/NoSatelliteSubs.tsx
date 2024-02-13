@@ -1,8 +1,8 @@
 import { EmptyStateIcon } from '@patternfly/react-core';
-import { EmptyState } from '@patternfly/react-core';
+import { EmptyState, EmptyStateHeader } from '@patternfly/react-core';
 import React from 'react';
 import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
-import { Title } from '@patternfly/react-core';
+import {} from '@patternfly/react-core';
 import { EmptyStateBody } from '@patternfly/react-core';
 import { Text, TextContent } from '@patternfly/react-core';
 import { Button } from '@patternfly/react-core';
@@ -11,11 +11,12 @@ import { supportLink, subscriptionInventoryLink } from '../../utilities/consts';
 
 export const NoSatelliteSubs = () => {
   return (
-    <EmptyState variant={EmptyStateVariant.large}>
-      <EmptyStateIcon icon={WrenchIcon} />
-      <Title headingLevel="h2" size="lg">
-        Your account has no Satellite subscriptions
-      </Title>
+    <EmptyState variant={EmptyStateVariant.lg}>
+      <EmptyStateHeader
+        titleText="Your account has no Satellite subscriptions"
+        icon={<EmptyStateIcon icon={WrenchIcon} />}
+        headingLevel="h2"
+      />
       <EmptyStateBody>
         <TextContent className="pf-u-mb-xl">
           <Text variant="small">

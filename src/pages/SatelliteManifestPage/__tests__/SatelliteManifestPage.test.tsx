@@ -173,9 +173,10 @@ describe('when the user is not entitled', () => {
     });
 
     const { container } = render(<SatellitePage />);
-    expect(container.querySelector('.pf-c-empty-state__content > .pf-c-title').textContent).toEqual(
-      'Your account has no Satellite subscriptions'
-    );
+    expect(
+      container.querySelector('.pf-v5-c-empty-state__content .pf-v5-c-empty-state__title h2')
+        .textContent
+    ).toEqual('Your account has no Satellite subscriptions');
   });
 
   describe('and has manifests already', () => {

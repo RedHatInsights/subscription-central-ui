@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
 import { Text, TextContent } from '@patternfly/react-core';
 import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
@@ -11,6 +10,7 @@ import ExternalLink from '../../components/ExternalLink';
 import { NoSatelliteSubs } from '../../components/NoSatelliteSubs';
 import { Alert } from '@patternfly/react-core';
 import { subscriptionInventoryLink, supportLink } from '../../utilities/consts';
+import { PageSection } from '@patternfly/react-core';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
@@ -47,7 +47,7 @@ const SatelliteManifestPage: FC = () => {
           </Text>
         </TextContent>
       </PageHeader>
-      <Main>
+      <PageSection>
         <>
           {isLoading && !error && <Processing />}
 
@@ -59,7 +59,7 @@ const SatelliteManifestPage: FC = () => {
 
           {error && <Unavailable />}
         </>
-      </Main>
+      </PageSection>
     </>
   );
 };

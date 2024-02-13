@@ -4,14 +4,13 @@ import {
   Checkbox,
   EmptyState,
   EmptyStateIcon,
-  List,
-  ListItem,
   Modal,
   ModalVariant,
   Spinner,
   Text,
   TextContent,
-  TextVariants
+  TextVariants,
+  EmptyStateHeader
 } from '@patternfly/react-core';
 import useDeleteSatelliteManifest from '../../hooks/useDeleteSatelliteManifest';
 import useNotifications from '../../hooks/useNotifications';
@@ -42,7 +41,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
   } = useDeleteSatelliteManifest();
   const requestCompleted = manifestDeleted || manifestFailedToDelete;
 
-  const handleCheckbox = (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
 
@@ -80,7 +79,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     if (isDeletingManifest) {
       return (
         <EmptyState>
-          <EmptyStateIcon variant="container" component={Spinner} />
+          <EmptyStateHeader icon={<EmptyStateIcon icon={Spinner} />} />
         </EmptyState>
       );
     } else {
@@ -95,7 +94,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
             label="I acknowledge that this action cannot be undone"
             isChecked={checked}
             id="confirmation_checkbox"
-            onChange={handleCheckbox}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleCheckbox(event)}
           />
         </TextContent>
       );

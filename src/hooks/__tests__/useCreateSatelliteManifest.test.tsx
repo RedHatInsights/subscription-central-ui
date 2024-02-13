@@ -37,8 +37,9 @@ describe('useCreateSatelliteManifest hook', () => {
 
     expect(getByTestId('title').textContent).toBe('');
     fireEvent.click(getByText('mutate'));
-    await waitFor(() => getByTestId('title'));
-    expect(getByTestId('title').textContent).toBe('Success');
+    await waitFor(() => {
+      expect(getByTestId('title').textContent).toBe('Success');
+    });
   });
 
   it('returns an error if status is not 200 when given correct inputs', async () => {
@@ -66,9 +67,9 @@ describe('useCreateSatelliteManifest hook', () => {
 
     expect(getByTestId('title').textContent).toBe('');
     fireEvent.click(getByText('mutate'));
-    await waitFor(() => getByTestId('title'));
-    expect(getByTestId('title').textContent).toBe('Error');
-
+    await waitFor(() => {
+      expect(getByTestId('title').textContent).toBe('Error');
+    });
     console.error = originalError;
   });
 });

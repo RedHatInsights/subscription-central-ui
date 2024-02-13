@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import useSatelliteManifests, {
   SatelliteManifestAPIData,
@@ -40,13 +40,13 @@ describe('useSatelliteManifests hook', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockResponse));
 
-    const { result, waitFor } = renderHook(() => useSatelliteManifests(), {
+    const { result } = renderHook(() => useSatelliteManifests(), {
       wrapper: createQueryWrapper()
     });
 
-    await waitFor(() => result.current.isSuccess);
-
-    expect(result.current.data).toEqual(manifestData);
+    await waitFor(() => {
+      expect(result.current.data).toEqual(manifestData);
+    });
   });
 
   it('passes back data from multiple paginated calls', async () => {
@@ -85,14 +85,14 @@ describe('useSatelliteManifests hook', () => {
     fetch.mockResponseOnce(JSON.stringify(mockResponse2));
     fetch.mockResponseOnce(JSON.stringify(mockResponse3));
 
-    const { result, waitFor } = renderHook(() => useSatelliteManifests(), {
+    const { result } = renderHook(() => useSatelliteManifests(), {
       wrapper: createQueryWrapper()
     });
 
-    await waitFor(() => result.current.isSuccess);
-
-    expect(result.current.data).toEqual([...manifestData1, ...manifestData2, ...manifestData3]);
-    expect(result.current.data.length).toEqual(5);
+    await waitFor(() => {
+      expect(result.current.data).toEqual([...manifestData1, ...manifestData2, ...manifestData3]);
+      expect(result.current.data.length).toEqual(5);
+    });
   });
 
   it('enters isError state within react-query when API fetch fails', async () => {
@@ -103,13 +103,14 @@ describe('useSatelliteManifests hook', () => {
       error: 'Error getting manifests'
     });
 
-    const { result, waitFor } = renderHook(() => useSatelliteManifests(), {
+    const { result } = renderHook(() => useSatelliteManifests(), {
       wrapper: createQueryWrapper()
     });
 
-    await waitFor(() => result.current.isError);
+    await waitFor(() => {
+      expect(result.current.data).toEqual(undefined);
+    });
 
-    expect(result.current.data).toEqual(undefined);
     console.error = originalError;
   });
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import useManifestEntitlements, { getManifestEntitlements } from '../useManifestEntitlements';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 
 enableFetchMocks();
@@ -47,13 +47,13 @@ describe('useManifestEntitlements hook', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockResponse));
 
-    const { result, waitFor } = renderHook(() => useManifestEntitlements('uuid-12345'), {
+    const { result } = renderHook(() => useManifestEntitlements('uuid-12345'), {
       wrapper
     });
 
-    await waitFor(() => result.current.isSuccess);
-
-    expect(result.current.data).toEqual(mockResponse);
+    await waitFor(() => {
+      expect(result.current.data).toEqual(mockResponse);
+    });
   });
 
   it('throws an error when not 200', async () => {

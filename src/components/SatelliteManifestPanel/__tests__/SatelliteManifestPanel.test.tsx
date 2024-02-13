@@ -187,7 +187,7 @@ describe('Satellite Manifest Panel', () => {
       </QueryClientProvider>
     );
 
-    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByLabelText('Kebab toggle'));
     fireEvent.click(getByText('Delete'));
 
     expect(
@@ -205,13 +205,13 @@ describe('Satellite Manifest Panel', () => {
       isError: false
     }));
 
-    const { getByLabelText, getByText, container } = render(
+    const { getByLabelText, getByText } = render(
       <QueryClientProvider client={queryClient}>
         <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
 
-    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByLabelText('Kebab toggle'));
     fireEvent.click(getByText('Export'));
 
     await new Promise((r) => setTimeout(r, 2000));
@@ -244,7 +244,7 @@ describe('Satellite Manifest Panel', () => {
         <SatelliteManifestPanel {...get('props')} />
       </QueryClientProvider>
     );
-    fireEvent.click(getByLabelText('Actions'));
+    fireEvent.click(getByLabelText('Kebab toggle'));
     fireEvent.click(getByText('Delete'));
 
     expect(
@@ -260,13 +260,13 @@ describe('Satellite Manifest Panel', () => {
         body: [] as SatelliteVersion[]
       });
 
-      const { queryByText, container } = render(
+      const { queryByText, getByLabelText } = render(
         <QueryClientProvider client={queryClient}>
           <SatelliteManifestPanel {...get('props')} user={get('user')} />
         </QueryClientProvider>
       );
 
-      fireEvent.click(container.querySelector('.pf-c-dropdown__toggle'));
+      fireEvent.click(getByLabelText('Kebab toggle'));
       expect(queryByText('Delete').closest('button')).toBeDisabled();
     });
   });

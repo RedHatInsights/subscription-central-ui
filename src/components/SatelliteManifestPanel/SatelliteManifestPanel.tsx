@@ -17,7 +17,7 @@ import {
 import {
   ActionsColumn,
   ExpandableRowContent,
-  TableComposable,
+  Table /* data-codemods */,
   Tbody,
   Td,
   Th,
@@ -223,7 +223,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     const results: IAction[] = [
       {
         title: 'Export',
-        disabled: false,
         onClick: () => {
           exportManifest(uuid, name);
         },
@@ -231,7 +230,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       },
       {
         title: 'Delete',
-        disabled: !user.canWriteManifests,
+        isDisabled: !user.canWriteManifests,
         onClick: user.canWriteManifests
           ? () => {
               openDeleteConfirmationModal(uuid);
@@ -338,7 +337,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   <FlexItem align={{ default: 'alignRight' }}>{pagination()}</FlexItem>
                 </Flex>
               </PageSection>
-              <TableComposable
+              <Table
                 aria-label="Satellite Manifest Table"
                 variant="compact"
                 ouiaId="manifestTable"
@@ -407,7 +406,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                     </Tbody>
                   );
                 })}
-              </TableComposable>
+              </Table>
               <PageSection variant={PageSectionVariants.light}>
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />

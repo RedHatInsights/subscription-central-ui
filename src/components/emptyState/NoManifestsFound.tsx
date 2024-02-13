@@ -4,17 +4,18 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
-  Title
+  EmptyStateHeader
 } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
 
 const NoManifestsFound: FunctionComponent = () => {
   return (
-    <EmptyState variant={EmptyStateVariant.small}>
-      <EmptyStateIcon icon={SearchIcon} />
-      <Title headingLevel="h2" size="lg">
-        No manifests found
-      </Title>
+    <EmptyState variant={EmptyStateVariant.sm}>
+      <EmptyStateHeader
+        titleText="No manifests found"
+        icon={<EmptyStateIcon icon={SearchIcon} />}
+        headingLevel="h2"
+      />
       <EmptyStateBody>No manifests were found under your account.</EmptyStateBody>
     </EmptyState>
   );

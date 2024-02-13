@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import useSatelliteVersions, { fetchSatelliteVersions } from '../useSatelliteVersions';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 
 enableFetchMocks();
@@ -25,11 +25,11 @@ describe('useSatelliteVersions hook', () => {
     const mockResponse = { body: [{ value: 'sat-6.9', description: 'Satellite 6.9' }] };
     fetch.mockResponseOnce(JSON.stringify(mockResponse));
 
-    const { result, waitFor } = renderHook(() => useSatelliteVersions(), { wrapper });
+    const { result } = renderHook(() => useSatelliteVersions(), { wrapper });
 
-    await waitFor(() => result.current.isSuccess);
-
-    expect(result.current.data).toEqual(mockResponse);
+    await waitFor(() => {
+      expect(result.current.data).toEqual(mockResponse);
+    });
   });
 
   it('throws an error when not 200', async () => {

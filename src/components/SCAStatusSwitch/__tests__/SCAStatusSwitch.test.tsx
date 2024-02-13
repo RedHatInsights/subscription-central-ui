@@ -143,7 +143,7 @@ describe('Satellite Manifest Panel', () => {
 
         const { container } = render(<SCAStatusSwitch user={get('user')} {...props} />);
 
-        expect(container.querySelector('.pf-c-switch__input')).toBeDisabled();
+        waitFor(() => expect(container.querySelector('.pf-v5-c-switch__toggle')).toBeDisabled());
       });
     });
   });

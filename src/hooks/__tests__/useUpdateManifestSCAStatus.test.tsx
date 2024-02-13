@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import useUpdateManifestSCAStatus from '../useUpdateManifestSCAStatus';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 
 enableFetchMocks();
 
@@ -28,25 +28,28 @@ describe('useUpdateManifestSCAStatus hook', () => {
   it('updates the SCA status to enabled when it receives a 204 status', async () => {
     fetch.mockResponseOnce(JSON.stringify({}), { status: 204 });
 
-    const { result, waitFor } = renderHook(() => useUpdateManifestSCAStatus(), { wrapper });
+    const { result } = renderHook(() => useUpdateManifestSCAStatus(), { wrapper });
     result.current.mutate({
       uuid: '00000000-0000-0000-0000-000000000000',
       newSCAStatus: 'disabled'
     });
 
-    await waitFor(() => result.current.isSuccess);
+    await waitFor(() => {
+      const updatedManifests: {
+        simpleContentAccess: string;
+        uuid: string;
+      }[] = queryClient.getQueryData('manifests');
 
-    const updatedManifests: {
-      simpleContentAccess: string;
-      uuid: string;
-    }[] = queryClient.getQueryData('manifests');
+      const updatedEntitlements: {
+        body: { simpleContentAccess: string };
+      } = queryClient.getQueryData([
+        'manifestEntitlements',
+        '00000000-0000-0000-0000-000000000000'
+      ]);
 
-    const updatedEntitlements: {
-      body: { simpleContentAccess: string };
-    } = queryClient.getQueryData(['manifestEntitlements', '00000000-0000-0000-0000-000000000000']);
-
-    expect(updatedManifests[0].simpleContentAccess).toEqual('disabled');
-    expect(updatedEntitlements.body.simpleContentAccess).toEqual('disabled');
+      expect(updatedManifests[0].simpleContentAccess).toEqual('disabled');
+      expect(updatedEntitlements.body.simpleContentAccess).toEqual('disabled');
+    });
   });
 
   it('does not update the SCA status to enabled when it receives a 403 status', async () => {
@@ -55,7 +58,7 @@ describe('useUpdateManifestSCAStatus hook', () => {
 
     fetch.mockResponseOnce(JSON.stringify({}), { status: 403 });
 
-    const { result, waitFor } = renderHook(() => useUpdateManifestSCAStatus(), { wrapper });
+    const { result } = renderHook(() => useUpdateManifestSCAStatus(), { wrapper });
     result.current.mutate({
       uuid: '00000000-0000-0000-0000-000000000000',
       newSCAStatus: 'disabled'
