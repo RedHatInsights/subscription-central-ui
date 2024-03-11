@@ -1,7 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
 import AppEntry from './AppEntry';
 
-const root = document.getElementById('root');
+const container = document.getElementById('root');
 
-ReactDOM.render(<AppEntry />, root, () => root.setAttribute('data-ouia-safe', true));
+const root = createRoot(container);
+
+const AppEntryWithCallback = () => {
+  useEffect(() => root.setAttribute('data-ouia-safe', true));
+
+  return <AppEntry />;
+};
+
+container.render(<AppEntryWithCallback />);

@@ -5,7 +5,8 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
-  Title
+  EmptyStateHeader,
+  EmptyStateFooter
 } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
 
@@ -15,18 +16,21 @@ interface NoSearchResultsProps {
 
 const NoSearchResults: FunctionComponent<NoSearchResultsProps> = ({ clearFilters }) => {
   return (
-    <EmptyState variant={EmptyStateVariant.small}>
-      <EmptyStateIcon icon={SearchIcon} />
-      <Title headingLevel="h2" size="lg">
-        No results found
-      </Title>
+    <EmptyState variant={EmptyStateVariant.sm}>
+      <EmptyStateHeader
+        titleText="No results found"
+        icon={<EmptyStateIcon icon={SearchIcon} />}
+        headingLevel="h2"
+      />
       <EmptyStateBody>
         No results match the filter criteria. Remove all filters or clear all filters to show
         results.
       </EmptyStateBody>
-      <Button variant="link" onClick={clearFilters}>
-        Clear all filters
-      </Button>
+      <EmptyStateFooter>
+        <Button variant="link" onClick={clearFilters}>
+          Clear all filters
+        </Button>
+      </EmptyStateFooter>
     </EmptyState>
   );
 };

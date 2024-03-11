@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { Table /* data-codemods */, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Processing } from '../emptyState';
 import './ManifestEntitlementsList.scss';
 import useManifestEntitlements, { ManifestEntitlement } from '../../hooks/useManifestEntitlements';
@@ -92,7 +92,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
         </div>
       )}
       {isSuccess && entitlementsData.valid && (
-        <TableComposable
+        <Table
           ref={entitlementsRowRef}
           aria-label="Allocations table"
           variant="compact"
@@ -125,7 +125,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
               </Tr>
             ))}
           </Tbody>
-        </TableComposable>
+        </Table>
       )}
       {isError && 'Something went wrong.  Please refresh the page and try again.'}
     </>

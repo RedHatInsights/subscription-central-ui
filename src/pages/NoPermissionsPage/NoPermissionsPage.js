@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
+import { PageSection } from '@patternfly/react-core';
 
 const NoPermissionsPage = () => {
   const chrome = useChrome();
@@ -11,9 +10,9 @@ const NoPermissionsPage = () => {
   }, []);
 
   return (
-    <Main>
+    <PageSection>
       <NotAuthorized serviceName="Manifests" />
-    </Main>
+    </PageSection>
   );
 };
 

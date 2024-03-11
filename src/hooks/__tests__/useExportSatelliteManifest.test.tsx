@@ -151,7 +151,8 @@ describe('useExportSatelliteManifests hook', () => {
 
     expect(getByTestId('title').textContent).toBe('');
     fireEvent.click(getByText('mutate'));
-    await waitFor(() => getByTestId('title'));
-    expect(getByTestId('title').textContent).toBe('Success');
+    await waitFor(() => {
+      expect(getByTestId('title').textContent).toBe('Success');
+    });
   });
 });

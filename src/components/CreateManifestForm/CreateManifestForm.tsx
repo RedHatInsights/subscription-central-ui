@@ -1,4 +1,5 @@
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useEffect } from 'react';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import {
   Button,
   ActionGroup,
@@ -12,6 +13,9 @@ import {
 import useNotifications from '../../hooks/useNotifications';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
+import { HelperText } from '@patternfly/react-core';
+import { FormHelperText } from '@patternfly/react-core';
+import { HelperTextItem } from '@patternfly/react-core';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -24,17 +28,7 @@ interface CreateManifestFormProps {
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   type Validate = 'default' | 'error' | 'success';
-  const {
-    satelliteVersions,
-    satelliteVersions: createManifestResponseData,
-    handleModalToggle,
-    isLoading,
-    submitForm,
-    isError: errorCreatingManifest,
-    isError: hasSatelliteVersionsError,
-    isError,
-    isSuccess
-  } = props;
+  const { satelliteVersions, handleModalToggle, isLoading, submitForm, isError, isSuccess } = props;
   const [inputFieldBlur, setinputFieldBlur] = React.useState(false);
   const [dropdownFieldBlur, setDropdownFieldBlur] = React.useState(false);
   const [manifestName, setManifestName] = useState('');
@@ -54,17 +48,15 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
 
   const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
 
-  if (isSuccess) {
-    addSuccessNotification(`Manifest ${manifestName} created`);
-    handleModalToggle();
-  } else if (isError) {
-    addErrorNotification('Something went wrong. Please try again');
-    handleModalToggle();
-  }
-
-  const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
-
-  const formHasError = errorCreatingManifest || hasSatelliteVersionsError;
+  useEffect(() => {
+    if (isSuccess) {
+      addSuccessNotification(`Manifest ${manifestName} created`);
+      handleModalToggle();
+    } else if (isError) {
+      addErrorNotification('Something went wrong. Please try again');
+      handleModalToggle();
+    }
+  }, [isSuccess]);
 
   const satelliteTypeOptions = satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
     return (
@@ -77,22 +69,22 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     );
   });
 
-  const onBlurHandler = (event: React.FocusEvent<HTMLInputElement>) => {
+  const onBlurHandler = (_event: React.FocusEvent<HTMLInputElement>) => {
     setinputFieldBlur(true);
   };
 
-  const formSelectBlurHandler = (event: React.FocusEvent<HTMLInputElement>) => {
+  const formSelectBlurHandler = (_event: React.FocusEvent<HTMLInputElement>) => {
     setDropdownFieldBlur(true);
   };
 
-  const handleNameChange = (manifestName: string, e: React.FormEvent<HTMLInputElement>) => {
+  const handleNameChange = (manifestName: string) => {
     setManifestName(manifestName);
   };
 
   const isValidManifestName = (manifestName: string) =>
     /^[0-9A-Za-z_.-]*$/.test(manifestName) && manifestName.length > 0 && manifestName.length < 99;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isValidManifestName(manifestName)) {
       setNameValidated('success');
       nameFieldHelperText;
@@ -105,7 +97,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     }
   }, [manifestName, inputFieldBlur]);
 
-  const handleTypeChange = (value: string, _event: React.FormEvent<HTMLSelectElement>) => {
+  const handleTypeChange = (value: string) => {
     setManifestType(value);
   };
 
@@ -131,33 +123,32 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           management application. Match the type and version of the subscription management
           application that you are using. All fields are required.
         </p>
-        <Form isError={formHasError} isSuccess={hasCreatedManifest} isWidthLimited>
-          <FormGroup
-            label="Name"
-            helperText={nameFieldHelperText}
-            helperTextInvalid={invalidNameFieldText}
-            validated={nameValidated}
-            fieldId="create-satellite-manifest-form-name"
-          >
+        <Form isWidthLimited>
+          <FormGroup label="Name" fieldId="create-satellite-manifest-form-name">
             <TextInput
               name="satelliteManifestName"
               value={manifestName}
-              onChange={handleNameChange}
+              onChange={(_event: any, manifestName: string) => handleNameChange(manifestName)}
               onBlur={onBlurHandler}
               validated={nameValidated}
               id="create-satellite-manifest-form-name"
               autoFocus="autoFocus"
             />
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem
+                  variant={nameValidated}
+                  {...(nameValidated == 'error' && { icon: <ExclamationCircleIcon /> })}
+                >
+                  {nameValidated != 'error' ? nameFieldHelperText : invalidNameFieldText}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
           </FormGroup>
-          <FormGroup
-            label="Type"
-            helperTextInvalid={invalidTypeText}
-            fieldId="create-satellite-manifest-form-type"
-            validated={typeValidated}
-          >
+          <FormGroup label="Type" fieldId="create-satellite-manifest-form-type">
             <FormSelect
               value={manifestType}
-              onChange={handleTypeChange}
+              onChange={(_event: any, value: string) => handleTypeChange(value)}
               onBlur={formSelectBlurHandler}
               name="satelliteManifestType"
               aria-label="FormSelect Input"
@@ -174,6 +165,15 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               />
               {satelliteTypeOptions}
             </FormSelect>
+            {typeValidated == 'error' && (
+              <FormHelperText>
+                <HelperText>
+                  <HelperTextItem variant={typeValidated} icon={<ExclamationCircleIcon />}>
+                    {invalidTypeText}
+                  </HelperTextItem>
+                </HelperText>
+              </FormHelperText>
+            )}
           </FormGroup>
           <ActionGroup>
             <Button
