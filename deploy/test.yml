@@ -1,73 +1,29 @@
-kind: Template
+---
 apiVersion: template.openshift.io/v1
+kind: Template
 metadata:
-  name: 'iqe plugin build config'
-
-parameters:
-  - name: 'REPOSITORY'
-    required: false
-    value: 'quay.io/cloudservices/iqe-tests'
-  - name: 'TAG'
-    required: true
-  - name: 'PUSH_SECRET'
-    required: false
-    value: 'quay-cloudservices-push'
-  - name: 'PULL_SECRET'
-    required: false
-    value: 'quay-cloudservices-push'
-
+  name: subscription-central-ui-regression
 objects:
-  - kind: 'BuildConfig'
-    apiVersion: 'build.openshift.io/v1'
+  - apiVersion: cloud.redhat.com/v1alpha1
+    kind: ClowdJobInvocation
     metadata:
-      name: 'iqe-${PLUGIN_NAME}-plugin'
-      labels:
-        iqe: 'plugin'
+      name: subscription-central-ui-regression-${IMAGE_TAG}-${UID}
+      annotations:
+        'ignore-check.kube-linter.io/no-liveness-probe': 'probes not required on Job pods'
+        'ignore-check.kube-linter.io/no-readiness-probe': 'probes not required on Job pods'
     spec:
-      nodeSelector: {}
-      output:
-        to:
-          kind: 'DockerImage'
-          name: '${REPOSITORY}:${TAG}'
-        pushSecret:
-          name: '${PUSH_SECRET}'
-      resources:
-        requests:
-          cpu: '250m'
-          memory: '512Mi'
-        limits:
-          cpu: '500m'
-          memory: '1Gi'
-      successfulBuildsHistoryLimit: 1
-      failedBuildsHistoryLimit: 1
-      strategy:
-        type: 'Docker'
-        dockerStrategy:
-          pullSecret:
-            name: '${PULL_SECRET}'
-          noCache: true
-          forcePull: true
-          dockerfilePath: 'Dockerfile'
-          buildArgs:
-            - name: PLUGIN_NAME
-              value: subscription-central-ui
-      source:
-        type: 'Git'
-        git:
-          uri: 'https://gitlab.cee.redhat.com/insights-qe/iqe-${PLUGIN_NAME}-plugin.git'
-        sourceSecret:
-          name: 'rh-root-cert'
-      triggers:
-        - type: 'ImageChange'
-          imageChange:
-            from:
-              kind: 'ImageStreamTag'
-              name: 'iqe-core:latest'
-        - type: 'ImageChange'
-          imageChange:
-            from:
-              kind: 'ImageStreamTag'
-              name: 'iqe-tests:platform-ui'
-      runPolicy: 'Serial'
-    status:
-      lastVersion: 0
+      appName: rhsm-api-proxy
+      testing:
+        iqe:
+          debug: false
+          dynaconfEnvName: stage
+          filter: ''
+          marker: 'manifests'
+parameters:
+  - name: IMAGE_TAG
+    value: ''
+    required: true
+  - name: UID
+    description: 'Unique CJI name suffix'
+    generate: expression
+    from: '[a-z0-9]{6}'
