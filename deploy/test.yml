@@ -19,6 +19,10 @@ objects:
           dynaconfEnvName: stage
           filter: ''
           marker: 'manifests'
+          plugins: subscription_central
+          ui:
+            selenium:
+              deploy: true
 parameters:
   - name: IMAGE_TAG
     value: ''
