@@ -2,7 +2,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: subscription-central-ui-regression
+  name: manifests-ui-test
 objects:
   - apiVersion: cloud.redhat.com/v1alpha1
     kind: ClowdJobInvocation
