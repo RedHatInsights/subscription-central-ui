@@ -2,12 +2,12 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: subscription-central-ui-regression
+  name: manifests-ui-test
 objects:
   - apiVersion: cloud.redhat.com/v1alpha1
     kind: ClowdJobInvocation
     metadata:
-      name: subscription-central-ui-regression-${IMAGE_TAG}-${UID}
+      name: manifests-ui-test-${IMAGE_TAG}-${UID}
       annotations:
         'ignore-check.kube-linter.io/no-liveness-probe': 'probes not required on Job pods'
         'ignore-check.kube-linter.io/no-readiness-probe': 'probes not required on Job pods'
@@ -16,7 +16,7 @@ objects:
       testing:
         iqe:
           debug: false
-          dynaconfEnvName: stage
+          dynaconfEnvName: stage_proxy
           filter: ''
           marker: 'manifests'
           plugins: subscription_central
