@@ -139,7 +139,7 @@ parameters:
   - name: IQE_FILTER_EXPRESSION
     value: ''
   - name: IQE_LOG_LEVEL
-    value: debug
+    value: info
   - name: IQE_REQUIREMENTS
     value: ''
   - name: IQE_REQUIREMENTS_PRIORITY
