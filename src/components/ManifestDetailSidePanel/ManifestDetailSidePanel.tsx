@@ -94,8 +94,8 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
     return (
       <>
         <p className="sub-manifest-details-delete-text">
-          Deleting a subscription allocation is <strong>STRONGLY</strong> discouraged. This action
-          should only be taken in extreme circumstances or for debugging purposes
+          Deleting a manifest is <strong>STRONGLY</strong> discouraged. This action should only be
+          taken in extreme circumstances or for debugging purposes
         </p>
         <Button
           variant="tertiary"

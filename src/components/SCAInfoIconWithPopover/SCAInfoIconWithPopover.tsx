@@ -23,8 +23,7 @@ const SCAInfoIconWithPopover: FunctionComponent = () => {
         }
         footerContent={
           <ExternalLink href={scaMoreInfoLink}>
-            Learn more about enabling simple content access on an existing Satellite allocation and
-            manifest
+            Learn more about enabling simple content access on an existing manifest
           </ExternalLink>
         }
       >
