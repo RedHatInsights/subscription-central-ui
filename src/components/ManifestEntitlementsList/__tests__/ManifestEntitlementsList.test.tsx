@@ -51,7 +51,7 @@ describe('Manifest Entitlements List', () => {
     const { getByLabelText } = render(<ManifestEntitlementsList {...props} />);
 
     expect(
-      getByLabelText('Allocations table').children[1].firstChild.childNodes[1].textContent
+      getByLabelText('Manifests table').children[1].firstChild.childNodes[1].textContent
     ).toEqual(entitlementsData.value[0].sku);
   });
 
@@ -92,7 +92,7 @@ describe('Manifest Entitlements List', () => {
   it('renders correctly when no entitlements are attached to the manifest', () => {
     mockResponse({
       valid: false,
-      reason: 'No Entitlements are attached to the Allocation'
+      reason: 'No Entitlements are attached to the manifest'
     });
     const props = {
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
@@ -100,7 +100,7 @@ describe('Manifest Entitlements List', () => {
     };
     const { queryByLabelText } = render(<ManifestEntitlementsList {...props} />);
 
-    expect(queryByLabelText('Allocations table')).toBeNull();
+    expect(queryByLabelText('Manifests table')).toBeNull();
   });
 
   it('renders with an error message when the API call fails', () => {
@@ -110,7 +110,7 @@ describe('Manifest Entitlements List', () => {
       isError: false,
       entitlementsData: {
         valid: false,
-        reason: 'No Entitlements are attached to the Allocation'
+        reason: 'No Entitlements are attached to the manifest'
       },
       entitlementsRowRef: null as React.MutableRefObject<HTMLSpanElement>,
       uuid: 'abc123'
@@ -125,7 +125,7 @@ describe('Manifest Entitlements List', () => {
     mockResponse(
       {
         valid: false,
-        reason: 'No Allocations found'
+        reason: 'No Manifests found'
       },
       true
     );

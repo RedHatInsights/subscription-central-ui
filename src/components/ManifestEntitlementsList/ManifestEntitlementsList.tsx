@@ -94,7 +94,7 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
       {isSuccess && entitlementsData.valid && (
         <Table
           ref={entitlementsRowRef}
-          aria-label="Allocations table"
+          aria-label="Manifests table"
           variant="compact"
           borders={false}
           isNested={true}
