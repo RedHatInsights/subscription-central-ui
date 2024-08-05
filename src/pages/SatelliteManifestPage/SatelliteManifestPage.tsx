@@ -22,8 +22,6 @@ const SatelliteManifestPage: FC = () => {
     'https://access.redhat.com/documentation/en-us/subscription_central/2023/html/' +
     'creating_and_managing_manifests_for_a_connected_satellite_server/index';
 
-  console.log(user.canReadManifests);
-
   if (!user.canReadManifests) {
     navigate('./no-permissions');
   }
