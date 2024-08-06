@@ -11,14 +11,20 @@ import { NoSatelliteSubs } from '../../components/NoSatelliteSubs';
 import { Alert } from '@patternfly/react-core';
 import { subscriptionInventoryLink, supportLink } from '../../utilities/consts';
 import { PageSection } from '@patternfly/react-core';
+import { useNavigate } from 'react-router-dom';
 
 const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
+  const navigate = useNavigate();
 
   const { data: user } = useUser();
   const manifestsMoreInfoLink =
     'https://access.redhat.com/documentation/en-us/subscription_central/2023/html/' +
     'creating_and_managing_manifests_for_a_connected_satellite_server/index';
+
+  if (!user.canReadManifests) {
+    navigate('./no-permissions');
+  }
 
   return (
     <>

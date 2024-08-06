@@ -46,7 +46,7 @@ const useUser = () => {
         rbacPermissions.includes('subscriptions:*:*'),
       isEntitled: userStatus.entitlements.smart_management?.is_entitled,
       isOrgAdmin: userStatus.identity.user.is_org_admin === true,
-      isSCACapable: scaStatusResponse.body.simpleContentAccessCapable === true
+      isSCACapable: scaStatusResponse?.body?.simpleContentAccessCapable === true
     };
     return user;
   });
