@@ -6,8 +6,7 @@ import './SCAInfoIconWithPopover.scss';
 
 const SCAInfoIconWithPopover: FunctionComponent = () => {
   const scaMoreInfoLink =
-    'https://access.redhat.com/documentation/en-us/subscription_central/2023/html/' +
-    'getting_started_with_simple_content_access/con-what-is-simplecontent_assembly-simplecontent-ctxt';
+    'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html/getting_started_with_simple_content_access/index';
 
   return (
     <>
