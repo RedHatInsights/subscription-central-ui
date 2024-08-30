@@ -10,12 +10,12 @@ const { config: webpackConfig, plugins } = config({
 });
 
 plugins.push(
-  require('@redhat-cloud-services/frontend-components-config/federated-modules')({
+  require('@redhat-cloud-services/frontend-components-config-utilities/federated-modules')({
     root: resolve(__dirname, '../'),
     moduleName: 'manifests',
     shared: [
       {
-        'react-router-dom': { singleton: true, requiredVersion: '*' }
+        'react-router-dom': { singleton: true, requiredVersion: '*', version: '*' }
       }
     ]
   })
