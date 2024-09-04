@@ -194,7 +194,7 @@ spec:
           resolver: git
           params:
             - name: url
-              value: https://github.com/RedHatInsights/konflux-consoledot-frontend-build
+              value: 'https://github.com/RedHatInsights/konflux-consoledot-frontend-build'
             - name: revision
               value: <latest-commit-sha-in-above-repo>
             - name: pathInRepo
@@ -209,7 +209,7 @@ spec:
           resolver: git
           params:
             - name: url
-              value: https://github.com/RedHatInsights/konflux-consoledot-frontend-build
+              value: 'https://github.com/RedHatInsights/konflux-consoledot-frontend-build'
             - name: revision
               value: <latest-commit-sha-in-above-repo>
             - name: pathInRepo
