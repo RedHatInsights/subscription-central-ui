@@ -310,7 +310,6 @@ spec:
               name: SOURCE_ARTIFACT
               type: string
           volumes:
-            # New volume to store a copy of the source code accessible only to this Task.
             - name: workdir
               emptyDir: {}
           stepTemplate:
