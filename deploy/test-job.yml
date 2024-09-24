@@ -106,11 +106,11 @@ objects:
                   value: ${VNC_GEOMETRY}
               resources:
                 limits:
-                  cpu: 500m
+                  cpu: '2'
                   memory: 2Gi
                 requests:
-                  cpu: 100m
-                  memory: 256Mi
+                  cpu: '1'
+                  memory: 1Gi
               volumeMounts:
                 - name: sel-shm
                   mountPath: /dev/shm
