@@ -19,7 +19,7 @@ const SatelliteManifestPage: FC = () => {
 
   const { data: user } = useUser();
   const manifestsMoreInfoLink =
-    'https://access.redhat.com/documentation/en-us/subscription_central/2023/html/' +
+    'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html/' +
     'creating_and_managing_manifests_for_a_connected_satellite_server/index';
 
   if (!user.canReadManifests) {
