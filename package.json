@@ -92,7 +92,7 @@
     "react-hook-form": "^7.53.1",
     "react-query": "^3.39.3",
     "react-redux": "^8.1.1",
-    "react-router-dom": "^6.7.0",
+    "react-router-dom": "^6.27.0",
     "redux": "^4.2.1",
     "redux-logger": "3.0.6",
     "redux-promise-middleware": "6.2.0",
