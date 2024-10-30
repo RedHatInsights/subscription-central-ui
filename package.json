@@ -135,7 +135,7 @@
     "css-loader": "^6.8.1",
     "escape-string-regexp": "^5.0.0",
     "eslint": "^8.45.0",
-    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
