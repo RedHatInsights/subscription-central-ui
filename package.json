@@ -68,7 +68,7 @@
       "<rootDir>/config/setupTests.js"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
+      "<rootDir>/jest.setup.ts"
     ],
     "testEnvironment": "jsdom",
     "testRunner": "jest-jasmine2"
