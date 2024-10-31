@@ -11,7 +11,6 @@ import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
 import useUser from '../../../hooks/useUser';
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
-import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
 import { subscriptionInventoryLink, supportLink } from '../../../utilities/consts';
 

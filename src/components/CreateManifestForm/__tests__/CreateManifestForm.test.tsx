@@ -4,7 +4,6 @@ import CreateManifestForm from '../CreateManifestForm';
 import { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import '@testing-library/jest-dom';
-import '@testing-library/jest-dom/extend-expect';
 
 const queryClient = new QueryClient();
 
