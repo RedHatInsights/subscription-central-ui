@@ -1,7 +1,17 @@
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
+import 'jest';
 import { expect } from '@jest/globals';
 
-const toHaveLoader = (obj) => {
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace jest {
+    interface Matchers {
+      toHaveLoader(): CustomMatcherResult;
+    }
+  }
+}
+
+const toHaveLoader = (obj: any) => {
   if (obj.queryByRole('progressbar')) {
     return {
       message: () => 'Must have loader with role "progressbar"',
