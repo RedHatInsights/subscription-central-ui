@@ -4,7 +4,6 @@ import CreateManifestButtonWithModal from '..';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import factories from '../../../utilities/factories';
-import '@testing-library/jest-dom/extend-expect';
 import useUser from '../../../hooks/useUser';
 
 jest.mock('../../../hooks/useUser');

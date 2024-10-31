@@ -68,7 +68,7 @@
       "<rootDir>/config/setupTests.js"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
+      "<rootDir>/jest.setup.ts"
     ],
     "testEnvironment": "jsdom",
     "testRunner": "jest-jasmine2"
@@ -114,7 +114,7 @@
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^2.0.4",
     "@redhat-cloud-services/frontend-components-config": "^6.2.3",
     "@redhat-cloud-services/frontend-components-config-utilities": "^3.2.2",
-    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/react": "^13.1.5",
     "@types/jest": "^29.5.14",
     "@types/js-cookie": "^3.0.6",

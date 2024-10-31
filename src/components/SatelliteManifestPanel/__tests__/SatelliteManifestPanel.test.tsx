@@ -6,7 +6,6 @@ import SatelliteManifestPanel from '../SatelliteManifestPanel';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
-import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
