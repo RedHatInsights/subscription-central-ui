@@ -28,7 +28,7 @@
     "glob-parent": "^6.0.1",
     "hosted-git-info": "^3.0.8",
     "url-parse": "^1.5.3",
-    "axios": "^0.21.4",
+    "axios": "^0.28.0",
     "moment": "2.29.4"
   },
   "lint-staged": {
