@@ -15,7 +15,6 @@
     "nightly": "npm run deploy",
     "postisntall": "rm -rf .cache",
     "prepare": "node ./prepare.js",
-    "prod": "NODE_ENV=production webpack-dev-server --config config/dev.webpack.config.js",
     "server:ctr": "node src/server/generateServerKey.js",
     "start": "PROXY=true fec dev",
     "test": "TZ=UTC jest --verbose --no-cache",
@@ -28,7 +27,6 @@
     "glob-parent": "^6.0.1",
     "hosted-git-info": "^3.0.8",
     "url-parse": "^1.5.3",
-    "axios": "^0.28.0",
     "moment": "2.29.4"
   },
   "lint-staged": {
