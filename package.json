@@ -78,7 +78,7 @@
     "@babel/runtime": "^7.26.10",
     "@patternfly/patternfly": "^5.0.0",
     "@patternfly/react-core": "^5.4.8",
-    "@patternfly/react-table": "^5.4.9",
+    "@patternfly/react-table": "^6.1.0",
     "@redhat-cloud-services/frontend-components": "^4.2.21",
     "@redhat-cloud-services/frontend-components-utilities": "^5.0.10",
     "babel-plugin-transform-imports": "^2.0.0",
