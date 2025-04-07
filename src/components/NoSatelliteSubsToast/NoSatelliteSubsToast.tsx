@@ -6,7 +6,7 @@ import { subscriptionInventoryLink, supportLink } from '../../utilities/consts';
 export const NoSatelliteSubsToast = () => {
   return (
     <TextContent className="pf-u-mb-xl">
-      <Text variant="small">
+      <Text>
         A Satellite subscription is required to create a manifest.{''}
         <a href={supportLink} target="_blank" rel="noopener noreferrer">
           Contact support{' '}

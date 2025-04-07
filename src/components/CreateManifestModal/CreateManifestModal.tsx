@@ -1,7 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
 import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
-import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import {
+  Alert,
+  AlertActionCloseButton
+} from '@patternfly/react-core/dist/dynamic/components/Alert';
 import { AlertGroup } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import { AlertVariant } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import CreateManifestForm from '../CreateManifestForm/CreateManifestForm';
@@ -91,10 +94,11 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
       <AlertGroup isToast>
         {alerts.map(({ key, content }) => (
           <Alert
+            title=""
             key={key}
             variant={AlertVariant.danger}
             timeout={4000}
-            onClose={() => removeAlert(key)}
+            actionClose={<AlertActionCloseButton onClose={() => removeAlert(key)} />}
           >
             {content}
           </Alert>
