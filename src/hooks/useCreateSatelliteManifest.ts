@@ -14,9 +14,11 @@ const createSatelliteManifest =
       headers: { Authorization: `Bearer ${await jwtToken}` }
     }).then((response) => {
       if (response.status !== 200) {
-        throw new Error(
+        const error = new Error(
           `Status Code ${response.status}.  Error creating manifest: ${response.statusText}.  `
         );
+        (error as any).status = response.status;
+        throw error;
       }
       return response.json();
     });
