@@ -1,49 +1,58 @@
-import React, { FC } from 'react';
-import { Modal, ModalVariant } from '@patternfly/react-core';
+import React, { FC, useEffect } from 'react';
+import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
 import CreateManifestForm from '../CreateManifestForm/CreateManifestForm';
 import CreateManifestFormLoading from '../CreateManifestForm/CreateManifestFormLoading';
 import useCreateSatelliteManifest from '../../hooks/useCreateSatelliteManifest';
 import useSatelliteVersions from '../../hooks/useSatelliteVersions';
-
+import { NoSatelliteSubsToast } from '../NoSatelliteSubsToast/NoSatelliteSubsToast';
+import useNotifications from '../../hooks/useNotifications';
 interface CreateManifestModalProps {
   handleModalToggle: () => void;
   isModalOpen: boolean;
 }
-
 const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, isModalOpen }) => {
   const {
     data,
     isLoading: isLoadingSatelliteVersions,
     isError: hasSatelliteVersionsError
   } = useSatelliteVersions();
-
+  const { addErrorNotification, removeNotification } = useNotifications();
   const {
     data: createManifestResponseData,
     mutate,
     isLoading: isCreatingManifest,
     isSuccess,
     isError: errorCreatingManifest,
-    reset: resetCreateSatelliteManifestQuery
+    reset: resetCreateSatelliteManifestQuery,
+    error: createManifestError
   } = useCreateSatelliteManifest();
-
   const submitForm = (name: string, version: string) => {
     mutate({ name, version });
   };
-
-  if (isModalOpen === false && isSuccess === true) {
-    resetCreateSatelliteManifestQuery();
-  }
-
-  /**
-   * In case of an error, the API will "succeed",
-   * but with an error status, so we need to
-   * check for data to confirm success
-   */
-
+  const key = 'no-sat-toast';
   const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
-
-  const formHasError = errorCreatingManifest || hasSatelliteVersionsError;
-
+  useEffect(() => {
+    if (errorCreatingManifest && createManifestError) {
+      addErrorNotification(
+        <NoSatelliteSubsToast
+          onClose={() => {
+            removeNotification(key);
+            handleModalToggle();
+          }}
+        />
+      );
+      handleModalToggle();
+    } else if (errorCreatingManifest || hasSatelliteVersionsError) {
+      addErrorNotification('An error occurred while creating the manifest.');
+      handleModalToggle();
+    }
+  }, [errorCreatingManifest, hasSatelliteVersionsError, createManifestError]);
+  useEffect(() => {
+    if (!isModalOpen) {
+      resetCreateSatelliteManifestQuery();
+    }
+  }, [isModalOpen]);
   return (
     <>
       <Modal
@@ -58,7 +67,7 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
             satelliteVersions={data?.body}
             submitForm={submitForm}
             isLoading={isCreatingManifest}
-            isError={formHasError}
+            isError={!!(errorCreatingManifest || hasSatelliteVersionsError)}
             isSuccess={hasCreatedManifest}
             handleModalToggle={handleModalToggle}
           />
@@ -67,5 +76,4 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
     </>
   );
 };
-
 export default CreateManifestModal;

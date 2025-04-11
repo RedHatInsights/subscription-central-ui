@@ -7,7 +7,7 @@ import {
 
 interface Notification {
   variant: NotificationVariantType;
-  message: string;
+  message: React.ReactNode;
   key: string;
   timeout?: boolean;
   actionLinks?: React.ReactNode;
@@ -17,7 +17,7 @@ interface Notification {
 interface Notifications {
   notifications: Notification[];
   addSuccessNotification(message: string, options?: NotificationOptions): string;
-  addErrorNotification(message: string, options?: NotificationOptions): string;
+  addErrorNotification(message: React.ReactNode, options?: NotificationOptions): string;
   addInfoNotification(message: string, options?: NotificationOptions): string;
   removeNotification(key: string, options?: NotificationOptions): void;
 }
