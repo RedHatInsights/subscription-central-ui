@@ -7,22 +7,17 @@ import useCreateSatelliteManifest from '../../hooks/useCreateSatelliteManifest';
 import useSatelliteVersions from '../../hooks/useSatelliteVersions';
 import { NoSatelliteSubsToast } from '../NoSatelliteSubsToast/NoSatelliteSubsToast';
 import useNotifications from '../../hooks/useNotifications';
-import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
-
 interface CreateManifestModalProps {
   handleModalToggle: () => void;
   isModalOpen: boolean;
 }
-
 const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, isModalOpen }) => {
   const {
     data,
     isLoading: isLoadingSatelliteVersions,
     isError: hasSatelliteVersionsError
   } = useSatelliteVersions();
-
-  const { addErrorNotification } = useNotifications();
-
+  const { addErrorNotification, removeNotification } = useNotifications();
   const {
     data: createManifestResponseData,
     mutate,
@@ -32,27 +27,32 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
     reset: resetCreateSatelliteManifestQuery,
     error: createManifestError
   } = useCreateSatelliteManifest();
-
   const submitForm = (name: string, version: string) => {
     mutate({ name, version });
   };
-
-  if (isModalOpen && createManifestResponseData) {
-    resetCreateSatelliteManifestQuery();
-  }
-
+  const key = 'no-sat-toast';
   const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
-
   useEffect(() => {
     if (errorCreatingManifest && createManifestError) {
-      addErrorNotification(<NoSatelliteSubsToast />);
+      addErrorNotification(
+        <NoSatelliteSubsToast
+          onClose={() => {
+            removeNotification(key);
+            handleModalToggle();
+          }}
+        />
+      );
       handleModalToggle();
     } else if (errorCreatingManifest || hasSatelliteVersionsError) {
       addErrorNotification('An error occurred while creating the manifest.');
       handleModalToggle();
     }
   }, [errorCreatingManifest, hasSatelliteVersionsError, createManifestError]);
-
+  useEffect(() => {
+    if (!isModalOpen) {
+      resetCreateSatelliteManifestQuery();
+    }
+  }, [isModalOpen]);
   return (
     <>
       <Modal
