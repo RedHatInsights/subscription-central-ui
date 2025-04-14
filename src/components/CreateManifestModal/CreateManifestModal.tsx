@@ -5,8 +5,9 @@ import CreateManifestForm from '../CreateManifestForm/CreateManifestForm';
 import CreateManifestFormLoading from '../CreateManifestForm/CreateManifestFormLoading';
 import useCreateSatelliteManifest from '../../hooks/useCreateSatelliteManifest';
 import useSatelliteVersions from '../../hooks/useSatelliteVersions';
-import { NoSatelliteSubsToast } from '../NoSatelliteSubsToast/NoSatelliteSubsToast';
+import { supportLink } from '../../utilities/consts';
 import useNotifications from '../../hooks/useNotifications';
+
 interface CreateManifestModalProps {
   handleModalToggle: () => void;
   isModalOpen: boolean;
@@ -17,7 +18,7 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
     isLoading: isLoadingSatelliteVersions,
     isError: hasSatelliteVersionsError
   } = useSatelliteVersions();
-  const { addErrorNotification, removeNotification } = useNotifications();
+  const { addErrorNotification } = useNotifications();
   const {
     data: createManifestResponseData,
     mutate,
@@ -27,20 +28,26 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
     reset: resetCreateSatelliteManifestQuery,
     error: createManifestError
   } = useCreateSatelliteManifest();
+
   const submitForm = (name: string, version: string) => {
     mutate({ name, version });
   };
-  const key = 'no-sat-toast';
+
+  if (isModalOpen && createManifestResponseData) {
+    resetCreateSatelliteManifestQuery();
+  }
+
   const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
   useEffect(() => {
-    if (errorCreatingManifest && createManifestError) {
+    const status = (createManifestError as any)?.status;
+
+    if (errorCreatingManifest && status === 403) {
       addErrorNotification(
-        <NoSatelliteSubsToast
-          onClose={() => {
-            removeNotification(key);
-            handleModalToggle();
-          }}
-        />
+        'A Satellite subscription is required to create a manifest. Contact support to check if you need a new subscription.',
+        {
+          alertLinkText: 'Contact support',
+          alertLinkHref: supportLink
+        }
       );
       handleModalToggle();
     } else if (errorCreatingManifest || hasSatelliteVersionsError) {
@@ -48,11 +55,7 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
       handleModalToggle();
     }
   }, [errorCreatingManifest, hasSatelliteVersionsError, createManifestError]);
-  useEffect(() => {
-    if (!isModalOpen) {
-      resetCreateSatelliteManifestQuery();
-    }
-  }, [isModalOpen]);
+
   return (
     <>
       <Modal
