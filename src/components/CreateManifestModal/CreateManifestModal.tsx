@@ -39,7 +39,7 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
 
   const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
   useEffect(() => {
-    const status = (createManifestError as any)?.status;
+    const status = createManifestError?.status;
 
     if (errorCreatingManifest && status === 403) {
       addErrorNotification(
