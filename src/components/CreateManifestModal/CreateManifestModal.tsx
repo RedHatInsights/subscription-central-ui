@@ -50,7 +50,7 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
         }
       );
       handleModalToggle();
-    } else if (errorCreatingManifest || hasSatelliteVersionsError) {
+    } else {
       addErrorNotification('An error occurred while creating the manifest.');
       handleModalToggle();
     }
@@ -70,7 +70,7 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
             satelliteVersions={data?.body}
             submitForm={submitForm}
             isLoading={isCreatingManifest}
-            isError={!!(errorCreatingManifest || hasSatelliteVersionsError)}
+            isError={errorCreatingManifest || hasSatelliteVersionsError}
             isSuccess={hasCreatedManifest}
             handleModalToggle={handleModalToggle}
           />

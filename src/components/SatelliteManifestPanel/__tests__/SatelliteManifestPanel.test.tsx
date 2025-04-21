@@ -148,7 +148,8 @@ describe('Satellite Manifest Panel', () => {
 
     it('renders loading', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[]
+        body: [] as SatelliteVersion[],
+        isLoading: true
       });
 
       const container = render(
