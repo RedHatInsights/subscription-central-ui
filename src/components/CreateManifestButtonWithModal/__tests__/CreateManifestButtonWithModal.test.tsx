@@ -23,7 +23,7 @@ it('renders the modal properly when the button is clicked', async () => {
     </QueryClientProvider>
   );
 
-  fireEvent.click(getByText('Create manifest'));
+  fireEvent.click(getByText('Create new manifest'));
   expect(
     getByText(
       'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'

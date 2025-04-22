@@ -33,15 +33,19 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
     mutate({ name, version });
   };
 
-  if (isModalOpen && createManifestResponseData) {
-    resetCreateSatelliteManifestQuery();
-  }
+  useEffect(() => {
+    if (isModalOpen) {
+      resetCreateSatelliteManifestQuery();
+    }
+  }, [isModalOpen]);
 
   const hasCreatedManifest = typeof createManifestResponseData !== 'undefined';
   useEffect(() => {
+    if (!isModalOpen || !errorCreatingManifest || !createManifestError) return;
+
     const status = createManifestError?.status;
 
-    if (errorCreatingManifest && status === 403) {
+    if (status === 403) {
       addErrorNotification(
         'A Satellite subscription is required to create a manifest. Contact support to check if you need a new subscription.',
         {
@@ -49,12 +53,12 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
           alertLinkHref: supportLink
         }
       );
-      handleModalToggle();
     } else {
       addErrorNotification('An error occurred while creating the manifest.');
-      handleModalToggle();
     }
-  }, [errorCreatingManifest, hasSatelliteVersionsError, createManifestError]);
+    handleModalToggle();
+    resetCreateSatelliteManifestQuery();
+  }, [errorCreatingManifest, hasSatelliteVersionsError, isModalOpen]);
 
   return (
     <>
