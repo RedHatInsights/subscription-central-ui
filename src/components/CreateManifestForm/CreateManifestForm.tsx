@@ -73,7 +73,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
         key={satelliteVersion.value}
         value={satelliteVersion.value}
         label={satelliteVersion.description}
-        validated={typeValidated}
       />
     );
   });
@@ -82,7 +81,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     setinputFieldBlur(true);
   };
 
-  const formSelectBlurHandler = (_event: React.FocusEvent<HTMLInputElement>) => {
+  const formSelectBlurHandler = (_event: React.FormEvent<HTMLSelectElement>) => {
     setDropdownFieldBlur(true);
   };
 
@@ -141,7 +140,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               onBlur={onBlurHandler}
               validated={nameValidated}
               id="create-satellite-manifest-form-name"
-              autoFocus="autoFocus"
+              autoFocus={true}
             />
             <FormHelperText>
               <HelperText>
