@@ -4,27 +4,20 @@ import CreateManifestForm from '../CreateManifestForm';
 import { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import '@testing-library/jest-dom';
+import { HttpError } from '../../../utilities/errors';
 
 const queryClient = new QueryClient();
 
 const handleModalToggle = jest.fn();
 const submitForm = jest.fn();
-const handleNameChange = jest.fn();
-const handleTypeChange = jest.fn();
 
 const createManifestFormProps = {
   satelliteVersions: [{ description: 'Satellite v6.2', value: 'sat-6.2' }] as SatelliteVersion[],
   handleModalToggle,
-  handleNameChange,
-  handleTypeChange,
-  isModalOpen: true,
   submitForm: (): any => null,
   isLoading: false,
-  isError: false,
-  isSuccess: false,
-  errorCreatingManifest: false,
-  hasSatelliteVersionsError: false,
-  createManifestResponseData: false
+  error: null as HttpError,
+  isSuccess: false
 };
 
 describe('Create Manifest Form', () => {

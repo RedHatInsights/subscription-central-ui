@@ -50,7 +50,8 @@ describe('Satellite Manifest Panel', () => {
 
   it('renders correctly with SCA column when user is SCA Capable', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+      body: [] as SatelliteVersion[],
+      refetch: jest.fn()
     });
 
     const { getByLabelText } = render(
@@ -66,7 +67,8 @@ describe('Satellite Manifest Panel', () => {
 
     it('renders correctly without SCA column', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[]
+        body: [] as SatelliteVersion[],
+        refetch: jest.fn()
       });
 
       const { queryByLabelText } = render(
@@ -95,7 +97,8 @@ describe('Satellite Manifest Panel', () => {
 
     it('renders N/A for the SCA Status', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[]
+        body: [] as SatelliteVersion[],
+        refetch: jest.fn()
       });
 
       const { getByText } = render(
@@ -113,7 +116,8 @@ describe('Satellite Manifest Panel', () => {
 
     it('renders no results', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[]
+        body: [] as SatelliteVersion[],
+        refetch: jest.fn()
       });
 
       const { getByLabelText } = render(
@@ -131,7 +135,8 @@ describe('Satellite Manifest Panel', () => {
 
     it('renders a blank state', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[]
+        body: [] as SatelliteVersion[],
+        refetch: jest.fn()
       });
 
       const { getByText } = render(
@@ -149,6 +154,8 @@ describe('Satellite Manifest Panel', () => {
     it('renders loading', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
         body: [] as SatelliteVersion[],
+        refetch: jest.fn(),
+
         isLoading: true
       });
 
@@ -163,7 +170,8 @@ describe('Satellite Manifest Panel', () => {
 
   it('opens the side panel when the row name is clicked', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+      body: [] as SatelliteVersion[],
+      refetch: jest.fn()
     });
 
     const { container, getByTestId } = render(
@@ -178,7 +186,8 @@ describe('Satellite Manifest Panel', () => {
 
   it('opens the delete popup from clicking the kebab menu', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+      body: [] as SatelliteVersion[],
+      refetch: jest.fn()
     });
 
     const { getByLabelText, getByText } = render(
@@ -221,7 +230,8 @@ describe('Satellite Manifest Panel', () => {
 
   it('opens the side panel when the row name is clicked', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+      body: [] as SatelliteVersion[],
+      refetch: jest.fn()
     });
 
     const { getByText, getByTestId } = render(
@@ -236,7 +246,8 @@ describe('Satellite Manifest Panel', () => {
 
   it('opens the delete popup from clicking the kebab menu', () => {
     (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[]
+      body: [] as SatelliteVersion[],
+      refetch: jest.fn()
     });
 
     const { getByLabelText, getByText } = render(
@@ -257,7 +268,8 @@ describe('Satellite Manifest Panel', () => {
 
     it('does render the delete button, button is disabled', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[]
+        body: [] as SatelliteVersion[],
+        refetch: jest.fn()
       });
 
       const { queryByText, getByLabelText } = render(
