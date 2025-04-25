@@ -1,34 +1,34 @@
 import React, { useState, FC, useEffect } from 'react';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
-import {
-  Button,
-  ActionGroup,
-  Form,
-  FormGroup,
-  TextInput,
-  Title,
-  FormSelect,
-  FormSelectOption
-} from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ActionGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import { FormSelect } from '@patternfly/react-core/dist/dynamic/components/FormSelect';
+import { FormSelectOption } from '@patternfly/react-core/dist/dynamic/components/FormSelect';
 import useNotifications from '../../hooks/useNotifications';
 import { SatelliteVersion } from '../../hooks/useSatelliteVersions';
 import CreateManifestFormLoading from './CreateManifestFormLoading';
-import { HelperText } from '@patternfly/react-core';
-import { FormHelperText } from '@patternfly/react-core';
-import { HelperTextItem } from '@patternfly/react-core';
+import { HelperText } from '@patternfly/react-core/dist/dynamic/components/HelperText';
+import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { HelperTextItem } from '@patternfly/react-core/dist/dynamic/components/HelperText';
+import { HttpError } from '../../utilities/errors';
+import { supportLink } from '../../utilities/consts';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
   handleModalToggle: () => void;
   submitForm: (name: string, version: string) => void;
   isLoading: boolean;
-  isError: boolean;
   isSuccess: boolean;
+  error: HttpError;
 }
 
 const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   type Validate = 'default' | 'error' | 'success';
-  const { satelliteVersions, handleModalToggle, isLoading, submitForm, isError, isSuccess } = props;
+  const { satelliteVersions, handleModalToggle, isLoading, submitForm, error, isSuccess } = props;
   const [inputFieldBlur, setinputFieldBlur] = React.useState(false);
   const [dropdownFieldBlur, setDropdownFieldBlur] = React.useState(false);
   const [manifestName, setManifestName] = useState('');
@@ -46,17 +46,26 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     submitForm(manifestName, manifestType);
   };
 
-  const shouldShowForm = isLoading === false && isError === false && isSuccess === false;
+  const shouldShowForm = isLoading === false && error === null && isSuccess === false;
 
   useEffect(() => {
     if (isSuccess) {
+      handleModalToggle();
       addSuccessNotification(`Manifest ${manifestName} created`);
+    } else if (error?.status == 403) {
       handleModalToggle();
-    } else if (isError) {
+      addErrorNotification(
+        'A Satellite subscription is required to create a manifest. Contact support to check if you need a new subscription.',
+        {
+          alertLinkText: 'Contact support',
+          alertLinkHref: supportLink
+        }
+      );
+    } else if (error != undefined) {
+      handleModalToggle();
       addErrorNotification('Something went wrong. Please try again');
-      handleModalToggle();
     }
-  }, [isSuccess]);
+  }, [isLoading]);
 
   const satelliteTypeOptions = satelliteVersions?.map((satelliteVersion: SatelliteVersion) => {
     return (
@@ -64,7 +73,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
         key={satelliteVersion.value}
         value={satelliteVersion.value}
         label={satelliteVersion.description}
-        validated={typeValidated}
       />
     );
   });
@@ -73,7 +81,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     setinputFieldBlur(true);
   };
 
-  const formSelectBlurHandler = (_event: React.FocusEvent<HTMLInputElement>) => {
+  const formSelectBlurHandler = (_event: React.FormEvent<HTMLSelectElement>) => {
     setDropdownFieldBlur(true);
   };
 
@@ -132,7 +140,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
               onBlur={onBlurHandler}
               validated={nameValidated}
               id="create-satellite-manifest-form-name"
-              autoFocus="autoFocus"
+              autoFocus={true}
             />
             <FormHelperText>
               <HelperText>

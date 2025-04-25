@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { useToken } from '../utilities/platformServices';
+import { HttpError } from '../utilities/errors';
 
 interface CreateManifestParams {
   name: string;
@@ -9,30 +10,32 @@ interface CreateManifestParams {
 const createSatelliteManifest =
   (jwtToken: Promise<string>) => async (data: CreateManifestParams) => {
     const { name, version } = data;
-    return fetch(`/api/rhsm/v2/manifests?name=${name}&version=${version}`, {
+    const response = await fetch(`/api/rhsm/v2/manifests?name=${name}&version=${version}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${await jwtToken}` }
-    }).then((response) => {
-      if (response.status !== 200) {
-        throw new Error(
-          `Status Code ${response.status}.  Error creating manifest: ${response.statusText}.  `
-        );
-      }
-      return response.json();
     });
+    if (!response.ok) {
+      throw new HttpError(
+        `Status Code ${response.status}. Error creating manifest: ${response.statusText}.`,
+        response.status,
+        response.statusText
+      );
+    }
+    return response.json();
   };
 
 const useCreateSatelliteManifest = () => {
   const queryClient = useQueryClient();
   const token = useToken();
-  return useMutation(
-    (newManifest: CreateManifestParams) => createSatelliteManifest(token)(newManifest),
+  return useMutation<any, HttpError, CreateManifestParams, unknown>(
+    (newManifest) => createSatelliteManifest(token)(newManifest),
     {
-      onSuccess: (data: any) => {
-        if (typeof data !== 'undefined') queryClient.invalidateQueries('manifests');
+      onSuccess: (data) => {
+        if (typeof data !== 'undefined') {
+          queryClient.invalidateQueries('manifests');
+        }
       }
     }
   );
 };
-
 export { CreateManifestParams, createSatelliteManifest, useCreateSatelliteManifest as default };

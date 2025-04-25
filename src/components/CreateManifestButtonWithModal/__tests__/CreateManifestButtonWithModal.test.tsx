@@ -13,6 +13,7 @@ const queryClient = new QueryClient();
 it('renders the modal properly when the button is clicked', async () => {
   (useSatelliteVersions as jest.Mock).mockReturnValue({
     body: [] as SatelliteVersion[],
+    refetch: jest.fn(),
     isError: false,
     isLoading: false
   });
@@ -34,6 +35,7 @@ it('renders the modal properly when the button is clicked', async () => {
 it('renders the Create manifest form with disabled button for user', async () => {
   (useSatelliteVersions as jest.Mock).mockReturnValue({
     body: [] as SatelliteVersion[],
+    refetch: jest.fn(),
     isLoading: false,
     data: []
   });

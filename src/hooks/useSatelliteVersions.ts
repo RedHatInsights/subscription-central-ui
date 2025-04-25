@@ -1,5 +1,6 @@
 import { useQuery } from 'react-query';
 import { useToken } from '../utilities/platformServices';
+import { HttpError } from '../utilities/errors';
 
 interface SatelliteVersion {
   description: string;
@@ -11,7 +12,11 @@ const fetchSatelliteVersions = (jwtToken: Promise<string>) => async (): Promise<
     headers: { Authorization: `Bearer ${await jwtToken}` }
   }).then((response) => {
     if (response.status != 200) {
-      throw new Error(`Failed to fetch satellite versions: ${response.statusText}`);
+      throw new HttpError(
+        `Failed to fetch satellite versions: ${response.statusText}`,
+        response.status,
+        response.statusText
+      );
     }
     return response.json();
   });
@@ -19,7 +24,9 @@ const fetchSatelliteVersions = (jwtToken: Promise<string>) => async (): Promise<
 
 const useSatelliteVersions = () => {
   const jwtToken = useToken();
-  return useQuery('satelliteVersions', () => fetchSatelliteVersions(jwtToken)());
+  return useQuery<any, HttpError, any, 'satelliteVersions'>('satelliteVersions', () =>
+    fetchSatelliteVersions(jwtToken)()
+  );
 };
 
 export { fetchSatelliteVersions, SatelliteVersion, useSatelliteVersions as default };
