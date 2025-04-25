@@ -1,19 +1,16 @@
 import React, { FunctionComponent, useState, useRef } from 'react';
-import {
-  Button,
-  Drawer,
-  DrawerContent,
-  DrawerContentBody,
-  Flex,
-  FlexItem,
-  PageSection,
-  PageSectionVariants,
-  Pagination,
-  PaginationVariant,
-  SearchInput,
-  Split,
-  SplitItem
-} from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Drawer } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { DrawerContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { DrawerContentBody } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { Pagination } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { SearchInput } from '@patternfly/react-core/dist/dynamic/components/SearchInput';
+import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
+import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import {
   ActionsColumn,
   ExpandableRowContent,
@@ -44,7 +41,6 @@ import { NoSearchResults } from '../emptyState';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { Processing } from '../emptyState';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
-import './SatelliteManifestPanel.scss';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
 import SCAStatusSwitch from '../SCAStatusSwitch';
 
@@ -123,7 +119,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setPage(1);
   };
 
-  const handleSearch = (_: Event, searchValue: string) => {
+  const handleSearch = (_: React.FormEvent, searchValue: string) => {
     setSearchValue(searchValue);
     setPage(1);
     collapseAllRows();
@@ -312,7 +308,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
         <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
           <DrawerContent panelContent={panelContent()}>
             <DrawerContentBody>
-              <PageSection variant={PageSectionVariants.light}>
+              <PageSection hasBodyWrapper={false}>
                 <Flex
                   direction={{ default: 'column', md: 'row' }}
                   justifyContent={{ default: 'justifyContentSpaceBetween' }}
@@ -407,7 +403,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                   );
                 })}
               </Table>
-              <PageSection variant={PageSectionVariants.light}>
+              <PageSection hasBodyWrapper={false}>
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />
                 )}

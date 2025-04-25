@@ -10,12 +10,12 @@ it('shows the error message', () => {
 
 it('links to support', () => {
   const { getByText } = render(<NoSatelliteSubs />);
-  expect(getByText('Contact support')).toHaveAttribute('href', supportLink);
+  expect(getByText('Contact support').parentElement).toHaveAttribute('href', supportLink);
 });
 
 it('links to subscription inventory', () => {
   const { getByText } = render(<NoSatelliteSubs />);
-  expect(getByText('View subscription inventory')).toHaveAttribute(
+  expect(getByText('View subscription inventory').parentElement).toHaveAttribute(
     'href',
     subscriptionInventoryLink
   );

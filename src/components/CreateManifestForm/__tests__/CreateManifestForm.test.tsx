@@ -98,7 +98,7 @@ describe('Create Manifest Form', () => {
         </QueryClientProvider>
       );
       const input = getByRole('textbox');
-      const createButton = getByText('Create');
+      const createButton = getByText('Create').parentElement;
 
       expect(createButton).toBeInTheDocument();
       expect(createButton).toHaveAttribute('disabled');
@@ -233,7 +233,7 @@ it('renders the create button on form with button is disabled', () => {
     </QueryClientProvider>
   );
 
-  expect(queryByText('Create')).toBeDisabled();
+  expect(queryByText('Create').parentElement).toBeDisabled();
 });
 describe('when the api call fails, and manifest has not been created', () => {
   it('renders an error message', () => {
