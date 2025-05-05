@@ -7,7 +7,7 @@ const packageJson = require('./package.json');
 
 module.exports = {
   appUrl: '/subscriptions/manifests',
-  useProxy: process.env.PROXY === 'true',
+  useProxy: true,
   proxyVerbose: true,
   plugins: [
     new webpack.DefinePlugin({

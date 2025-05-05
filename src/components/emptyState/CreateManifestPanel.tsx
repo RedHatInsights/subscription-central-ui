@@ -1,12 +1,8 @@
 import React, { FC } from 'react';
-import {
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateVariant,
-  EmptyStateHeader,
-  EmptyStateFooter
-} from '@patternfly/react-core';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateFooter } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal/CreateManifestButtonWithModal';
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
 import { User } from '../../hooks/useUser';
@@ -17,12 +13,12 @@ interface CreateManifestButtonWithModalProps {
 
 const CreateManifestPanel: FC<CreateManifestButtonWithModalProps> = ({ user }) => {
   return (
-    <EmptyState variant={EmptyStateVariant.lg}>
-      <EmptyStateHeader
-        titleText="Create a new manifest to export subscriptions"
-        icon={<EmptyStateIcon icon={PlusCircleIcon} />}
-        headingLevel="h2"
-      />
+    <EmptyState
+      headingLevel="h2"
+      icon={PlusCircleIcon}
+      titleText="Create a new manifest to export subscriptions"
+      variant={EmptyStateVariant.lg}
+    >
       <EmptyStateBody>
         You currently have no manifests displayed. Create a new manifest to export subscriptions
         from the Red Hat Customer Portal to your on-premise subscription management application.

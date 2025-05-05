@@ -1,30 +1,29 @@
-import { EmptyStateIcon } from '@patternfly/react-core';
-import { EmptyState, EmptyStateHeader } from '@patternfly/react-core';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import React from 'react';
 import WrenchIcon from '@patternfly/react-icons/dist/js/icons/wrench-icon';
-import {} from '@patternfly/react-core';
-import { EmptyStateBody } from '@patternfly/react-core';
-import { Text, TextContent } from '@patternfly/react-core';
-import { Button } from '@patternfly/react-core';
-import { EmptyStateVariant } from '@patternfly/react-core';
+
+import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { Content } from '@patternfly/react-core/dist/dynamic/components/Content';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { supportLink, subscriptionInventoryLink } from '../../utilities/consts';
 
 export const NoSatelliteSubs = () => {
   return (
-    <EmptyState variant={EmptyStateVariant.lg}>
-      <EmptyStateHeader
-        titleText="Your account has no Satellite subscriptions"
-        icon={<EmptyStateIcon icon={WrenchIcon} />}
-        headingLevel="h2"
-      />
+    <EmptyState
+      headingLevel="h2"
+      icon={WrenchIcon}
+      titleText="Your account has no Satellite subscriptions"
+      variant={EmptyStateVariant.lg}
+    >
       <EmptyStateBody>
-        <TextContent className="pf-u-mb-xl">
-          <Text variant="small">
+        <Content className="pf-u-mb-xl">
+          <Content component="p">
             A Satellite subscription is required to create a manifest. Contact support to determine
             if you need a new subscription. To view recently expired subscriptions, select the{' '}
             <em>Expired</em> card in your subscription inventory.
-          </Text>
-        </TextContent>
+          </Content>
+        </Content>
         <Button variant="primary" component="a" href={supportLink} target="_blank">
           Contact support
         </Button>

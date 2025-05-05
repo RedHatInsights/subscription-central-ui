@@ -11,9 +11,8 @@ describe('External Link', () => {
 
     const container = render(<ExternalLink {...props} />);
 
-    expect(container.queryByText('This is text for an external link')).toHaveAttribute(
-      'href',
-      'foo.com'
-    );
+    expect(
+      container.queryByText('This is text for an external link').parentElement
+    ).toHaveAttribute('href', 'foo.com');
   });
 });

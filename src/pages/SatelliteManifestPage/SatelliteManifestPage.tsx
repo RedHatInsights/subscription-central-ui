@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
-import { Text, TextContent } from '@patternfly/react-core';
+import { Content } from '@patternfly/react-core/dist/dynamic/components/Content';
 import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
@@ -8,9 +8,9 @@ import { Processing } from '../../components/emptyState';
 import useUser from '../../hooks/useUser';
 import ExternalLink from '../../components/ExternalLink';
 import { NoSatelliteSubs } from '../../components/NoSatelliteSubs';
-import { Alert } from '@patternfly/react-core';
+import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import { subscriptionInventoryLink, supportLink } from '../../utilities/consts';
-import { PageSection } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { useNavigate } from 'react-router-dom';
 
 const SatelliteManifestPage: FC = () => {
@@ -29,9 +29,9 @@ const SatelliteManifestPage: FC = () => {
   return (
     <>
       <PageHeader>
-        <TextContent>
-          <Text component="h1">Manifests</Text>
-          <Text component="p">
+        <Content>
+          <Content component="h1">Manifests</Content>
+          <Content component="p">
             Create and export manifests for your on-premise subscription management application.
             This page does not allow you to add subscriptions to manifests. Subscriptions can be
             added to the manifest using using the Satellite Server web user interface after
@@ -51,10 +51,10 @@ const SatelliteManifestPage: FC = () => {
                 <a href={subscriptionInventoryLink}>subscription inventory</a>.
               </Alert>
             )}
-          </Text>
-        </TextContent>
+          </Content>
+        </Content>
       </PageHeader>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <>
           {isLoading && !error && <Processing />}
 

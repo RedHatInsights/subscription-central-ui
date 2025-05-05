@@ -1,17 +1,11 @@
 import React, { FunctionComponent } from 'react';
-import {
-  Button,
-  Checkbox,
-  EmptyState,
-  EmptyStateIcon,
-  Modal,
-  ModalVariant,
-  Spinner,
-  Text,
-  TextContent,
-  TextVariants,
-  EmptyStateHeader
-} from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Checkbox } from '@patternfly/react-core/dist/dynamic/components/Checkbox';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import { ContentVariants } from '@patternfly/react-core/dist/dynamic/components/Content';
+import { Content } from '@patternfly/react-core/dist/dynamic/components/Content';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import useDeleteSatelliteManifest from '../../hooks/useDeleteSatelliteManifest';
 import useNotifications from '../../hooks/useNotifications';
 
@@ -75,28 +69,24 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
     }
   };
 
-  const Content = () => {
+  const ModalContent = () => {
     if (isDeletingManifest) {
-      return (
-        <EmptyState>
-          <EmptyStateHeader icon={<EmptyStateIcon icon={Spinner} />} />
-        </EmptyState>
-      );
+      return <EmptyState icon={Spinner}></EmptyState>;
     } else {
       return (
-        <TextContent>
-          <Text component={TextVariants.p}>
+        <>
+          <Content component={ContentVariants.p}>
             <b>{name}</b> will be permanently deleted, and the connection to Red Hat Insights will
             be broken. To enable again, you must create, export, download, and import a new manifest
             into your connected Satellite Server.
-          </Text>
+          </Content>
           <Checkbox
             label="I acknowledge that this action cannot be undone"
             isChecked={checked}
             id="confirmation_checkbox"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleCheckbox(event)}
           />
-        </TextContent>
+        </>
       );
     }
   };
@@ -118,7 +108,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
       titleIconVariant="warning"
       actions={actions()}
     >
-      <Content />
+      <ModalContent />
     </Modal>
   );
 };

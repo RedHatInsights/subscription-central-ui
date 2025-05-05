@@ -1,7 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { Drawer, DrawerContent, DrawerContentBody } from '@patternfly/react-core';
+import { Drawer } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { DrawerContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { DrawerContentBody } from '@patternfly/react-core/dist/dynamic/components/Drawer';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import useManifestEntitlements from '../../../hooks/useManifestEntitlements';
 import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifest';
@@ -212,7 +214,7 @@ describe('Manifest Detail Side Panel', () => {
         </QueryClientProvider>
       );
 
-      expect(queryByText('Delete manifest')).toBeDisabled();
+      expect(queryByText('Delete manifest').parentElement).toBeDisabled();
     });
   });
 });

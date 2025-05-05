@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { Spinner, Switch } from '@patternfly/react-core';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import { Switch } from '@patternfly/react-core/dist/dynamic/components/Switch';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
 import useUpdateManifestSCAStatus from '../../hooks/useUpdateManifestSCAStatus';
 import './SCAStatusSwitch.scss';
@@ -51,7 +52,6 @@ const SCAStatusSwitch: FC<SCAStatusSwitchProps> = ({ scaStatus, uuid, user }) =>
       isChecked={isChecked}
       onChange={handleChange}
       label="Enabled"
-      labelOff="Disabled"
       isDisabled={!user.canWriteManifests}
     />
   );

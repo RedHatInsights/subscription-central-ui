@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
-import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
-import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { Modal } from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
+import { ModalVariant } from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import CreateManifestForm from '../CreateManifestForm/CreateManifestForm';
 import CreateManifestFormLoading from '../CreateManifestForm/CreateManifestFormLoading';
 import useCreateSatelliteManifest from '../../hooks/useCreateSatelliteManifest';

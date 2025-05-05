@@ -1,10 +1,7 @@
 import React, { FC } from 'react';
-import {
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateVariant,
-  EmptyStateHeader
-} from '@patternfly/react-core';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { Processing } from '../emptyState';
 
 interface CreateManifestFormLoadingProps {
@@ -12,8 +9,7 @@ interface CreateManifestFormLoadingProps {
 }
 const CreateManifestFormLoading: FC<CreateManifestFormLoadingProps> = ({ title }) => {
   return (
-    <EmptyState variant={EmptyStateVariant.sm}>
-      <EmptyStateHeader titleText={<>{title}</>} headingLevel="h3" />
+    <EmptyState headingLevel="h3" titleText={<>{title}</>} variant={EmptyStateVariant.sm}>
       <EmptyStateBody>
         <Processing />
       </EmptyStateBody>
