@@ -156,7 +156,7 @@
     "sass-loader": "^16.0.5",
     "source-map-explorer": "^2.5.3",
     "stylelint": "^15.11.0",
-    "stylelint-config-recommended-scss": "^13.1.0",
+    "stylelint-config-recommended-scss": "^14.1.0",
     "stylelint-scss": "^5.3.2",
     "ts-patch": "^3.2.1",
     "webpack-bundle-analyzer": "^4.10.2",
