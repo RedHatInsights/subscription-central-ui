@@ -6,9 +6,10 @@ metadata:
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
     build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
-    pipelinesascode.tekton.dev/max-keep-runs: '3'
-    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch == "main"
-  creationTimestamp:
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch
+      == "main"
+  creationTimestamp: null
   labels:
     appstudio.openshift.io/application: subscription-central-ui
     appstudio.openshift.io/component: subscription-central-ui
@@ -17,120 +18,123 @@ metadata:
   namespace: teamnado-konflux-tenant
 spec:
   params:
-    - name: git-url
-      value: '{{source_url}}'
-    - name: revision
-      value: '{{revision}}'
-    - name: output-image
-      value: quay.io/redhat-user-workloads/teamnado-konflux-tenant/subscription-central-ui/subscription-central-ui:on-pr-{{revision}}
-    - name: image-expires-after
-      value: 5d
-    - name: dockerfile
-      value: ./build-tools/Dockerfile
+  - name: git-url
+    value: '{{source_url}}'
+  - name: revision
+    value: '{{revision}}'
+  - name: output-image
+    value: quay.io/redhat-user-workloads/teamnado-konflux-tenant/subscription-central-ui/subscription-central-ui:on-pr-{{revision}}
+  - name: image-expires-after
+    value: 5d
+  - name: dockerfile
+    value: ./build-tools/Dockerfile
   pipelineSpec:
     finally:
-      - name: show-sbom
-        params:
-          - name: IMAGE_URL
-            value: $(tasks.build-image-index.results.IMAGE_URL)
-        taskRef:
-          params:
-            - name: name
-              value: show-sbom
-            - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-show-sbom:0.1@sha256:002f7c8c1d2f9e09904035da414aba1188ae091df0ea9532cd997be05e73d594
-            - name: kind
-              value: task
-          resolver: bundles
-      - name: show-summary
-        params:
-          - name: pipelinerun-name
-            value: $(context.pipelineRun.name)
-          - name: git-url
-            value: $(tasks.clone-repository.results.url)?rev=$(tasks.clone-repository.results.commit)
-          - name: image-url
-            value: $(params.output-image)
-          - name: build-task-status
-            value: $(tasks.build-image-index.status)
-        taskRef:
-          params:
-            - name: name
-              value: summary
-            - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-summary:0.2@sha256:76075b709fa06ed824cbc84f41448b397b85bfde1cf9809395ba6d286f5b7cbd
-            - name: kind
-              value: task
-          resolver: bundles
-        workspaces:
-          - name: workspace
-            workspace: workspace
-    params:
-      - description: Source Repository URL
-        name: git-url
-        type: string
-      - default: ''
-        description: Revision of the Source Repository
-        name: revision
-        type: string
-      - description: Fully Qualified Output Image
-        name: output-image
-        type: string
-      - default: .
-        description: Path to the source code of an application's component from where to build image.
-        name: path-context
-        type: string
-      - default: Dockerfile
-        description: Path to the Dockerfile inside the context specified by parameter path-context
-        name: dockerfile
-        type: string
-      - default: 'false'
-        description: Force rebuild image
-        name: rebuild
-        type: string
-      - default: 'false'
-        description: Skip checks against built image
-        name: skip-checks
-        type: string
-      - default: 'false'
-        description: Execute the build with network isolation
-        name: hermetic
-        type: string
-      - default: ''
-        description: Build dependencies to be prefetched by Cachi2
-        name: prefetch-input
-        type: string
-      - default: ''
-        description: Image tag expiration time, time values could be something like 1h, 2d, 3w for hours, days, and weeks, respectively.
-        name: image-expires-after
-      - default: 'false'
-        description: Build a source image.
-        name: build-source-image
-        type: string
-      - default: 'false'
-        description: Add built image into an OCI image index
-        name: build-image-index
-        type: string
-      - default: []
-        description: Array of --build-arg values ("arg=value" strings) for buildah
-        name: build-args
-        type: array
-      - default: ''
-        description: Path to a file with build arguments for buildah, see https://www.mankier.com/1/buildah-build#--build-arg-file
-        name: build-args-file
-        type: string
-    results:
-      - description: ''
-        name: IMAGE_URL
+    - name: show-sbom
+      params:
+      - name: IMAGE_URL
         value: $(tasks.build-image-index.results.IMAGE_URL)
-      - description: ''
-        name: IMAGE_DIGEST
-        value: $(tasks.build-image-index.results.IMAGE_DIGEST)
-      - description: ''
-        name: CHAINS-GIT_URL
-        value: $(tasks.clone-repository.results.url)
-      - description: ''
-        name: CHAINS-GIT_COMMIT
-        value: $(tasks.clone-repository.results.commit)
+      taskRef:
+        params:
+        - name: name
+          value: show-sbom
+        - name: bundle
+          value: quay.io/konflux-ci/tekton-catalog/task-show-sbom:0.1@sha256:002f7c8c1d2f9e09904035da414aba1188ae091df0ea9532cd997be05e73d594
+        - name: kind
+          value: task
+        resolver: bundles
+    - name: show-summary
+      params:
+      - name: pipelinerun-name
+        value: $(context.pipelineRun.name)
+      - name: git-url
+        value: $(tasks.clone-repository.results.url)?rev=$(tasks.clone-repository.results.commit)
+      - name: image-url
+        value: $(params.output-image)
+      - name: build-task-status
+        value: $(tasks.build-image-index.status)
+      taskRef:
+        params:
+        - name: name
+          value: summary
+        - name: bundle
+          value: quay.io/konflux-ci/tekton-catalog/task-summary:0.2@sha256:76075b709fa06ed824cbc84f41448b397b85bfde1cf9809395ba6d286f5b7cbd
+        - name: kind
+          value: task
+        resolver: bundles
+      workspaces:
+      - name: workspace
+        workspace: workspace
+    params:
+    - description: Source Repository URL
+      name: git-url
+      type: string
+    - default: ""
+      description: Revision of the Source Repository
+      name: revision
+      type: string
+    - description: Fully Qualified Output Image
+      name: output-image
+      type: string
+    - default: .
+      description: Path to the source code of an application's component from where
+        to build image.
+      name: path-context
+      type: string
+    - default: Dockerfile
+      description: Path to the Dockerfile inside the context specified by parameter
+        path-context
+      name: dockerfile
+      type: string
+    - default: "false"
+      description: Force rebuild image
+      name: rebuild
+      type: string
+    - default: "false"
+      description: Skip checks against built image
+      name: skip-checks
+      type: string
+    - default: "false"
+      description: Execute the build with network isolation
+      name: hermetic
+      type: string
+    - default: ""
+      description: Build dependencies to be prefetched by Cachi2
+      name: prefetch-input
+      type: string
+    - default: ""
+      description: Image tag expiration time, time values could be something like
+        1h, 2d, 3w for hours, days, and weeks, respectively.
+      name: image-expires-after
+    - default: "false"
+      description: Build a source image.
+      name: build-source-image
+      type: string
+    - default: "false"
+      description: Add built image into an OCI image index
+      name: build-image-index
+      type: string
+    - default: []
+      description: Array of --build-arg values ("arg=value" strings) for buildah
+      name: build-args
+      type: array
+    - default: ""
+      description: Path to a file with build arguments for buildah, see https://www.mankier.com/1/buildah-build#--build-arg-file
+      name: build-args-file
+      type: string
+    results:
+    - description: ""
+      name: IMAGE_URL
+      value: $(tasks.build-image-index.results.IMAGE_URL)
+    - description: ""
+      name: IMAGE_DIGEST
+      value: $(tasks.build-image-index.results.IMAGE_DIGEST)
+    - description: ""
+      name: CHAINS-GIT_URL
+      value: $(tasks.clone-repository.results.url)
+    - description: ""
+      name: CHAINS-GIT_COMMIT
+      value: $(tasks.clone-repository.results.commit)
     tasks:
       - name: init
         params:
@@ -521,25 +525,26 @@ spec:
           - name: image-digest
             value: $(tasks.build-container.results.IMAGE_DIGEST)
     workspaces:
-      - name: workspace
-      - name: git-auth
-        optional: true
-      - name: netrc
-        optional: true
-  taskRunTemplate: {}
-  workspaces:
     - name: workspace
-      volumeClaimTemplate:
-        metadata:
-          creationTimestamp:
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 1Gi
-        status: {}
     - name: git-auth
-      secret:
-        secretName: '{{ git_auth_secret }}'
+      optional: true
+    - name: netrc
+      optional: true
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-subscription-central-ui
+  workspaces:
+  - name: workspace
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+      status: {}
+  - name: git-auth
+    secret:
+      secretName: '{{ git_auth_secret }}'
 status: {}
