@@ -109,7 +109,7 @@
     "@babel/preset-flow": "7.25.9",
     "@babel/preset-react": "7.25.9",
     "@babel/preset-typescript": "^7.26.0",
-    "@faker-js/faker": "^9.5.1",
+    "@faker-js/faker": "^9.8.0",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^2.0.12",
     "@redhat-cloud-services/frontend-components-config": "^6.3.5",
     "@redhat-cloud-services/frontend-components-config-utilities": "^4.3.4",
