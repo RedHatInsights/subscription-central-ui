@@ -9,7 +9,7 @@ export COMPONENT="rhsm-api-proxy"
 export IMAGE="quay.io/cloudservices/subscription-central-ui"
 export WORKSPACE=${WORKSPACE:-$APP_ROOT} # if running in jenkins, use the build's workspace
 export APP_ROOT=$(pwd)
-export NODE_BUILD_VERSION=16
+export NODE_BUILD_VERSION=22
 COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master
 
 # --------------------------------------------
@@ -26,7 +26,7 @@ BUILD_RESULTS=$?
 
 # Stubbed out for now
 mkdir -p $WORKSPACE/artifacts
-cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
+cat <<EOF >$WORKSPACE/artifacts/junit-dummy.xml
 <testsuite tests="1">
     <testcase classname="dummy" name="dummytest"/>
 </testsuite>
