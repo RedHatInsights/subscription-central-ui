@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
-import { Alert, AlertActionCloseButton, AlertGroup } from '@patternfly/react-core';
+import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { AlertActionCloseButton } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { AlertGroup } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import useNotifications from '../../hooks/useNotifications';
 
 const Notifications: FC = () => {

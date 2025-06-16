@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- outside of update scope, fix later*/
 import { useQuery } from 'react-query';
 import { useToken } from '../utilities/platformServices';
 import { HttpError } from '../utilities/errors';

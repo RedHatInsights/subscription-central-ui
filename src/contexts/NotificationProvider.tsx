@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { AlertActionLink } from '@patternfly/react-core';
+import { AlertActionLink } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import { v4 as uuid } from 'uuid';
 
 type NotificationVariantType = 'success' | 'danger' | 'info';
@@ -21,6 +21,7 @@ export type NotificationOptions = {
   keyOfAlertToReplace?: string;
 };
 
+/* eslint-disable -- stub out react context, all of this get re-initialized */
 const NotificationContext = React.createContext({
   notifications: [],
   addNotification: (
@@ -30,6 +31,7 @@ const NotificationContext = React.createContext({
   ) => null,
   removeNotification: (key: string) => null
 });
+/* eslint-enable */
 
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState([]);

@@ -77,11 +77,11 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     );
   });
 
-  const onBlurHandler = (_event: React.FocusEvent<HTMLInputElement>) => {
+  const onBlurHandler = () => {
     setinputFieldBlur(true);
   };
 
-  const formSelectBlurHandler = (_event: React.FormEvent<HTMLSelectElement>) => {
+  const formSelectBlurHandler = () => {
     setDropdownFieldBlur(true);
   };
 
@@ -95,13 +95,10 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   useEffect(() => {
     if (isValidManifestName(manifestName)) {
       setNameValidated('success');
-      nameFieldHelperText;
     } else if (manifestName != '') {
       setNameValidated('error');
-      invalidNameFieldText;
     } else if (manifestName == '' && inputFieldBlur) {
       setNameValidated('error');
-      invalidNameFieldText;
     }
   }, [manifestName, inputFieldBlur]);
 
@@ -136,7 +133,9 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
             <TextInput
               name="satelliteManifestName"
               value={manifestName}
-              onChange={(_event: any, manifestName: string) => handleNameChange(manifestName)}
+              onChange={(_event: React.FormEvent<HTMLInputElement>, manifestName: string) =>
+                handleNameChange(manifestName)
+              }
               onBlur={onBlurHandler}
               validated={nameValidated}
               id="create-satellite-manifest-form-name"
@@ -156,7 +155,9 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           <FormGroup label="Type" fieldId="create-satellite-manifest-form-type">
             <FormSelect
               value={manifestType}
-              onChange={(_event: any, value: string) => handleTypeChange(value)}
+              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) =>
+                handleTypeChange(value)
+              }
               onBlur={formSelectBlurHandler}
               name="satelliteManifestType"
               aria-label="FormSelect Input"

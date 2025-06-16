@@ -31,11 +31,11 @@ describe('Manifest Detail Side Panel', () => {
     uuid: 'abc123',
     titleRef: null as React.MutableRefObject<HTMLSpanElement>,
     drawerRef: null as React.MutableRefObject<HTMLDivElement>,
-    onCloseClick: (): any => undefined,
-    exportManifest: (): any => undefined,
+    onCloseClick: (): undefined => undefined,
+    exportManifest: (): undefined => undefined,
     exportManifestButtonIsDisabled: false,
-    openCurrentEntitlementsListFromPanel: (): any => undefined,
-    deleteManifest: (): any => undefined
+    openCurrentEntitlementsListFromPanel: (): undefined => undefined,
+    deleteManifest: (): undefined => undefined
   };
 
   beforeEach(() => {

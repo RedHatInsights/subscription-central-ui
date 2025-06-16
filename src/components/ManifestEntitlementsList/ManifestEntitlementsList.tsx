@@ -5,6 +5,7 @@ import './ManifestEntitlementsList.scss';
 import useManifestEntitlements, { ManifestEntitlement } from '../../hooks/useManifestEntitlements';
 
 interface ManifestEntitlementsListProps {
+  // eslint-disable-next-line -- outside of scope, fix later
   entitlementsRowRef: React.MutableRefObject<any>;
   uuid: string;
 }
@@ -59,23 +60,6 @@ const ManifestEntitlementsList: FC<ManifestEntitlementsListProps> = ({
       }
     );
   }
-
-  const actions = [
-    {
-      title: 'Remove Subscription',
-      onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-        // placeholder for now
-        console.log('clicked on Some action, on row: ', rowId, rowData);
-      }
-    },
-    {
-      title: 'Move Subscription',
-      onClick: (event: React.MouseEvent, rowId: number, rowData: any) => {
-        // placeholder for now
-        console.log('clicked on Some action, on row: ', rowId, rowData);
-      }
-    }
-  ];
 
   return (
     <>
