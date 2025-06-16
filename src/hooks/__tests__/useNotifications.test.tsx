@@ -3,7 +3,11 @@ import { renderHook, act } from '@testing-library/react';
 import useNotifications from '../useNotifications';
 import NotificationProvider from '../../contexts/NotificationProvider';
 
-const wrapper = ({ children }: any) => {
+interface WrapperProps {
+  children: React.ReactNode;
+}
+
+const wrapper = ({ children }: WrapperProps) => {
   return <NotificationProvider>{children}</NotificationProvider>;
 };
 

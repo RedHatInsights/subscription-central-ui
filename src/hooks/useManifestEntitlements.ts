@@ -49,7 +49,7 @@ const useManifestEntitlements = (
   uuid: string
 ): QueryObserverResult<ManifestEntitlementsData, unknown> => {
   const jwtToken = useToken();
-  return useQuery<any, Error>(['manifestEntitlements', uuid], () =>
+  return useQuery<ManifestEntitlementsData, Error>(['manifestEntitlements', uuid], () =>
     getManifestEntitlements(jwtToken)(uuid)
   );
 };

@@ -1,14 +1,12 @@
 import React, { FC, useEffect } from 'react';
 import { useQueryClient } from 'react-query';
-import {
-  Button,
-  DrawerPanelContent,
-  DrawerHead,
-  DrawerActions,
-  DrawerCloseButton,
-  Grid,
-  GridItem
-} from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { DrawerPanelContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { DrawerHead } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { DrawerActions } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { DrawerCloseButton } from '@patternfly/react-core/dist/dynamic/components/Drawer';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { Processing } from '../emptyState';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';

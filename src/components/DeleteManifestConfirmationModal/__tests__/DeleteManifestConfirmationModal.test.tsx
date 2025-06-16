@@ -10,8 +10,8 @@ describe('DeleteConfirmationModal', () => {
     isOpen: true,
     uuid: '00000000-0000-0000-0000-000000000000',
     name: 'Manifest Name',
-    handleModalToggle: (): any => undefined,
-    onSuccess: (): any => undefined
+    handleModalToggle: (): undefined => undefined,
+    onSuccess: (): undefined => undefined
   };
   let isLoading = false;
 
@@ -20,7 +20,7 @@ describe('DeleteConfirmationModal', () => {
       isLoading: isLoading,
       isSuccess: false,
       isError: false,
-      reset: (): any => undefined
+      reset: (): undefined => undefined
     }));
   });
 

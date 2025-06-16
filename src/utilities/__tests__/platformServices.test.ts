@@ -1,4 +1,3 @@
-import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import { useAuthenticateUser, useEnvironment, useUserRbacPermissions } from '../platformServices';
 
 jest.mock('@redhat-cloud-services/frontend-components/useChrome');

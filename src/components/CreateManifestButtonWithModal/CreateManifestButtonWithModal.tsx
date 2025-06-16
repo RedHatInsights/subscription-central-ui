@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react';
-import { Button } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import CreateManifestModal from '../CreateManifestModal';
 import { User } from '../../hooks/useUser';
-import { Tooltip } from '@patternfly/react-core';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 
 interface CreateManifestButtonWithModalProps {
   user: User;

@@ -6,8 +6,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 enableFetchMocks();
 
+interface WrapperProps {
+  children: React.ReactNode;
+}
+
 const queryClient = new QueryClient();
-const wrapper = ({ children }: any) => {
+const wrapper = ({ children }: WrapperProps) => {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
 

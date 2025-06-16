@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- outside of update scope, fix later*/
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { renderHook, waitFor } from '@testing-library/react';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- outside of update scope, fix later*/
 import config, { EnvironmentConfig } from './config/config';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 

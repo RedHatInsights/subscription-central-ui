@@ -14,7 +14,7 @@ const submitForm = jest.fn();
 const createManifestFormProps = {
   satelliteVersions: [{ description: 'Satellite v6.2', value: 'sat-6.2' }] as SatelliteVersion[],
   handleModalToggle,
-  submitForm: (): any => null,
+  submitForm: (): null => null,
   isLoading: false,
   error: null as HttpError,
   isSuccess: false

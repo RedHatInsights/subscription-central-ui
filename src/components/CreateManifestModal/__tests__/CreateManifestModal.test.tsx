@@ -15,7 +15,7 @@ describe('Create Manifest Modal', () => {
       isError: false,
       isLoading: false
     });
-    const props = { handleModalToggle: (): any => null, isModalOpen: true };
+    const props = { handleModalToggle: (): null => null, isModalOpen: true };
     const { getByLabelText } = render(
       <QueryClientProvider client={queryClient}>
         <CreateManifestModal {...props} />
