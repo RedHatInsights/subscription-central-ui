@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/RedHatInsights/frontend-components/refs/heads/master/packages/config-utils/src/feo/spec/frontend-crd.schema.json
 apiVersion: v1
 kind: Template
 metadata:
@@ -9,6 +10,7 @@ objects:
       name: manifests
     spec:
       envName: ${ENV_NAME}
+      feoConfigEnabled: true
       title: Manifests
       deploymentRepo: https://github.com/RedHatInsights/subscription-central-ui
       API:
@@ -18,18 +20,26 @@ objects:
         paths:
           - /apps/manifests
       image: ${IMAGE}:${IMAGE_TAG}
-      navItems:
-        - appId: 'manifests'
-          title: 'Manifests'
-          href: '/insights/subscriptions/manifests'
-          product: 'Subscription Watch'
+      searchEntries:
+        - id: 'manifests'
+          title: Manifests
+          href: /subscriptions/manifests
+          description: Create, manage, and export subscription manifests for Red Hat Satellite.
+      bundleSegments:
+        - segmentId: manifests
+          bundleId: subscriptions
+          navItems:
+            - id: manifests
+              title: Manifests
+              href: /subscriptions/manifests
+          position: 150
       module:
         manifestLocation: '/apps/manifests/fed-mods.json'
         modules:
           - id: 'manifests'
             module: './RootApp'
             routes:
-              - pathname: /insights/subscriptions/manifests
+              - pathname: /subscriptions/manifests
 
 parameters:
   - name: ENV_NAME
