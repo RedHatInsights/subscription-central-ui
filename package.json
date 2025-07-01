@@ -151,7 +151,7 @@
     "null-loader": "^4.0.1",
     "postcss": "^8.4.26",
     "prettier": "^3.5.3",
-    "pretty-quick": "^4.0.0",
+    "pretty-quick": "^4.2.2",
     "prop-types": "^15.8.1",
     "sass-loader": "^16.0.5",
     "source-map-explorer": "^2.5.3",
