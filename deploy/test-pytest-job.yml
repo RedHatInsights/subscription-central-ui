@@ -22,7 +22,7 @@ objects:
           restartPolicy: Never
           containers:
             - name: manifests-ui-pytest-${IMAGE_TAG}-${UID}
-              image: ${TEST_IMAGE}:${IMAGE_TAG}
+              image: ${TEST_IMAGE}:latest
               imagePullPolicy: Always
               env:
                 - name: TEST_SUITE
