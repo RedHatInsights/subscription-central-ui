@@ -1,0 +1,55 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: manifests-ui-pytest
+objects:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: manifests-ui-pytest-${IMAGE_TAG}-${UID}
+      annotations:
+        'ignore-check.kube-linter.io/no-liveness-probe': 'probes not required on Job pods'
+        'ignore-check.kube-linter.io/no-readiness-probe': 'probes not required on Job pods'
+      labels:
+        image-tag: ${IMAGE_TAG}
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          imagePullSecrets:
+            - name: quay-cloudservices-pull
+          restartPolicy: Never
+          containers:
+            - name: manifests-ui-pytest-${IMAGE_TAG}-${UID}
+              image: ${TEST_IMAGE}:${IMAGE_TAG}
+              imagePullPolicy: Always
+              env:
+                - name: TEST_SUITE
+                  value: ${TEST_SUITE}
+                - name: NONPROD_ITPNTAUTOMATION_PEM
+                  valueFrom:
+                    secretKeyRef:
+                      key: pem
+                      name: nonprod-itpntautomation
+                      optional: false
+              resources:
+                limits:
+                  cpu: '1'
+                  memory: 1.5Gi
+                requests:
+                  cpu: 250m
+                  memory: 512Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+parameters:
+  - name: IMAGE_TAG
+    value: ''
+    required: true
+  - name: UID
+    description: 'Unique job name suffix'
+    generate: expression
+    from: '[a-z0-9]{6}'
+  - name: TEST_IMAGE
+    description: 'container image path for the test suite'
+    value: quay.io/cloudservices/subscription-central-automation
