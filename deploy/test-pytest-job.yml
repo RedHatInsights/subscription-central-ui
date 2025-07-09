@@ -30,7 +30,6 @@ objects:
               volumeMounts:
                 - name: nonprod-itpntautomation
                   mountPath: /etc/pki/tls/certs/enterprise_services/nonprod-itpntautomation.pem
-                  subPath: pem
                   readOnly: true
               resources:
                 limits:
