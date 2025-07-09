@@ -27,12 +27,11 @@ objects:
               env:
                 - name: TEST_SUITE
                   value: ${TEST_SUITE}
-                - name: NONPROD_ITPNTAUTOMATION_PEM
-                  valueFrom:
-                    secretKeyRef:
-                      key: pem
-                      name: nonprod-itpntautomation
-                      optional: false
+              volumeMounts:
+                - name: nonprod-itpntautomation
+                  mountPath: /etc/pki/tls/certs/enterprise_services/nonprod-itpntautomation.pem
+                  subPath: pem
+                  readOnly: true
               resources:
                 limits:
                   cpu: '1'
@@ -42,6 +41,11 @@ objects:
                   memory: 512Mi
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
+          volumes:
+            - name: nonprod-itpntautomation
+              secret:
+                secretName: nonprod-itpntautomation
+                defaultMode: 0644
 parameters:
   - name: IMAGE_TAG
     value: ''
