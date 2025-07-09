@@ -56,3 +56,6 @@ parameters:
   - name: TEST_IMAGE
     description: 'container image path for the test suite'
     value: quay.io/cloudservices/subscription-central-automation
+  - name: TEST_SUITE
+    description: 'test suite to run'
+    value: manifests
