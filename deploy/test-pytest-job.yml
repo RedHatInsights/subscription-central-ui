@@ -29,7 +29,7 @@ objects:
                   value: ${TEST_SUITE}
               volumeMounts:
                 - name: nonprod-itpntautomation
-                  mountPath: /etc/pki/tls/certs/enterprise_services/nonprod-itpntautomation.pem
+                  mountPath: /etc/pki/tls/certs/enterprise_services
                   readOnly: true
               resources:
                 limits:
@@ -44,7 +44,9 @@ objects:
             - name: nonprod-itpntautomation
               secret:
                 secretName: nonprod-itpntautomation
-                defaultMode: 0644
+                items:
+                  - key: pem
+                    path: nonprod-itpntautomation.pem
 parameters:
   - name: IMAGE_TAG
     value: ''
