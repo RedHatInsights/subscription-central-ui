@@ -17,7 +17,7 @@ const SatelliteManifestPage: FC = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
   const navigate = useNavigate();
 
-  const { data: user } = useUser();
+  const { data: user, isError: userError } = useUser();
   const manifestsMoreInfoLink =
     'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html/' +
     'creating_and_managing_manifests_for_a_connected_satellite_server/index';
@@ -25,6 +25,8 @@ const SatelliteManifestPage: FC = () => {
   if (!user.canReadManifests) {
     navigate('./no-permissions');
   }
+
+  const hasError = error || userError;
 
   return (
     <>
@@ -56,15 +58,15 @@ const SatelliteManifestPage: FC = () => {
       </PageHeader>
       <PageSection hasBodyWrapper={false}>
         <>
-          {isLoading && !error && <Processing />}
+          {hasError && <Unavailable />}
 
-          {!isLoading && !error && !user.isEntitled && data.length == 0 && <NoSatelliteSubs />}
+          {isLoading && !hasError && <Processing />}
 
-          {!isLoading && !error && (user.isEntitled || data.length != 0) && (
+          {!isLoading && !hasError && !user.isEntitled && data.length == 0 && <NoSatelliteSubs />}
+
+          {!isLoading && !hasError && (user.isEntitled || data.length != 0) && (
             <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
-
-          {error && <Unavailable />}
         </>
       </PageSection>
     </>

@@ -36,7 +36,7 @@ const updateManifestSCAStatus =
         return { success: true, status: response.status };
       })
       .catch((e) => {
-        console.error(e);
+        throw new Error(e);
       });
   };
 
