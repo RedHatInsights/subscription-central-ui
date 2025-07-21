@@ -4,6 +4,7 @@ import {
   useToken,
   useUserRbacPermissions
 } from '../utilities/platformServices';
+import { HttpError } from '../utilities/errors';
 
 interface User {
   canReadManifests: boolean;
@@ -25,7 +26,12 @@ const useSCACapableStatus = async (): Promise<SCACapableStatusResponse> => {
   const jwtToken = useToken();
   return fetch('/api/rhsm/v2/organization', {
     headers: { Authorization: `Bearer ${await jwtToken}` }
-  }).then((response) => response.json());
+  }).then((response) => {
+    if (!response.ok) {
+      throw new HttpError('Error encountered', response.status, response.statusText);
+    }
+    return response.json();
+  });
 };
 
 const useUser = () => {
