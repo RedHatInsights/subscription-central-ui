@@ -25,11 +25,11 @@ const Authentication: FC = ({ children }) => {
     if (isSuccess) chrome.hideGlobalFilter(true);
   }, [isSuccess]);
 
-  if (isError === true) {
+  if (isError) {
     return <Unavailable />;
-  } else if (isLoading === true || isFetching === true) {
+  } else if (isLoading || isFetching) {
     return <Processing />;
-  } else if (isSuccess === true) {
+  } else if (isSuccess) {
     return <>{children}</>;
   }
 };

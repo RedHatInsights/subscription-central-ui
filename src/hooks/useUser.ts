@@ -24,38 +24,41 @@ interface SCACapableStatusResponse {
 
 const useSCACapableStatus = async (): Promise<SCACapableStatusResponse> => {
   const jwtToken = useToken();
-  return fetch('/api/rhsm/v2/organization', {
+  const response = await fetch('/api/rhsm/v2/organization', {
     headers: { Authorization: `Bearer ${await jwtToken}` }
-  }).then((response) => {
-    if (!response.ok) {
-      throw new HttpError('Error encountered', response.status, response.statusText);
-    }
-    return response.json();
   });
+
+  return await response.json();
 };
 
 const useUser = () => {
   const authenticateUser = useAuthenticateUser();
   const userRbacPermissions = useUserRbacPermissions();
   const scaCapableStatus = useSCACapableStatus();
-  return useQuery('user', async () => {
-    const userStatus = await authenticateUser;
-    const rawRbacPermissions = await userRbacPermissions;
-    const scaStatusResponse = await scaCapableStatus;
-    const rbacPermissions = rawRbacPermissions.map((rawPermission) => rawPermission.permission);
-    const user: User = {
-      canReadManifests:
-        rbacPermissions.includes('subscriptions:manifests:read') ||
-        rbacPermissions.includes('subscriptions:*:*'),
-      canWriteManifests:
-        rbacPermissions.includes('subscriptions:manifests:write') ||
-        rbacPermissions.includes('subscriptions:*:*'),
-      isEntitled: userStatus.entitlements.smart_management?.is_entitled,
-      isOrgAdmin: userStatus.identity.user.is_org_admin === true,
-      isSCACapable: scaStatusResponse?.body?.simpleContentAccessCapable === true
-    };
-    return user;
-  });
+  return useQuery<User, HttpError>(
+    'user',
+    async () => {
+      const userStatus = await authenticateUser;
+      const rawRbacPermissions = await userRbacPermissions;
+      const scaStatusResponse = await scaCapableStatus;
+      const rbacPermissions = rawRbacPermissions.map((rawPermission) => rawPermission.permission);
+      const user: User = {
+        canReadManifests:
+          rbacPermissions.includes('subscriptions:manifests:read') ||
+          rbacPermissions.includes('subscriptions:*:*'),
+        canWriteManifests:
+          rbacPermissions.includes('subscriptions:manifests:write') ||
+          rbacPermissions.includes('subscriptions:*:*'),
+        isEntitled: userStatus.entitlements.smart_management?.is_entitled,
+        isOrgAdmin: userStatus.identity.user.is_org_admin === true,
+        isSCACapable: scaStatusResponse?.body?.simpleContentAccessCapable === true
+      };
+      return user;
+    },
+    {
+      retry: false
+    }
+  );
 };
 
 export { SCACapableStatusResponse, useUser as default, User };
