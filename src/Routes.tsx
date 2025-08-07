@@ -5,7 +5,6 @@ import Authentication from './components/Authentication';
 
 const SatelliteManifestPage = lazy(() => import('./pages/SatelliteManifestPage'));
 const OopsPage = lazy(() => import('./pages/OopsPage'));
-const NoPermissionsPage = lazy(() => import('./pages/NoPermissionsPage'));
 
 export const ManifestRoutes: ReactNode = () => (
   <div className="manifests">
@@ -14,7 +13,6 @@ export const ManifestRoutes: ReactNode = () => (
         <Routes>
           <Route path="/" element={<SatelliteManifestPage />} />
           <Route path="/oops" element={<OopsPage />} />
-          <Route path="/no-permissions" element={<NoPermissionsPage />} />
           {/* Finally, catch all unmatched routes */}
           <Route path="*" element={<Navigate to="/oops" replace />} />
         </Routes>

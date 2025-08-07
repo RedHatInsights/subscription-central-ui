@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import SatelliteManifestPage from '../SatelliteManifestPage';
 import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -216,4 +216,25 @@ describe('when the user is not entitled', () => {
       );
     });
   });
+});
+
+it('Renders no access when the user is not entitled', () => {
+  (useUser as jest.Mock).mockReturnValue({
+    isLoading: false,
+    isFetching: false,
+    isSuccess: true,
+    isError: false,
+    data: { canReadManifests: false }
+  });
+
+  (useSatelliteManifests as jest.Mock).mockReturnValueOnce({
+    isLoading: false,
+    data: [],
+    error: false,
+    isError: false
+  });
+
+  render(<SatellitePage />);
+
+  expect(screen.getByText('You do not have access to Manifests')).toBeInTheDocument();
 });
