@@ -13,12 +13,10 @@ jest.mock('../../../hooks/useSatelliteVersions');
 const queryClient = new QueryClient();
 
 describe('Satellite Manifest Panel', () => {
-  def('scaCapable', () => true);
   def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
   def('user', () => {
     return factories.user.build({
-      isSCACapable: get('scaCapable'),
       canWriteManifests: get('canWriteManifests')
     });
   });
@@ -46,68 +44,6 @@ describe('Satellite Manifest Panel', () => {
 
   beforeEach(() => {
     queryClient.setQueryData('user', get('user'));
-  });
-
-  it('renders correctly with SCA column when user is SCA Capable', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[],
-      refetch: jest.fn()
-    });
-
-    const { getByLabelText } = render(
-      <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...get('props')} />
-      </QueryClientProvider>
-    );
-    expect(getByLabelText('SCA Status for this Manifest is enabled')).toBeInTheDocument();
-  });
-
-  describe('when user is not SCA capable', () => {
-    def('scaCapable', () => false);
-
-    it('renders correctly without SCA column', () => {
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[],
-        refetch: jest.fn()
-      });
-
-      const { queryByLabelText } = render(
-        <QueryClientProvider client={queryClient}>
-          <SatelliteManifestPanel {...get('props')} />
-        </QueryClientProvider>
-      );
-      expect(queryByLabelText('SCA Status for this Manifest is enabled')).toBeNull();
-    });
-  });
-
-  describe('when version <= 6.2', () => {
-    def('data', () => {
-      return [
-        {
-          name: 'Sputnik',
-          type: 'Satellite',
-          url: 'www.example.com',
-          uuid: '00000000-0000-0000-0000-000000000000',
-          version: '6.2',
-          entitlementQuantity: 5,
-          simpleContentAccess: 'enabled'
-        }
-      ];
-    });
-
-    it('renders N/A for the SCA Status', () => {
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[],
-        refetch: jest.fn()
-      });
-
-      const { getByText } = render(
-        <QueryClientProvider client={queryClient}>
-          <SatelliteManifestPanel {...get('props')} />
-        </QueryClientProvider>
-      );
-      expect(getByText('N/A')).toBeInTheDocument();
-    });
   });
 
   describe('when user does not have write permission and there are no results', () => {

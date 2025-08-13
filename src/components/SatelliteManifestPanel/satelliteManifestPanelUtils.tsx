@@ -1,7 +1,6 @@
 import React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
 import ManifestEntitlementsList from '../ManifestEntitlementsList';
-import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import { User } from '../../hooks/useUser';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
 import semver from 'semver';
@@ -44,15 +43,6 @@ export const getTableHeaders = (user: User): ManifestTableHeader[] => {
   const tableHeaders: ManifestTableHeader[] = [
     { label: 'Name', sortKey: 'name' },
     { label: 'Version', sortKey: 'version' },
-    {
-      label: (
-        <React.Fragment key="0">
-          Simple Content Access
-          <SCAInfoIconWithPopover />
-        </React.Fragment>
-      ),
-      sortKey: 'scaStatus'
-    },
     { label: 'UUID', sortKey: 'uuid' }
   ];
 

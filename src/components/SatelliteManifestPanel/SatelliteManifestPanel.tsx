@@ -42,7 +42,6 @@ import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { Processing } from '../emptyState';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
-import SCAStatusSwitch from '../SCAStatusSwitch';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -375,15 +374,6 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                           </Button>
                         </Td>
                         <Td>{manifest.version}</Td>
-                        {user.isSCACapable && (
-                          <Td>
-                            <SCAStatusSwitch
-                              scaStatus={manifest.scaStatus}
-                              uuid={manifest.uuid}
-                              user={user}
-                            />
-                          </Td>
-                        )}
                         <Td>{manifest.uuid}</Td>
                         <Td>
                           <ActionsColumn items={actions(manifest.uuid, manifest.name)} />
