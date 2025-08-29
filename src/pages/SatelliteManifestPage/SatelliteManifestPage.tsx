@@ -35,8 +35,8 @@ const SatelliteManifestPage: FC = () => {
           <Content component="p">
             Create and export manifests for your on-premise subscription management application.
             This page does not allow you to add subscriptions to manifests. Subscriptions can be
-            added to the manifest using using the Satellite Server web user interface after
-            importing the downloaded manifests.{' '}
+            added to the manifest using the Satellite Server web user interface after importing the
+            downloaded manifests.{' '}
             <ExternalLink href={manifestsMoreInfoLink}>
               Learn more about creating and managing manifests for a connected Satellite Server
             </ExternalLink>
