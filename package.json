@@ -75,7 +75,7 @@
     "/node_modules/(?!@patternfly)"
   ],
   "dependencies": {
-    "@babel/runtime": "^7.26.10",
+    "@babel/runtime": "^7.28.3",
     "@patternfly/patternfly": "^6.2.0",
     "@patternfly/react-core": "^6.2.0",
     "@patternfly/react-table": "^6.2.0",
