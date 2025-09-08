@@ -1,3 +1,15 @@
 {
-  "schedule": ["before 8am on the first day of the month"]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "https://github.com/konflux-ci/mintmaker/blob/main/config/renovate/renovate.json?raw=true"
+  ],
+  "tekton": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["tekton"],
+      "automerge": true
+    }
+  ]
 }
