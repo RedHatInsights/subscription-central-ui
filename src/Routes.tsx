@@ -1,12 +1,12 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import React, { Suspense, lazy, ReactNode } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Processing } from './components/emptyState';
 import Authentication from './components/Authentication';
 
 const SatelliteManifestPage = lazy(() => import('./pages/SatelliteManifestPage'));
 const OopsPage = lazy(() => import('./pages/OopsPage'));
 
-export const ManifestRoutes: ReactNode = () => (
+export const ManifestRoutes = () => (
   <div className="manifests">
     <Suspense fallback={<Processing />}>
       <Authentication>
