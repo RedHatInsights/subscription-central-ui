@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, ReactNode } from 'react';
 import { useQueryClient } from 'react-query';
 import { useLocation } from 'react-router-dom';
 import { Processing } from '../emptyState';
@@ -6,7 +6,7 @@ import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable'
 import useUser from '../../hooks/useUser';
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
-const Authentication: FC = ({ children }) => {
+const Authentication: FC<{ children: ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient();
   const location = useLocation();
   const chrome = useChrome();
