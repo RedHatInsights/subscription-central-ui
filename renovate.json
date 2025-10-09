@@ -6,6 +6,9 @@
   "tekton": {
     "enabled": true
   },
+  "npm": {
+    "enabled": false
+  },
   "packageRules": [
     {
       "matchManagers": ["tekton"],
