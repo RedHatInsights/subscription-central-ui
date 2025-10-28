@@ -52,7 +52,6 @@ describe('useUser hook', () => {
       expect(result.current.data).toEqual({
         canReadManifests: true,
         canWriteManifests: true,
-        isEntitled: true,
         isOrgAdmin: true,
         isSCACapable: true
       });
