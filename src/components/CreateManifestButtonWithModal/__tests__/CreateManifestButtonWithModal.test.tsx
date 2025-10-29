@@ -49,7 +49,7 @@ it('renders the Create manifest form with disabled button for user', async () =>
 });
 
 it('renders the create button disabled', () => {
-  (useUser as jest.Mock).mockReturnValue(factories.user.build({ isEntitled: false }));
+  (useUser as jest.Mock).mockReturnValue(factories.user.build());
   const { getByText } = render(
     <QueryClientProvider client={queryClient}>
       <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: false })} />

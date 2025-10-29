@@ -7,9 +7,6 @@ import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable'
 import { Processing } from '../../components/emptyState';
 import useUser from '../../hooks/useUser';
 import ExternalLink from '../../components/ExternalLink';
-import { NoSatelliteSubs } from '../../components/NoSatelliteSubs';
-import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
-import { subscriptionInventoryLink, supportLink } from '../../utilities/consts';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import NoPermissionsPage from '../NoPermissionsPage';
 
@@ -40,18 +37,6 @@ const SatelliteManifestPage: FC = () => {
             <ExternalLink href={manifestsMoreInfoLink}>
               Learn more about creating and managing manifests for a connected Satellite Server
             </ExternalLink>
-            {!user.isEntitled && !isLoading && data?.length != 0 && (
-              <Alert title="Your account has no Satellite subscriptions" isInline variant="info">
-                You can view existing manifests for your account, however, an active Satellite
-                subscription is required to create a new manifest.{' '}
-                <a href={supportLink} target="_blank" rel="noreferrer">
-                  Contact support
-                </a>{' '}
-                to determine if you need a new subscription. To view recently expired subscriptions,
-                select the <em>Expired</em> card in your{' '}
-                <a href={subscriptionInventoryLink}>subscription inventory</a>.
-              </Alert>
-            )}
           </Content>
         </Content>
       </PageHeader>
@@ -61,9 +46,7 @@ const SatelliteManifestPage: FC = () => {
 
           {isLoading && !hasError && <Processing />}
 
-          {!isLoading && !hasError && !user.isEntitled && data.length == 0 && <NoSatelliteSubs />}
-
-          {!isLoading && !hasError && (user.isEntitled || data.length != 0) && (
+          {!isLoading && !hasError && (
             <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
         </>
