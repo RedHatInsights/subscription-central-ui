@@ -7,11 +7,12 @@
     "enabled": true
   },
   "npm": {
-    "enabled": false
+    "enabled": true,
+    "schedule": ["* * 1 * *"]
   },
   "packageRules": [
     {
-      "matchManagers": ["tekton"],
+      "matchManagers": ["tekton", "npm"],
       "automerge": true
     }
   ]
