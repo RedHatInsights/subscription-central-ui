@@ -142,8 +142,8 @@ describe('Satellite Manifest Panel', () => {
 
   it('Shows export message when successfully exported', async () => {
     jest.mock('../../../hooks/useExportSatelliteManifest', () => ({
-      data: null,
-      mutate: null,
+      data: undefined as undefined,
+      mutate: undefined as undefined,
       isLoading: false,
       isSuccess: true,
       isError: false
