@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- outside of update scope, fix later*/
 import React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import useDeleteSatelliteManifest from '../useDeleteSatelliteManifest';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
@@ -18,7 +18,7 @@ describe('useDeleteSatelliteManifest hook', () => {
 
   beforeEach(() => {
     fetch.mockResponseOnce(JSON.stringify({}), { status: status });
-    queryClient.setQueryData('manifests', [{ uuid: '00000000-0000-0000-0000-000000000000' }]);
+    queryClient.setQueryData(['manifests'], [{ uuid: '00000000-0000-0000-0000-000000000000' }]);
     result.current.mutate('00000000-0000-0000-0000-000000000000');
   });
 
@@ -29,7 +29,7 @@ describe('useDeleteSatelliteManifest hook', () => {
 
     it('deletes the data locally', async () => {
       await waitFor(() => {
-        const manifests: Array<any> = queryClient.getQueryData('manifests');
+        const manifests: Array<any> = queryClient.getQueryData(['manifests']);
         expect(manifests.length).toEqual(0);
       });
     });
@@ -54,7 +54,7 @@ describe('useDeleteSatelliteManifest hook', () => {
     it('does not delete the data locally', async () => {
       // We should be waiting for isError here, but there seems to be a bug in the testing library
       await waitFor(() => {
-        const manifests: Array<any> = queryClient.getQueryData('manifests');
+        const manifests: Array<any> = queryClient.getQueryData(['manifests']);
         expect(manifests.length).toEqual(1);
       });
     });

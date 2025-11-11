@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { DrawerPanelContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
 import { DrawerHead } from '@patternfly/react-core/dist/dynamic/components/Drawer';
@@ -46,7 +46,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   } = useManifestEntitlements(uuid);
 
   const queryClient = useQueryClient();
-  const user: User = queryClient.getQueryData('user');
+  const user: User = queryClient.getQueryData(['user']);
 
   useEffect(() => {
     if (isExpanded === true) {

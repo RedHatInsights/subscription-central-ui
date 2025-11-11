@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   useAuthenticateUser,
   useToken,
@@ -35,7 +35,7 @@ const useUser = () => {
   const userRbacPermissions = useUserRbacPermissions();
   const scaCapableStatus = useSCACapableStatus();
   return useQuery<User, HttpError>(
-    'user',
+    ['user'],
     async () => {
       const userStatus = await authenticateUser;
       const rawRbacPermissions = await userRbacPermissions;

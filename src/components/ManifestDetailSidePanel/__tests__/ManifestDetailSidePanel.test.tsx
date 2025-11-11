@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Drawer } from '@patternfly/react-core/dist/dynamic/components/Drawer';
 import { DrawerContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
 import { DrawerContentBody } from '@patternfly/react-core/dist/dynamic/components/Drawer';
@@ -39,7 +39,7 @@ describe('Manifest Detail Side Panel', () => {
   };
 
   beforeEach(() => {
-    queryClient.setQueryData('user', get('user'));
+    queryClient.setQueryData(['user'], get('user'));
   });
 
   it('renders with a spinner when loading', () => {

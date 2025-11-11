@@ -6,7 +6,7 @@ import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { init } from '../../../store';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
 import useUser from '../../../hooks/useUser';
 import factories from '../../../utilities/factories';
@@ -54,7 +54,7 @@ describe('Satellite Manifests Page', () => {
     });
 
     if (get('error') === false) {
-      queryClient.setQueryData('user', get('user'));
+      queryClient.setQueryData(['user'], get('user'));
     }
   });
 

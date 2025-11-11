@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- outside of update scope, fix later*/
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useToken } from '../utilities/platformServices';
 import { HttpError } from '../utilities/errors';
 
@@ -25,7 +25,7 @@ const fetchSatelliteVersions = (jwtToken: Promise<string>) => async (): Promise<
 
 const useSatelliteVersions = () => {
   const jwtToken = useToken();
-  return useQuery<any, HttpError, any, 'satelliteVersions'>('satelliteVersions', () =>
+  return useQuery<any, HttpError, any, readonly ['satelliteVersions']>(['satelliteVersions'], () =>
     fetchSatelliteVersions(jwtToken)()
   );
 };

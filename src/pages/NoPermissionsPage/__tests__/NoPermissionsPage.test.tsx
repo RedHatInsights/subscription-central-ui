@@ -5,7 +5,7 @@ import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { init } from '../../../store';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useUser from '../../../hooks/useUser';
 import factories from '../../../utilities/factories';
 import { get, def } from 'bdd-lazy-var';
@@ -45,7 +45,7 @@ describe('No Permissions Page', () => {
       data: get('user')
     });
 
-    queryClient.setQueryData('user', get('user'));
+    queryClient.setQueryData(['user'], get('user'));
   });
 
   it('renders correctly', () => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- outside of update scope, fix later*/
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToken } from '../utilities/platformServices';
 import { HttpError } from '../utilities/errors';
 
@@ -28,15 +28,13 @@ const createSatelliteManifest =
 const useCreateSatelliteManifest = () => {
   const queryClient = useQueryClient();
   const token = useToken();
-  return useMutation<any, HttpError, CreateManifestParams, unknown>(
-    (newManifest) => createSatelliteManifest(token)(newManifest),
-    {
-      onSuccess: (data) => {
-        if (typeof data !== 'undefined') {
-          queryClient.invalidateQueries('manifests');
-        }
+  return useMutation<any, HttpError, CreateManifestParams, unknown>({
+    mutationFn: (newManifest) => createSatelliteManifest(token)(newManifest),
+    onSuccess: (data) => {
+      if (typeof data !== 'undefined') {
+        queryClient.invalidateQueries(['manifests']);
       }
     }
-  );
+  });
 };
 export { CreateManifestParams, createSatelliteManifest, useCreateSatelliteManifest as default };

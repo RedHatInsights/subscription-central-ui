@@ -1,4 +1,4 @@
-import { useMutation, UseMutationResult } from 'react-query';
+import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { useToken } from '../utilities/platformServices';
 
 interface TriggerManifestExportResponse {
@@ -92,9 +92,10 @@ const useExportSatelliteManifest = (): UseMutationResult<
   unknown
 > => {
   const jwtToken = useToken();
-  return useMutation((exportManifestParams: ExportManifestParams) =>
-    exportManifest(jwtToken)(exportManifestParams.uuid)
-  );
+  return useMutation({
+    mutationFn: (exportManifestParams: ExportManifestParams) =>
+      exportManifest(jwtToken)(exportManifestParams.uuid)
+  });
 };
 
 export {

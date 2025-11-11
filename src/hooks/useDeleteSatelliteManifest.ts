@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToken } from '../utilities/platformServices';
 import { ManifestEntry } from './useSatelliteManifests';
 
@@ -18,9 +18,10 @@ const deleteSatelliteManifest = (jwtToken: Promise<string>) => async (uuid: stri
 const useDeleteSatelliteManifest = () => {
   const queryClient = useQueryClient();
   const jwtToken = useToken();
-  return useMutation((uuid: string) => deleteSatelliteManifest(jwtToken)(uuid), {
+  return useMutation({
+    mutationFn: (uuid: string) => deleteSatelliteManifest(jwtToken)(uuid),
     onSuccess: (_, uuid) => {
-      queryClient.setQueryData('manifests', (oldData: ManifestEntry[]) =>
+      queryClient.setQueryData(['manifests'], (oldData: ManifestEntry[]) =>
         oldData.filter((entry) => entry.uuid != uuid)
       );
     }
