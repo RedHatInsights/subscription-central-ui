@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { QueryClientProvider, QueryClient } from 'react-query';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
@@ -43,7 +43,7 @@ describe('Satellite Manifest Panel', () => {
   });
 
   beforeEach(() => {
-    queryClient.setQueryData('user', get('user'));
+    queryClient.setQueryData(['user'], get('user'));
   });
 
   describe('when user does not have write permission and there are no results', () => {

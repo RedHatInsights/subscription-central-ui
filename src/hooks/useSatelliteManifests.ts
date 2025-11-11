@@ -1,4 +1,4 @@
-import { useQuery, QueryObserverResult } from 'react-query';
+import { useQuery, QueryObserverResult } from '@tanstack/react-query';
 import { useToken } from '../utilities/platformServices';
 
 type ManifestEntry = {
@@ -60,7 +60,7 @@ const getSatelliteManifests = (jwtToken: Promise<string>) => async (): Promise<M
 
 const useSatelliteManifests = (): QueryObserverResult<ManifestEntry[], unknown> => {
   const jwtToken = useToken();
-  return useQuery('manifests', () => getSatelliteManifests(jwtToken)());
+  return useQuery(['manifests'], () => getSatelliteManifests(jwtToken)());
 };
 
 export {

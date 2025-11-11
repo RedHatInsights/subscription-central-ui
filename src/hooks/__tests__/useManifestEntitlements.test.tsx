@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useManifestEntitlements, { getManifestEntitlements } from '../useManifestEntitlements';
 import { renderHook, waitFor } from '@testing-library/react';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';

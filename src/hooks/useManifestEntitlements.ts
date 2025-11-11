@@ -1,4 +1,4 @@
-import { useQuery, QueryObserverResult } from 'react-query';
+import { useQuery, QueryObserverResult } from '@tanstack/react-query';
 import { useToken } from '../utilities/platformServices';
 
 interface ManifestEntitlement {

@@ -1,6 +1,6 @@
 import React from 'react';
 import CreateManifestModal from '../CreateManifestModal';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import Component, { ManifestEntitlementsListProps } from '../ManifestEntitlementsList';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useManifestEntitlements, {
   EntitlementsAttachedData
 } from '../../../hooks/useManifestEntitlements';

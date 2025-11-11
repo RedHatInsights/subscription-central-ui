@@ -18,7 +18,7 @@ const SatelliteManifestPage: FC = () => {
     'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html/' +
     'creating_and_managing_manifests_for_a_connected_satellite_server/index';
 
-  if (!user.canReadManifests) {
+  if (!user?.canReadManifests) {
     return <NoPermissionsPage />;
   }
 

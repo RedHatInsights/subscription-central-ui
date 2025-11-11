@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import CreateManifestForm from '../CreateManifestForm';
 import { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
-import { QueryClientProvider, QueryClient } from 'react-query';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { HttpError } from '../../../utilities/errors';
 
