@@ -15,7 +15,6 @@ import { HelperText } from '@patternfly/react-core/dist/dynamic/components/Helpe
 import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { HelperTextItem } from '@patternfly/react-core/dist/dynamic/components/HelperText';
 import { HttpError } from '../../utilities/errors';
-import { supportLink } from '../../utilities/consts';
 
 interface CreateManifestFormProps {
   satelliteVersions: SatelliteVersion[];
@@ -39,7 +38,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const [typeValidated, setTypeValidated] = React.useState<Validate>('default');
 
   const nameFieldHelperText =
-    'Your manifest name must be unique and must contain only numbers, letters, underscores, and hyphens.';
+    'Your manifest name must contain only numbers, letters, underscores, and hyphens.';
   const invalidNameFieldText = `Name requirements have not been met. ${nameFieldHelperText}`;
 
   const onSubmit = (): void => {
@@ -52,15 +51,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
     if (isSuccess) {
       handleModalToggle();
       addSuccessNotification(`Manifest ${manifestName} created`);
-    } else if (error?.status == 403) {
-      handleModalToggle();
-      addErrorNotification(
-        'A Satellite subscription is required to create a manifest. Contact support to check if you need a new subscription.',
-        {
-          alertLinkText: 'Contact support',
-          alertLinkHref: supportLink
-        }
-      );
     } else if (error != undefined) {
       handleModalToggle();
       addErrorNotification('Something went wrong. Please try again');
@@ -186,7 +176,6 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           </FormGroup>
           <ActionGroup>
             <Button
-              type="submit"
               key="confirm"
               id="submit-manifest-button"
               variant="primary"
