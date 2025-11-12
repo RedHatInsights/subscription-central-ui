@@ -38,7 +38,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const [typeValidated, setTypeValidated] = React.useState<Validate>('default');
 
   const nameFieldHelperText =
-    'Your manifest name must contain only numbers, letters, underscores, hyphens, and periods.';
+    'Your manifest name must be less than 100 characters and must contain only numbers, letters, underscores, hyphens, and periods.';
   const invalidNameFieldText = `Name requirements have not been met. ${nameFieldHelperText}`;
 
   const onSubmit = (): void => {
