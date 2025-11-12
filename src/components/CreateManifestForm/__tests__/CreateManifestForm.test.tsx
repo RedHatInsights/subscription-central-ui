@@ -70,7 +70,7 @@ describe('Create Manifest Form', () => {
         </QueryClientProvider>
       );
       const nameAlert = screen.getAllByText(
-        'Your manifest name must contain only numbers, letters, underscores, and hyphens.'
+        'Your manifest name must contain only numbers, letters, underscores, hyphens, and periods.'
       );
       expect(nameAlert).toHaveLength(1);
     });

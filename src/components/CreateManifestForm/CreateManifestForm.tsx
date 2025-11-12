@@ -80,7 +80,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   };
 
   const isValidManifestName = (manifestName: string) =>
-    /^[0-9A-Za-z_.-]*$/.test(manifestName) && manifestName.length > 0 && manifestName.length < 99;
+    /^[0-9A-Za-z_.-]*$/.test(manifestName) && manifestName.length > 0 && manifestName.length <= 99;
 
   useEffect(() => {
     if (isValidManifestName(manifestName)) {
