@@ -38,7 +38,7 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
   const [typeValidated, setTypeValidated] = React.useState<Validate>('default');
 
   const nameFieldHelperText =
-    'Your manifest name must contain only numbers, letters, underscores, and hyphens.';
+    'Your manifest name must contain only numbers, letters, underscores, hyphens, and periods.';
   const invalidNameFieldText = `Name requirements have not been met. ${nameFieldHelperText}`;
 
   const onSubmit = (): void => {
@@ -176,10 +176,14 @@ const CreateManifestForm: FC<CreateManifestFormProps> = (props) => {
           </FormGroup>
           <ActionGroup>
             <Button
+              type="submit"
               key="confirm"
               id="submit-manifest-button"
               variant="primary"
-              onClick={onSubmit}
+              onClick={(e) => {
+                e.preventDefault();
+                onSubmit();
+              }}
               isDisabled={nameValidated != 'success' || typeValidated != 'success'}
             >
               Create
