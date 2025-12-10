@@ -28,8 +28,8 @@ const NotificationContext = React.createContext({
     variant: NotificationVariantType,
     message: string,
     options?: NotificationOptions
-  ) => null,
-  removeNotification: (key: string) => null
+  ) => null as string,
+  removeNotification: (key: string) => null as string
 });
 /* eslint-enable */
 
@@ -91,6 +91,7 @@ const NotificationProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const removeNotification = (key: string) => {
     setNotifications(notifications.filter((notification) => notification.key !== key));
+    return key;
   };
 
   const contextValue = {
