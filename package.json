@@ -132,7 +132,7 @@
     "babel-plugin-transform-imports": "^2.0.0",
     "bdd-lazy-var": "^2.6.1",
     "cross-fetch": "^4.0.0",
-    "css-loader": "^6.8.1",
+    "css-loader": "^7.0.0",
     "escape-string-regexp": "^5.0.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^10.0.2",
