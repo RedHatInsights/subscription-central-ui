@@ -27,7 +27,7 @@
     "glob-parent": "^6.0.1",
     "hosted-git-info": "^3.0.8",
     "url-parse": "^1.5.3",
-    "moment": "2.29.4"
+    "moment": "2.30.1"
   },
   "lint-staged": {
     "*.{js,scss,ts,tsx,html}": "eslint --cache --fix"
