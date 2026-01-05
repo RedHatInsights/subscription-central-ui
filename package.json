@@ -115,7 +115,7 @@
     "@redhat-cloud-services/frontend-components-config-utilities": "^4.3.4",
     "@redhat-cloud-services/tsc-transform-imports": "^1.0.17",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^14.3.1",
+    "@testing-library/react": "^16.0.0",
     "@types/jest": "^29.5.14",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.14.195",
