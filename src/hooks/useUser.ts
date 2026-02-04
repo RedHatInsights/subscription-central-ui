@@ -34,9 +34,9 @@ const useUser = () => {
   const authenticateUser = useAuthenticateUser();
   const userRbacPermissions = useUserRbacPermissions();
   const scaCapableStatus = useSCACapableStatus();
-  return useQuery<User, HttpError>(
-    ['user'],
-    async () => {
+  return useQuery<User, HttpError>({
+    queryKey: ['user'],
+    queryFn: async () => {
       const userStatus = await authenticateUser;
       const rawRbacPermissions = await userRbacPermissions;
       const scaStatusResponse = await scaCapableStatus;
@@ -53,10 +53,8 @@ const useUser = () => {
       };
       return user;
     },
-    {
-      retry: false
-    }
-  );
+    retry: false
+  });
 };
 
 export { SCACapableStatusResponse, useUser as default, User };

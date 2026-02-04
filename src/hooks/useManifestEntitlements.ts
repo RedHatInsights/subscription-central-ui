@@ -1,4 +1,4 @@
-import { useQuery, QueryObserverResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useToken } from '../utilities/platformServices';
 
 interface ManifestEntitlement {
@@ -45,13 +45,12 @@ const getManifestEntitlements =
     });
   };
 
-const useManifestEntitlements = (
-  uuid: string
-): QueryObserverResult<ManifestEntitlementsData, unknown> => {
+const useManifestEntitlements = (uuid: string) => {
   const jwtToken = useToken();
-  return useQuery<ManifestEntitlementsData, Error>(['manifestEntitlements', uuid], () =>
-    getManifestEntitlements(jwtToken)(uuid)
-  );
+  return useQuery<ManifestEntitlementsData, Error>({
+    queryKey: ['manifestEntitlements', uuid],
+    queryFn: () => getManifestEntitlements(jwtToken)(uuid)
+  });
 };
 
 export {

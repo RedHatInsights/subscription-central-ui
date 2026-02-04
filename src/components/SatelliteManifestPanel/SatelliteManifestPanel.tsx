@@ -81,7 +81,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const {
     data: exportedManifestData,
     mutate: triggerManifestExport,
-    isLoading: isLoadingManifestExport,
+    isPending: isLoadingManifestExport,
     isSuccess: successExportingManifest,
     isError: errorExportingManifest
   } = useExportSatelliteManifest();
