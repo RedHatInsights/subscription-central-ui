@@ -8,7 +8,7 @@ import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import useManifestEntitlements from '../../../hooks/useManifestEntitlements';
 import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifest';
 import factories from '../../../utilities/factories';
-import { get, def } from 'bdd-lazy-var';
+import { def, get } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useManifestEntitlements');
 jest.mock('../../../hooks/useExportSatelliteManifest');

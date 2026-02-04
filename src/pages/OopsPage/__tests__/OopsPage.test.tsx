@@ -8,7 +8,7 @@ import { init } from '../../../store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useUser from '../../../hooks/useUser';
 import factories from '../../../utilities/factories';
-import { get, def } from 'bdd-lazy-var';
+import { def, get } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('react-router-dom', () => ({

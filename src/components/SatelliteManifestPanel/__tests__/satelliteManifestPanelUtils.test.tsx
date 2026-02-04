@@ -1,10 +1,10 @@
 import { SortByDirection } from '@patternfly/react-table';
 import {
+  ManifestRow,
   filterDataBySearchTerm,
   getFilteredRows,
   getManifestName,
-  sortFilteredRows,
-  ManifestRow
+  sortFilteredRows
 } from '../satelliteManifestPanelUtils';
 import { ManifestEntry } from '../../../hooks/useSatelliteManifests';
 

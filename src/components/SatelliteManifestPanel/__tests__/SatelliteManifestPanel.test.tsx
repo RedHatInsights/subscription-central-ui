@@ -1,11 +1,11 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import factories from '../../../utilities/factories';
-import { get, def } from 'bdd-lazy-var';
+import { def, get } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
