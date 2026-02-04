@@ -60,7 +60,7 @@ const getSatelliteManifests = (jwtToken: Promise<string>) => async (): Promise<M
 
 const useSatelliteManifests = (): QueryObserverResult<ManifestEntry[], unknown> => {
   const jwtToken = useToken();
-  return useQuery(['manifests'], () => getSatelliteManifests(jwtToken)());
+  return useQuery({ queryKey: ['manifests'], queryFn: () => getSatelliteManifests(jwtToken)() });
 };
 
 export {

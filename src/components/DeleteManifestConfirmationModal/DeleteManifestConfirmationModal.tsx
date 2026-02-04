@@ -28,7 +28,7 @@ const DeleteManifestConfirmationModal: FunctionComponent<DeleteManifestConfirmat
   const { addSuccessNotification, addErrorNotification } = useNotifications();
   const {
     isError: manifestFailedToDelete,
-    isLoading: isDeletingManifest,
+    isPending: isDeletingManifest,
     isSuccess: manifestDeleted,
     mutate: deleteManifest,
     reset: resetRequestStatus

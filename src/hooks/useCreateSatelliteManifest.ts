@@ -32,7 +32,7 @@ const useCreateSatelliteManifest = () => {
     mutationFn: (newManifest) => createSatelliteManifest(token)(newManifest),
     onSuccess: (data) => {
       if (typeof data !== 'undefined') {
-        queryClient.invalidateQueries(['manifests']);
+        queryClient.invalidateQueries({ queryKey: ['manifests'] });
       }
     }
   });
