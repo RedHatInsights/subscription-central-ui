@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, waitFor, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import SCAInfoIconWithPopover from '..';
 
 describe('SCA Info Icon With Popover', () => {

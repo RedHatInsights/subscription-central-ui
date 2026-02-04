@@ -1,13 +1,13 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import useExportSatelliteManifest, {
-  downloadExportedManifest,
   ExportManifestStatusResponse,
+  TriggerManifestExportResponse,
+  downloadExportedManifest,
   getManifestExportStatus,
-  triggerManifestExport,
-  TriggerManifestExportResponse
+  triggerManifestExport
 } from '../useExportSatelliteManifest';
 
 enableFetchMocks();

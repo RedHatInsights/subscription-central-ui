@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import {
   NotificationContext,
-  NotificationVariantType,
-  NotificationOptions
+  NotificationOptions,
+  NotificationVariantType
 } from '../contexts/NotificationProvider';
 
 interface Notification {

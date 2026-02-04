@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useRef } from 'react';
+import React, { FunctionComponent, useRef, useState } from 'react';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { Drawer } from '@patternfly/react-core/dist/dynamic/components/Drawer';
 import { DrawerContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
@@ -14,23 +14,23 @@ import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import {
   ActionsColumn,
   ExpandableRowContent,
+  IAction,
+  SortByDirection,
   Table,
   Tbody,
   Td,
   Th,
   ThProps,
   Thead,
-  Tr,
-  SortByDirection,
-  IAction
+  Tr
 } from '@patternfly/react-table';
 import {
   BooleanDictionary,
   SortKey,
   countManifests,
-  getTableHeaders,
   getManifestName,
-  getRowsWithAllocationDetails
+  getRowsWithAllocationDetails,
+  getTableHeaders
 } from './satelliteManifestPanelUtils';
 import { User } from '../../hooks/useUser';
 import { CreateManifestPanel } from '../../components/emptyState';

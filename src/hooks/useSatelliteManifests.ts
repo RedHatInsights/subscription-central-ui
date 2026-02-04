@@ -1,4 +1,4 @@
-import { useQuery, QueryObserverResult } from '@tanstack/react-query';
+import { QueryObserverResult, useQuery } from '@tanstack/react-query';
 import { useToken } from '../utilities/platformServices';
 
 type ManifestEntry = {

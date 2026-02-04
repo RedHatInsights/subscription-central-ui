@@ -1,4 +1,4 @@
-import React, { FC, useState, ReactNode } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import { AlertActionLink } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import { v4 as uuid } from 'uuid';
 

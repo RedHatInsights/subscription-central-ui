@@ -1,10 +1,10 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import useSatelliteManifests, {
-  SatelliteManifestAPIData,
-  getOnlyManifestsV6AndHigher,
   ManifestEntry,
-  fetchSatelliteManifestData
+  SatelliteManifestAPIData,
+  fetchSatelliteManifestData,
+  getOnlyManifestsV6AndHigher
 } from '../useSatelliteManifests';
 import { createQueryWrapper } from '../../utilities/testHelpers';
 import factories from '../../utilities/factories';
