@@ -19,7 +19,7 @@ const CreateManifestModal: FC<CreateManifestModalProps> = ({ handleModalToggle, 
   } = useSatelliteVersions();
   const {
     mutate,
-    isLoading: isCreatingManifest,
+    isPending: isCreatingManifest,
     isSuccess,
     reset: resetCreateSatelliteManifestQuery,
     error: createManifestError

@@ -17,7 +17,7 @@ describe('DeleteConfirmationModal', () => {
 
   beforeEach(() => {
     (useDeleteSatelliteManifest as jest.Mock).mockImplementation(() => ({
-      isLoading: isLoading,
+      isPending: isLoading,
       isSuccess: false,
       isError: false,
       reset: (): undefined => undefined

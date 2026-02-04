@@ -18,7 +18,7 @@ const Authentication: FC<{ children: ReactNode }> = ({ children }) => {
      * On every rerender, based on URL change (location.pathname),
      * reset the user's status to loading before authenticating again.
      */
-    queryClient.invalidateQueries(['user']);
+    queryClient.invalidateQueries({ queryKey: ['user'] });
   }, [location.pathname]);
 
   useEffect(() => {

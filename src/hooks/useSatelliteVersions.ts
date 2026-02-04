@@ -25,9 +25,10 @@ const fetchSatelliteVersions = (jwtToken: Promise<string>) => async (): Promise<
 
 const useSatelliteVersions = () => {
   const jwtToken = useToken();
-  return useQuery<any, HttpError, any, readonly ['satelliteVersions']>(['satelliteVersions'], () =>
-    fetchSatelliteVersions(jwtToken)()
-  );
+  return useQuery<any, HttpError, any, readonly ['satelliteVersions']>({
+    queryKey: ['satelliteVersions'],
+    queryFn: () => fetchSatelliteVersions(jwtToken)()
+  });
 };
 
 export { fetchSatelliteVersions, SatelliteVersion, useSatelliteVersions as default };
