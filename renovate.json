@@ -19,5 +19,6 @@
       "matchManagers": ["tekton", "npm"],
       "automerge": true
     }
-  ]
+  ],
+  "labels": ["dependency", "konflux"]
 }
