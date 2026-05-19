@@ -69,11 +69,11 @@
       "<rootDir>/jest.setup.ts"
     ],
     "testEnvironment": "jsdom",
-    "testRunner": "jest-jasmine2"
+    "testRunner": "jest-jasmine2",
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@patternfly|uuid))"
+    ]
   },
-  "transformIgnorePatterns": [
-    "/node_modules/(?!@patternfly)"
-  ],
   "dependencies": {
     "@babel/runtime": "^7.28.3",
     "@patternfly/patternfly": "^6.3.1",
@@ -98,7 +98,7 @@
     "semver": "^7.7.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.0.0",
-    "uuid": "^11.1.0"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
