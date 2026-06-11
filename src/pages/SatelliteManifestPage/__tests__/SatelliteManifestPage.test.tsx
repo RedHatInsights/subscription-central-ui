@@ -3,8 +3,6 @@ import { render, screen } from '@testing-library/react';
 import SatelliteManifestPage from '../SatelliteManifestPage';
 import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { init } from '../../../store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
 import useUser from '../../../hooks/useUser';
@@ -26,11 +24,9 @@ const queryClient = new QueryClient();
 const SatellitePage = () => (
   <QueryClientProvider client={queryClient}>
     <Authentication>
-      <Provider store={init().getStore()}>
-        <Router>
-          <SatelliteManifestPage />
-        </Router>
-      </Provider>
+      <Router>
+        <SatelliteManifestPage />
+      </Router>
     </Authentication>
   </QueryClientProvider>
 );
