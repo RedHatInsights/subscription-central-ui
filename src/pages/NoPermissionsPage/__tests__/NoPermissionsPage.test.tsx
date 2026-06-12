@@ -3,8 +3,6 @@ import { render } from '@testing-library/react';
 import NoPermissionsPage from '../NoPermissionsPage';
 import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { init } from '../../../store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useUser from '../../../hooks/useUser';
 import factories from '../../../utilities/factories';
@@ -24,11 +22,9 @@ const queryClient = new QueryClient();
 const Page = () => (
   <QueryClientProvider client={queryClient}>
     <Authentication>
-      <Provider store={init().getStore()}>
-        <Router>
-          <NoPermissionsPage />
-        </Router>
-      </Provider>
+      <Router>
+        <NoPermissionsPage />
+      </Router>
     </Authentication>
   </QueryClientProvider>
 );
