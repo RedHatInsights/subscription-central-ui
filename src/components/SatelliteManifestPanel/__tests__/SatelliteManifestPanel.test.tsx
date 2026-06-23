@@ -1,49 +1,78 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
+import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifest';
+import { Relation, useHasRelation } from '../../../hooks/useHasRelation';
 import factories from '../../../utilities/factories';
 import { def, get } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
+jest.mock('../../../hooks/useExportSatelliteManifest');
+jest.mock('../../../hooks/useHasRelation');
+
+beforeAll(() => {
+  Object.defineProperty(window.URL, 'createObjectURL', {
+    writable: true,
+    value: jest.fn(() => 'blob:test-url')
+  });
+});
 
 const queryClient = new QueryClient();
 
 describe('Satellite Manifest Panel', () => {
   def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
-  def('user', () => {
-    return factories.user.build({
-      canWriteManifests: get('canWriteManifests')
-    });
-  });
-  def('data', () => {
-    return [
-      {
-        name: 'Sputnik',
-        type: 'Satellite',
-        url: 'www.example.com',
-        uuid: '00000000-0000-0000-0000-000000000000',
-        version: '6.3',
-        entitlementQuantity: 5,
-        simpleContentAccess: 'enabled'
-      }
-    ];
-  });
+  def('user', () => factories.user.build());
+
+  def('data', () => [
+    {
+      name: 'Sputnik',
+      type: 'Satellite',
+      url: 'www.example.com',
+      uuid: '00000000-0000-0000-0000-000000000000',
+      version: '6.3',
+      entitlementQuantity: 5,
+      simpleContentAccess: 'enabled'
+    }
+  ]);
+
   def('fetching', () => false);
-  def('props', () => {
-    return {
-      data: get('data'),
-      isFetching: get('fetching'),
-      user: get('user')
-    };
-  });
+
+  def('props', () => ({
+    data: get('data'),
+    isFetching: get('fetching'),
+    user: get('user')
+  }));
 
   beforeEach(() => {
+    jest.clearAllMocks();
+    queryClient.clear();
+
     queryClient.setQueryData(['user'], get('user'));
+
+    (useHasRelation as jest.Mock).mockImplementation((relation: Relation) => ({
+      has:
+        relation === Relation.MANIFESTS_VIEW ? get('canReadManifests') : get('canWriteManifests'),
+      isLoading: false
+    }));
+
+    (useSatelliteVersions as jest.Mock).mockReturnValue({
+      body: [] as SatelliteVersion[],
+      refetch: jest.fn()
+    });
+
+    (useExportSatelliteManifest as jest.Mock).mockReturnValue({
+      data: null,
+      mutate: jest.fn(),
+      isPending: false,
+      isLoading: false,
+      isSuccess: false,
+      isError: false
+    });
   });
 
   describe('when user does not have write permission and there are no results', () => {
@@ -51,14 +80,11 @@ describe('Satellite Manifest Panel', () => {
     def('data', () => []);
 
     it('renders no results', () => {
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[],
-        refetch: jest.fn()
-      });
-
       const { getByLabelText } = render(
         <QueryClientProvider client={queryClient}>
+                    
           <SatelliteManifestPanel {...get('props')} />
+                  
         </QueryClientProvider>
       );
 
@@ -70,16 +96,14 @@ describe('Satellite Manifest Panel', () => {
     def('data', () => []);
 
     it('renders a blank state', () => {
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[],
-        refetch: jest.fn()
-      });
-
       const { getByText } = render(
         <QueryClientProvider client={queryClient}>
+                    
           <SatelliteManifestPanel {...get('props')} />
+                  
         </QueryClientProvider>
       );
+
       expect(getByText('Create a new manifest to export subscriptions')).toBeInTheDocument();
     });
   });
@@ -91,44 +115,41 @@ describe('Satellite Manifest Panel', () => {
       (useSatelliteVersions as jest.Mock).mockReturnValue({
         body: [] as SatelliteVersion[],
         refetch: jest.fn(),
-
         isLoading: true
       });
 
       const container = render(
         <QueryClientProvider client={queryClient}>
+                    
           <SatelliteManifestPanel {...get('props')} />
+                  
         </QueryClientProvider>
       );
+
       expect(container).toHaveLoader();
     });
   });
 
   it('opens the side panel when the row name is clicked', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[],
-      refetch: jest.fn()
-    });
-
     const { container, getByTestId } = render(
       <QueryClientProvider client={queryClient}>
+                
         <SatelliteManifestPanel {...get('props')} />
+              
       </QueryClientProvider>
     );
 
     fireEvent.click(getByTestId('expand-details-button-0'));
+
     expect(container.querySelector('.sub-c-drawer__panel-manifest-details')).toBeInTheDocument();
   });
 
   it('opens the delete popup from clicking the kebab menu', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[],
-      refetch: jest.fn()
-    });
-
     const { getByLabelText, getByText } = render(
       <QueryClientProvider client={queryClient}>
+                
         <SatelliteManifestPanel {...get('props')} />
+              
       </QueryClientProvider>
     );
 
@@ -140,81 +161,63 @@ describe('Satellite Manifest Panel', () => {
     ).toBeInTheDocument();
   });
 
-  it('Shows export message when successfully exported', async () => {
-    jest.mock('../../../hooks/useExportSatelliteManifest', () => ({
-      data: null as unknown,
-      mutate: null as unknown,
+  it('triggers export when export is clicked', () => {
+    const mutate = jest.fn();
+
+    (useExportSatelliteManifest as jest.Mock).mockReturnValue({
+      data: null,
+      mutate,
+      isPending: false,
       isLoading: false,
-      isSuccess: true,
+      isSuccess: false,
       isError: false
-    }));
+    });
 
     const { getByLabelText, getByText } = render(
       <QueryClientProvider client={queryClient}>
+              
         <SatelliteManifestPanel {...get('props')} />
+            
       </QueryClientProvider>
     );
 
     fireEvent.click(getByLabelText('Kebab toggle'));
     fireEvent.click(getByText('Export'));
 
-    await new Promise((r) => setTimeout(r, 2000));
-
-    waitFor(() => expect(screen.findByText('Download manifest')).toBeInTheDocument());
+    expect(mutate).toHaveBeenCalledWith({
+      uuid: '00000000-0000-0000-0000-000000000000'
+    });
   });
 
-  it('opens the side panel when the row name is clicked', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[],
-      refetch: jest.fn()
-    });
-
+  it('opens the side panel when the row name is clicked and shows UUID', () => {
     const { getByText, getByTestId } = render(
       <QueryClientProvider client={queryClient}>
+                
         <SatelliteManifestPanel {...get('props')} />
+              
       </QueryClientProvider>
     );
 
     fireEvent.click(getByTestId('expand-details-button-0'));
+
     expect(getByText('UUID')).toBeInTheDocument();
-  });
-
-  it('opens the delete popup from clicking the kebab menu', () => {
-    (useSatelliteVersions as jest.Mock).mockReturnValue({
-      body: [] as SatelliteVersion[],
-      refetch: jest.fn()
-    });
-
-    const { getByLabelText, getByText } = render(
-      <QueryClientProvider client={queryClient}>
-        <SatelliteManifestPanel {...get('props')} />
-      </QueryClientProvider>
-    );
-    fireEvent.click(getByLabelText('Kebab toggle'));
-    fireEvent.click(getByText('Delete'));
-
-    expect(
-      screen.queryByText('I acknowledge that this action cannot be undone')
-    ).toBeInTheDocument();
   });
 
   describe('when the user does not have write permissions', () => {
     def('canWriteManifests', () => false);
 
     it('does render the delete button, button is disabled', () => {
-      (useSatelliteVersions as jest.Mock).mockReturnValue({
-        body: [] as SatelliteVersion[],
-        refetch: jest.fn()
-      });
-
       const { queryByText, getByLabelText } = render(
         <QueryClientProvider client={queryClient}>
-          <SatelliteManifestPanel {...get('props')} user={get('user')} />
+                    
+          <SatelliteManifestPanel {...get('props')} />
+                  
         </QueryClientProvider>
       );
 
       fireEvent.click(getByLabelText('Kebab toggle'));
-      expect(queryByText('Delete').closest('button')).toBeDisabled();
+
+      expect(queryByText('Delete')?.closest('button')).toBeDisabled();
     });
   });
 });

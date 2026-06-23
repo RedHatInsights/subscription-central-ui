@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Drawer } from '@patternfly/react-core/dist/dynamic/components/Drawer';
@@ -7,21 +7,21 @@ import { DrawerContentBody } from '@patternfly/react-core/dist/dynamic/component
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import useManifestEntitlements from '../../../hooks/useManifestEntitlements';
 import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifest';
+import { useHasRelation } from '../../../hooks/useHasRelation';
 import factories from '../../../utilities/factories';
 import { def, get } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useManifestEntitlements');
 jest.mock('../../../hooks/useExportSatelliteManifest');
+jest.mock('../../../hooks/useHasRelation');
 
 const queryClient = new QueryClient();
 
 describe('Manifest Detail Side Panel', () => {
   def('scaCapable', () => true);
-  def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
   def('user', () =>
     factories.user.build({
-      canWriteManifests: get('canWriteManifests'),
       isSCACapable: get('scaCapable')
     })
   );
@@ -29,17 +29,25 @@ describe('Manifest Detail Side Panel', () => {
   const props = {
     isExpanded: true,
     uuid: 'abc123',
-    titleRef: null as React.MutableRefObject<HTMLSpanElement>,
-    drawerRef: null as React.MutableRefObject<HTMLDivElement>,
-    onCloseClick: (): undefined => undefined,
-    exportManifest: (): undefined => undefined,
+    titleRef: createRef<HTMLSpanElement>(),
+    drawerRef: createRef<HTMLDivElement | HTMLHeadingElement>(),
+    onCloseClick: jest.fn(),
+    exportManifest: jest.fn(),
     exportManifestButtonIsDisabled: false,
-    openCurrentEntitlementsListFromPanel: (): undefined => undefined,
-    deleteManifest: (): undefined => undefined
+    openCurrentEntitlementsListFromPanel: jest.fn(),
+    deleteManifest: jest.fn()
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
+    queryClient.clear();
+
     queryClient.setQueryData(['user'], get('user'));
+
+    (useHasRelation as jest.Mock).mockReturnValue({
+      has: get('canWriteManifests'),
+      isLoading: false
+    });
   });
 
   it('renders with a spinner when loading', () => {
@@ -52,11 +60,16 @@ describe('Manifest Detail Side Panel', () => {
 
     const container = render(
       <QueryClientProvider client={queryClient}>
+                
         <Drawer isExpanded={true}>
+                    
           <DrawerContent panelContent={panelContent}>
-            <DrawerContentBody>foo</DrawerContentBody>
+                        <DrawerContentBody>foo</DrawerContentBody>
+                      
           </DrawerContent>
+                  
         </Drawer>
+              
       </QueryClientProvider>
     );
 
@@ -72,11 +85,16 @@ describe('Manifest Detail Side Panel', () => {
 
     const { getByText } = render(
       <QueryClientProvider client={queryClient}>
+                
         <Drawer isExpanded={true}>
+                    
           <DrawerContent panelContent={panelContent}>
-            <DrawerContentBody>foo</DrawerContentBody>
+                        <DrawerContentBody>foo</DrawerContentBody>
+                      
           </DrawerContent>
+                  
         </Drawer>
+              
       </QueryClientProvider>
     );
 
@@ -95,11 +113,16 @@ describe('Manifest Detail Side Panel', () => {
 
     const { getByText } = render(
       <QueryClientProvider client={queryClient}>
+                
         <Drawer isExpanded={true}>
+                    
           <DrawerContent panelContent={panelContent}>
-            <DrawerContentBody>foo</DrawerContentBody>
+                        <DrawerContentBody>foo</DrawerContentBody>
+                      
           </DrawerContent>
+                  
         </Drawer>
+              
       </QueryClientProvider>
     );
 
@@ -129,11 +152,16 @@ describe('Manifest Detail Side Panel', () => {
 
     const { getAllByText } = render(
       <QueryClientProvider client={queryClient}>
+                
         <Drawer isExpanded={true}>
+                    
           <DrawerContent panelContent={panelContent}>
-            <DrawerContentBody>foo</DrawerContentBody>
+                        <DrawerContentBody>foo</DrawerContentBody>
+                      
           </DrawerContent>
+                  
         </Drawer>
+              
       </QueryClientProvider>
     );
 
@@ -168,11 +196,16 @@ describe('Manifest Detail Side Panel', () => {
 
       const { getByText } = render(
         <QueryClientProvider client={queryClient}>
+                    
           <Drawer isExpanded={true}>
+                        
             <DrawerContent panelContent={panelContent}>
-              <DrawerContentBody>foo</DrawerContentBody>
+                            <DrawerContentBody>foo</DrawerContentBody>
+                          
             </DrawerContent>
+                      
           </Drawer>
+                  
         </QueryClientProvider>
       );
 
@@ -206,15 +239,20 @@ describe('Manifest Detail Side Panel', () => {
 
       const { queryByText } = render(
         <QueryClientProvider client={queryClient}>
+                    
           <Drawer isExpanded={true}>
+                        
             <DrawerContent panelContent={panelContent}>
-              <DrawerContentBody>foo</DrawerContentBody>
+                            <DrawerContentBody>foo</DrawerContentBody>
+                          
             </DrawerContent>
+                      
           </Drawer>
+                  
         </QueryClientProvider>
       );
 
-      expect(queryByText('Delete manifest').parentElement).toBeDisabled();
+      expect(queryByText('Delete manifest')?.parentElement).toBeDisabled();
     });
   });
 });

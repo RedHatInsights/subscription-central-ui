@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { Drawer } from '@patternfly/react-core/dist/dynamic/components/Drawer';
 import { DrawerContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
@@ -11,6 +11,10 @@ import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/component
 import { SearchInput } from '@patternfly/react-core/dist/dynamic/components/SearchInput';
 import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
+import type {
+  OnPerPageSelect,
+  OnSetPage
+} from '@patternfly/react-core/dist/dynamic/components/Pagination';
 import {
   ActionsColumn,
   ExpandableRowContent,
@@ -42,6 +46,7 @@ import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { Processing } from '../emptyState';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
+import { Relation, useHasRelation } from '../../hooks/useHasRelation';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -49,11 +54,7 @@ interface SatelliteManifestPanelProps {
   user: User;
 }
 
-const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
-  data,
-  isFetching,
-  user
-}) => {
+const SatelliteManifestPanel = ({ data, isFetching, user }: SatelliteManifestPanelProps) => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
@@ -61,7 +62,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
   const [rowExpandedStatus, setRowExpandedStatus] = useState<BooleanDictionary>({});
   const [currentDetailUUID, setCurrentDetailUUID] = useState('');
   const [detailsDrawerIsExpanded, setDetailsDrawerIsExpanded] = useState(false);
-  const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState(null);
+  const [currentDetailRowIndex, setCurrentDetailRowIndex] = useState<number | null>(null);
   const [isDeleteManifestConfirmationModalOpen, setIsDeleteManifestConfirmationModalOpen] =
     useState(false);
   const [currentDeletionUUID, setCurrentDeletionUUID] = useState('');
@@ -70,13 +71,18 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     useState(false);
   const [exportedManifestName, setExportedManifestName] = useState('');
   const [loadingManifestNotificationKey, setLoadingManifestNotificationKey] = useState('');
-  const titleRef = useRef<HTMLSpanElement>(null);
-  const drawerRef = useRef<HTMLDivElement | HTMLHeadingElement>(null);
+  const titleRef = React.useRef<HTMLSpanElement>(null);
+  const drawerRef = React.useRef<HTMLDivElement | HTMLHeadingElement>(null);
+
   const entitlementsRowRefs = new Array(10)
     .fill(null)
     .map(() => useRef<HTMLSpanElement | HTMLParagraphElement>(null));
 
   const { addInfoNotification, addSuccessNotification, addErrorNotification } = useNotifications();
+
+  const { has: canWriteManifests } = useHasRelation(Relation.MANIFESTS_EDIT);
+
+  const manifests = data ?? [];
 
   const {
     data: exportedManifestData,
@@ -113,7 +119,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     setCurrentDetailUUID('');
   };
 
-  const handlePerPageSelect = (_event: React.MouseEvent, perPage: number) => {
+  const handlePerPageSelect: OnPerPageSelect = (_event, perPage) => {
     setPerPage(perPage);
     setPage(1);
   };
@@ -124,7 +130,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     collapseAllRows();
   };
 
-  const handleSetPage = (_event: React.MouseEvent, page: number) => {
+  const handleSetPage: OnSetPage = (_event, page) => {
     setPage(page);
     collapseAllRows();
   };
@@ -146,7 +152,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   const openDeleteConfirmationModal = (uuid: string) => {
     setCurrentDeletionUUID(uuid);
-    setCurrentDeletionName(getManifestName(data, uuid));
+    setCurrentDeletionName(getManifestName(manifests, uuid));
     handleDeleteManifestConfirmationModalToggle();
   };
 
@@ -166,6 +172,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   const openCurrentEntitlementsListFromPanel = () => {
     closeDetailsPanel();
+
+    if (currentDetailRowIndex === null) {
+      return;
+    }
     toggleRowExpansion(currentDetailUUID, true);
     const currentRowRef = entitlementsRowRefs[currentDetailRowIndex];
     if (currentRowRef?.current) {
@@ -225,12 +235,12 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       },
       {
         title: 'Delete',
-        isDisabled: !user.canWriteManifests,
-        onClick: user.canWriteManifests
+        isDisabled: !canWriteManifests,
+        onClick: canWriteManifests
           ? () => {
               openDeleteConfirmationModal(uuid);
             }
-          : null,
+          : undefined,
         variant: 'link'
       }
     ];
@@ -240,7 +250,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     return (
       <Pagination
         isDisabled={isFetching}
-        itemCount={countManifests(data, searchValue)}
+        itemCount={countManifests(manifests, searchValue)}
         perPage={perPage}
         page={page}
         onSetPage={handleSetPage}
@@ -285,8 +295,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       return [];
     } else {
       return getRowsWithAllocationDetails(
-        data,
-        user,
+        manifests,
         searchValue,
         page,
         perPage,
@@ -301,8 +310,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   return (
     <>
-      {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel user={user} />}
-      {(data?.length > 0 || !user.canWriteManifests) && (
+      {data?.length === 0 && canWriteManifests && <CreateManifestPanel user={user} />}
+      {(manifests?.length > 0 || !canWriteManifests) && (
         <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
           <DrawerContent panelContent={panelContent()}>
             <DrawerContentBody>
@@ -313,7 +322,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 >
                   <FlexItem>
                     <Split hasGutter>
-                      {data.length > 0 && (
+                      {manifests.length > 0 && (
                         <SplitItem isFilled>
                           <SearchInput
                             placeholder="Filter by name, version or UUID"
@@ -324,7 +333,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                         </SplitItem>
                       )}
                       <SplitItem>
-                        <CreateManifestButtonWithModal user={user} />
+                        <CreateManifestButtonWithModal />
                       </SplitItem>
                     </Split>
                   </FlexItem>
@@ -360,7 +369,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                         <Td
                           expand={{
                             rowIndex: index,
-                            isExpanded: row.isOpen,
+                            isExpanded: row.isOpen ?? false,
                             onToggle: () => toggleAllocationDetails(manifest.uuid)
                           }}
                         />
@@ -385,7 +394,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                         ouiaSafe={true}
                       >
                         <Td colSpan={colSpan}>
-                          <ExpandableRowContent>{row.details.content}</ExpandableRowContent>
+                          <ExpandableRowContent>{row.details?.content}</ExpandableRowContent>
                         </Td>
                       </Tr>
                     </Tbody>
@@ -393,10 +402,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 })}
               </Table>
               <PageSection hasBodyWrapper={false}>
-                {countManifests(data, searchValue) === 0 && data.length > 0 && (
+                {countManifests(manifests, searchValue) === 0 && manifests.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />
                 )}
-                {!isFetching && data.length === 0 && <CreateManifestPanel user={user} />}
+                {!isFetching && manifests.length === 0 && <CreateManifestPanel user={user} />}
                 {isFetching && <Processing />}
                 {pagination(PaginationVariant.bottom)}
               </PageSection>

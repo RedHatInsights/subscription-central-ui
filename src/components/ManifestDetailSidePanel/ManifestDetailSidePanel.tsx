@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { DrawerPanelContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
@@ -11,13 +11,14 @@ import { Processing } from '../emptyState';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
-import { User } from '../../hooks/useUser';
 import './ManifestDetailSidePanel.scss';
+import { Relation, useHasRelation } from '../../hooks/useHasRelation';
+import { User } from '../../hooks/useUser';
 
 interface ManifestDetailSidePanelProps {
   isExpanded: boolean;
-  titleRef: React.MutableRefObject<HTMLSpanElement>;
-  drawerRef: React.MutableRefObject<HTMLDivElement | HTMLHeadingElement>;
+  titleRef: React.RefObject<HTMLSpanElement>;
+  drawerRef: React.RefObject<HTMLDivElement | HTMLHeadingElement>;
   uuid: string;
   onCloseClick: () => void;
   exportManifest: (uuid: string, manifestName: string) => void;
@@ -26,7 +27,7 @@ interface ManifestDetailSidePanelProps {
   deleteManifest: (uuid: string) => void;
 }
 
-const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
+const ManifestDetailSidePanel = ({
   isExpanded,
   titleRef,
   drawerRef,
@@ -36,7 +37,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   exportManifestButtonIsDisabled,
   openCurrentEntitlementsListFromPanel,
   deleteManifest
-}) => {
+}: ManifestDetailSidePanelProps) => {
   const {
     data: entitlementData,
     isLoading: isLoadingEntitlementData,
@@ -46,7 +47,8 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   } = useManifestEntitlements(uuid);
 
   const queryClient = useQueryClient();
-  const user: User = queryClient.getQueryData(['user']);
+  const user = queryClient.getQueryData<User>(['user']);
+  const { has: canWriteManifests } = useHasRelation(Relation.MANIFESTS_EDIT);
 
   useEffect(() => {
     if (isExpanded === true) {
@@ -72,6 +74,9 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
   };
 
   const handleExportManifestClick = () => {
+    if (!entitlementData?.body) {
+      return;
+    }
     const { uuid, name } = entitlementData.body;
     exportManifest(uuid, name);
     onCloseClick();
@@ -100,7 +105,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
           onClick={() => {
             deleteManifest(uuid);
           }}
-          isDisabled={!user.canWriteManifests}
+          isDisabled={!canWriteManifests}
         >
           Delete manifest
         </Button>
@@ -164,7 +169,7 @@ const ManifestDetailSidePanel: FC<ManifestDetailSidePanelProps> = ({
             </strong>
           </GridItem>
           <GridItem span={6}>
-            {user.isSCACapable === true ? simpleContentAccess : 'administratively disabled'}
+            {user?.isSCACapable === true ? simpleContentAccess : 'administratively disabled'}
           </GridItem>
 
           <GridItem span={6}>
