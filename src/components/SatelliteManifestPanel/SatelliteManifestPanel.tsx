@@ -310,7 +310,7 @@ const SatelliteManifestPanel = ({ data, isFetching, user }: SatelliteManifestPan
 
   return (
     <>
-      {data?.length === 0 && canWriteManifests && <CreateManifestPanel user={user} />}
+      {manifests?.length === 0 && canWriteManifests && <CreateManifestPanel user={user} />}
       {(manifests?.length > 0 || !canWriteManifests) && (
         <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
           <DrawerContent panelContent={panelContent()}>

@@ -53,7 +53,7 @@ export const useHasRelation = (relation: Relation): HasRelationResult => {
         ).allowed === 'ALLOWED_TRUE'
       );
     },
-    enabled: !defaultWorkspaceIsLoading && !defaultWorkspaceIsError && !defaultWorkspaceIsError,
+    enabled: !defaultWorkspaceIsLoading && !defaultWorkspaceIsError,
     staleTime: QUERY_STALE_TIME
   });
 
