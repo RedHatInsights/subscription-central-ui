@@ -6,9 +6,11 @@ import SatelliteManifestPanel from '../SatelliteManifestPanel';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import factories from '../../../utilities/factories';
 import { def, get } from 'bdd-lazy-var';
+import { Relation, useHasRelation } from '../../../hooks/useHasRelation';
 
 jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
+jest.mock('../../../hooks/useHasRelation');
 
 const queryClient = new QueryClient();
 
@@ -16,9 +18,7 @@ describe('Satellite Manifest Panel', () => {
   def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
   def('user', () => {
-    return factories.user.build({
-      canWriteManifests: get('canWriteManifests')
-    });
+    return factories.user.build();
   });
   def('data', () => {
     return [
@@ -43,6 +43,14 @@ describe('Satellite Manifest Panel', () => {
   });
 
   beforeEach(() => {
+    queryClient.clear();
+
+    (useHasRelation as jest.Mock).mockImplementation((relation: Relation) => ({
+      has:
+        relation === Relation.MANIFESTS_VIEW ? get('canReadManifests') : get('canWriteManifests'),
+      isLoading: false
+    }));
+
     queryClient.setQueryData(['user'], get('user'));
   });
 

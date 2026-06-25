@@ -11,7 +11,7 @@ interface CreateManifestButtonWithModalProps {
   user: User;
 }
 
-const CreateManifestPanel: FC<CreateManifestButtonWithModalProps> = ({ user }) => {
+const CreateManifestPanel: FC<CreateManifestButtonWithModalProps> = () => {
   return (
     <EmptyState
       headingLevel="h2"
@@ -24,7 +24,7 @@ const CreateManifestPanel: FC<CreateManifestButtonWithModalProps> = ({ user }) =
         from the Red Hat Customer Portal to your on-premise subscription management application.
       </EmptyStateBody>
       <EmptyStateFooter>
-        <CreateManifestButtonWithModal user={user} />
+        <CreateManifestButtonWithModal />
       </EmptyStateFooter>
     </EmptyState>
   );
