@@ -51,7 +51,7 @@ const SatelliteManifestPage = () => {
 
           {(isLoading || canReadIsLoading) && !hasError && <Processing />}
 
-          {(!isLoading || !canReadIsLoading) && !hasError && user && (
+          {!isLoading && !canReadIsLoading && !hasError && user && (
             <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
           )}
         </>
