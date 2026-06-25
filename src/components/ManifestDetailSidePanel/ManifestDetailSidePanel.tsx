@@ -74,9 +74,6 @@ const ManifestDetailSidePanel = ({
   };
 
   const handleExportManifestClick = () => {
-    if (!entitlementData?.body) {
-      return;
-    }
     const { uuid, name } = entitlementData.body;
     exportManifest(uuid, name);
     onCloseClick();
