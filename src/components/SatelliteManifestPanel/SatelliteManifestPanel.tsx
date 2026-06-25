@@ -83,6 +83,9 @@ const SatelliteManifestPanel = ({ data, isFetching, user }: SatelliteManifestPan
   const { has: canWriteManifests } = useHasRelation(Relation.MANIFESTS_EDIT);
 
   const manifests = data ?? [];
+  const allocationDetailsRefs = entitlementsRowRefs as React.MutableRefObject<
+    HTMLSpanElement | HTMLParagraphElement
+  >[];
 
   const {
     data: exportedManifestData,
@@ -296,12 +299,13 @@ const SatelliteManifestPanel = ({ data, isFetching, user }: SatelliteManifestPan
     } else {
       return getRowsWithAllocationDetails(
         manifests,
+        user,
         searchValue,
         page,
         perPage,
         rowExpandedStatus,
         handleRowManifestClick,
-        entitlementsRowRefs,
+        allocationDetailsRefs,
         sortKeys[sortBy.index],
         sortBy.direction
       );

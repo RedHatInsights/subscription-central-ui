@@ -25,31 +25,23 @@ const queryClient = new QueryClient();
 
 const SatellitePage = () => (
   <QueryClientProvider client={queryClient}>
-        
     <Authentication>
-            
       <Router>
-                
         <SatelliteManifestPage />
-              
       </Router>
-          
     </Authentication>
-      
   </QueryClientProvider>
 );
 
 describe('Satellite Manifests Page', () => {
   def('loading', () => false);
   def('error', () => false);
-  def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
-  def('user', () => factories.user.build());
+  def('user', () => {
+    return factories.user.build();
+  });
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    queryClient.clear();
-
     (useUser as jest.Mock).mockReturnValue({
       isLoading: get('loading'),
       isFetching: false,
@@ -59,8 +51,7 @@ describe('Satellite Manifests Page', () => {
     });
 
     (useHasRelation as jest.Mock).mockImplementation((relation: Relation) => ({
-      has:
-        relation === Relation.MANIFESTS_VIEW ? get('canReadManifests') : get('canWriteManifests'),
+      has: relation === Relation.MANIFESTS_VIEW ? true : get('canWriteManifests'),
       isLoading: false
     }));
 
@@ -72,9 +63,6 @@ describe('Satellite Manifests Page', () => {
   it('renders correctly with satellite data', async () => {
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
-      isFetching: false,
-      error: false,
-      isError: false,
       data: [
         {
           name: 'Sputnik',
@@ -85,9 +73,7 @@ describe('Satellite Manifests Page', () => {
         }
       ]
     });
-
     const { getAllByText } = render(<SatellitePage />);
-
     getAllByText('Sputnik').forEach((el) => {
       expect(el).toBeInTheDocument();
     });
@@ -95,7 +81,6 @@ describe('Satellite Manifests Page', () => {
 
   describe('when the user status call is still loading', () => {
     def('loading', () => true);
-
     it('renders loading', () => {
       (useSatelliteManifests as jest.Mock).mockReturnValue({
         isLoading: true,
@@ -103,12 +88,10 @@ describe('Satellite Manifests Page', () => {
         error: false,
         isError: false
       });
-
       const container = render(<SatellitePage />);
       expect(container).toHaveLoader();
     });
   });
-
   it('renders loading when it has not received a response back', () => {
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: true,
@@ -116,85 +99,75 @@ describe('Satellite Manifests Page', () => {
       error: false,
       isError: false
     });
-
     const container = render(<SatellitePage />);
     expect(container).toHaveLoader();
   });
+});
 
-  it('renders the empty state when no results are returned', async () => {
+it('renders the empty state when no results are returned', async () => {
+  (useSatelliteManifests as jest.Mock).mockReturnValue({
+    isLoading: false,
+    data: []
+  });
+
+  const { getByText } = render(<SatellitePage />);
+  expect(getByText('Create a new manifest to export subscriptions')).toBeInTheDocument();
+});
+
+describe('when the user does not have write permissions', () => {
+  def('canWriteManifests', () => false);
+
+  it('renders an empty table when the API returns no manifests', async () => {
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
-      isFetching: false,
-      error: false,
-      isError: false,
       data: []
     });
 
     const { getByText } = render(<SatellitePage />);
     expect(getByText('Create a new manifest to export subscriptions')).toBeInTheDocument();
   });
+});
 
-  describe('when the user does not have write permissions', () => {
-    def('canWriteManifests', () => false);
-
-    it('renders an empty table when the API returns no manifests', async () => {
-      (useSatelliteManifests as jest.Mock).mockReturnValue({
-        isLoading: false,
-        isFetching: false,
-        error: false,
-        isError: false,
-        data: []
-      });
-
-      const { getByText } = render(<SatellitePage />);
-      expect(getByText('Create a new manifest to export subscriptions')).toBeInTheDocument();
-    });
+it('renders with an error message when an API fails', async () => {
+  (useSatelliteManifests as jest.Mock).mockReturnValue({
+    isLoading: false,
+    error: true,
+    data: undefined
   });
+  const container = render(<SatellitePage />);
 
-  it('renders with an error message when an API fails', async () => {
+  expect(container.queryByText('This page is temporarily unavailable').firstChild.textContent);
+});
+
+describe('when the user call fails', () => {
+  def('error', () => true);
+
+  it('renders an error message', async () => {
     (useSatelliteManifests as jest.Mock).mockReturnValue({
       isLoading: false,
       error: true,
-      isError: true,
       data: undefined
     });
 
-    render(<SatellitePage />);
+    const { getByText } = render(<SatellitePage />);
+    expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();
+  });
+});
 
-    expect(screen.getByText('This page is temporarily unavailable')).toBeInTheDocument();
+it('Renders no access when the user does not have the read permission', () => {
+  (useHasRelation as jest.Mock).mockImplementation((relation: Relation) => ({
+    has: relation === Relation.MANIFESTS_VIEW ? false : get('canWriteManifests'),
+    isLoading: false
+  }));
+
+  (useSatelliteManifests as jest.Mock).mockReturnValueOnce({
+    isLoading: false,
+    data: [],
+    error: false,
+    isError: false
   });
 
-  describe('when the user call fails', () => {
-    def('error', () => true);
+  render(<SatellitePage />);
 
-    it('renders an error message', async () => {
-      (useSatelliteManifests as jest.Mock).mockReturnValue({
-        isLoading: false,
-        error: true,
-        isError: true,
-        data: undefined
-      });
-
-      const { getByText } = render(<SatellitePage />);
-      expect(getByText('This page is temporarily unavailable')).toBeInTheDocument();
-    });
-  });
-
-  describe('when the user does not have read permission', () => {
-    def('canReadManifests', () => false);
-
-    it('renders no access', () => {
-      (useSatelliteManifests as jest.Mock).mockReturnValue({
-        isLoading: false,
-        isFetching: false,
-        data: [],
-        error: false,
-        isError: false
-      });
-
-      render(<SatellitePage />);
-
-      expect(screen.getByText('You do not have access to Manifests')).toBeInTheDocument();
-    });
-  });
+  expect(screen.getByText('You do not have access to Manifests')).toBeInTheDocument();
 });

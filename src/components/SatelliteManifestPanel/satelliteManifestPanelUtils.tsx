@@ -87,17 +87,12 @@ export const getFilteredRows = (data: ManifestEntry[], searchValue: string): Man
       scaStatus = 'disallowed';
     }
 
-    return {
-      name: entry.name || '',
-      version: entry.version || '',
-      scaStatus,
-      uuid: entry.uuid || ''
-    };
+    return { name: entry.name, version: entry.version, scaStatus: scaStatus, uuid: entry.uuid };
   });
 };
 
 export const getManifestName = (data: ManifestEntry[], uuid: string): string => {
-  return data.find((entry) => entry.uuid === uuid)?.name || '';
+  return data.find((entry) => entry.uuid == uuid)?.name || '';
 };
 
 export const sortFilteredRows = (
@@ -159,12 +154,13 @@ export const getPaginatedRows = (
 
 export const getRowsWithAllocationDetails = (
   data: ManifestEntry[],
+  user: User,
   searchValue: string,
   page: number,
   perPage: number,
   rowExpandedStatus: BooleanDictionary,
   handleRowManifestClick: (uuid: string, rowIndex: number) => void,
-  entitlementsRowRefs: React.RefObject<HTMLSpanElement | HTMLParagraphElement>[],
+  entitlementsRowRefs: React.MutableRefObject<HTMLSpanElement | HTMLParagraphElement>[],
   sortKey: SortKey,
   sortDirection: SortByDirection
 ): Row[] => {

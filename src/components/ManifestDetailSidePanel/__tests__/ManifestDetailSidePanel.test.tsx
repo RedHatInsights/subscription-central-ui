@@ -60,16 +60,11 @@ describe('Manifest Detail Side Panel', () => {
 
     const container = render(
       <QueryClientProvider client={queryClient}>
-                
         <Drawer isExpanded={true}>
-                    
           <DrawerContent panelContent={panelContent}>
-                        <DrawerContentBody>foo</DrawerContentBody>
-                      
+            <DrawerContentBody>foo</DrawerContentBody>           
           </DrawerContent>
-                  
         </Drawer>
-              
       </QueryClientProvider>
     );
 
@@ -85,16 +80,11 @@ describe('Manifest Detail Side Panel', () => {
 
     const { getByText } = render(
       <QueryClientProvider client={queryClient}>
-                
         <Drawer isExpanded={true}>
-                    
           <DrawerContent panelContent={panelContent}>
-                        <DrawerContentBody>foo</DrawerContentBody>
-                      
+            <DrawerContentBody>foo</DrawerContentBody>
           </DrawerContent>
-                  
         </Drawer>
-              
       </QueryClientProvider>
     );
 
@@ -113,16 +103,11 @@ describe('Manifest Detail Side Panel', () => {
 
     const { getByText } = render(
       <QueryClientProvider client={queryClient}>
-                
         <Drawer isExpanded={true}>
-                    
           <DrawerContent panelContent={panelContent}>
-                        <DrawerContentBody>foo</DrawerContentBody>
-                      
+            <DrawerContentBody>foo</DrawerContentBody>           
           </DrawerContent>
-                  
         </Drawer>
-              
       </QueryClientProvider>
     );
 
@@ -152,16 +137,11 @@ describe('Manifest Detail Side Panel', () => {
 
     const { getAllByText } = render(
       <QueryClientProvider client={queryClient}>
-                
         <Drawer isExpanded={true}>
-                    
           <DrawerContent panelContent={panelContent}>
-                        <DrawerContentBody>foo</DrawerContentBody>
-                      
+            <DrawerContentBody>foo</DrawerContentBody>
           </DrawerContent>
-                  
         </Drawer>
-              
       </QueryClientProvider>
     );
 
@@ -196,16 +176,11 @@ describe('Manifest Detail Side Panel', () => {
 
       const { getByText } = render(
         <QueryClientProvider client={queryClient}>
-                    
           <Drawer isExpanded={true}>
-                        
             <DrawerContent panelContent={panelContent}>
-                            <DrawerContentBody>foo</DrawerContentBody>
-                          
+              <DrawerContentBody>foo</DrawerContentBody>            
             </DrawerContent>
-                      
           </Drawer>
-                  
         </QueryClientProvider>
       );
 
@@ -239,20 +214,15 @@ describe('Manifest Detail Side Panel', () => {
 
       const { queryByText } = render(
         <QueryClientProvider client={queryClient}>
-                    
           <Drawer isExpanded={true}>
-                        
             <DrawerContent panelContent={panelContent}>
-                            <DrawerContentBody>foo</DrawerContentBody>
-                          
+              <DrawerContentBody>foo</DrawerContentBody>          
             </DrawerContent>
-                      
           </Drawer>
-                  
         </QueryClientProvider>
       );
 
-      expect(queryByText('Delete manifest')?.parentElement).toBeDisabled();
+      expect(queryByText('Delete manifest').parentElement).toBeDisabled();
     });
   });
 });

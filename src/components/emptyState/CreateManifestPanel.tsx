@@ -11,7 +11,7 @@ interface CreateManifestButtonWithModalProps {
   user: User;
 }
 
-const CreateManifestPanel: FC<CreateManifestButtonWithModalProps> = ({}) => {
+const CreateManifestPanel: FC<CreateManifestButtonWithModalProps> = () => {
   return (
     <EmptyState
       headingLevel="h2"
