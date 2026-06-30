@@ -3,28 +3,45 @@ import { fireEvent, render } from '@testing-library/react';
 import CreateManifestButtonWithModal from '..';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import factories from '../../../utilities/factories';
-import useUser from '../../../hooks/useUser';
+import { useHasRelation } from '../../../hooks/useHasRelation';
 
-jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
+jest.mock('../../../hooks/useHasRelation');
+
 const queryClient = new QueryClient();
 
-it('renders the modal properly when the button is clicked', async () => {
+const mockKesselCheck = (canWriteManifests: boolean) => {
+  (useHasRelation as jest.Mock).mockReturnValue({
+    isLoading: false,
+    has: canWriteManifests
+  });
+};
+
+const renderComponent = () =>
+  render(
+    <QueryClientProvider client={queryClient}>
+      <CreateManifestButtonWithModal />
+    </QueryClientProvider>
+  );
+
+beforeEach(() => {
+  jest.clearAllMocks();
+
   (useSatelliteVersions as jest.Mock).mockReturnValue({
     body: [] as SatelliteVersion[],
     refetch: jest.fn(),
     isError: false,
     isLoading: false
   });
+});
 
-  const { getByText } = render(
-    <QueryClientProvider client={queryClient}>
-      <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: true })} />
-    </QueryClientProvider>
-  );
+it('renders the modal properly when the button is clicked', async () => {
+  mockKesselCheck(true);
+
+  const { getByText } = renderComponent();
 
   fireEvent.click(getByText('Create new manifest'));
+
   expect(
     getByText(
       'Creating a manifest allows you to export subscriptions to your on-premise subscription management application. Match the type and version of the subscription management application that you are using. All fields are required.'
@@ -33,28 +50,17 @@ it('renders the modal properly when the button is clicked', async () => {
 });
 
 it('renders the Create manifest form with disabled button for user', async () => {
-  (useSatelliteVersions as jest.Mock).mockReturnValue({
-    body: [] as SatelliteVersion[],
-    refetch: jest.fn(),
-    isLoading: false,
-    data: []
-  });
-  const { getByText } = render(
-    <QueryClientProvider client={queryClient}>
-      <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: false })} />
-    </QueryClientProvider>
-  );
+  mockKesselCheck(false);
+
+  const { getByText } = renderComponent();
 
   expect(getByText('Create new manifest').closest('button')).toHaveAttribute('disabled');
 });
 
 it('renders the create button disabled', () => {
-  (useUser as jest.Mock).mockReturnValue(factories.user.build());
-  const { getByText } = render(
-    <QueryClientProvider client={queryClient}>
-      <CreateManifestButtonWithModal user={factories.user.build({ canWriteManifests: false })} />
-    </QueryClientProvider>
-  );
+  mockKesselCheck(false);
+
+  const { getByText } = renderComponent();
 
   expect(getByText('Create new manifest').closest('button')).toHaveAttribute('disabled');
 });

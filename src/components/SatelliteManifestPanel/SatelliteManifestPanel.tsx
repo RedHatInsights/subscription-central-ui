@@ -42,6 +42,7 @@ import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal';
 import { Processing } from '../emptyState';
 import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import DeleteManifestConfirmationModal from '../DeleteManifestConfirmationModal';
+import { Relation, useHasRelation } from '../../hooks/useHasRelation';
 
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
@@ -85,6 +86,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     isSuccess: successExportingManifest,
     isError: errorExportingManifest
   } = useExportSatelliteManifest();
+
+  const { has: canWriteManifests } = useHasRelation(Relation.MANIFESTS_EDIT);
 
   const sortKeys: SortKey[] = [];
 
@@ -225,8 +228,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
       },
       {
         title: 'Delete',
-        isDisabled: !user.canWriteManifests,
-        onClick: user.canWriteManifests
+        isDisabled: !canWriteManifests,
+        onClick: canWriteManifests
           ? () => {
               openDeleteConfirmationModal(uuid);
             }
@@ -301,8 +304,8 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   return (
     <>
-      {data?.length === 0 && user.canWriteManifests && <CreateManifestPanel user={user} />}
-      {(data?.length > 0 || !user.canWriteManifests) && (
+      {data?.length === 0 && canWriteManifests && <CreateManifestPanel user={user} />}
+      {(data?.length > 0 || !canWriteManifests) && (
         <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
           <DrawerContent panelContent={panelContent()}>
             <DrawerContentBody>
@@ -324,7 +327,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                         </SplitItem>
                       )}
                       <SplitItem>
-                        <CreateManifestButtonWithModal user={user} />
+                        <CreateManifestButtonWithModal />
                       </SplitItem>
                     </Split>
                   </FlexItem>

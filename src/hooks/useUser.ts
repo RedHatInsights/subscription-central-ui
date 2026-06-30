@@ -1,14 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-  useAuthenticateUser,
-  useToken,
-  useUserRbacPermissions
-} from '../utilities/platformServices';
+import { useAuthenticateUser, useToken } from '../utilities/platformServices';
 import { HttpError } from '../utilities/errors';
 
 interface User {
-  canReadManifests: boolean;
-  canWriteManifests: boolean;
   isOrgAdmin: boolean;
   isSCACapable: boolean;
 }
@@ -32,23 +26,14 @@ const useSCACapableStatus = async (): Promise<SCACapableStatusResponse> => {
 
 const useUser = () => {
   const authenticateUser = useAuthenticateUser();
-  const userRbacPermissions = useUserRbacPermissions();
   const scaCapableStatus = useSCACapableStatus();
   return useQuery<User, HttpError>({
     queryKey: ['user'],
     queryFn: async () => {
       const userStatus = await authenticateUser;
-      const rawRbacPermissions = await userRbacPermissions;
       const scaStatusResponse = await scaCapableStatus;
-      const rbacPermissions = rawRbacPermissions.map((rawPermission) => rawPermission.permission);
       const user: User = {
-        canReadManifests:
-          rbacPermissions.includes('subscriptions:manifests:read') ||
-          rbacPermissions.includes('subscriptions:*:*'),
-        canWriteManifests:
-          rbacPermissions.includes('subscriptions:manifests:write') ||
-          rbacPermissions.includes('subscriptions:*:*'),
-        isOrgAdmin: userStatus.identity.user.is_org_admin === true,
+        isOrgAdmin: userStatus.identity.user?.is_org_admin === true,
         isSCACapable: scaStatusResponse?.body?.simpleContentAccessCapable === true
       };
       return user;

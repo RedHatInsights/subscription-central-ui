@@ -92,7 +92,7 @@ export const getFilteredRows = (data: ManifestEntry[], searchValue: string): Man
 };
 
 export const getManifestName = (data: ManifestEntry[], uuid: string): string => {
-  return data.find((entry) => entry.uuid == uuid)?.name;
+  return data.find((entry) => entry.uuid == uuid)?.name || '';
 };
 
 export const sortFilteredRows = (

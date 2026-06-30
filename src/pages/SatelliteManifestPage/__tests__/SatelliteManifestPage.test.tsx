@@ -6,12 +6,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
 import useUser from '../../../hooks/useUser';
+import { Relation, useHasRelation } from '../../../hooks/useHasRelation';
 import factories from '../../../utilities/factories';
 import { def, get } from 'bdd-lazy-var';
 import '@testing-library/jest-dom';
 
 jest.mock('../../../hooks/useSatelliteManifests');
 jest.mock('../../../hooks/useUser');
+jest.mock('../../../hooks/useHasRelation');
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
   useLocation: () => ({
@@ -36,7 +38,7 @@ describe('Satellite Manifests Page', () => {
   def('error', () => false);
   def('canWriteManifests', () => true);
   def('user', () => {
-    return factories.user.build({ canWriteManifests: get('canWriteManifests') });
+    return factories.user.build();
   });
 
   beforeEach(() => {
@@ -47,6 +49,11 @@ describe('Satellite Manifests Page', () => {
       isError: get('error'),
       data: get('user')
     });
+
+    (useHasRelation as jest.Mock).mockImplementation((relation: Relation) => ({
+      has: relation === Relation.MANIFESTS_VIEW ? true : get('canWriteManifests'),
+      isLoading: false
+    }));
 
     if (get('error') === false) {
       queryClient.setQueryData(['user'], get('user'));
@@ -148,13 +155,10 @@ describe('when the user call fails', () => {
 });
 
 it('Renders no access when the user does not have the read permission', () => {
-  (useUser as jest.Mock).mockReturnValue({
-    isLoading: false,
-    isFetching: false,
-    isSuccess: true,
-    isError: false,
-    data: { canReadManifests: false }
-  });
+  (useHasRelation as jest.Mock).mockImplementation((relation: Relation) => ({
+    has: relation === Relation.MANIFESTS_VIEW ? false : get('canWriteManifests'),
+    isLoading: false
+  }));
 
   (useSatelliteManifests as jest.Mock).mockReturnValueOnce({
     isLoading: false,
