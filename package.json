@@ -121,7 +121,7 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-jasmine2": "^29.6.1",
     "lint-staged": "^16.1.0",
-    "npm-run-all2": "5.0.2",
+    "npm-run-all2": "9.0.2",
     "prettier": "^3.6.2",
     "pretty-quick": "^4.2.2",
     "source-map-explorer": "^2.5.3",
