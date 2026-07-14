@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import {
-  fetchDefaultWorkspace,
+  // fetchDefaultWorkspace, TODO: Add back once the sdk is fixed
   useAccessCheckContext
 } from '@project-kessel/react-kessel-access-check';
 import { checkSelf } from '@project-kessel/react-kessel-access-check/core/api-client';
@@ -10,6 +10,17 @@ import { createQueryWrapper } from '../../utilities/testHelpers';
 
 jest.mock('@project-kessel/react-kessel-access-check');
 jest.mock('@project-kessel/react-kessel-access-check/core/api-client');
+
+// ------------------------------------------------------------
+// TODO: remove once sdk is used for default workspace fetching
+// ------------------------------------------------------------
+
+import { fetchDefaultWorkspace } from '../../utilities/fetchDefaultWorkspace';
+jest.mock('../../utilities/fetchDefaultWorkspace');
+
+// ------------------------------------------------------------
+// TODO: End remove block
+// ------------------------------------------------------------
 
 describe('useHasRelation hook', () => {
   const mockCheckSelf = checkSelf as jest.Mock;
