@@ -1,9 +1,10 @@
 import {
-  fetchDefaultWorkspace,
+  // fetchDefaultWorkspace, TODO: Add back once the sdk is fixed
   useAccessCheckContext
 } from '@project-kessel/react-kessel-access-check';
 import { checkSelf } from '@project-kessel/react-kessel-access-check/core/api-client';
 import { useQuery } from '@tanstack/react-query';
+import { fetchDefaultWorkspace } from '../utilities/fetchDefaultWorkspace'; // TODO remove once sdk is fixed
 
 const QUERY_STALE_TIME = 5 * 60 * 1000;
 
