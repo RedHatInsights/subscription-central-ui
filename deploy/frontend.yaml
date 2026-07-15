@@ -40,6 +40,14 @@ objects:
             module: './RootApp'
             routes:
               - pathname: /subscriptions/manifests
+      serviceTiles:
+        - id: manifests
+          section: subscriptions
+          group: subscriptions
+          title: Manifests
+          href: /subscriptions/manifests
+          description: Create, manage, and export subscription manifests for Red Hat Satellite.
+          icon: SubscriptionsIcon
 
 parameters:
   - name: ENV_NAME
