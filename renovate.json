@@ -19,7 +19,9 @@
   "packageRules": [
     {
       "matchManagers": ["tekton", "npm"],
-      "automerge": true,
+      "automerge": true
+    },
+    {
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch",
       "matchPackageNames": ["*"],
