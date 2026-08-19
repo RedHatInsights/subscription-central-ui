@@ -20,6 +20,12 @@
     {
       "matchManagers": ["tekton", "npm"],
       "automerge": true
+    },
+    {
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch"]
     }
   ],
   "labels": ["dependency", "konflux"]
