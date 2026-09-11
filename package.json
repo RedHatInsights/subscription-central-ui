@@ -112,7 +112,7 @@
     "babel-plugin-transform-imports": "^2.0.0",
     "bdd-lazy-var": "^2.6.1",
     "css-loader": "^7.0.0",
-    "eslint": "^9.24.0",
+    "eslint": "^10.0.0",
     "fishery": "^2.2.2",
     "husky": "^9.1.7",
     "identity-obj-proxy": "^3.0.0",
