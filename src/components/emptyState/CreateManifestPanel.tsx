@@ -5,13 +5,8 @@ import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/component
 import { EmptyStateFooter } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import CreateManifestButtonWithModal from '../CreateManifestButtonWithModal/CreateManifestButtonWithModal';
 import { PlusCircleIcon } from '@patternfly/react-icons/dist/js/icons/plus-circle-icon';
-import { User } from '../../hooks/useUser';
 
-interface CreateManifestButtonWithModalProps {
-  user: User;
-}
-
-const CreateManifestPanel: FC<CreateManifestButtonWithModalProps> = () => {
+const CreateManifestPanel: FC = () => {
   return (
     <EmptyState
       headingLevel="h2"

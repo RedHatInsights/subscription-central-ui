@@ -1,18 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import SatelliteManifestPage from '../SatelliteManifestPage';
-import Authentication from '../../../components/Authentication';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useSatelliteManifests from '../../../hooks/useSatelliteManifests';
-import useUser from '../../../hooks/useUser';
 import { Relation, useHasRelation } from '../../../hooks/useHasRelation';
-import factories from '../../../utilities/factories';
-import { def, get } from 'bdd-lazy-var';
 import '@testing-library/jest-dom';
+import { def, get } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useSatelliteManifests');
-jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useHasRelation');
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
@@ -25,11 +21,9 @@ const queryClient = new QueryClient();
 
 const SatellitePage = () => (
   <QueryClientProvider client={queryClient}>
-    <Authentication>
-      <Router>
-        <SatelliteManifestPage />
-      </Router>
-    </Authentication>
+    <Router>
+      <SatelliteManifestPage />
+    </Router>
   </QueryClientProvider>
 );
 
@@ -37,27 +31,12 @@ describe('Satellite Manifests Page', () => {
   def('loading', () => false);
   def('error', () => false);
   def('canWriteManifests', () => true);
-  def('user', () => {
-    return factories.user.build();
-  });
 
   beforeEach(() => {
-    (useUser as jest.Mock).mockReturnValue({
-      isLoading: get('loading'),
-      isFetching: false,
-      isSuccess: true,
-      isError: get('error'),
-      data: get('user')
-    });
-
     (useHasRelation as jest.Mock).mockImplementation((relation: Relation) => ({
       has: relation === Relation.MANIFESTS_VIEW ? true : get('canWriteManifests'),
       isLoading: false
     }));
-
-    if (get('error') === false) {
-      queryClient.setQueryData(['user'], get('user'));
-    }
   });
 
   it('renders correctly with satellite data', async () => {

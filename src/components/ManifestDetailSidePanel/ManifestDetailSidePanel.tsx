@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { DrawerPanelContent } from '@patternfly/react-core/dist/dynamic/components/Drawer';
 import { DrawerHead } from '@patternfly/react-core/dist/dynamic/components/Drawer';
@@ -9,11 +8,9 @@ import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { Processing } from '../emptyState';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
-import SCAInfoIconWithPopover from '../SCAInfoIconWithPopover';
 import useManifestEntitlements from '../../hooks/useManifestEntitlements';
 import './ManifestDetailSidePanel.scss';
 import { Relation, useHasRelation } from '../../hooks/useHasRelation';
-import { User } from '../../hooks/useUser';
 
 interface ManifestDetailSidePanelProps {
   isExpanded: boolean;
@@ -46,8 +43,6 @@ const ManifestDetailSidePanel = ({
     isError: errorFetchingEntitlementData
   } = useManifestEntitlements(uuid);
 
-  const queryClient = useQueryClient();
-  const user = queryClient.getQueryData<User>(['user']);
   const { has: canWriteManifests } = useHasRelation(Relation.MANIFESTS_EDIT);
 
   useEffect(() => {
@@ -121,8 +116,7 @@ const ManifestDetailSidePanel = ({
       createdDate,
       createdBy,
       lastModified,
-      entitlementsAttachedQuantity,
-      simpleContentAccess
+      entitlementsAttachedQuantity
     } = entitlementData.body;
 
     const formatDate = (dateString: string) => {
@@ -159,16 +153,6 @@ const ManifestDetailSidePanel = ({
 
         <h4>Subscriptions</h4>
         <Grid>
-          <GridItem span={6}>
-            <strong>
-              Simple content access
-              <SCAInfoIconWithPopover />
-            </strong>
-          </GridItem>
-          <GridItem span={6}>
-            {user?.isSCACapable === true ? simpleContentAccess : 'administratively disabled'}
-          </GridItem>
-
           <GridItem span={6}>
             <strong>Quantity</strong>
           </GridItem>

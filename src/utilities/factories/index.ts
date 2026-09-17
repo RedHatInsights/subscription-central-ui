@@ -1,4 +1,3 @@
 import manifestEntry from './manifestEntry';
-import user from './user';
 
-export default { manifestEntry, user };
+export default { manifestEntry };
