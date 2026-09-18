@@ -1,9 +1,7 @@
 import React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
 import ManifestEntitlementsList from '../ManifestEntitlementsList';
-import { User } from '../../hooks/useUser';
 import { ManifestEntry } from '../../hooks/useSatelliteManifests';
-import semver from 'semver';
 
 export interface TableHeader {
   title: string | React.ReactNode;
@@ -32,24 +30,20 @@ export interface BooleanDictionary {
   [key: string]: boolean;
 }
 
-export type SortKey = 'name' | 'version' | 'scaStatus' | 'uuid';
+export type SortKey = 'name' | 'version' | 'uuid';
 
 type ManifestTableHeader = {
   label: string | React.ReactNode;
   sortKey: SortKey;
 };
 
-export const getTableHeaders = (user: User): ManifestTableHeader[] => {
+export const getTableHeaders = (): ManifestTableHeader[] => {
   const tableHeaders: ManifestTableHeader[] = [
     { label: 'Name', sortKey: 'name' },
     { label: 'Version', sortKey: 'version' },
     { label: 'UUID', sortKey: 'uuid' }
   ];
 
-  if (user.isSCACapable === false) {
-    // remove SCA Status column
-    tableHeaders.splice(2, 1);
-  }
   return tableHeaders;
 };
 
@@ -74,20 +68,12 @@ export const countManifests = (data: ManifestEntry[], searchValue: string): numb
 export type ManifestRow = {
   name: string;
   version: string;
-  scaStatus: string;
   uuid: string;
 };
 
 export const getFilteredRows = (data: ManifestEntry[], searchValue: string): ManifestRow[] => {
   return filterDataBySearchTerm(data, searchValue).map((entry: ManifestEntry) => {
-    let scaStatus = entry.simpleContentAccess || 'disabled';
-    const manifestVersion = semver.coerce(entry.version);
-    const allowedSCAVersion = semver.coerce('6.3');
-    if (semver.lt(manifestVersion, allowedSCAVersion)) {
-      scaStatus = 'disallowed';
-    }
-
-    return { name: entry.name, version: entry.version, scaStatus: scaStatus, uuid: entry.uuid };
+    return { name: entry.name, version: entry.version, uuid: entry.uuid };
   });
 };
 
@@ -154,12 +140,10 @@ export const getPaginatedRows = (
 
 export const getRowsWithAllocationDetails = (
   data: ManifestEntry[],
-  user: User,
   searchValue: string,
   page: number,
   perPage: number,
   rowExpandedStatus: BooleanDictionary,
-  handleRowManifestClick: (uuid: string, rowIndex: number) => void,
   entitlementsRowRefs: React.MutableRefObject<HTMLSpanElement | HTMLParagraphElement>[],
   sortKey: SortKey,
   sortDirection: SortByDirection

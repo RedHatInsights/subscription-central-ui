@@ -8,7 +8,6 @@ import ManifestDetailSidePanel from '../ManifestDetailSidePanel';
 import useManifestEntitlements from '../../../hooks/useManifestEntitlements';
 import useExportSatelliteManifest from '../../../hooks/useExportSatelliteManifest';
 import { useHasRelation } from '../../../hooks/useHasRelation';
-import factories from '../../../utilities/factories';
 import { def, get } from 'bdd-lazy-var';
 
 jest.mock('../../../hooks/useManifestEntitlements');
@@ -18,13 +17,7 @@ jest.mock('../../../hooks/useHasRelation');
 const queryClient = new QueryClient();
 
 describe('Manifest Detail Side Panel', () => {
-  def('scaCapable', () => true);
   def('canWriteManifests', () => true);
-  def('user', () =>
-    factories.user.build({
-      isSCACapable: get('scaCapable')
-    })
-  );
 
   const props = {
     isExpanded: true,
@@ -147,44 +140,6 @@ describe('Manifest Detail Side Panel', () => {
 
     getAllByText('John Doe').forEach((el) => {
       expect(el).toBeInTheDocument();
-    });
-  });
-
-  describe('when user is not SCA capable', () => {
-    def('scaCapable', () => false);
-
-    it("shows 'administratively disabled' for SCA status", () => {
-      (useManifestEntitlements as jest.Mock).mockImplementation(() => ({
-        isError: false,
-        isSuccess: true,
-        isLoading: false,
-        data: {
-          body: {
-            uuid: 'abc123',
-            name: 'John Doe',
-            version: '6.9',
-            createdDate: '2020-01-01T00:00:00.000Z',
-            createdBy: 'Jane Doe',
-            lastModified: '2021-01-01T00:00:00.000Z',
-            entitlementsAttachedQuantity: 10,
-            simpleContentAccess: 'enabled'
-          }
-        }
-      }));
-
-      const panelContent = <ManifestDetailSidePanel {...props} />;
-
-      const { getByText } = render(
-        <QueryClientProvider client={queryClient}>
-          <Drawer isExpanded={true}>
-            <DrawerContent panelContent={panelContent}>
-              <DrawerContentBody>foo</DrawerContentBody>            
-            </DrawerContent>
-          </Drawer>
-        </QueryClientProvider>
-      );
-
-      expect(getByText('administratively disabled')).toBeInTheDocument();
     });
   });
 

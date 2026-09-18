@@ -4,11 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import SatelliteManifestPanel from '../SatelliteManifestPanel';
 import useSatelliteVersions, { SatelliteVersion } from '../../../hooks/useSatelliteVersions';
-import factories from '../../../utilities/factories';
 import { def, get } from 'bdd-lazy-var';
 import { Relation, useHasRelation } from '../../../hooks/useHasRelation';
 
-jest.mock('../../../hooks/useUser');
 jest.mock('../../../hooks/useSatelliteVersions');
 jest.mock('../../../hooks/useHasRelation');
 
@@ -17,9 +15,6 @@ const queryClient = new QueryClient();
 describe('Satellite Manifest Panel', () => {
   def('canReadManifests', () => true);
   def('canWriteManifests', () => true);
-  def('user', () => {
-    return factories.user.build();
-  });
   def('data', () => {
     return [
       {
