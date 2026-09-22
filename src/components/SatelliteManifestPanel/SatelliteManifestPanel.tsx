@@ -32,7 +32,6 @@ import {
   getRowsWithAllocationDetails,
   getTableHeaders
 } from './satelliteManifestPanelUtils';
-import { User } from '../../hooks/useUser';
 import { CreateManifestPanel } from '../../components/emptyState';
 import useNotifications from '../../hooks/useNotifications';
 import useExportSatelliteManifest from '../../hooks/useExportSatelliteManifest';
@@ -47,13 +46,11 @@ import { Relation, useHasRelation } from '../../hooks/useHasRelation';
 interface SatelliteManifestPanelProps {
   data: ManifestEntry[] | undefined;
   isFetching: boolean;
-  user: User;
 }
 
 const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = ({
   data,
-  isFetching,
-  user
+  isFetching
 }) => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -289,12 +286,10 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
     } else {
       return getRowsWithAllocationDetails(
         data,
-        user,
         searchValue,
         page,
         perPage,
         rowExpandedStatus,
-        handleRowManifestClick,
         entitlementsRowRefs,
         sortKeys[sortBy.index],
         sortBy.direction
@@ -304,7 +299,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
 
   return (
     <>
-      {data?.length === 0 && canWriteManifests && <CreateManifestPanel user={user} />}
+      {data?.length === 0 && canWriteManifests && <CreateManifestPanel />}
       {(data?.length > 0 || !canWriteManifests) && (
         <Drawer isExpanded={detailsDrawerIsExpanded} className="sub-c-drawer-satellite-manifest">
           <DrawerContent panelContent={panelContent()}>
@@ -343,7 +338,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 <Thead>
                   <Tr ouiaId="manifestTable/head" ouiaSafe={true}>
                     <Th />
-                    {getTableHeaders(user).map((header, index) => {
+                    {getTableHeaders().map((header, index) => {
                       sortKeys.push(header.sortKey);
                       return (
                         <Th key={index} sort={getSortParams(index)}>
@@ -399,7 +394,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                 {countManifests(data, searchValue) === 0 && data.length > 0 && (
                   <NoSearchResults clearFilters={clearSearch} />
                 )}
-                {!isFetching && data.length === 0 && <CreateManifestPanel user={user} />}
+                {!isFetching && data.length === 0 && <CreateManifestPanel />}
                 {isFetching && <Processing />}
                 {pagination(PaginationVariant.bottom)}
               </PageSection>

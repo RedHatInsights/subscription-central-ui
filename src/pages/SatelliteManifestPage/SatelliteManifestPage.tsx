@@ -5,7 +5,6 @@ import SatelliteManifestPanel from '../../components/SatelliteManifestPanel';
 import useSatelliteManifests from '../../hooks/useSatelliteManifests';
 import Unavailable from '@redhat-cloud-services/frontend-components/Unavailable';
 import { Processing } from '../../components/emptyState';
-import useUser from '../../hooks/useUser';
 import ExternalLink from '../../components/ExternalLink';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import NoPermissionsPage from '../NoPermissionsPage';
@@ -14,7 +13,6 @@ import { Relation, useHasRelation } from '../../hooks/useHasRelation';
 const SatelliteManifestPage = () => {
   const { isLoading, isFetching, error, data } = useSatelliteManifests();
 
-  const { data: user, isError: userError } = useUser();
   const manifestsMoreInfoLink =
     'https://docs.redhat.com/en/documentation/subscription_central/1-latest/html/' +
     'creating_and_managing_manifests_for_a_connected_satellite_server/index';
@@ -26,8 +24,6 @@ const SatelliteManifestPage = () => {
   if (!canReadManifests && !canReadIsLoading) {
     return <NoPermissionsPage />;
   }
-
-  const hasError = error || userError;
 
   return (
     <>
@@ -47,12 +43,12 @@ const SatelliteManifestPage = () => {
       </PageHeader>
       <PageSection hasBodyWrapper={false}>
         <>
-          {hasError && <Unavailable />}
+          {error && <Unavailable />}
 
-          {(isLoading || canReadIsLoading) && !hasError && <Processing />}
+          {(isLoading || canReadIsLoading) && !error && <Processing />}
 
-          {!isLoading && !canReadIsLoading && !hasError && user && (
-            <SatelliteManifestPanel data={data} user={user} isFetching={isFetching} />
+          {!isLoading && !canReadIsLoading && !error && (
+            <SatelliteManifestPanel data={data} isFetching={isFetching} />
           )}
         </>
       </PageSection>

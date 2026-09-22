@@ -62,9 +62,9 @@ const mockData: ManifestEntry[] = [manifest1, manifest2, manifest3, manifest4, m
 
 describe('sortFilteredRows method', () => {
   const filteredRows = [
-    { name: 'a-manifest', version: '6.9', scaStatus: 'enabled', uuid: '111111' },
-    { name: 'z-manifest', version: '6.10', scaStatus: 'enabled', uuid: '555555' },
-    { name: 'c-manifest', version: '6.4', scaStatus: 'disabled', uuid: '333333' }
+    { name: 'a-manifest', version: '6.9', uuid: '111111' },
+    { name: 'z-manifest', version: '6.10', uuid: '555555' },
+    { name: 'c-manifest', version: '6.4', uuid: '333333' }
   ];
 
   it('sorts the rows by title ascending', () => {
@@ -79,13 +79,6 @@ describe('sortFilteredRows method', () => {
       (row) => row.version
     );
     expect(sortedRows).toEqual(['6.10', '6.9', '6.4']);
-  });
-
-  it('sorts the rows by sca status ascending', () => {
-    const sortedRows = sortFilteredRows(filteredRows, 'scaStatus', SortByDirection.asc).map(
-      (row) => row.scaStatus
-    );
-    expect(sortedRows).toEqual(['disabled', 'enabled', 'enabled']);
   });
 
   it('sorts the rows by uuid descending', () => {
@@ -119,13 +112,13 @@ describe('filterDataBySearchTerm method', () => {
 });
 
 describe('getFilteredRows method', () => {
-  it('returns filtered rows and disallows SCA status if below 6.2', () => {
+  it('returns filtered rows', () => {
     const expectedRows: ManifestRow[] = [
-      { name: 'first-manifest', version: '6.1', scaStatus: 'disallowed', uuid: '111111' },
-      { name: 'second-manifest', version: '6.3', scaStatus: 'enabled', uuid: '222222' },
-      { name: 'third-manifest', version: '6.5', scaStatus: 'enabled', uuid: '333333' },
-      { name: 'manifest-6.10', version: '6.10', scaStatus: 'disabled', uuid: 'abcd-1234' },
-      { name: 'manifest-6.2', version: '6.2', scaStatus: 'disallowed', uuid: 'wxyz-5678' }
+      { name: 'first-manifest', version: '6.1', uuid: '111111' },
+      { name: 'second-manifest', version: '6.3', uuid: '222222' },
+      { name: 'third-manifest', version: '6.5', uuid: '333333' },
+      { name: 'manifest-6.10', version: '6.10', uuid: 'abcd-1234' },
+      { name: 'manifest-6.2', version: '6.2', uuid: 'wxyz-5678' }
     ];
     expect(getFilteredRows(mockData, '')).toEqual(expectedRows);
   });
