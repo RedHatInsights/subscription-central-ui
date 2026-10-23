@@ -362,7 +362,7 @@ const SatelliteManifestPanel: FunctionComponent<SatelliteManifestPanelProps> = (
                             onToggle: () => toggleAllocationDetails(manifest.uuid)
                           }}
                         />
-                        <Td>
+                        <Td modifier="truncate" width={35}>
                           <Button
                             data-testid={`expand-details-button-${index}`}
                             variant="link"
